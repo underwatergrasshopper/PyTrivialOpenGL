@@ -133,6 +133,7 @@ dmypy.json
 
 # Visual Studio
 .vs/
+*.pyproj.user
 
 # pytest
 TestResults/

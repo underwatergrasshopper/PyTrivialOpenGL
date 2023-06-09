@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>55e85929-b5f6-427a-b4ea-c1be3f4cc622</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>tests\smoke_test.py</StartupFile>
+    <StartupFile>tests\unittests\test_color.py</StartupFile>
     <SearchPath>src;tests</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -15,6 +15,9 @@
     <UnitTestRootDirectory>.</UnitTestRootDirectory>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+    <IsWindowsApplication>True</IsWindowsApplication>
+    <InterpreterId>Global|PythonCore|3.9-32</InterpreterId>
+    <InterpreterPath>C:\Users\Artur\AppData\Local\Programs\Python\Python39-32\python.exe</InterpreterPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,13 +36,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="setup.py" />
+    <Compile Include="src\PyTrivialOpenGL\Color.py" />
     <Compile Include="src\PyTrivialOpenGL\__init__.py" />
     <Compile Include="tests\smoke_test.py" />
+    <Compile Include="tests\unittests\test_color.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\" />
     <Folder Include="src\PyTrivialOpenGL\" />
     <Folder Include="tests\" />
+    <Folder Include="tests\unittests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.9-32" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
