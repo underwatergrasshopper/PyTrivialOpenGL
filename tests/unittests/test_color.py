@@ -3,7 +3,7 @@ import math
 
 from PyTrivialOpenGL.Color import *
 
-def test_ColorB():
+def test_color_b():
     ### constructor ###
 
     color = ColorB(0, 0, 0, 0)
@@ -85,16 +85,20 @@ def test_ColorB():
 
     try:
         color = ColorB(11, 22, "text", 44)
-    except Exception as e:
+    except TypeError as e:
         assert(str(e) == "Value of 'b' can not be converted to int.")
+    except Exception:
+        assert False, "Wrong exception."
     else:
         assert False, "Should throw exception."
 
     color = ColorB(11, 22, 33, 44)
     try:
         color.b = "text"
-    except Exception as e:
+    except TypeError as e:
         assert(str(e) == "Value of 'b' can not be converted to int.")
+    except Exception:
+        assert False, "Wrong exception."
     else:
         assert False, "Should throw exception."
 
@@ -102,24 +106,30 @@ def test_ColorB():
 
     try:
         color = ColorB(11, 22, 330, 44)
-    except Exception as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'b' is out of acceptable range 0..255.")
+    except Exception:
+        assert False, "Wrong exception."
     else:
         assert False, "Should throw exception."
         
     color = ColorB(11, 22, 33, 44)
     try:
         color.b = 256
-    except Exception as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'b' is out of acceptable range 0..255.")
+    except Exception:
+        assert False, "Wrong exception."
     else:
         assert False, "Should throw exception."
 
     color = ColorB(11, 22, 33, 44)
     try:
         color.b = -1
-    except Exception as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'b' is out of acceptable range 0..255.")
+    except Exception:
+        assert False, "Wrong exception."
     else:
         assert False, "Should throw exception."
 
@@ -129,6 +139,8 @@ def test_ColorB():
         color = Color()
     except NotImplementedError as e:
         assert str(e) == "Can not create object of abstract class 'Color'."
+    except Exception:
+        assert False, "Wrong exception."
     else:
         assert False, "Should throw exception."
 
@@ -140,7 +152,7 @@ def test_ColorB():
     assert not isinstance(color_b, ColorF)
 
 
-def test_ColorF():
+def test_color_f():
     ### constructor ###
 
     color = ColorF(0, 0, 0, 0)
@@ -222,16 +234,20 @@ def test_ColorF():
 
     try:
         color = ColorF(0.1, 0.2, "text", 0.3)
-    except Exception as e:
+    except TypeError as e:
         assert(str(e) == "Value of 'b' can not be converted to float.")
+    except Exception:
+        assert False, "Wrong exception."
     else:
         assert False, "Should throw exception."
 
     color = ColorF(0.1, 0.2, 0.3, 0.4)
     try:
         color.b = "text"
-    except Exception as e:
+    except TypeError as e:
         assert(str(e) == "Value of 'b' can not be converted to float.")
+    except Exception:
+        assert False, "Wrong exception."
     else:
         assert False, "Should throw exception."
 
@@ -239,24 +255,30 @@ def test_ColorF():
 
     try:
         color = ColorF(0.1, 0.2, 1.1, 0.4)
-    except Exception as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'b' is out of acceptable range 0..1.")
+    except Exception:
+        assert False, "Wrong exception."
     else:
         assert False, "Should throw exception."
         
     color = ColorF(0.1, 0.2, 0.3, 0.4)
     try:
         color.b = 1.1
-    except Exception as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'b' is out of acceptable range 0..1.")
+    except Exception:
+        assert False, "Wrong exception."
     else:
         assert False, "Should throw exception."
 
     color = ColorF(0.1, 0.2, 0.3, 0.4)
     try:
         color.b = -0.1
-    except Exception as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'b' is out of acceptable range 0..1.")
+    except Exception:
+        assert False, "Wrong exception."
     else:
         assert False, "Should throw exception."
 
@@ -269,6 +291,6 @@ def test_ColorF():
 
 if __name__ == "__main__":
     print("test_color start")
-    test_ColorB()
-    test_ColorF()
+    test_color_b()
+    test_color_f()
     print("test_color end")

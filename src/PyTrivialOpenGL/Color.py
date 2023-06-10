@@ -97,7 +97,7 @@ class ColorB(Color):
         try:
             value = int(value)
         except:
-            raise ValueError("Value of '%s' can not be converted to int." % (name))
+            raise TypeError("Value of '%s' can not be converted to int." % (name))
 
         if not (0 <= value and value <= 255):
             raise ValueError("Value of '%s' is out of acceptable range 0..255." % (name))
@@ -160,7 +160,7 @@ class ColorF(Color):
         try:
             value = float(value)
         except:
-            raise ValueError("Value of '%s' can not be converted to float." % (name))
+            raise TypeError("Value of '%s' can not be converted to float." % (name))
 
         if not (0.0 <= value and value <= 1.0):
             raise ValueError("Value of '%s' is out of acceptable range 0..1." % (name))
