@@ -1,4 +1,5 @@
 __all__ = [
+    "Color",
     "ColorF",
     "ColorB",
 ]
@@ -7,9 +8,40 @@ __all__ = [
 # Color
 ################################################################################
 
-class ColorB:
+class Color:
     """
-    Represent color with three color channels and one alpha channel. 
+    Abstract class.
+    Should contain color with three color channels and one alpha channel. 
+    """
+
+    def __init__(self):
+        raise NotImplementedError("Can not create object of abstract class 'Color'.")
+
+    def rgba(self):
+        """
+        Abstract method.
+        Should converts to tuple[T, T, T, T] Where tuple is (r, g, b, a).
+        """
+        raise NotImplementedError("Call of not implemented abstract method.")
+
+    def to_color_b(self):
+        """
+        Abstract method.
+        Should converts to ColorB.
+        """
+        raise NotImplementedError("Call of not implemented abstract method.")
+
+    def to_color_f(self):
+        """
+        Abstract method.
+        Should converts to ColorF.
+        """
+        raise NotImplementedError("Call of not implemented abstract method.")
+
+
+class ColorB(Color):
+    """
+    Contains color with three color channels and one alpha channel. 
     Each channel value can fit in one byte.
     r : int         Red color channel. Valid value range 0..255.       
     g : int         Green color channel. Valid value range 0..255.  
@@ -31,7 +63,8 @@ class ColorB:
 
     def rgba(self):
         """
-        Converts to tuple[int, int, int, int] Where tuple is (r, g, b, a).
+        Converts to tuple[int, int, int, int] Where tuple is (r, g, b, a). 
+        Value ranges are not changed.
         """
         return (self.r, self.g, self.b, self.a)
 
@@ -58,9 +91,9 @@ class ColorB:
 
         self.__dict__[name] = value
 
-class ColorF:
+class ColorF(Color):
     """
-    Represent color with three color channels and one alpha channel.
+    Contains color with three color channels and one alpha channel.
     r : float       Red color channel. Valid value range 0..1.       
     g : float       Green color channel. Valid value range 0..1.  
     b : float       Blue color channel. Valid value range 0..1.  
@@ -81,7 +114,8 @@ class ColorF:
 
     def rgba(self):
         """
-        Converts to tuple[float, float, float, float]. Where tuple is (r, g, b, a).
+        Converts to tuple[float, float, float, float]. Where tuple is (r, g, b, a). 
+        Value ranges are not changed.
         """
         return (self.r, self.g, self.b, self.a)
 
@@ -97,7 +131,6 @@ class ColorF:
         """
         return self
 
-
     def __setattr__(self, name, value):
         try:
             value = float(value)
@@ -108,8 +141,6 @@ class ColorF:
             raise ValueError("Value of '%s' is out of acceptable range 0..1." % (name))
 
         self.__dict__[name] = value
-
-
 
 ################################################################################
 # Inner Support

@@ -111,6 +111,27 @@ def test_ColorB():
     else:
         assert False, "Should throw exception."
 
+    ### abstract check ###
+
+    try:
+        color = Color()
+    except NotImplementedError as e:
+        assert str(e) == "Can not create object of abstract class 'Color'."
+    else:
+        assert False, "Should throw exception."
+
+    ### type check ###
+
+    color_b = ColorB(255, 255, 255)
+    assert isinstance(color_b, Color)
+    assert isinstance(color_b, ColorB)
+    assert not isinstance(color_b, ColorF)
+
+    color_f = ColorF(1, 1, 1)
+    assert isinstance(color_f, Color)
+    assert not isinstance(color_f, ColorB)
+    assert isinstance(color_f, ColorF)
+
 
 def test_ColorF():
     ### constructor ###
