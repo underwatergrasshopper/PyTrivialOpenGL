@@ -1,41 +1,16 @@
 __all__ = [
-    "Color4",
-    "Color4U8",
-    "Color4F",
+    "ColorF",
+    "ColorB",
 ]
 
 ################################################################################
 # Color
 ################################################################################
 
-class Color4:
+class ColorB:
     """
-    Abstract class for representing four channel color (red, green, blue, alpha)
-    """
-
-    def rgba(self):
-        """
-        Returns tuple containing each color channel.
-        """
-        raise Exception("Abstract method is not defined.")
-
-    def to_color4u8(self):
-        """
-        Returns color where all channels are converted to int on range 0..255.
-        """
-        raise Exception("Abstract method is not defined.")
-
-    def to_color4f(self):
-        """
-        Returns color where all channels are converted to float on range 0..1.
-        """
-        raise Exception("Abstract method is not defined.")
-
-
-class Color4U8:
-    """
-    Represents four channel color.
-
+    Represent color with three color channels and one alpha channel. 
+    Each channel value can fit in one byte.
     r : int         Red color channel. Valid value range 0..255.       
     g : int         Green color channel. Valid value range 0..255.  
     b : int         Blue color channel. Valid value range 0..255.  
@@ -56,21 +31,21 @@ class Color4U8:
 
     def rgba(self):
         """
-        Returns tuple[int, int, int, int]       Value range of each channel: 0..255.
+        Converts to tuple[int, int, int, int] Where tuple is (r, g, b, a).
         """
         return (self.r, self.g, self.b, self.a)
 
-    def to_color4u8(self):
+    def to_color_b(self):
         """
-        Returns color where all channels are converted to int on range 0..255.
+        Converts to ColorB. Value ranges are not changed.
         """
         return self
 
-    def to_color4f(self):
+    def to_color_f(self):
         """
-        Returns color where all channels are converted to float on range 0..1.
+        Converts to ColorF. Changes remap value range from 0..255 to 0..1 for each channel.
         """
-        return Color4F(self.r / 255.0, self.g / 255.0, self.b / 255.0, self.a / 255.0)
+        return ColorF(self.r / 255.0, self.g / 255.0, self.b / 255.0, self.a / 255.0)
 
     def __setattr__(self, name, value):
         try:
@@ -83,10 +58,9 @@ class Color4U8:
 
         self.__dict__[name] = value
 
-class Color4F:
+class ColorF:
     """
-    Represents four channel color.
-
+    Represent color with three color channels and one alpha channel.
     r : float       Red color channel. Valid value range 0..1.       
     g : float       Green color channel. Valid value range 0..1.  
     b : float       Blue color channel. Valid value range 0..1.  
@@ -107,19 +81,19 @@ class Color4F:
 
     def rgba(self):
         """
-        Returns tuple[float, float, float, float]       Value range of each channel: 0..1.
+        Converts to tuple[float, float, float, float]. Where tuple is (r, g, b, a).
         """
         return (self.r, self.g, self.b, self.a)
 
-    def to_color4u8(self):
+    def to_color_b(self):
         """
-        Returns color where all channels are converted to int on range 0..255.
+        Converts to ColorB. Changes remap value range from 0..1 to 0..255 for each channel.
         """
-        return Color4U8(self.r * 255, self.g * 255, self.b * 255, self.a * 255)
+        return ColorB(self.r * 255, self.g * 255, self.b * 255, self.a * 255)
 
-    def to_color4f(self):
+    def to_color_f(self):
         """
-        Returns color where all channels are converted to float on range 0..1.
+        Converts to ColorF. Value ranges are not changed.
         """
         return self
 
