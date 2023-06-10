@@ -1,3 +1,5 @@
+from .Basics import clamp
+
 __all__ = [
     "Color",
     "ColorF",
@@ -38,28 +40,39 @@ class Color:
         """
         raise NotImplementedError("Call of not implemented abstract method.")
 
-
 class ColorB(Color):
     """
     Contains color with three color channels and one alpha channel. 
     Each channel value can fit in one byte.
-    r : int         Red color channel. Valid value range 0..255.       
-    g : int         Green color channel. Valid value range 0..255.  
-    b : int         Blue color channel. Valid value range 0..255.  
-    a : int         Alpha channel. Valid value range 0..255.  
+
+    r           : int       Red color channel. Valid value range 0..255.       
+    g           : int       Green color channel. Valid value range 0..255.  
+    b           : int       Blue color channel. Valid value range 0..255.  
+    a           : int       Alpha channel. Valid value range 0..255. 
+    is_clamp    : bool      When true, then clamp values of r, g, b and a variables to valid range.
+                            When false, then throws ValueError exception if any values of r, g, b or a variable is out of valid range.
+    
+    Assignment out of valid range to any of those variables will throw ValueError exception.
     """
 
-    def __init__(self, r, g, b, a = 255):
+    def __init__(self, r, g, b, a = 255, is_clamp = False):
         """
         r : int         Red color channel. Valid value range 0..255.       
         g : int         Green color channel. Valid value range 0..255.  
         b : int         Blue color channel. Valid value range 0..255.  
-        a : int         Alpha channel. Valid value range 0..255.  
+        a : int         (optional, default = 255) Alpha channel. Valid value range 0..255.  
+        Exceptions:     ValueError - If any value of r, g, b or a variable is out of valid range.
         """
-        self.r = r
-        self.g = g
-        self.b = b
-        self.a = a
+        if is_clamp:
+            self.r = clamp(r, 0, 255)
+            self.g = clamp(g, 0, 255)
+            self.b = clamp(b, 0, 255)
+            self.a = clamp(a, 0, 255)
+        else:
+            self.r = r
+            self.g = g
+            self.b = b
+            self.a = a
 
     def rgba(self):
         """
@@ -94,23 +107,35 @@ class ColorB(Color):
 class ColorF(Color):
     """
     Contains color with three color channels and one alpha channel.
-    r : float       Red color channel. Valid value range 0..1.       
-    g : float       Green color channel. Valid value range 0..1.  
-    b : float       Blue color channel. Valid value range 0..1.  
-    a : float       Alpha channel. Valid value range 0..1.  
+
+    r           : float     Red color channel. Valid value range 0..1.       
+    g           : float     Green color channel. Valid value range 0..1.  
+    b           : float     Blue color channel. Valid value range 0..1.  
+    a           : float     Alpha channel. Valid value range 0..1.  
+    is_clamp    : bool      When true, then clamp values of r, g, b and a variables to valid range.
+                            When false, then throws ValueError exception if any values of r, g, b or a variable is out of valid range.
+
+    Assignment out of valid range to any of those variables will throw ValueError exception.
     """
 
-    def __init__(self, r, g, b, a = 1):
+    def __init__(self, r, g, b, a = 1, is_clamp = False):
         """
         r : float       Red color channel. Valid value range 0..1.       
         g : float       Green color channel. Valid value range 0..1.  
         b : float       Blue color channel. Valid value range 0..1.  
         a : float       Alpha channel. Valid value range 0..1.  
+        Exceptions:     ValueError - If any value of r, g, b or a variable is out of valid range.
         """
-        self.r = r
-        self.g = g
-        self.b = b
-        self.a = a
+        if is_clamp:
+            self.r = clamp(r, 0.0, 1.0)
+            self.g = clamp(g, 0.0, 1.0)
+            self.b = clamp(b, 0.0, 1.0)
+            self.a = clamp(a, 0.0, 1.0)
+        else:
+            self.r = r
+            self.g = g
+            self.b = b
+            self.a = a
 
     def rgba(self):
         """
@@ -142,15 +167,6 @@ class ColorF(Color):
 
         self.__dict__[name] = value
 
-################################################################################
-# Inner Support
-################################################################################
-
-def clamp(val, min_val, max_val):
-    return max(min(val, max_val), min_val)
-
-def clamp_u8(val):
-    return clamp(int(val), 0, 255)
 
 
 

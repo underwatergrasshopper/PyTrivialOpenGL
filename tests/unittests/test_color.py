@@ -24,6 +24,18 @@ def test_ColorB():
     assert(color.b == 33)
     assert(color.a == 44)
 
+    color = ColorB(11, 300, 33, 44, is_clamp = True)
+    assert(color.r == 11)
+    assert(color.g == 255)
+    assert(color.b == 33)
+    assert(color.a == 44)
+
+    color = ColorB(-1, 300, 400, 500, is_clamp = True)
+    assert(color.r == 0)
+    assert(color.g == 255)
+    assert(color.b == 255)
+    assert(color.a == 255)
+
     ### access ###
 
     color = ColorB(11, 22, 33, 44)
@@ -127,11 +139,6 @@ def test_ColorB():
     assert isinstance(color_b, ColorB)
     assert not isinstance(color_b, ColorF)
 
-    color_f = ColorF(1, 1, 1)
-    assert isinstance(color_f, Color)
-    assert not isinstance(color_f, ColorB)
-    assert isinstance(color_f, ColorF)
-
 
 def test_ColorF():
     ### constructor ###
@@ -153,6 +160,18 @@ def test_ColorF():
     assert(color.g == 0.2)
     assert(color.b == 0.3)
     assert(color.a == 0.4)
+
+    color = ColorF(0.1, 1.2, 0.3, 0.4, is_clamp = True)
+    assert(color.r == 0.1)
+    assert(color.g == 1.0)
+    assert(color.b == 0.3)
+    assert(color.a == 0.4)
+
+    color = ColorF(-0.1, 1.2, -0.3, 1.4, is_clamp = True)
+    assert(color.r == 0.0)
+    assert(color.g == 1.0)
+    assert(color.b == 0.0)
+    assert(color.a == 1.0)
 
     ### access ###
 
@@ -240,6 +259,13 @@ def test_ColorF():
         assert(str(e) == "Value of 'b' is out of acceptable range 0..1.")
     else:
         assert False, "Should throw exception."
+
+    ### type check ###
+
+    color_f = ColorF(1, 1, 1)
+    assert isinstance(color_f, Color)
+    assert not isinstance(color_f, ColorB)
+    assert isinstance(color_f, ColorF)
 
 if __name__ == "__main__":
     print("test_color start")
