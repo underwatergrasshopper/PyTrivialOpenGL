@@ -97,13 +97,13 @@ def test_point():
     assert not (Point(5, 9)  > Point(5, 10))
     assert not (Point(4, 10) > Point(5, 10))
     assert not (Point(5, 10) > Point(5, 10))
-    assert Point(6, 10) > Point(5, 10)
-    assert Point(5, 11) > Point(5, 10)
+    assert not Point(6, 10) > Point(5, 10)
+    assert not Point(5, 11) > Point(5, 10)
     assert Point(6, 11) > Point(5, 10)
 
     assert Point(4, 9)  < Point(5, 10)
-    assert Point(5, 9)  < Point(5, 10)
-    assert Point(4, 10) < Point(5, 10)
+    assert not Point(5, 9)  < Point(5, 10)
+    assert not Point(4, 10) < Point(5, 10)
     assert not (Point(5, 10) < Point(5, 10))
     assert not (Point(6, 10) < Point(5, 10))
     assert not (Point(5, 11) < Point(5, 10))
@@ -248,11 +248,11 @@ def test_point():
     ### is_between ###
 
     assert Point(0, 0).is_between(Point(-1, -1), Point(1, 1))
-    assert Point(1, 0).is_between(Point(-1, -1), Point(1, 1))
+    assert not Point(1, 0).is_between(Point(-1, -1), Point(1, 1))
     assert Point(-1, 0).is_between(Point(-1, -1), Point(1, 1))
-    assert Point(0, 1).is_between(Point(-1, -1), Point(1, 1))
+    assert not Point(0, 1).is_between(Point(-1, -1), Point(1, 1))
     assert Point(0, -1).is_between(Point(-1, -1), Point(1, 1))
-    assert Point(1, 1).is_between(Point(-1, -1), Point(1, 1))
+    assert not Point(1, 1).is_between(Point(-1, -1), Point(1, 1))
     assert Point(-1, -1).is_between(Point(-1, -1), Point(1, 1))
     
     assert not Point(-2, -1).is_between(Point(-1, -1), Point(1, 1))

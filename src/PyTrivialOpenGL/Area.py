@@ -67,7 +67,7 @@ class Area:
 
     def is_in(self, pos):
         """
-        Returns (bool) True - if pos is in area.
+        Returns (bool) True - When pos is in area.
         """
         return pos.is_between(self.get_pos(), self.get_pos() + self.get_size())
 

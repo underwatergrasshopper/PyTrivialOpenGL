@@ -210,10 +210,9 @@ def test_area():
     assert Area(10, 20, 50, 100).is_in(Point(10, 20))
     assert not Area(10, 20, 50, 100).is_in(Point(9, 20))
     assert not Area(10, 20, 50, 100).is_in(Point(10, 19))
-    assert Area(10, 20, 50, 100).is_in(Point(60, 120))
-    assert not Area(10, 20, 50, 100).is_in(Point(61, 120))
-    assert not Area(10, 20, 50, 100).is_in(Point(60, 121))
-
+    assert Area(10, 20, 50, 100).is_in(Point(59, 119))
+    assert not Area(10, 20, 50, 100).is_in(Point(59, 120))
+    assert not Area(10, 20, 50, 100).is_in(Point(60, 119))
 
 def run():
     print("test_area start")

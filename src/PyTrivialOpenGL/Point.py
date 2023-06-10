@@ -30,9 +30,9 @@ class Point:
         """
         a : Point
         b : Point
-        Returns (bool) True  - when is between a and b.
+        Returns (bool) True  - when is between a and b (a is inclusive, b is exclusive).
         """
-        return a <= self and self <= b
+        return a <= self and self < b
 
     def to_tuple(self):
         """
@@ -61,10 +61,10 @@ class Point:
         return self.x != other.x or self.y != other.y
 
     def __gt__(self, other): # >
-        return (self.x > other.x and self.y >= other.y) or (self.x == other.x and self.y > other.y)
+        return self.x > other.x and self.y > other.y
 
     def __lt__(self, other): # <
-        return (self.x < other.x and self.y <= other.y) or (self.x == other.x and self.y < other.y)
+        return self.x < other.x and self.y < other.y
 
     def __ge__(self, other): # >=
         return self.x >= other.x and self.y >= other.y
