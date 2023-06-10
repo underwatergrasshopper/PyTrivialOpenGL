@@ -43,7 +43,7 @@ class ColorB:
 
     def to_color_f(self):
         """
-        Converts to ColorF. Changes remap value range from 0..255 to 0..1 for each channel.
+        Converts to ColorF. Remaps value range from 0..255 to 0..1 for each channel.
         """
         return ColorF(self.r / 255.0, self.g / 255.0, self.b / 255.0, self.a / 255.0)
 
@@ -87,7 +87,7 @@ class ColorF:
 
     def to_color_b(self):
         """
-        Converts to ColorB. Changes remap value range from 0..1 to 0..255 for each channel.
+        Converts to ColorB. Remaps value range from 0..1 to 0..255 for each channel.
         """
         return ColorB(self.r * 255, self.g * 255, self.b * 255, self.a * 255)
 
