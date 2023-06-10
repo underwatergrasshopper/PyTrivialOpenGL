@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="setup.py" />
+    <Compile Include="src\PyTrivialOpenGL\Area.py" />
     <Compile Include="src\PyTrivialOpenGL\Basics.py" />
     <Compile Include="src\PyTrivialOpenGL\Color.py" />
     <Compile Include="src\PyTrivialOpenGL\Point.py" />
@@ -43,6 +44,7 @@
     <Compile Include="src\PyTrivialOpenGL\__init__.py" />
     <Compile Include="tests\smoke_test.py" />
     <Compile Include="tests\unittests\run_all_tests.py" />
+    <Compile Include="tests\unittests\test_area.py" />
     <Compile Include="tests\unittests\test_color.py" />
     <Compile Include="tests\unittests\test_point.py" />
     <Compile Include="tests\unittests\test_size.py" />
