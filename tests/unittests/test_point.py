@@ -211,7 +211,7 @@ def test_point():
     point //= 4
     assert point == Point(2, 5)
 
-    ### operations ###
+    ### to_tuple{_f|_i} ###
 
     t = Point(5, 6).to_tuple()
     assert type(t[0]) == int
@@ -238,10 +238,30 @@ def test_point():
     assert type(t[1]) == int
     assert t == (5, 6)
 
+    ### is_zero ###
+
     assert Point(0, 0).is_zero()
     assert not Point(1, 0).is_zero()
     assert not Point(0, 2).is_zero()
     assert not Point(1, 2).is_zero()
+
+    ### is_between ###
+
+    assert Point(0, 0).is_between(Point(-1, -1), Point(1, 1))
+    assert Point(1, 0).is_between(Point(-1, -1), Point(1, 1))
+    assert Point(-1, 0).is_between(Point(-1, -1), Point(1, 1))
+    assert Point(0, 1).is_between(Point(-1, -1), Point(1, 1))
+    assert Point(0, -1).is_between(Point(-1, -1), Point(1, 1))
+    assert Point(1, 1).is_between(Point(-1, -1), Point(1, 1))
+    assert Point(-1, -1).is_between(Point(-1, -1), Point(1, 1))
+    
+    assert not Point(-2, -1).is_between(Point(-1, -1), Point(1, 1))
+    assert not Point(-1, -2).is_between(Point(-1, -1), Point(1, 1))
+    assert not Point(-2, -2).is_between(Point(-1, -1), Point(1, 1))
+    
+    assert not Point(2, 1).is_between(Point(-1, -1), Point(1, 1))
+    assert not Point(1, 2).is_between(Point(-1, -1), Point(1, 1))
+    assert not Point(2, 2).is_between(Point(-1, -1), Point(1, 1))
 
 def run():
     print("test_point start")

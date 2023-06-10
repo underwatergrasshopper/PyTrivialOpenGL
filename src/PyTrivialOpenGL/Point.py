@@ -26,6 +26,14 @@ class Point:
         """
         return self.x == 0 and self.y == 0
 
+    def is_between(self, a, b):
+        """
+        a : Point
+        b : Point
+        Returns (bool) True  - when is between a and b.
+        """
+        return a <= self and self <= b
+
     def to_tuple(self):
         """
         Returns (tuple[T, T]) (x, y).
