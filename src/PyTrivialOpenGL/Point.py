@@ -1,3 +1,5 @@
+from .Size import Size
+
 __all__ = [
     "Point",
 ]
@@ -67,31 +69,43 @@ class Point:
     def __add__(self, other): # +
         if isinstance(other, Point):
             return Point(self.x + other.x, self.y + other.y)
+        if isinstance(other, Size):
+            return Point(self.x + other.width, self.y + other.height)
         return Point(self.x + other, self.y + other)
 
     def __sub__(self, other): # -
         if isinstance(other, Point):
             return Point(self.x - other.x, self.y - other.y)
+        if isinstance(other, Size):
+            return Point(self.x - other.width, self.y - other.height)
         return Point(self.x - other, self.y - other)
 
     def __mul__(self, other): # *
         if isinstance(other, Point):
             return Point(self.x * other.x, self.y * other.y)
+        if isinstance(other, Size):
+            return Point(self.x * other.width, self.y * other.height)
         return Point(self.x * other, self.y * other)
 
     def __truediv__(self, other): # /
         if isinstance(other, Point):
             return Point(self.x / other.x, self.y / other.y)
+        if isinstance(other, Size):
+            return Point(self.x / other.width, self.y / other.height)
         return Point(self.x / other, self.y / other)
 
     def __floordiv__(self, other): # //
         if isinstance(other, Point):
             return Point(self.x // other.x, self.y // other.y)
+        if isinstance(other, Size):
+            return Point(self.x // other.width, self.y // other.height)
         return Point(self.x // other, self.y // other)
 
     def __div__(self, other): # /
         if isinstance(other, Point):
             return Point(self.x / other.x, self.y / other.y)
+        if isinstance(other, Size):
+            return Point(self.x / other.width, self.y / other.height)
         return Point(self.x / other, self.y / other)
 
     def __setattr__(self, name, value):

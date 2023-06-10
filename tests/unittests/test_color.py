@@ -3,6 +3,10 @@ import math
 
 from PyTrivialOpenGL.Color import *
 
+__all__ = [
+    "run"
+]
+
 def test_color_b():
     ### constructor ###
 
@@ -289,8 +293,11 @@ def test_color_f():
     assert not isinstance(color_f, ColorB)
     assert isinstance(color_f, ColorF)
 
-if __name__ == "__main__":
+def run():
     print("test_color start")
     test_color_b()
     test_color_f()
     print("test_color end")
+
+if __name__ == "__main__":
+   run()

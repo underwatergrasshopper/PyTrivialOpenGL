@@ -1,7 +1,12 @@
 import pytest
 import math
 
-from PyTrivialOpenGL.Point import *
+from PyTrivialOpenGL.Point import Point
+from PyTrivialOpenGL.Size import Size
+
+__all__ = [
+    "run"
+]
 
 def test_point():
 
@@ -132,23 +137,51 @@ def test_point():
 
     point = Point(10, 20)
     point += Point(7, 3)
-    assert Point(17, 23)
+    assert point == Point(17, 23)
 
     point = Point(10, 20)
     point -= Point(7, 3)
-    assert Point(3, 17)
+    assert point == Point(3, 17)
 
     point = Point(10, 20)
     point *= Point(7, 3)
-    assert Point(70, 60)
+    assert point == Point(70, 60)
 
     point = Point(10, 20)
-    point /= Point(7, 3)
-    assert Point(5, 4)
+    point /= Point(2, 5)
+    assert point == Point(5, 4)
 
     point = Point(10, 20)
     point //= Point(4, 8)
-    assert Point(2.5, 2.5)
+    assert point == Point(2, 2)
+
+    assert Point(10, 20) + Size(7, 3) == Point(17, 23)
+    assert Point(10, 20) - Size(7, 3) == Point(3, 17)
+    assert Point(10, 20) * Size(7, 3) == Point(70, 60)
+    assert Point(10, 20) / Size(2, 5) == Point(5, 4)
+    assert Point(10, 20) / Size(4, 8) == Point(2.5, 2.5)
+    assert Point(10, 20) // Size(4, 8) == Point(2, 2)
+    assert Point(10.9, 20.9) // Size(2, 5) == Point(5, 4)
+
+    point = Point(10, 20)
+    point += Size(7, 3)
+    assert point == Point(17, 23)
+
+    point = Point(10, 20)
+    point -= Size(7, 3)
+    assert point == Point(3, 17)
+
+    point = Point(10, 20)
+    point *= Size(7, 3)
+    assert point == Point(70, 60)
+
+    point = Point(10, 20)
+    point /= Size(2, 5)
+    assert point == Point(5, 4)
+
+    point = Point(10, 20)
+    point //= Size(4, 8)
+    assert point == Point(2, 2)
 
     assert Point(10, 20) + 5 == Point(15, 25)
     assert Point(10, 20) - 4 == Point(6, 16)
@@ -160,23 +193,23 @@ def test_point():
 
     point = Point(10, 20)
     point += 5
-    assert Point(15, 25)
+    assert point == Point(15, 25)
 
-    point = Point(6, 16)
+    point = Point(10, 20)
     point -= 4
-    assert Point(3, 17)
+    assert point == Point(6, 16)
 
     point = Point(10, 20)
     point *= 5
-    assert Point(50, 100)
+    assert point == Point(50, 100)
 
     point = Point(10, 20)
     point /= 4
-    assert Point(2.5, 2.5)
+    assert point == Point(2.5, 5)
 
     point = Point(10, 20)
     point //= 4
-    assert Point(2, 2)
+    assert point == Point(2, 5)
 
     ### operations ###
 
@@ -210,7 +243,10 @@ def test_point():
     assert not Point(0, 2).is_zero()
     assert not Point(1, 2).is_zero()
 
-if __name__ == "__main__":
+def run():
     print("test_point start")
     test_point()
     print("test_point end")
+
+if __name__ == "__main__":
+   run()
