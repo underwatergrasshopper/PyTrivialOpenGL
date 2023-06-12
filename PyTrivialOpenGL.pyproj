@@ -37,7 +37,7 @@
   <ItemGroup>
     <Compile Include="setup.py" />
     <Compile Include="src\PyTrivialOpenGL\Area.py" />
-    <Compile Include="src\PyTrivialOpenGL\Basics.py" />
+    <Compile Include="src\PyTrivialOpenGL\_Basics.py" />
     <Compile Include="src\PyTrivialOpenGL\Color.py" />
     <Compile Include="src\PyTrivialOpenGL\Log.py" />
     <Compile Include="src\PyTrivialOpenGL\Logger.py" />
