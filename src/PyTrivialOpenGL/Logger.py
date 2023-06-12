@@ -21,7 +21,7 @@ class LogMessageTypeId(Enum):
     FATAL_ERROR = 4
 
 def defautl_log_message_callback(log_message_type_id, prefix, message):
-    print(prefix + message)
+    print("%s%s" % (prefix, message))
 
 class Logger:
     """
@@ -41,7 +41,7 @@ class Logger:
         message             : str
         """
         if not isinstance(log_message_type_id, LogMessageTypeId):
-            raise TypeError("Value of log_message_type_id must be any enum value from LogMessageTypeId.")
+            raise TypeError("Value of log_message_type_id is not LogMessageTypeId enum type.")
 
         if log_message_type_id == LogMessageTypeId.DEBUG:
             if self.is_log_level_at_least(LogLevel.DEBUG):
