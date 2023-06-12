@@ -3,7 +3,7 @@ from enum import Enum
 __all__ = [
     "LogLevel",
     "LogMessageTypeId",
-    "defautl_log_message_callback",
+    "defautl_log_message_to_output",
     "Logger",
 ]
 
@@ -20,7 +20,10 @@ class LogMessageTypeId(Enum):
     ERROR       = 3
     FATAL_ERROR = 4
 
-def defautl_log_message_callback(log_message_type_id, prefix, message):
+def defautl_log_message_to_output(log_message_type_id, prefix, message):
+    """
+    Logs message to stdout.
+    """
     print("%s%s" % (prefix, message))
 
 class Logger:
@@ -31,7 +34,7 @@ class Logger:
 
     def __init__(self):
         self._log_level             = LogLevel.INFO
-        self._log_message_callback  = defautl_log_message_callback
+        self._log_message_to_output = defautl_log_message_to_output
 
     ### log message ###
 
@@ -45,24 +48,24 @@ class Logger:
 
         if log_message_type_id == LogMessageTypeId.DEBUG:
             if self.is_log_level_at_least(LogLevel.DEBUG):
-                self._log_message_callback(log_message_type_id, "(TOGL) Debug: ", message)
+                self._log_message_to_output(log_message_type_id, "(TOGL) Debug: ", message)
 
         elif log_message_type_id == LogMessageTypeId.INFO:
             
             if self.is_log_level_at_least(LogLevel.INFO):
-                self._log_message_callback(log_message_type_id, "(TOGL) Info: ", message)
+                self._log_message_to_output(log_message_type_id, "(TOGL) Info: ", message)
 
         elif log_message_type_id == LogMessageTypeId.WARNING:
             if self.is_log_level_at_least(LogLevel.WARNING):
-                self._log_message_callback(log_message_type_id, "(TOGL) Warning: ", message)
+                self._log_message_to_output(log_message_type_id, "(TOGL) Warning: ", message)
 
         elif log_message_type_id == LogMessageTypeId.ERROR:
             if self.is_log_level_at_least(LogLevel.ERROR):
-                self._log_message_callback(log_message_type_id, "(TOGL) Error: ", message)
+                self._log_message_to_output(log_message_type_id, "(TOGL) Error: ", message)
 
         elif log_message_type_id == LogMessageTypeId.FATAL_ERROR:
             if self.is_log_level_at_least(LogLevel.ERROR):
-                self._log_message_callback(log_message_type_id, "(TOGL) Fatal Error: ", message)
+                self._log_message_to_output(log_message_type_id, "(TOGL) Fatal Error: ", message)
                 exit(1) # EXIT_FAILURE
 
     def log_debug(self, message):
@@ -116,22 +119,21 @@ class Logger:
         """
         return log_level <= self._log_level
 
-    ### log message callback ###
+    ### log message to output ###
 
-    def set_log_message_callback(self, log_message_callback):
+    def set_log_message_to_output(self, log_message_to_output):
         """
-        Replaces default log message function.
-        log_message_callback : Callable[[int, str, str], None]      
-            Is called when any log_{...} method is called
-            as log_message_callback(log_message_type_id, prefix, message).
+        Replaces default function which displays log message with custom one (by default it's defautl_log_message_to_output).
+        log_message_to_output : Callable[[int, str, str], None]      
+            Is called when any log_{...} method is called as log_message_to_output(log_message_type_id, prefix, message).
             Where:
                 log_message_type_id   - LogMessageTypeId.DEBUG, LogMessageTypeId.WARNING, 
                                         LogMessageTypeId.ERROR or LogMessageTypeId.FATAL_ERROR.
-                prefix                - Log message prefix. Contains information about log message type.
+                prefix                - Log message prefix. Contains default text information about log message type.
                                         For example: "Error: " for error messages.
-                message               - Log message. 
+                message               - Log message.
         """
-        self._log_message_callback = log_message_callback
+        self._log_message_to_output = log_message_to_output
 
 
 
