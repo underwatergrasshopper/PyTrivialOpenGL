@@ -9,10 +9,10 @@ __all__ = [
     "run"
 ]
 
+output_folder_path = "log/tests/logger"
+
 def gen_test_output(test_file_name, test_flag, output_file_name):
     content = ""
-
-    output_folder_path = "log/tests"
 
     if not os.path.exists(output_folder_path):
         os.makedirs(output_folder_path)
@@ -124,7 +124,7 @@ def test_logger_log_message():
     )
     assert content == expected_content, content
 
-    ### log raw ###
+    ### log direct ###
 
     content = gen_output("log_message_direct_level_default")
     expected_content = (
@@ -191,11 +191,10 @@ def test_logger_custom_log_message():
         "(TOGL) Fatal Error: --Some fatal error message.\n"
     )
     assert content == expected_content, content
-    
-
 
 def run():
-    shutil.rmtree("log/tests")
+    if os.path.exists(output_folder_path):
+        shutil.rmtree(output_folder_path)
 
     print("test_logger start")
     test_logger_log_level()

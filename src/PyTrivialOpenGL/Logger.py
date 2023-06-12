@@ -104,6 +104,7 @@ class Logger:
     def set_log_level(self, log_level):
         """
         log_level : int
+            Might be: LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARNING or LogLevel.ERROR.
         """
         self._log_level = log_level
 
