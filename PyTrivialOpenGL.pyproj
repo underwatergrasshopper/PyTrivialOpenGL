@@ -39,6 +39,8 @@
     <Compile Include="src\PyTrivialOpenGL\Area.py" />
     <Compile Include="src\PyTrivialOpenGL\Basics.py" />
     <Compile Include="src\PyTrivialOpenGL\Color.py" />
+    <Compile Include="src\PyTrivialOpenGL\Log.py" />
+    <Compile Include="src\PyTrivialOpenGL\Logger.py" />
     <Compile Include="src\PyTrivialOpenGL\Point.py" />
     <Compile Include="src\PyTrivialOpenGL\Size.py" />
     <Compile Include="src\PyTrivialOpenGL\__init__.py" />
@@ -46,6 +48,7 @@
     <Compile Include="tests\unittests\run_all_tests.py" />
     <Compile Include="tests\unittests\test_area.py" />
     <Compile Include="tests\unittests\test_color.py" />
+    <Compile Include="tests\unittests\test_logger.py" />
     <Compile Include="tests\unittests\test_point.py" />
     <Compile Include="tests\unittests\test_size.py" />
   </ItemGroup>
