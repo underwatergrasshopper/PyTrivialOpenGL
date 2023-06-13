@@ -128,7 +128,7 @@ class Logger:
         log_message_to_output : Callable[[int, str, str], None]      
             Is called when any log_{...} method is called as log_message_to_output(log_message_type_id, prefix, message).
             Where:
-                log_message_type_id   - LogMessageTypeId.DEBUG, LogMessageTypeId.WARNING, 
+                log_message_type_id   - LogMessageTypeId.DEBUG, LogMessageTypeId.INFO, LogMessageTypeId.WARNING, 
                                         LogMessageTypeId.ERROR or LogMessageTypeId.FATAL_ERROR.
                 prefix                - Log message prefix. Contains default text information about log message type.
                                         For example: "Error: " for error messages.
