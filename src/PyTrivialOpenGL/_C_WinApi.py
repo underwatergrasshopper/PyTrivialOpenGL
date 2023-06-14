@@ -3,16 +3,105 @@ import ctypes.wintypes  as _wt
 
 ### WinApi Libraries ###
 
-#_Kernel32   = _ct.windll.Kernel32
-#_User32     = _ct.windll.User32
-#_Dwmapi     = _ct.windll.Dwmapi
+_Kernel32   = _ct.windll.Kernel32
+_User32     = _ct.windll.User32
+_Dwmapi     = _ct.windll.Dwmapi
+_Gdi32      = _ct.windll.Gdi32
 
-_Kernel32   = _ct.windll.LoadLibrary("C:\\Windows\\SysWOW64\\Kernel32.dll")
-_User32     = _ct.windll.LoadLibrary("C:\\Windows\\SysWOW64\\User32.dll")
-_Dwmapi     = _ct.windll.LoadLibrary("C:\\Windows\\SysWOW64\\Dwmapi.dll")
-
+_IS_64_BIT  = _ct.sizeof(_ct.c_void_p) == 8
 
 ### WinApi Constants ###
+
+# Window Styles
+WS_OVERLAPPED           = 0x00000000
+WS_POPUP                = 0x80000000
+WS_CHILD                = 0x40000000
+WS_MINIMIZE             = 0x20000000
+WS_VISIBLE              = 0x10000000
+WS_DISABLED             = 0x08000000
+WS_CLIPSIBLINGS         = 0x04000000
+WS_CLIPCHILDREN         = 0x02000000
+WS_MAXIMIZE             = 0x01000000
+WS_BORDER               = 0x00800000
+WS_DLGFRAME             = 0x00400000
+WS_CAPTION              = WS_BORDER | WS_DLGFRAME
+WS_VSCROLL              = 0x00200000
+WS_HSCROLL              = 0x00100000
+WS_SYSMENU              = 0x00080000
+WS_THICKFRAME           = 0x00040000
+WS_GROUP                = 0x00020000
+WS_TABSTOP              = 0x00010000
+WS_MINIMIZEBOX          = 0x00020000
+WS_MAXIMIZEBOX          = 0x00010000
+                   
+WS_TILED                = WS_OVERLAPPED
+WS_ICONIC               = WS_MINIMIZE
+WS_SIZEBOX              = WS_THICKFRAME
+
+WS_OVERLAPPEDWINDOW     = (
+    WS_OVERLAPPED     | 
+    WS_CAPTION        | 
+    WS_SYSMENU        | 
+    WS_THICKFRAME     | 
+    WS_MINIMIZEBOX    | 
+    WS_MAXIMIZEBOX
+)
+
+WS_TILEDWINDOW          = WS_OVERLAPPEDWINDOW
+
+WS_POPUPWINDOW          = (
+    WS_POPUP          | 
+    WS_BORDER         | 
+    WS_SYSMENU
+)
+
+WS_CHILDWINDOW          = (
+    WS_CHILD
+)
+
+# Extended Window Styles
+WS_EX_DLGMODALFRAME         = 0x00000001
+WS_EX_NOPARENTNOTIFY        = 0x00000004
+WS_EX_TOPMOST               = 0x00000008
+WS_EX_ACCEPTFILES           = 0x00000010
+WS_EX_TRANSPARENT           = 0x00000020
+WS_EX_MDICHILD              = 0x00000040
+WS_EX_TOOLWINDOW            = 0x00000080
+WS_EX_WINDOWEDGE            = 0x00000100
+WS_EX_CLIENTEDGE            = 0x00000200
+WS_EX_CONTEXTHELP           = 0x00000400
+WS_EX_RIGHT                 = 0x00001000
+WS_EX_LEFT                  = 0x00000000
+WS_EX_RTLREADING            = 0x00002000
+WS_EX_LTRREADING            = 0x00000000
+WS_EX_LEFTSCROLLBAR         = 0x00004000
+WS_EX_RIGHTSCROLLBAR        = 0x00000000
+WS_EX_CONTROLPARENT         = 0x00010000
+WS_EX_STATICEDGE            = 0x00020000
+WS_EX_APPWINDOW             = 0x00040000
+WS_EX_OVERLAPPEDWINDOW      = (WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE)
+WS_EX_PALETTEWINDOW         = (WS_EX_WINDOWEDGE | WS_EX_TOOLWINDOW | WS_EX_TOPMOST)
+WS_EX_LAYERED               = 0x00080000
+WS_EX_NOINHERITLAYOUT       = 0x00100000
+WS_EX_NOREDIRECTIONBITMAP   = 0x00200000
+WS_EX_LAYOUTRTL             = 0x00400000
+WS_EX_COMPOSITED            = 0x02000000
+WS_EX_NOACTIVATE            = 0x08000000
+
+# Window Class Styles
+CS_VREDRAW              = 0x0001
+CS_HREDRAW              = 0x0002
+CS_DBLCLKS              = 0x0008
+CS_OWNDC                = 0x0020
+CS_CLASSDC              = 0x0040
+CS_PARENTDC             = 0x0080
+CS_NOCLOSE              = 0x0200
+CS_SAVEBITS             = 0x0800
+CS_BYTEALIGNCLIENT      = 0x1000
+CS_BYTEALIGNWINDOW      = 0x2000
+CS_GLOBALCLASS          = 0x4000
+CS_IME                  = 0x00010000
+CS_DROPSHADOW           = 0x00020000
 
 # GetSystemMetrics, nIndex
 SM_CXSCREEN             = 0
@@ -33,8 +122,15 @@ GW_OWNER                = 4
 GW_CHILD                = 5
 GW_ENABLEDPOPUP         = 6
 
+# SetWindowLongPtrW, nIndex
+GWL_EXSTYLE             = -20
+GWL_STYLE               = -16
+
 # Errors
 ERROR_INVALID_PARAMETER = 0x57
+
+# Other
+WHEEL_DELTA             = 120
 
 ### WinApi Types ###
 
@@ -65,6 +161,19 @@ PVOID                   = _ct.c_void_p
 LPVOID                  = _wt.LPVOID
 LPCVOID                 = _wt.LPCVOID
 
+if _IS_64_BIT:
+    ULONG_PTR               = _ct.c_size_t
+    LONG_PTR                = _ct.c_ssize_t 
+    UINT_PTR                = _ct.c_size_t
+    INT_PTR                 = _ct.c_ssize_t 
+else:
+    ULONG_PTR               = _ct.c_ulong
+    LONG_PTR                = _ct.c_long 
+    UINT_PTR                = _ct.c_uint
+    INT_PTR                 = _ct.c_int 
+
+DWORD_PTR               = ULONG_PTR
+
 ATOM                    = _wt.WORD
 
 HANDLE                  = _wt.HANDLE
@@ -73,7 +182,9 @@ HFONT                   = _wt.HFONT
 HICON                   = _wt.HICON
 HINSTANCE               = _wt.HINSTANCE
 HMODULE                 = _wt.HMODULE
+
 HWND                    = _wt.HWND
+HDC                     = _wt.HDC
 
 WPARAM                  = _wt.WPARAM
 LPARAM                  = _wt.LPARAM
@@ -92,6 +203,29 @@ LPRECT                  = _wt.LPRECT
 
 MSG                     = _wt.MSG
 
+### WinApi Macros ###
+
+def MAKEINTRESOURCEW(i):
+    return LPWSTR(ULONG_PTR(WORD(i).value).value)
+
+def LOWORD(l):
+    return WORD(DWORD_PTR(l).value & 0xFFFF)
+
+def HIWORD(l):
+    return WORD((DWORD_PTR(l).value >> 16) & 0xFFFF)
+
+def GET_X_LPARAM(lp):
+    return _ct.c_int(_ct.c_short(LOWORD(lp).value).value)
+
+def GET_Y_LPARAM(lp):
+    return _ct.c_int(_ct.c_short(HIWORD(lp).value).value)
+
+def GET_WHEEL_DELTA_WPARAM(wParam):
+    return _ct.c_short(HIWORD(wParam).value)
+
+def GET_KEYSTATE_WPARAM(wParam):
+    return LOWORD(wParam)
+
 ### WinApi Functions ###
 
 GetLastError            = _ct.WINFUNCTYPE(DWORD)(
@@ -109,7 +243,7 @@ SystemParametersInfoW   = _ct.WINFUNCTYPE(BOOL, UINT, UINT, PVOID, UINT)(
     ((1, "uiAction"), (1, "uiParam"), (1, "pvParam"), (1, "fWinIni"))
 )
 
-### Window ###
+### WinApi Functions - Window ###
 
 GetForegroundWindow     = _ct.WINFUNCTYPE(HWND)(
     ("GetForegroundWindow", _User32), 
@@ -174,4 +308,44 @@ ClientToScreen          = _ct.WINFUNCTYPE(BOOL, HWND, LPPOINT)(
 ScreenToClient          = _ct.WINFUNCTYPE(BOOL, HWND, LPPOINT)(
     ("ScreenToClient", _User32), 
     ((1, "hWnd"), (1, "lpPoint"))
+)
+
+SetWindowLongW          = _ct.WINFUNCTYPE(LONG, HWND, _ct.c_int, LONG)(
+    ("SetWindowLongW", _User32), 
+    ((1, "hWnd"), (1, "nIndex"), (1, "dwNewLong"))
+)
+
+if _IS_64_BIT:
+    SetWindowLongPtrW          = _ct.WINFUNCTYPE(LONG_PTR, HWND, _ct.c_int, LONG_PTR)(
+        ("SetWindowLongPtrW", _User32), 
+        ((1, "hWnd"), (1, "nIndex"), (1, "dwNewLong"))
+    )
+else:
+    SetWindowLongPtrW = SetWindowLongW 
+
+
+
+
+### WinApi Functions - Cursor ###
+
+GetCursorPos            = _ct.WINFUNCTYPE(BOOL, LPPOINT)(
+    ("GetCursorPos", _User32), 
+    ((1, "lpPoint"),)
+)
+
+### WinApi Functions - Device Context ###
+
+SwapBuffers             = _ct.WINFUNCTYPE(BOOL, HDC)(
+    ("SwapBuffers", _Gdi32), 
+    ((1, "hdc"),)
+)
+
+InvalidateRect          = _ct.WINFUNCTYPE(BOOL, HDC, LPRECT, BOOL)(
+    ("InvalidateRect", _User32), 
+    ((1, "hWnd"), (1, "lpRect"), (1, "bErase"))
+)
+
+ValidateRect            = _ct.WINFUNCTYPE(BOOL, HDC, LPRECT)(
+    ("ValidateRect", _User32), 
+    ((1, "hWnd"), (1, "lpRect"))
 )

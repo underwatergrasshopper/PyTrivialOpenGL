@@ -8,6 +8,7 @@ def rect_diff(a, b):
     return RECT(a.left - b.left, a.top - b.top, a.right - b.right, a.bottom - b.bottom)
 
 if __name__ == "__main__":
+    ### Window Function Scenarios ####
     width   = GetSystemMetrics(SM_CXSCREEN)
     height  = GetSystemMetrics(SM_CYSCREEN)
     print(width, height)
@@ -77,8 +78,34 @@ if __name__ == "__main__":
         
         print("Focused on '*Untitled - Notepad'.")
 
+    if not SetWindowLongPtrW(window_handle, GWL_STYLE, WS_POPUPWINDOW):
+        print(FormatError(GetLastError()))
+
+    pos = POINT()
+    GetCursorPos(byref(pos))
+    print("%d %d" % (pos.x, pos.y))
 
 
+       
+    ### Macro Check ###
+    if sizeof(c_void_p) == 4:
+        assert ULONG is ULONG_PTR
+    else:
+        assert ULONG is not ULONG_PTR
+
+    i = MAKEINTRESOURCEW(0x12345678)
+    p = cast(byref(i), POINTER(c_short))
+    assert p[0] == 0x5678
+
+    assert HIWORD(0x12345678).value == 0x1234
+    assert LOWORD(0x12345678).value == 0x5678
+
+    assert GET_X_LPARAM(0xFF12FF34).value == -204
+    assert GET_Y_LPARAM(0xFF12FF34).value == -238
+
+    assert GET_WHEEL_DELTA_WPARAM(0xFF12FF34).value == -238
+    assert GET_KEYSTATE_WPARAM(0x12345678).value == 0x5678
+    
     
 
 
