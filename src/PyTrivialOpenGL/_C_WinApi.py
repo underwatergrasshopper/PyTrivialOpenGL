@@ -1,6 +1,8 @@
 import ctypes           as _ct
 import ctypes.wintypes  as _wt
 
+### WinApi Libraries ###
+
 _Kernel32   = _ct.windll.Kernel32
 _User32     = _ct.windll.User32
 
@@ -57,19 +59,18 @@ LPARAM                  = _wt.LPARAM
 
 ### WinApi Structures ###
 
-POINT   = _wt.POINT
-SIZE    = _wt.SIZE
-RECT    = _wt.RECT
+POINT                   = _wt.POINT
+SIZE                    = _wt.SIZE
+RECT                    = _wt.RECT
 
-MSG     = _wt.MSG
+MSG                     = _wt.MSG
 
 ### WinApi Functions ###
 
-#GetLastError            = _ct.WINFUNCTYPE(DWORD)(
-#    ("GetLastError", _Kernel32), 
-#    ()
-#)
-GetLastError = _Kernel32.GetLastError
+GetLastError            = _ct.WINFUNCTYPE(DWORD)(
+    ("GetLastError", _Kernel32), 
+    ()
+)
 
 GetSystemMetrics        = _ct.WINFUNCTYPE(_ct.c_int, _ct.c_int)(
     ("GetSystemMetrics", _User32), 
