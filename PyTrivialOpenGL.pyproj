@@ -33,6 +33,7 @@
     <Content Include="CHANGELOG.md" />
     <Content Include="pyproject.toml" />
     <Content Include="README.md" />
+    <Content Include="tests\assets\icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="setup.py" />
@@ -60,6 +61,7 @@
     <Folder Include="src\" />
     <Folder Include="src\PyTrivialOpenGL\" />
     <Folder Include="tests\" />
+    <Folder Include="tests\assets\" />
     <Folder Include="tests\unittests\" />
   </ItemGroup>
   <ItemGroup>

@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import ctypes           as _ct
 import ctypes.wintypes  as _wt
 
@@ -143,6 +144,52 @@ SWP_NOREPOSITION        = SWP_NOOWNERZORDER
 SWP_DEFERERASE          = 0x2000 
 SWP_ASYNCWINDOWPOS      = 0x4000 
 
+# MessageBoxW, uType
+MB_OK                   = 0x00000000
+MB_OKCANCEL             = 0x00000001
+MB_ABORTRETRYIGNORE     = 0x00000002
+MB_YESNOCANCEL          = 0x00000003
+MB_YESNO                = 0x00000004
+MB_RETRYCANCEL          = 0x00000005
+MB_CANCELTRYCONTINUE    = 0x00000006
+MB_ICONHAND             = 0x00000010
+MB_ICONQUESTION         = 0x00000020
+MB_ICONEXCLAMATION      = 0x00000030
+MB_ICONASTERISK         = 0x00000040
+MB_USERICON             = 0x00000080
+MB_ICONWARNING          = MB_ICONEXCLAMATION
+MB_ICONERROR            = MB_ICONHAND
+MB_ICONINFORMATION      = MB_ICONASTERISK
+MB_ICONSTOP             = MB_ICONHAND
+MB_DEFBUTTON1           = 0x00000000
+MB_DEFBUTTON2           = 0x00000100
+MB_DEFBUTTON3           = 0x00000200
+MB_DEFBUTTON4           = 0x00000300
+MB_APPLMODAL            = 0x00000000
+MB_SYSTEMMODAL          = 0x00001000
+MB_TASKMODAL            = 0x00002000
+MB_HELP                 = 0x00004000 
+MB_NOFOCUS              = 0x00008000
+MB_SETFOREGROUND        = 0x00010000
+MB_DEFAULT_DESKTOP_ONLY = 0x00020000
+MB_TOPMOST              = 0x00040000
+MB_RIGHT                = 0x00080000
+MB_RTLREADING           = 0x00100000
+
+# MessageBoxW, return
+IDOK                    = 1
+IDCANCEL                = 2
+IDABORT                 = 3
+IDRETRY                 = 4
+IDIGNORE                = 5
+IDYES                   = 6
+IDNO                    = 7
+IDCLOSE                 = 8
+IDHELP                  = 9
+IDTRYAGAIN              = 10
+IDCONTINUE              = 11
+IDTIMEOUT               = 32000
+
 # ShowWindow, nCmdShow
 SW_HIDE                 = 0
 SW_SHOWNORMAL           = 1
@@ -160,13 +207,53 @@ SW_SHOWDEFAULT          = 10
 SW_FORCEMINIMIZE        = 11
 SW_MAX                  = 11
 
+# Window Messages
+WM_QUIT                 = 0x0012
+WM_DESTROY              = 0x0002
+WM_PAINT                = 0x000F
+WM_CLOSE                = 0x0010
+WM_CHAR                 = 0x0102
+WM_CREATE               = 0x0001
+WM_KEYDOWN              = 0x0100
+WM_KEYUP                = 0x0101
+
+# LoadImage, _type
+IMAGE_BITMAP            = 0
+IMAGE_ICON              = 1
+IMAGE_CURSOR            = 2
+
+# LoadImage, fuLoad
+LR_DEFAULTCOLOR         = 0x00000000
+LR_MONOCHROME           = 0x00000001
+LR_COLOR                = 0x00000002
+LR_COPYRETURNORG        = 0x00000004
+LR_COPYDELETEORG        = 0x00000008
+LR_LOADFROMFILE         = 0x00000010
+LR_LOADTRANSPARENT      = 0x00000020
+LR_DEFAULTSIZE          = 0x00000040
+LR_VGACOLOR             = 0x00000080
+LR_LOADMAP3DCOLORS      = 0x00001000
+LR_CREATEDIBSECTION     = 0x00002000
+LR_COPYFROMRESOURCE     = 0x00004000
+LR_SHARED               = 0x00008000
+
+# CreateWindowEx
+CW_USEDEFAULT           = 0x80000000
+
 # Errors
 ERROR_INVALID_PARAMETER = 0x57
 
 # Other
+EXIT_SUCCESS            = 0
+EXIT_FAILURE            = 1
+
 WHEEL_DELTA             = 120
 
+COLOR_WINDOW            = 5
+
 ### WinApi Types ###
+
+NULL                    = None
 
 BYTE                    = _wt.BYTE
 WORD                    = _wt.WORD
@@ -207,15 +294,17 @@ else:
     INT_PTR                 = _ct.c_int 
 
 DWORD_PTR               = ULONG_PTR
-
+LRESULT                 = LONG_PTR
 ATOM                    = _wt.WORD
 
 HANDLE                  = _wt.HANDLE
 HBRUSH                  = _wt.HBRUSH
 HFONT                   = _wt.HFONT
 HICON                   = _wt.HICON
+HCURSOR                 = HICON
 HINSTANCE               = _wt.HINSTANCE
 HMODULE                 = _wt.HMODULE
+HMENU                   = _wt.HMENU
 
 HWND                    = _wt.HWND
 HDC                     = _wt.HDC
@@ -224,6 +313,14 @@ WPARAM                  = _wt.WPARAM
 LPARAM                  = _wt.LPARAM
 
 HRESULT                 = _ct.c_long
+
+WNDPROC                 = _ct.WINFUNCTYPE(LRESULT, HWND, UINT, WPARAM, LPARAM)
+
+# SetWindowPos, hWndInsertAfter
+HWND_TOP                = HWND(0)
+HWND_BOTTOM             = HWND(1)
+HWND_TOPMOST            = HWND(-1)
+HWND_NOTOPMOST          = HWND(-2)
 
 ### WinApi Structures ###
 
@@ -237,11 +334,21 @@ LPRECT                  = _wt.LPRECT
 
 MSG                     = _wt.MSG
 
-# SetWindowPos, hWndInsertAfter
-HWND_TOP                = HWND(0)
-HWND_BOTTOM             = HWND(1)
-HWND_TOPMOST            = HWND(-1)
-HWND_NOTOPMOST          = HWND(-2)
+class WNDCLASSEXW(_ct.Structure):
+    _fields_ = [
+        ("cbSize",          _ct.c_uint),
+        ("style",           _ct.c_uint),
+        ("lpfnWndProc",     WNDPROC),
+        ("cbClsExtra",      _ct.c_int),
+        ("cbWndExtra",      _ct.c_int),
+        ("hInstance",       HINSTANCE),
+        ("hIcon",           HICON),
+        ("hCursor",         HCURSOR),
+        ("hbrBackground",   HBRUSH),
+        ("lpszMenuName",    LPCWSTR),
+        ("lpszClassName",   LPCWSTR),
+        ("hIconSm",         HICON)
+    ]
 
 ### WinApi Macros ###
 
@@ -272,6 +379,10 @@ def IsMinimized(hwnd):
 def IsMaximized(hwnd):
     return IsZoomed(hwnd)
 
+### WinApi Constants which are macro dependent ###
+
+IDC_ARROW               = MAKEINTRESOURCEW(32512)
+
 ### WinApi Functions ###
 
 GetLastError            = _ct.WINFUNCTYPE(DWORD)(
@@ -279,9 +390,14 @@ GetLastError            = _ct.WINFUNCTYPE(DWORD)(
     ()
 )
 
+GetModuleHandleW        = _ct.WINFUNCTYPE(HMODULE, LPCWSTR)(
+    ("GetModuleHandleW", _Kernel32), 
+    ((1, "lpModuleName"), )
+)
+
 GetSystemMetrics        = _ct.WINFUNCTYPE(_ct.c_int, _ct.c_int)(
     ("GetSystemMetrics", _User32), 
-    ((1, "nIndex"),)
+    ((1, "nIndex"), )
 )
 
 SystemParametersInfoW   = _ct.WINFUNCTYPE(BOOL, UINT, UINT, PVOID, UINT)(
@@ -402,6 +518,88 @@ IsIconic                = _ct.WINFUNCTYPE(BOOL, HWND)(
 ShowWindow              = _ct.WINFUNCTYPE(BOOL, HWND, _ct.c_int)(
     ("ShowWindow", _User32), 
     ((1, "hWnd"), (1, "nCmdShow"))
+)
+
+LoadCursorW             = _ct.WINFUNCTYPE(HCURSOR, HINSTANCE, LPCWSTR)(
+    ("LoadCursorW", _User32), 
+    ((1, "hInstance"), (1, "lpCursorName"))
+)
+
+LoadImageW             = _ct.WINFUNCTYPE(HANDLE, HINSTANCE, LPCWSTR, UINT, _ct.c_int, _ct.c_int, UINT)(
+    ("LoadImageW", _User32), 
+    ((1, "hInst"), (1, "name"), (1, "_type"), (1, "cx"), (1, "cy"), (1, "fuLoad"))
+)
+
+MessageBoxW            = _ct.WINFUNCTYPE(_ct.c_int, HWND, LPCWSTR, LPCWSTR, UINT)(
+    ("MessageBoxW", _User32), 
+    ((1, "hWnd", NULL), (1, "lpText", ""), (1, "lpCaption", ""), (1, "uType", 0))
+)
+
+###
+
+RegisterClassExW        = _ct.WINFUNCTYPE(ATOM, _ct.POINTER(WNDCLASSEXW))(
+    ("RegisterClassExW", _User32), 
+    ((1, "lpwcx"), )
+)
+
+UnregisterClassW        = _ct.WINFUNCTYPE(BOOL, LPCWSTR, HINSTANCE)(
+    ("UnregisterClassW", _User32), 
+    ((1, "lpClassName"), (1, "hInstance"))
+)
+
+CreateWindowExW         = _ct.WINFUNCTYPE(HWND, DWORD, LPCWSTR, LPCWSTR, DWORD, _ct.c_int, _ct.c_int, _ct.c_int, _ct.c_int, HWND, HMENU, HINSTANCE, LPVOID)(
+    ("CreateWindowExW", _User32), 
+    (
+        (1, "dwExStyle", 0), 
+        (1, "lpClassName"), 
+        (1, "lpWindowName"), 
+        (1, "dwStyle", 0), 
+        (1, "X", CW_USEDEFAULT), (1, "Y", CW_USEDEFAULT), (1, "nWidth", CW_USEDEFAULT), (1, "nHeight", CW_USEDEFAULT), 
+        (1, "hWndParent", None), 
+        (1, "hMenu", None), 
+        (1, "hInstance"), 
+        (1, "lpParam", 0)
+    )
+)
+
+DestroyWindow           = _ct.WINFUNCTYPE(BOOL, HWND)(
+    ("DestroyWindow", _User32), 
+    ((1, "hWnd"), )
+)
+
+UpdateWindow            = _ct.WINFUNCTYPE(BOOL, HWND)(
+    ("UpdateWindow", _User32), 
+    ((1, "hWnd"), )
+)
+
+DefWindowProcW          = _ct.WINFUNCTYPE(LRESULT, HWND, UINT, WPARAM, LPARAM)(
+    ("DefWindowProcW", _User32), 
+    ((1, "hWnd"), (1, "Msg"), (1, "wParam"), (1, "lParam"))
+)
+
+GetMessageW             = _ct.WINFUNCTYPE(BOOL, _ct.POINTER(MSG), HWND, UINT, UINT)(
+    ("GetMessageW", _User32), 
+    ((1, "lpMsg"), (1, "hWnd"), (1, "wMsgFilterMin"), (1, "wMsgFilterMax"))
+)
+
+PeekMessageW            = _ct.WINFUNCTYPE(BOOL, _ct.POINTER(MSG), HWND, UINT, UINT, UINT)(
+    ("PeekMessageW", _User32), 
+    ((1, "lpMsg"), (1, "hWnd"), (1, "wMsgFilterMin"), (1, "wMsgFilterMax"), (1, "wRemoveMsg"))
+)
+
+TranslateMessage        = _ct.WINFUNCTYPE(BOOL, _ct.POINTER(MSG))(
+    ("TranslateMessage", _User32), 
+    ((1, "lpMsg"), )
+)
+
+DispatchMessageW        = _ct.WINFUNCTYPE(LRESULT, _ct.POINTER(MSG))(
+    ("DispatchMessageW", _User32), 
+    ((1, "lpMsg"), )
+)
+
+PostQuitMessage        = _ct.WINFUNCTYPE(None, _ct.c_int)(
+    ("PostQuitMessage", _User32), 
+    ((1, "nExitCode"), )
 )
 
 ### WinApi Functions - Cursor ###
