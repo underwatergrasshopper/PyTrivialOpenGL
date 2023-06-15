@@ -126,6 +126,40 @@ GW_ENABLEDPOPUP         = 6
 GWL_EXSTYLE             = -20
 GWL_STYLE               = -16
 
+# SetWindowPos, uFlags
+SWP_NOSIZE              = 0x0001
+SWP_NOMOVE              = 0x0002
+SWP_NOZORDER            = 0x0004
+SWP_NOREDRAW            = 0x0008
+SWP_NOACTIVATE          = 0x0010
+SWP_FRAMECHANGED        = 0x0020  
+SWP_SHOWWINDOW          = 0x0040
+SWP_HIDEWINDOW          = 0x0080
+SWP_NOCOPYBITS          = 0x0100
+SWP_NOOWNERZORDER       = 0x0200  
+SWP_NOSENDCHANGING      = 0x0400 
+SWP_DRAWFRAME           = SWP_FRAMECHANGED
+SWP_NOREPOSITION        = SWP_NOOWNERZORDER
+SWP_DEFERERASE          = 0x2000 
+SWP_ASYNCWINDOWPOS      = 0x4000 
+
+# ShowWindow, nCmdShow
+SW_HIDE                 = 0
+SW_SHOWNORMAL           = 1
+SW_NORMAL               = 1
+SW_SHOWMINIMIZED        = 2
+SW_SHOWMAXIMIZED        = 3
+SW_MAXIMIZE             = 3
+SW_SHOWNOACTIVATE       = 4
+SW_SHOW                 = 5
+SW_MINIMIZE             = 6
+SW_SHOWMINNOACTIVE      = 7
+SW_SHOWNA               = 8
+SW_RESTORE              = 9
+SW_SHOWDEFAULT          = 10
+SW_FORCEMINIMIZE        = 11
+SW_MAX                  = 11
+
 # Errors
 ERROR_INVALID_PARAMETER = 0x57
 
@@ -203,6 +237,12 @@ LPRECT                  = _wt.LPRECT
 
 MSG                     = _wt.MSG
 
+# SetWindowPos, hWndInsertAfter
+HWND_TOP                = HWND(0)
+HWND_BOTTOM             = HWND(1)
+HWND_TOPMOST            = HWND(-1)
+HWND_NOTOPMOST          = HWND(-2)
+
 ### WinApi Macros ###
 
 def MAKEINTRESOURCEW(i):
@@ -225,6 +265,12 @@ def GET_WHEEL_DELTA_WPARAM(wParam):
 
 def GET_KEYSTATE_WPARAM(wParam):
     return LOWORD(wParam)
+
+def IsMinimized(hwnd):
+    return IsIconic(hwnd)
+
+def IsMaximized(hwnd):
+    return IsZoomed(hwnd)
 
 ### WinApi Functions ###
 
@@ -316,15 +362,47 @@ SetWindowLongW          = _ct.WINFUNCTYPE(LONG, HWND, _ct.c_int, LONG)(
 )
 
 if _IS_64_BIT:
-    SetWindowLongPtrW          = _ct.WINFUNCTYPE(LONG_PTR, HWND, _ct.c_int, LONG_PTR)(
+    SetWindowLongPtrW   = _ct.WINFUNCTYPE(LONG_PTR, HWND, _ct.c_int, LONG_PTR)(
         ("SetWindowLongPtrW", _User32), 
         ((1, "hWnd"), (1, "nIndex"), (1, "dwNewLong"))
     )
 else:
     SetWindowLongPtrW = SetWindowLongW 
 
+SetWindowLongW          = _ct.WINFUNCTYPE(LONG, HWND, _ct.c_int, LONG)(
+    ("SetWindowLongW", _User32), 
+    ((1, "hWnd"), (1, "nIndex"), (1, "dwNewLong"))
+)
 
+SetWindowPos            = _ct.WINFUNCTYPE(BOOL, HWND, HWND, _ct.c_int, _ct.c_int, _ct.c_int, _ct.c_int, UINT)(
+    ("SetWindowPos", _User32), 
+    ((1, "hWnd"), (1, "hWndInsertAfter"), (1, "X"), (1, "Y"), (1, "cx"), (1, "cy"), (1, "uFlags"))
+)
 
+AdjustWindowRectEx      = _ct.WINFUNCTYPE(BOOL, LPRECT, DWORD, BOOL, DWORD)(
+    ("AdjustWindowRectEx", _User32), 
+    ((1, "lpRect"), (1, "dwStyle"), (1, "bMenu"), (1, "dwExStyle"))
+)
+
+AdjustWindowRect        = _ct.WINFUNCTYPE(BOOL, LPRECT, DWORD, BOOL)(
+    ("AdjustWindowRect", _User32), 
+    ((1, "lpRect"), (1, "dwStyle"), (1, "bMenu"))
+)
+
+IsZoomed                = _ct.WINFUNCTYPE(BOOL, HWND)(
+    ("IsZoomed", _User32), 
+    ((1, "hWnd"),)
+)
+
+IsIconic                = _ct.WINFUNCTYPE(BOOL, HWND)(
+    ("IsIconic", _User32), 
+    ((1, "hWnd"),)
+)
+
+ShowWindow              = _ct.WINFUNCTYPE(BOOL, HWND, _ct.c_int)(
+    ("ShowWindow", _User32), 
+    ((1, "hWnd"), (1, "nCmdShow"))
+)
 
 ### WinApi Functions - Cursor ###
 

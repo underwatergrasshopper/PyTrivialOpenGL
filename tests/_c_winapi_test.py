@@ -62,6 +62,8 @@ if __name__ == "__main__":
     window_name = cast(buffer, c_wchar_p).value
     print(window_name)
 
+    this_window_handle = window_handle
+
     ### 
 
     window_handle = FindWindowW(None, "Untitled - Notepad")
@@ -85,8 +87,29 @@ if __name__ == "__main__":
     GetCursorPos(byref(pos))
     print("%d %d" % (pos.x, pos.y))
 
+    SetWindowPos(this_window_handle, HWND_TOP, 0, 0, 1200, 600, SWP_NOMOVE)
 
-       
+    ###
+
+    assert IsMaximized(this_window_handle) == False
+    assert IsMinimized(this_window_handle) == False
+
+    ShowWindow(this_window_handle, SW_MINIMIZE)
+
+    assert IsMaximized(this_window_handle) == False
+    assert IsMinimized(this_window_handle) == True
+
+    ShowWindow(this_window_handle, SW_MAXIMIZE)
+
+    assert IsMaximized(this_window_handle) == True
+    assert IsMinimized(this_window_handle) == False
+
+    ShowWindow(this_window_handle, SW_SHOWNORMAL)
+    
+    assert IsMaximized(this_window_handle) == False
+    assert IsMinimized(this_window_handle) == False
+
+      
     ### Macro Check ###
     if sizeof(c_void_p) == 4:
         assert ULONG is ULONG_PTR
