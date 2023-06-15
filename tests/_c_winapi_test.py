@@ -10,28 +10,41 @@ def rect_to_str(r):
 def rect_diff(a, b):
     return RECT(a.left - b.left, a.top - b.top, a.right - b.right, a.bottom - b.bottom)
 
-def WndProc(hWnd, msg, wParam, lParam):
-    if msg == WM_PAINT:
-        return 0;
-
-    if msg == WM_CREATE:
-        return 0
-
-    if msg == WM_DESTROY:
-        PostQuitMessage(0)
-        return 0
-
-    if msg == WM_CLOSE:
-        # Freezes application.
-        # MessageBoxW(lpCaption = "Exit", lpText = "Do you want exit?", uType = MB_ICONQUESTION | MB_OKCANCEL)
-        DestroyWindow(hWnd)
-        return 0
-
-    return DefWindowProcW(hWnd, msg, wParam, lParam)
-WndProc = WNDPROC(WndProc)
+count = 0
 
 def run_window():
+    def WndProc(hWnd, msg, wParam, lParam):
+        global count
 
+        if msg == WM_PAINT:
+            return 0;
+
+        if msg == WM_CREATE:
+            return 0
+
+        if msg == WM_DESTROY:
+            PostQuitMessage(0)
+            return 0
+
+        if msg == WM_KEYUP:
+            count += 1
+            print(count)
+            return 0
+
+        if msg == WM_CLOSE:
+            # This do not work. Will freeze window.
+            #if MessageBoxW(NULL, "Do you want exit?", "Exit", MB_ICONQUESTION | MB_OKCANCEL) == IDOK: 
+            #    DestroyWindow(hWnd)
+
+            # Working solution.
+            if OwnerlessMessageBox_FromNewThreadWithWait("Do you want exit?", "Exit", MB_ICONQUESTION | MB_OKCANCEL) == IDOK: 
+                DestroyWindow(hWnd)
+
+            return 0
+
+        return DefWindowProcW(hWnd, msg, wParam, lParam)
+
+    WndProc = WNDPROC(WndProc)
 
     window_name         = "Trivial Window"
     window_class_name   = window_name + " Class"
@@ -74,7 +87,7 @@ def run_window():
         hInstance,
         NULL
     )
-    
+
     if not hWnd:
         print("Error: Cannot create window.")
         exit(EXIT_FAILURE)
@@ -82,14 +95,25 @@ def run_window():
     UpdateWindow(hWnd)
     ShowWindow(hWnd, SW_SHOW)
     # SetForegroundWindow(hWnd)
-        
-    msg = MSG()
-    while GetMessageW(byref(msg), NULL, 0, 0):
-        TranslateMessage(byref(msg))
-        DispatchMessageW(byref(msg))
 
-    return msg.wParam
+    is_peek = True
+    if is_peek:
+        msg = MSG()
+        while True:
+            while PeekMessageW(byref(msg), NULL, 0, 0, PM_REMOVE):
+                if msg.message == WM_QUIT:
+                    return msg.wParam
 
+                TranslateMessage(byref(msg))
+                DispatchMessageW(byref(msg))
+
+            # ... render, update ...
+    else:
+        msg = MSG()
+        while GetMessageW(byref(msg), NULL, 0, 0):
+            TranslateMessage(byref(msg))
+            DispatchMessageW(byref(msg))
+        return msg.wParam
 
 if __name__ == "__main__":
     ### Window Function Scenarios ####

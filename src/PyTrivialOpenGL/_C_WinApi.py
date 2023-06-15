@@ -208,6 +208,7 @@ SW_FORCEMINIMIZE        = 11
 SW_MAX                  = 11
 
 # Window Messages
+WM_USER                 = 0x0400
 WM_QUIT                 = 0x0012
 WM_DESTROY              = 0x0002
 WM_PAINT                = 0x000F
@@ -237,6 +238,11 @@ LR_CREATEDIBSECTION     = 0x00002000
 LR_COPYFROMRESOURCE     = 0x00004000
 LR_SHARED               = 0x00008000
 
+# PostMessageW, wRemoveMsg
+PM_NOREMOVE             = 0x0000
+PM_REMOVE               = 0x0001
+PM_NOYIELD              = 0x0002
+
 # CreateWindowEx
 CW_USEDEFAULT           = 0x80000000
 
@@ -247,9 +253,14 @@ ERROR_INVALID_PARAMETER = 0x57
 EXIT_SUCCESS            = 0
 EXIT_FAILURE            = 1
 
+FALSE                   = 0
+TRUE                    = 1
+
 WHEEL_DELTA             = 120
 
 COLOR_WINDOW            = 5
+
+INFINITE                = 0xFFFFFFFF
 
 ### WinApi Types ###
 
@@ -281,6 +292,8 @@ LPCSTR                  = _wt.LPCSTR
 PVOID                   = _ct.c_void_p
 LPVOID                  = _wt.LPVOID
 LPCVOID                 = _wt.LPCVOID
+LPWORD                  = _wt.LPWORD  
+LPDWORD                 = _wt.LPDWORD       
 
 if _IS_64_BIT:
     ULONG_PTR               = _ct.c_size_t
@@ -292,6 +305,9 @@ else:
     LONG_PTR                = _ct.c_long 
     UINT_PTR                = _ct.c_uint
     INT_PTR                 = _ct.c_int 
+
+SIZE_T                  = ULONG_PTR
+SSIZE_T                 = LONG_PTR
 
 DWORD_PTR               = ULONG_PTR
 LRESULT                 = LONG_PTR
@@ -535,6 +551,45 @@ MessageBoxW            = _ct.WINFUNCTYPE(_ct.c_int, HWND, LPCWSTR, LPCWSTR, UINT
     ((1, "hWnd", NULL), (1, "lpText", ""), (1, "lpCaption", ""), (1, "uType", 0))
 )
 
+# NOTE: This is not WinApi function! It's custom made function for purpose of _C_WinApi module.
+def OwnerlessMessageBox_FromNewThreadWithWait(lpText, lpCaption, uType):
+    """
+    Function works 'pretty much' same as MessageBoxW. 
+    In addition, is called from separate thread, and window handle of owner (hWnd) is ignored.
+    Will wait until message box is closed (until thread finish).
+
+    Warning! If called withing window message procedure, 
+    then new messages (which are coming to the callee window) still can be stacked in the message queue, 
+    even when current thread waits to this function finish. 
+    Their dispatching resumes after this function finish.
+    
+    lpText          : LPCWSTR
+    lpCaption       : LPCWSTR
+    uType           : UINT
+    Returns (ctypes.c_int). Same result values as MessageBoxW. 
+    """
+    class ParameterPack(_ct.Structure):
+        _fields_ = [
+            ("lpText",      LPCWSTR),
+            ("lpCaption",   LPCWSTR),
+            ("uType",       UINT),
+            ("iResult",     _ct.c_int),
+        ]
+
+    def ThreadFunction(param):
+        pack = _ct.cast(param, _ct.POINTER(ParameterPack))[0]
+
+        pack.iResult = MessageBoxW(NULL, pack.lpText, pack.lpCaption, pack.uType)
+        return 0
+    ThreadFunction = LPTHREAD_START_ROUTINE(ThreadFunction)
+
+    pack = ParameterPack(lpText, lpCaption, uType, 0)
+
+    thread_handle = CreateThread(NULL, 0, ThreadFunction, _ct.byref(pack), 0, NULL)
+    WaitForSingleObject(thread_handle, INFINITE)
+
+    return pack.iResult
+
 ###
 
 RegisterClassExW        = _ct.WINFUNCTYPE(ATOM, _ct.POINTER(WNDCLASSEXW))(
@@ -602,6 +657,41 @@ PostQuitMessage        = _ct.WINFUNCTYPE(None, _ct.c_int)(
     ((1, "nExitCode"), )
 )
 
+PostMessageW            = _ct.WINFUNCTYPE(BOOL, HWND, UINT, WPARAM, LPARAM)(
+    ("PostMessageW", _User32), 
+    ((1, "hWnd"), (1, "Msg"), (1, "wParam"), (1, "lParam"))
+)
+
+SendMessageW            = _ct.WINFUNCTYPE(LRESULT, HWND, UINT, WPARAM, LPARAM)(
+    ("SendMessageW", _User32), 
+    ((1, "hWnd"), (1, "Msg"), (1, "wParam"), (1, "lParam"))
+)
+
+GetQueueStatus          = _ct.WINFUNCTYPE(DWORD, UINT)(
+    ("GetQueueStatus", _User32), 
+    ((1, "flags"), )
+)
+
+WaitForSingleObject = _ct.WINFUNCTYPE(DWORD, HANDLE, DWORD)(
+    ("WaitForSingleObject", _Kernel32), 
+    ((1, "hHandle"), (1, "dwMilliseconds"))
+)
+
+MsgWaitForMultipleObjectsEx = _ct.WINFUNCTYPE(DWORD, DWORD, _ct.POINTER(HANDLE), DWORD, DWORD, DWORD)(
+    ("MsgWaitForMultipleObjectsEx", _User32), 
+    ((1, "nCount"), (1, "pHandles"), (1, "dwMilliseconds"), (1, "dwWakeMask"), (1, "dwFlags"))
+)
+
+InSendMessage           = _ct.WINFUNCTYPE(BOOL)(
+    ("InSendMessage", _User32), 
+    ()
+)
+
+ReplyMessage            = _ct.WINFUNCTYPE(BOOL, LRESULT)(
+    ("ReplyMessage", _User32), 
+    ((1, "lResult"), )
+)
+
 ### WinApi Functions - Cursor ###
 
 GetCursorPos            = _ct.WINFUNCTYPE(BOOL, LPPOINT)(
@@ -624,4 +714,32 @@ InvalidateRect          = _ct.WINFUNCTYPE(BOOL, HDC, LPRECT, BOOL)(
 ValidateRect            = _ct.WINFUNCTYPE(BOOL, HDC, LPRECT)(
     ("ValidateRect", _User32), 
     ((1, "hWnd"), (1, "lpRect"))
+)
+
+### Thread ###
+
+CREATE_SUSPENDED                    = 0x00000004
+STACK_SIZE_PARAM_IS_A_RESERVATION   = 0x00010000
+
+class SECURITY_ATTRIBUTES(_ct.Structure):
+    _fields_ = [
+        ("nLength",                 DWORD),
+        ("lpSecurityDescriptor",    LPVOID),
+        ("bInheritHandle",          BOOL)
+    ]
+
+LPSECURITY_ATTRIBUTES   = _ct.POINTER(SECURITY_ATTRIBUTES)
+LPTHREAD_START_ROUTINE  = _ct.WINFUNCTYPE(DWORD, LPVOID)
+
+
+CreateThread            = _ct.WINFUNCTYPE(HANDLE, LPSECURITY_ATTRIBUTES, SIZE_T, LPTHREAD_START_ROUTINE, LPVOID, DWORD, LPDWORD)(
+    ("CreateThread", _Kernel32), 
+    (
+        (1, "lpThreadAttributes"), 
+        (1, "dwStackSize"), 
+        (1, "lpStartAddress"), 
+        (1, "lpParameter"), 
+        (1, "dwCreationFlags"), 
+        (1, "lpThreadId")
+    )
 )
