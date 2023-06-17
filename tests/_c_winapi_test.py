@@ -83,12 +83,14 @@ class ExampleManager:
 
     def run_examples(self):
         while True:
+            print("--- Example Manager ---")
             print("Examples:")
             self._display_examples()
             print("")
 
             print("(e=Exit, d=%s)" % self.default_example_name)
             example_name = input("select example: ")
+            print("")
 
             if example_name == "e":
                 exit(0)
@@ -98,13 +100,13 @@ class ExampleManager:
 
             example = self.examples.get(example_name, None)
             if example:
-                print("")
                 print("Options:")
                 self._display_possible_options(example)
                 print("")
 
                 print("(e=Exit, d=%s)" % example.def_opt_to_str())
                 raw_options = input("select options: ")
+                print("")
 
                 raw_options = re.split(r"[\t\n ]+", raw_options)
 
@@ -123,15 +125,14 @@ class ExampleManager:
                 for option in options:
                     if option not in example.possible_options:
                         is_valid_option = False
-                        print("")
                         print("Error: Option '%s' does not exist." % option)
                         break
 
                 if is_valid_option:
                     result = example.function(example_name, options)
+                    print("")
                     print("Example ended with result code: %d." % result)
             else:
-                print("")
                 print("Error: Example '%s' do not exist in expected options." % example_name)
                 
             print("")
@@ -337,11 +338,11 @@ def simple_window(name, options):
     
             if msg == WM_CLOSE:
                 # This do not work. Will freeze window.
-                #if MessageBoxW(NULL, "Do you want exit?", "Exit", MB_ICONQUESTION | MB_OKCANCEL) == IDOK: 
+                #if MessageBoxW(NULL, "Are you sure?", "Exit", MB_ICONQUESTION | MB_OKCANCEL) == IDOK: 
                 #    DestroyWindow(hWnd)
     
                 # Working solution.
-                if OwnerlessMessageBox_FromNewThreadWithWait("Do you want exit?", "Exit", MB_ICONQUESTION | MB_OKCANCEL) == IDOK: 
+                if OwnerlessMessageBox_FromNewThreadWithWait("Are you sure?", "Exit", MB_ICONQUESTION | MB_OKCANCEL) == IDOK: 
                     DestroyWindow(hWnd)
     
                 return 0
@@ -398,7 +399,7 @@ def simple_window(name, options):
             
         UpdateWindow(hWnd)
         ShowWindow(hWnd, SW_SHOW)
-        # SetForegroundWindow(hWnd)
+        SetForegroundWindow(hWnd)
     
         def execute_main_loop():
             is_peek = True
