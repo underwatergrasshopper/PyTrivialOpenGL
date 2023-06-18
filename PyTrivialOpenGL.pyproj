@@ -45,6 +45,7 @@
     <Compile Include="src\PyTrivialOpenGL\Logger.py" />
     <Compile Include="src\PyTrivialOpenGL\Point.py" />
     <Compile Include="src\PyTrivialOpenGL\Size.py" />
+    <Compile Include="src\PyTrivialOpenGL\_C_WGL.py" />
     <Compile Include="src\PyTrivialOpenGL\_C_WinApi.py" />
     <Compile Include="src\PyTrivialOpenGL\__init__.py" />
     <Compile Include="tests\smoke_test.py" />

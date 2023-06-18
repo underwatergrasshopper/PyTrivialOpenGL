@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 import ctypes           as _ct
 import ctypes.wintypes  as _wt
 
@@ -208,15 +207,56 @@ SW_FORCEMINIMIZE        = 11
 SW_MAX                  = 11
 
 # Window Messages
-WM_USER                 = 0x0400
-WM_QUIT                 = 0x0012
-WM_DESTROY              = 0x0002
-WM_PAINT                = 0x000F
-WM_CLOSE                = 0x0010
-WM_CHAR                 = 0x0102
+WM_NULL                 = 0x0000
+                        
 WM_CREATE               = 0x0001
+WM_DESTROY              = 0x0002
+
+WM_CLOSE                = 0x0010
+WM_QUIT                 = 0x0012
+
+WM_PAINT                = 0x000F
+WM_ERASEBKGND           = 0x0014
+
+WM_MOVE                 = 0x0003
+WM_SIZE                 = 0x0005
+WM_SIZING               = 0x0214
+WM_MOVING               = 0x0216
+
+WM_ENTERSIZEMOVE        = 0x0231
+WM_EXITSIZEMOVE         = 0x0232  
+
+WM_TIMER                = 0x0113
+
+WM_SHOWWINDOW           = 0x0018
+
+WM_ACTIVATE             = 0x0006
+WM_ACTIVATEAPP          = 0x001C
+
+WM_SYSCOMMAND           = 0x0112
+
+WM_SETFOCUS             = 0x0007
+WM_KILLFOCUS            = 0x0008
+
 WM_KEYDOWN              = 0x0100
 WM_KEYUP                = 0x0101
+WM_SYSKEYDOWN           = 0x0104
+WM_SYSKEYUP             = 0x0105
+WM_CHAR                 = 0x0102
+
+WM_LBUTTONDOWN          = 0x0201
+WM_LBUTTONUP            = 0x0202
+WM_RBUTTONDOWN          = 0x0204
+WM_RBUTTONUP            = 0x0205
+WM_MBUTTONDOWN          = 0x0207
+WM_MBUTTONUP            = 0x0208
+WM_XBUTTONDOWN          = 0x020B
+WM_XBUTTONUP            = 0x020C
+
+WM_MOUSEMOVE            = 0x0200
+WM_MOUSEWHEEL           = 0x020A
+
+WM_USER                 = 0x0400
 
 # LoadImage, _type
 IMAGE_BITMAP            = 0
@@ -238,6 +278,38 @@ LR_CREATEDIBSECTION     = 0x00002000
 LR_COPYFROMRESOURCE     = 0x00004000
 LR_SHARED               = 0x00008000
 
+
+# PIXELFORMATDESCRIPTOR, iPixelType
+PFD_TYPE_RGBA               = 0
+PFD_TYPE_COLORINDEX         = 1
+
+# PIXELFORMATDESCRIPTOR, iLayerType
+PFD_MAIN_PLANE              = 0
+PFD_OVERLAY_PLANE           = 1
+PFD_UNDERLAY_PLANE          = (-1)
+
+# PIXELFORMATDESCRIPTOR, dwFlags
+PFD_DOUBLEBUFFER            = 0x00000001
+PFD_STEREO                  = 0x00000002
+PFD_DRAW_TO_WINDOW          = 0x00000004
+PFD_DRAW_TO_BITMAP          = 0x00000008
+PFD_SUPPORT_GDI             = 0x00000010
+PFD_SUPPORT_OPENGL          = 0x00000020
+PFD_GENERIC_FORMAT          = 0x00000040
+PFD_NEED_PALETTE            = 0x00000080
+PFD_NEED_SYSTEM_PALETTE     = 0x00000100
+PFD_SWAP_EXCHANGE           = 0x00000200
+PFD_SWAP_COPY               = 0x00000400
+PFD_SWAP_LAYER_BUFFERS      = 0x00000800
+PFD_GENERIC_ACCELERATED     = 0x00001000
+PFD_SUPPORT_DIRECTDRAW      = 0x00002000
+PFD_DIRECT3D_ACCELERATED    = 0x00004000
+PFD_SUPPORT_COMPOSITION     = 0x00008000
+
+PFD_DEPTH_DONTCARE          = 0x20000000
+PFD_DOUBLEBUFFER_DONTCARE   = 0x40000000
+PFD_STEREO_DONTCARE         = 0x80000000
+
 # PostMessageW, wRemoveMsg
 PM_NOREMOVE             = 0x0000
 PM_REMOVE               = 0x0001
@@ -245,6 +317,9 @@ PM_NOYIELD              = 0x0002
 
 # CreateWindowEx
 CW_USEDEFAULT           = 0x80000000
+
+# SystemParametersInfoW, uiAction
+SPI_GETWORKAREA         = 0x0030
 
 # Errors
 ERROR_INVALID_PARAMETER = 0x57
@@ -364,6 +439,36 @@ class WNDCLASSEXW(_ct.Structure):
         ("lpszMenuName",    LPCWSTR),
         ("lpszClassName",   LPCWSTR),
         ("hIconSm",         HICON)
+    ]
+
+class PIXELFORMATDESCRIPTOR(_ct.Structure):
+    _fields_ = [
+        ("nSize",           WORD),
+        ("nVersion",        WORD),
+        ("dwFlags",         DWORD),
+        ("iPixelType",      BYTE),
+        ("cColorBits",      BYTE),
+        ("cRedBits",        BYTE),
+        ("cRedShift",       BYTE),
+        ("cGreenBits",      BYTE),
+        ("cGreenShift",     BYTE),
+        ("cBlueBits",       BYTE),
+        ("cBlueShift",      BYTE),
+        ("cAlphaBits",      BYTE),
+        ("cAlphaShift",     BYTE),
+        ("cAccumBits",      BYTE),
+        ("cAccumRedBits",   BYTE),    
+        ("cAccumGreenBits", BYTE),    
+        ("cAccumBlueBits",  BYTE),    
+        ("cAccumAlphaBits", BYTE),    
+        ("cDepthBits",      BYTE),
+        ("cStencilBits",    BYTE),
+        ("cAuxBuffers",     BYTE),
+        ("iLayerType",      BYTE),
+        ("bReserved",       BYTE),
+        ("dwLayerMask",     DWORD),
+        ("dwVisibleMask",   DWORD),    
+        ("dwDamageMask",    DWORD),
     ]
 
 ### WinApi Macros ###
@@ -622,6 +727,11 @@ DestroyWindow           = _ct.WINFUNCTYPE(BOOL, HWND)(
     ((1, "hWnd"), )
 )
 
+CloseWindow             = _ct.WINFUNCTYPE(BOOL, HWND)(
+    ("CloseWindow", _User32), 
+    ((1, "hWnd"), )
+)
+
 UpdateWindow            = _ct.WINFUNCTYPE(BOOL, HWND)(
     ("UpdateWindow", _User32), 
     ((1, "hWnd"), )
@@ -692,28 +802,26 @@ ReplyMessage            = _ct.WINFUNCTYPE(BOOL, LRESULT)(
     ((1, "lResult"), )
 )
 
-### WinApi Functions - Cursor ###
+### WinApi Functions - Mouse ###
 
 GetCursorPos            = _ct.WINFUNCTYPE(BOOL, LPPOINT)(
     ("GetCursorPos", _User32), 
     ((1, "lpPoint"),)
 )
 
-### WinApi Functions - Device Context ###
-
-SwapBuffers             = _ct.WINFUNCTYPE(BOOL, HDC)(
-    ("SwapBuffers", _Gdi32), 
-    ((1, "hdc"),)
+SetCapture              = _ct.WINFUNCTYPE(HWND, HWND)(
+    ("SetCapture", _User32), 
+    ((1, "hWnd"),)
 )
 
-InvalidateRect          = _ct.WINFUNCTYPE(BOOL, HDC, LPRECT, BOOL)(
-    ("InvalidateRect", _User32), 
-    ((1, "hWnd"), (1, "lpRect"), (1, "bErase"))
+GetCapture              = _ct.WINFUNCTYPE(HWND)(
+    ("GetCapture", _User32), 
+    ()
 )
 
-ValidateRect            = _ct.WINFUNCTYPE(BOOL, HDC, LPRECT)(
-    ("ValidateRect", _User32), 
-    ((1, "hWnd"), (1, "lpRect"))
+ReleaseCapture          = _ct.WINFUNCTYPE(HWND)(
+    ("ReleaseCapture", _User32), 
+    ()
 )
 
 ### Thread ###
@@ -743,3 +851,47 @@ CreateThread            = _ct.WINFUNCTYPE(HANDLE, LPSECURITY_ATTRIBUTES, SIZE_T,
         (1, "lpThreadId")
     )
 )
+
+### Device Context / Rendering Context ###
+
+GetDC                   = _ct.WINFUNCTYPE(HDC, HWND)(
+    ("GetDC", _User32), 
+    ((1, "hWnd"), )
+)
+
+ReleaseDC               = _ct.WINFUNCTYPE(_ct.c_int, HWND, HDC)(
+    ("ReleaseDC", _User32), 
+    ((1, "hWnd"), (1, "hDC"), )
+)
+
+SwapBuffers             = _ct.WINFUNCTYPE(BOOL, HDC)(
+    ("SwapBuffers", _Gdi32), 
+    ((1, "hdc"),)
+)
+
+InvalidateRect          = _ct.WINFUNCTYPE(BOOL, HDC, LPRECT, BOOL)(
+    ("InvalidateRect", _User32), 
+    ((1, "hWnd"), (1, "lpRect"), (1, "bErase"))
+)
+
+ValidateRect            = _ct.WINFUNCTYPE(BOOL, HDC, LPRECT)(
+    ("ValidateRect", _User32), 
+    ((1, "hWnd"), (1, "lpRect"))
+)
+
+ChoosePixelFormat       = _ct.WINFUNCTYPE(_ct.c_int, HDC, _ct.POINTER(PIXELFORMATDESCRIPTOR))(
+    ("ChoosePixelFormat", _Gdi32), 
+    ((1, "hdc"), (1, "ppfd"), )
+)
+
+SetPixelFormat          = _ct.WINFUNCTYPE(BOOL, HDC, _ct.c_int, _ct.POINTER(PIXELFORMATDESCRIPTOR))(
+    ("SetPixelFormat", _Gdi32), 
+    ((1, "hdc"), (1, "_format"), (1, "ppfd"), )
+)
+
+DescribePixelFormat     = _ct.WINFUNCTYPE(_ct.c_int, HDC, _ct.c_int, UINT, _ct.POINTER(PIXELFORMATDESCRIPTOR))(
+    ("DescribePixelFormat", _Gdi32), 
+    ((1, "hdc"), (1, "iPixelFormat"), (1, "nBytes"), (1, "ppfd"), )
+)
+
+
