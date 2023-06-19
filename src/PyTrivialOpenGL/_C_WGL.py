@@ -1,9 +1,9 @@
-import ctypes           as _ct
-import ctypes.wintypes  as _wt
+import ctypes           as _ctypes
+import ctypes.wintypes  as _wintypes
 
 ### Libraries ###
 
-_OpenGL32   = _ct.windll.OpenGL32
+_OpenGL32   = _ctypes.windll.OpenGL32
 
 ### Constants ###
 
@@ -28,46 +28,41 @@ ERROR_INVALID_PROFILE_ARB                   = 0x2096
 
 ### Types ###
 
-BOOL        = _wt.BOOL
-DWORD       = _wt.DWORD
+BOOL        = _wintypes.BOOL
+DWORD       = _wintypes.DWORD
 
-LPCSTR      = _wt.LPCSTR
+LPCSTR      = _wintypes.LPCSTR
 
-HDC         = _wt.HANDLE
-HGLRC       = _wt.HANDLE
+HDC         = _wintypes.HANDLE
+HGLRC       = _wintypes.HANDLE
 
-PROC        = _ct.c_void_p
+PROC        = _ctypes.c_void_p
 
 ### Functions - Rendering Context ###
 
-wglGetProcAddress           = _ct.WINFUNCTYPE(PROC, LPCSTR)(
+wglGetProcAddress           = _ctypes.WINFUNCTYPE(PROC, LPCSTR)(
     ("wglGetProcAddress", _OpenGL32), 
     ((1, "functionName"), )
 )
 
-wglCreateContext            = _ct.WINFUNCTYPE(HGLRC, HDC)(
+wglCreateContext            = _ctypes.WINFUNCTYPE(HGLRC, HDC)(
     ("wglCreateContext", _OpenGL32), 
     ((1, "hDC"), )
 )
 
-#wglCreateContextAttribsARB  = _ct.WINFUNCTYPE(HGLRC, HDC, HGLRC, _ct.POINTER(_ct.c_int))(
-#    ("wglCreateContextAttribsARB", _OpenGL32), 
-#    ((1, "hDC"), (1, "hShareContext"), (1, "attribList"))
-#)
-
-wglDeleteContext            = _ct.WINFUNCTYPE(BOOL, HGLRC)(
+wglDeleteContext            = _ctypes.WINFUNCTYPE(BOOL, HGLRC)(
     ("wglDeleteContext", _OpenGL32), 
     ((1, "hGLRC"), )
 )
 
-wglMakeCurrent              = _ct.WINFUNCTYPE(BOOL, HDC, HGLRC)(
+wglMakeCurrent              = _ctypes.WINFUNCTYPE(BOOL, HDC, HGLRC)(
     ("wglMakeCurrent", _OpenGL32), 
     ((1, "hDC"), (1, "hGLRC"))
 )
 
 ### Functions - Font ###
 
-wglUseFontBitmapsW          = _ct.WINFUNCTYPE(BOOL, HDC, DWORD, DWORD, DWORD)(
+wglUseFontBitmapsW          = _ctypes.WINFUNCTYPE(BOOL, HDC, DWORD, DWORD, DWORD)(
     ("wglUseFontBitmapsW", _OpenGL32), 
     ((1, "hDC"), (1, "first"), (1, "count"), (1, "listBase"))
 )

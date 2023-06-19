@@ -540,120 +540,142 @@ def opengl_window(name, options):
         ))
 
     def WndProc(hWnd, msg, wParam, lParam):
-        if msg == WM_CREATE:
-            pfd = PIXELFORMATDESCRIPTOR()
-            memset(byref(pfd), 0, sizeof(PIXELFORMATDESCRIPTOR))
+        try:
+            if msg == WM_CREATE:
+                pfd = PIXELFORMATDESCRIPTOR()
+                memset(byref(pfd), 0, sizeof(PIXELFORMATDESCRIPTOR))
         
-            pfd.nSize           = sizeof(PIXELFORMATDESCRIPTOR)
-            pfd.nVersion        = 1
-            pfd.dwFlags         = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER
-            pfd.iPixelType      = PFD_TYPE_RGBA
-            pfd.cColorBits      = 24
-            pfd.cAlphaBits      = 8
-            pfd.cDepthBits      = 32
-            pfd.cStencilBits    = 8
-            pfd.iLayerType      = PFD_MAIN_PLANE
+                pfd.nSize           = sizeof(PIXELFORMATDESCRIPTOR)
+                pfd.nVersion        = 1
+                pfd.dwFlags         = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER
+                pfd.iPixelType      = PFD_TYPE_RGBA
+                pfd.cColorBits      = 24
+                pfd.cAlphaBits      = 8
+                pfd.cDepthBits      = 32
+                pfd.cStencilBits    = 8
+                pfd.iLayerType      = PFD_MAIN_PLANE
         
-            data.hDC = GetDC(hWnd);
-            if not data.hDC:
-                MessageError("Can not get device context.");
+                data.hDC = GetDC(hWnd);
+                if not data.hDC:
+                    MessageError("Can not get device context.");
 
-            pfi = ChoosePixelFormat(data.hDC, byref(pfd))
-            if not pfi:
-                MessageError("Can not choose pixel format. (windows error code: %d)" % GetLastError())
+                pfi = ChoosePixelFormat(data.hDC, byref(pfd))
+                if not pfi:
+                    MessageError("Can not choose pixel format. (windows error code: %d)" % GetLastError())
         
-            result = SetPixelFormat(data.hDC, pfi, byref(pfd))
-            if not result:
-                MessageError("Can not set pixel format. (windows error code: %d)" % GetLastError())
+                result = SetPixelFormat(data.hDC, pfi, byref(pfd))
+                if not result:
+                    MessageError("Can not set pixel format. (windows error code: %d)" % GetLastError())
 
-            # --- Just getting info --- 
-            memset(byref(pfd), 0, sizeof(PIXELFORMATDESCRIPTOR))
-            max_pfi = DescribePixelFormat(data.hDC, pfi, sizeof(PIXELFORMATDESCRIPTOR), byref(pfd));
-            if not max_pfi:
-                MessageError("Can not get pixel format. (windows error code: %d)" % GetLastError())
+                # --- Just getting info --- 
+                memset(byref(pfd), 0, sizeof(PIXELFORMATDESCRIPTOR))
+                max_pfi = DescribePixelFormat(data.hDC, pfi, sizeof(PIXELFORMATDESCRIPTOR), byref(pfd));
+                if not max_pfi:
+                    MessageError("Can not get pixel format. (windows error code: %d)" % GetLastError())
             
-            print("cColorBits   =", pfd.cColorBits)
-            print("cRedBits     =", pfd.cRedBits)
-            print("cGreenBits   =", pfd.cGreenBits)
-            print("cBlueBits    =", pfd.cBlueBits)
-            print("cAlphaBits   =", pfd.cAlphaBits)
-            print("cDepthBits   =", pfd.cDepthBits)
-            print("cStencilBits =", pfd.cStencilBits)
+                print("cColorBits   =", pfd.cColorBits)
+                print("cRedBits     =", pfd.cRedBits)
+                print("cGreenBits   =", pfd.cGreenBits)
+                print("cBlueBits    =", pfd.cBlueBits)
+                print("cAlphaBits   =", pfd.cAlphaBits)
+                print("cDepthBits   =", pfd.cDepthBits)
+                print("cStencilBits =", pfd.cStencilBits)
             
-            if "list_pixel_formats" in options:
-                max_pfi = DescribePixelFormat(data.hDC, 0, 0, NULL)
-                print("max_pfi:", max_pfi)
+                if "list_pixel_formats" in options:
+                    max_pfi = DescribePixelFormat(data.hDC, 0, 0, NULL)
+                    print("max_pfi:", max_pfi)
             
-                for pfi in range(0, max_pfi + 1):
-                    memset(byref(pfd), 0, sizeof(PIXELFORMATDESCRIPTOR))
-                    DescribePixelFormat(data.hDC, pfi, sizeof(PIXELFORMATDESCRIPTOR), byref(pfd))
+                    for pfi in range(0, max_pfi + 1):
+                        memset(byref(pfd), 0, sizeof(PIXELFORMATDESCRIPTOR))
+                        DescribePixelFormat(data.hDC, pfi, sizeof(PIXELFORMATDESCRIPTOR), byref(pfd))
                 
-                    ViewPFD(pfi, pfd)
-            # ---
+                        ViewPFD(pfi, pfd)
+                # ---
         
-            data.hRC = wglCreateContext(data.hDC)
-            if not data.hRC:
-                MessageError("Can create opengl rendering context. (windows error code: %d)" % GetLastError())
+                data.hRC = wglCreateContext(data.hDC)
+                if not data.hRC:
+                    MessageError("Can not create OpenGL Rendering Context. (windows error code: %d)" % GetLastError())
         
-            wglMakeCurrent(data.hDC, data.hRC)
+                wglMakeCurrent(data.hDC, data.hRC)
+
+                gl_version_major = 3
+                gl_version_minor = 0
+
+                attribute_list = [
+                    WGL_CONTEXT_MAJOR_VERSION_ARB, gl_version_major,
+                    WGL_CONTEXT_MINOR_VERSION_ARB, gl_version_minor,
+                    WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+                    0
+                ]
+                attribute_list = (c_int * len(attribute_list))(*(attribute for attribute in attribute_list))
+
+                wglCreateContextAttribsARB = WINFUNCTYPE(HGLRC, HDC, HGLRC, POINTER(c_int))(wglGetProcAddress(b"wglCreateContextAttribsARB"))
+
+                data.hRC = wglCreateContextAttribsARB(data.hDC, data.hRC, attribute_list)
+                if not data.hRC:
+                    MessageError("Can not create OpenGL %d.%d Rendering Context. (windows error code: %d)" % (gl_version_major, gl_version_minor, GetLastError()))
+
+                wglMakeCurrent(data.hDC, data.hRC)
         
-            # --- Just getting info --- 
-            version_string = cast(glGetString(GL_VERSION), c_char_p).value.decode("utf-8")
-            print("GL_VERSION: %s\n" % version_string, flush = True)
+                # --- Just getting info --- 
+                version_string = cast(glGetString(GL_VERSION), c_char_p).value.decode("utf-8")
+                print("GL_VERSION: %s\n" % version_string, flush = True)
 
-            # ---
+                # ---
 
-            initialize()
+                initialize()
 
-            # ---
+                # ---
 
-            print("X - Close (no prompt)")
+                print("X - Close (no prompt)")
 
-            return 0
+                return 0
     
-        if msg == WM_DESTROY:
-            print("Bye. Bye.")
+            if msg == WM_DESTROY:
+                print("Bye. Bye.")
 
-            wglMakeCurrent(NULL, NULL)
-            wglDeleteContext(data.hRC)
-            ReleaseDC(hWnd, data.hDC)
+                wglMakeCurrent(NULL, NULL)
+                wglDeleteContext(data.hRC)
+                ReleaseDC(hWnd, data.hDC)
 
-            PostQuitMessage(0)
+                PostQuitMessage(0)
 
-            return 0
+                return 0
 
-        if msg == WM_PAINT:
-            render()
-            SwapBuffers(data.hDC)
-            ValidateRect(hWnd, NULL)
-            return 0;
+            if msg == WM_PAINT:
+                render()
+                SwapBuffers(data.hDC)
+                ValidateRect(hWnd, NULL)
+                return 0;
 
-        if msg == WM_ERASEBKGND:
-            # Tells DefWindowProc to not erase background. It's unnecessary since background is handled by OpenGL.
-            return 1
+            if msg == WM_ERASEBKGND:
+                # Tells DefWindowProc to not erase background. It's unnecessary since background is handled by OpenGL.
+                return 1
 
-        if msg == WM_TIMER:
-            if wParam == TIMER_ID:
-                # 15 degrees per second
-                data.angle += 15 * (TIMER_DELAY / 1000.0)
+            if msg == WM_TIMER:
+                if wParam == TIMER_ID:
+                    # 15 degrees per second
+                    data.angle += 15 * (TIMER_DELAY / 1000.0)
+                return 0
 
-                #InvalidateRect(hWnd, NULL, TRUE)
-            return 0
+            if msg == WM_SIZE:
+                glViewport(0, 0, LOWORD(lParam).value, HIWORD(lParam).value)
+                return 0
 
-        if msg == WM_SIZE:
-            glViewport(0, 0, LOWORD(lParam).value, HIWORD(lParam).value)
-            return 0
+            if msg == WM_KEYUP:
+                if wParam == ord("X"):
+                    DestroyWindow(hWnd)
+                return 0
 
-        if msg == WM_KEYUP:
-            if wParam == ord("X"):
+            if msg == WM_CLOSE:
                 DestroyWindow(hWnd)
-            return 0
-
-        if msg == WM_CLOSE:
-            DestroyWindow(hWnd)
-            return 0
+                return 0
     
-        return DefWindowProcW(hWnd, msg, wParam, lParam)
+            return DefWindowProcW(hWnd, msg, wParam, lParam)
+
+        except Exception as e:
+            DestroyWindow(hWnd)
+            raise e
     
     WndProc = WNDPROC(WndProc)
     
