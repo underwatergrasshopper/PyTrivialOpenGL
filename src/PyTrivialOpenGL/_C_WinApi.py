@@ -1,14 +1,14 @@
-import ctypes           as _ct
-import ctypes.wintypes  as _wt
+import ctypes           as _ctypes
+import ctypes.wintypes  as _wintypes
 
 ### WinApi Libraries ###
 
-_Kernel32   = _ct.windll.Kernel32
-_User32     = _ct.windll.User32
-_Dwmapi     = _ct.windll.Dwmapi
-_Gdi32      = _ct.windll.Gdi32
+_Kernel32   = _ctypes.windll.Kernel32
+_User32     = _ctypes.windll.User32
+_Dwmapi     = _ctypes.windll.Dwmapi
+_Gdi32      = _ctypes.windll.Gdi32
 
-_IS_64_BIT  = _ct.sizeof(_ct.c_void_p) == 8
+_IS_64_BIT  = _ctypes.sizeof(_ctypes.c_void_p) == 8
 
 ### WinApi Constants ###
 
@@ -341,71 +341,72 @@ INFINITE                = 0xFFFFFFFF
 
 NULL                    = None
 
-BYTE                    = _wt.BYTE
-WORD                    = _wt.WORD
-DWORD                   = _wt.DWORD
-CHAR                    = _wt.CHAR
-WCHAR                   = _wt.WCHAR
-UINT                    = _wt.UINT
-INT                     = _wt.INT
-DOUBLE                  = _wt.DOUBLE
-FLOAT                   = _wt.FLOAT
-BOOLEAN                 = _wt.BOOLEAN
-BOOL                    = _wt.BOOL
+BYTE                    = _wintypes.BYTE
+WORD                    = _wintypes.WORD
+DWORD                   = _wintypes.DWORD
+CHAR                    = _wintypes.CHAR
+WCHAR                   = _wintypes.WCHAR
+UINT                    = _wintypes.UINT
+INT                     = _wintypes.INT
+DOUBLE                  = _wintypes.DOUBLE
+FLOAT                   = _wintypes.FLOAT
+BOOLEAN                 = _wintypes.BOOLEAN
+BOOL                    = _wintypes.BOOL
 
-ULONG                   = _wt.ULONG
-LONG                    = _wt.LONG
-USHORT                  = _wt.USHORT
-SHORT                   = _wt.SHORT
-LARGE_INTEGER           = _wt.LARGE_INTEGER
-ULARGE_INTEGER          = _wt.ULARGE_INTEGER
+ULONG                   = _wintypes.ULONG
+LONG                    = _wintypes.LONG
+USHORT                  = _wintypes.USHORT
+SHORT                   = _wintypes.SHORT
+LARGE_INTEGER           = _wintypes.LARGE_INTEGER
+ULARGE_INTEGER          = _wintypes.ULARGE_INTEGER
 
-LPWSTR                  = _wt.LPWSTR
-LPCWSTR                 = _wt.LPCWSTR
-LPSTR                   = _wt.LPSTR
-LPCSTR                  = _wt.LPCSTR
-PVOID                   = _ct.c_void_p
-LPVOID                  = _wt.LPVOID
-LPCVOID                 = _wt.LPCVOID
-LPWORD                  = _wt.LPWORD  
-LPDWORD                 = _wt.LPDWORD       
+LPWSTR                  = _wintypes.LPWSTR
+LPCWSTR                 = _wintypes.LPCWSTR
+LPSTR                   = _wintypes.LPSTR
+LPCSTR                  = _wintypes.LPCSTR
+PVOID                   = _ctypes.c_void_p
+LPVOID                  = _wintypes.LPVOID
+LPCVOID                 = _wintypes.LPCVOID
+LPWORD                  = _wintypes.LPWORD  
+LPDWORD                 = _wintypes.LPDWORD       
 
 if _IS_64_BIT:
-    ULONG_PTR               = _ct.c_size_t
-    LONG_PTR                = _ct.c_ssize_t 
-    UINT_PTR                = _ct.c_size_t
-    INT_PTR                 = _ct.c_ssize_t 
+    ULONG_PTR               = _ctypes.c_size_t
+    LONG_PTR                = _ctypes.c_ssize_t 
+    UINT_PTR                = _ctypes.c_size_t
+    INT_PTR                 = _ctypes.c_ssize_t 
 else:
-    ULONG_PTR               = _ct.c_ulong
-    LONG_PTR                = _ct.c_long 
-    UINT_PTR                = _ct.c_uint
-    INT_PTR                 = _ct.c_int 
+    ULONG_PTR               = _ctypes.c_ulong
+    LONG_PTR                = _ctypes.c_long 
+    UINT_PTR                = _ctypes.c_uint
+    INT_PTR                 = _ctypes.c_int 
 
 SIZE_T                  = ULONG_PTR
 SSIZE_T                 = LONG_PTR
 
 DWORD_PTR               = ULONG_PTR
 LRESULT                 = LONG_PTR
-ATOM                    = _wt.WORD
+ATOM                    = _wintypes.WORD
 
-HANDLE                  = _wt.HANDLE
-HBRUSH                  = _wt.HBRUSH
-HFONT                   = _wt.HFONT
-HICON                   = _wt.HICON
+HANDLE                  = _wintypes.HANDLE
+HBRUSH                  = _wintypes.HBRUSH
+HFONT                   = _wintypes.HFONT
+HICON                   = _wintypes.HICON
 HCURSOR                 = HICON
-HINSTANCE               = _wt.HINSTANCE
-HMODULE                 = _wt.HMODULE
-HMENU                   = _wt.HMENU
+HINSTANCE               = _wintypes.HINSTANCE
+HMODULE                 = _wintypes.HMODULE
+HMENU                   = _wintypes.HMENU
 
-HWND                    = _wt.HWND
-HDC                     = _wt.HDC
+HWND                    = _wintypes.HWND
+HDC                     = _wintypes.HDC
 
-WPARAM                  = _wt.WPARAM
-LPARAM                  = _wt.LPARAM
+WPARAM                  = _wintypes.WPARAM
+LPARAM                  = _wintypes.LPARAM
 
-HRESULT                 = _ct.c_long
+HRESULT                 = _ctypes.c_long
 
-WNDPROC                 = _ct.WINFUNCTYPE(LRESULT, HWND, UINT, WPARAM, LPARAM)
+WNDPROC                 = _ctypes.WINFUNCTYPE(LRESULT, HWND, UINT, WPARAM, LPARAM)
+TIMERPROC               = _ctypes.WINFUNCTYPE(None, HWND, UINT, UINT_PTR, DWORD)
 
 # SetWindowPos, hWndInsertAfter
 HWND_TOP                = HWND(0)
@@ -415,23 +416,23 @@ HWND_NOTOPMOST          = HWND(-2)
 
 ### WinApi Structures ###
 
-POINT                   = _wt.POINT
-SIZE                    = _wt.SIZE
-RECT                    = _wt.RECT
+POINT                   = _wintypes.POINT
+SIZE                    = _wintypes.SIZE
+RECT                    = _wintypes.RECT
 
-LPPOINT                 = _wt.LPPOINT
-LPSIZE                  = _wt.LPSIZE
-LPRECT                  = _wt.LPRECT
+LPPOINT                 = _wintypes.LPPOINT
+LPSIZE                  = _wintypes.LPSIZE
+LPRECT                  = _wintypes.LPRECT
 
-MSG                     = _wt.MSG
+MSG                     = _wintypes.MSG
 
-class WNDCLASSEXW(_ct.Structure):
+class WNDCLASSEXW(_ctypes.Structure):
     _fields_ = [
-        ("cbSize",          _ct.c_uint),
-        ("style",           _ct.c_uint),
+        ("cbSize",          _ctypes.c_uint),
+        ("style",           _ctypes.c_uint),
         ("lpfnWndProc",     WNDPROC),
-        ("cbClsExtra",      _ct.c_int),
-        ("cbWndExtra",      _ct.c_int),
+        ("cbClsExtra",      _ctypes.c_int),
+        ("cbWndExtra",      _ctypes.c_int),
         ("hInstance",       HINSTANCE),
         ("hIcon",           HICON),
         ("hCursor",         HCURSOR),
@@ -441,7 +442,7 @@ class WNDCLASSEXW(_ct.Structure):
         ("hIconSm",         HICON)
     ]
 
-class PIXELFORMATDESCRIPTOR(_ct.Structure):
+class PIXELFORMATDESCRIPTOR(_ctypes.Structure):
     _fields_ = [
         ("nSize",           WORD),
         ("nVersion",        WORD),
@@ -483,13 +484,13 @@ def HIWORD(l):
     return WORD((DWORD_PTR(l).value >> 16) & 0xFFFF)
 
 def GET_X_LPARAM(lp):
-    return _ct.c_int(_ct.c_short(LOWORD(lp).value).value)
+    return _ctypes.c_int(_ctypes.c_short(LOWORD(lp).value).value)
 
 def GET_Y_LPARAM(lp):
-    return _ct.c_int(_ct.c_short(HIWORD(lp).value).value)
+    return _ctypes.c_int(_ctypes.c_short(HIWORD(lp).value).value)
 
 def GET_WHEEL_DELTA_WPARAM(wParam):
-    return _ct.c_short(HIWORD(wParam).value)
+    return _ctypes.c_short(HIWORD(wParam).value)
 
 def GET_KEYSTATE_WPARAM(wParam):
     return LOWORD(wParam)
@@ -506,152 +507,152 @@ IDC_ARROW               = MAKEINTRESOURCEW(32512)
 
 ### WinApi Functions ###
 
-GetLastError            = _ct.WINFUNCTYPE(DWORD)(
+GetLastError            = _ctypes.WINFUNCTYPE(DWORD)(
     ("GetLastError", _Kernel32), 
     ()
 )
 
-GetModuleHandleW        = _ct.WINFUNCTYPE(HMODULE, LPCWSTR)(
+GetModuleHandleW        = _ctypes.WINFUNCTYPE(HMODULE, LPCWSTR)(
     ("GetModuleHandleW", _Kernel32), 
     ((1, "lpModuleName"), )
 )
 
-GetSystemMetrics        = _ct.WINFUNCTYPE(_ct.c_int, _ct.c_int)(
+GetSystemMetrics        = _ctypes.WINFUNCTYPE(_ctypes.c_int, _ctypes.c_int)(
     ("GetSystemMetrics", _User32), 
     ((1, "nIndex"), )
 )
 
-SystemParametersInfoW   = _ct.WINFUNCTYPE(BOOL, UINT, UINT, PVOID, UINT)(
+SystemParametersInfoW   = _ctypes.WINFUNCTYPE(BOOL, UINT, UINT, PVOID, UINT)(
     ("SystemParametersInfoW", _User32), 
     ((1, "uiAction"), (1, "uiParam"), (1, "pvParam"), (1, "fWinIni"))
 )
 
 ### WinApi Functions - Window ###
 
-GetForegroundWindow     = _ct.WINFUNCTYPE(HWND)(
+GetForegroundWindow     = _ctypes.WINFUNCTYPE(HWND)(
     ("GetForegroundWindow", _User32), 
     ()
 )
 
-SetForegroundWindow     = _ct.WINFUNCTYPE(BOOL, HWND)(
+SetForegroundWindow     = _ctypes.WINFUNCTYPE(BOOL, HWND)(
     ("SetForegroundWindow", _User32), 
     ((1, "hWnd"),)
 )
 
-SetFocus                = _ct.WINFUNCTYPE(HWND, HWND)(
+SetFocus                = _ctypes.WINFUNCTYPE(HWND, HWND)(
     ("SetFocus", _User32), 
     ((1, "hWnd"),)
 )
 
-FindWindowW             = _ct.WINFUNCTYPE(HWND, LPCWSTR, LPCWSTR)(
+FindWindowW             = _ctypes.WINFUNCTYPE(HWND, LPCWSTR, LPCWSTR)(
     ("FindWindowW", _User32), 
     ((1, "lpClassName", None), (1, "lpWindowName", None))
 )
 
-GetActiveWindow         = _ct.WINFUNCTYPE(HWND)(
+GetActiveWindow         = _ctypes.WINFUNCTYPE(HWND)(
     ("GetActiveWindow", _User32), 
     ()
 )
 
-GetWindow               = _ct.WINFUNCTYPE(HWND, HWND, UINT)(
+GetWindow               = _ctypes.WINFUNCTYPE(HWND, HWND, UINT)(
     ("GetWindow", _User32), 
     ((1, "hWnd"), (1, "uCmd"))
 )
 
-GetWindowTextLengthW    = _ct.WINFUNCTYPE(_ct.c_int, HWND)(
+GetWindowTextLengthW    = _ctypes.WINFUNCTYPE(_ctypes.c_int, HWND)(
     ("GetWindowTextLengthW", _User32), 
     ((1, "hWnd"),)
 )
 
-GetWindowTextW          = _ct.WINFUNCTYPE(_ct.c_int, HWND, LPWSTR, _ct.c_int)(
+GetWindowTextW          = _ctypes.WINFUNCTYPE(_ctypes.c_int, HWND, LPWSTR, _ctypes.c_int)(
     ("GetWindowTextW", _User32), 
     ((1, "hWnd"), (1, "lpString"), (1, "nMaxCount"))
 )
 
-GetWindowRect           = _ct.WINFUNCTYPE(BOOL, HWND, LPRECT)(
+GetWindowRect           = _ctypes.WINFUNCTYPE(BOOL, HWND, LPRECT)(
     ("GetWindowRect", _User32), 
     ((1, "hWnd"), (1, "lpRect"))
 )
 
-GetClientRect           = _ct.WINFUNCTYPE(BOOL, HWND, LPRECT)(
+GetClientRect           = _ctypes.WINFUNCTYPE(BOOL, HWND, LPRECT)(
     ("GetClientRect", _User32), 
     ((1, "hWnd"), (1, "lpRect"))
 )
 
-DwmGetWindowAttribute   = _ct.WINFUNCTYPE(HRESULT, HWND, DWORD, PVOID, DWORD)(
+DwmGetWindowAttribute   = _ctypes.WINFUNCTYPE(HRESULT, HWND, DWORD, PVOID, DWORD)(
     ("DwmGetWindowAttribute", _Dwmapi), 
     ((1, "hwnd"), (1, "dwAttribute"), (1, "pvAttribute"), (1, "cbAttribute"))
 )
 
-ClientToScreen          = _ct.WINFUNCTYPE(BOOL, HWND, LPPOINT)(
+ClientToScreen          = _ctypes.WINFUNCTYPE(BOOL, HWND, LPPOINT)(
     ("ClientToScreen", _User32), 
     ((1, "hWnd"), (1, "lpPoint"))
 )
 
-ScreenToClient          = _ct.WINFUNCTYPE(BOOL, HWND, LPPOINT)(
+ScreenToClient          = _ctypes.WINFUNCTYPE(BOOL, HWND, LPPOINT)(
     ("ScreenToClient", _User32), 
     ((1, "hWnd"), (1, "lpPoint"))
 )
 
-SetWindowLongW          = _ct.WINFUNCTYPE(LONG, HWND, _ct.c_int, LONG)(
+SetWindowLongW          = _ctypes.WINFUNCTYPE(LONG, HWND, _ctypes.c_int, LONG)(
     ("SetWindowLongW", _User32), 
     ((1, "hWnd"), (1, "nIndex"), (1, "dwNewLong"))
 )
 
 if _IS_64_BIT:
-    SetWindowLongPtrW   = _ct.WINFUNCTYPE(LONG_PTR, HWND, _ct.c_int, LONG_PTR)(
+    SetWindowLongPtrW   = _ctypes.WINFUNCTYPE(LONG_PTR, HWND, _ctypes.c_int, LONG_PTR)(
         ("SetWindowLongPtrW", _User32), 
         ((1, "hWnd"), (1, "nIndex"), (1, "dwNewLong"))
     )
 else:
     SetWindowLongPtrW = SetWindowLongW 
 
-SetWindowLongW          = _ct.WINFUNCTYPE(LONG, HWND, _ct.c_int, LONG)(
+SetWindowLongW          = _ctypes.WINFUNCTYPE(LONG, HWND, _ctypes.c_int, LONG)(
     ("SetWindowLongW", _User32), 
     ((1, "hWnd"), (1, "nIndex"), (1, "dwNewLong"))
 )
 
-SetWindowPos            = _ct.WINFUNCTYPE(BOOL, HWND, HWND, _ct.c_int, _ct.c_int, _ct.c_int, _ct.c_int, UINT)(
+SetWindowPos            = _ctypes.WINFUNCTYPE(BOOL, HWND, HWND, _ctypes.c_int, _ctypes.c_int, _ctypes.c_int, _ctypes.c_int, UINT)(
     ("SetWindowPos", _User32), 
     ((1, "hWnd"), (1, "hWndInsertAfter"), (1, "X"), (1, "Y"), (1, "cx"), (1, "cy"), (1, "uFlags"))
 )
 
-AdjustWindowRectEx      = _ct.WINFUNCTYPE(BOOL, LPRECT, DWORD, BOOL, DWORD)(
+AdjustWindowRectEx      = _ctypes.WINFUNCTYPE(BOOL, LPRECT, DWORD, BOOL, DWORD)(
     ("AdjustWindowRectEx", _User32), 
     ((1, "lpRect"), (1, "dwStyle"), (1, "bMenu"), (1, "dwExStyle"))
 )
 
-AdjustWindowRect        = _ct.WINFUNCTYPE(BOOL, LPRECT, DWORD, BOOL)(
+AdjustWindowRect        = _ctypes.WINFUNCTYPE(BOOL, LPRECT, DWORD, BOOL)(
     ("AdjustWindowRect", _User32), 
     ((1, "lpRect"), (1, "dwStyle"), (1, "bMenu"))
 )
 
-IsZoomed                = _ct.WINFUNCTYPE(BOOL, HWND)(
+IsZoomed                = _ctypes.WINFUNCTYPE(BOOL, HWND)(
     ("IsZoomed", _User32), 
     ((1, "hWnd"),)
 )
 
-IsIconic                = _ct.WINFUNCTYPE(BOOL, HWND)(
+IsIconic                = _ctypes.WINFUNCTYPE(BOOL, HWND)(
     ("IsIconic", _User32), 
     ((1, "hWnd"),)
 )
 
-ShowWindow              = _ct.WINFUNCTYPE(BOOL, HWND, _ct.c_int)(
+ShowWindow              = _ctypes.WINFUNCTYPE(BOOL, HWND, _ctypes.c_int)(
     ("ShowWindow", _User32), 
     ((1, "hWnd"), (1, "nCmdShow"))
 )
 
-LoadCursorW             = _ct.WINFUNCTYPE(HCURSOR, HINSTANCE, LPCWSTR)(
+LoadCursorW             = _ctypes.WINFUNCTYPE(HCURSOR, HINSTANCE, LPCWSTR)(
     ("LoadCursorW", _User32), 
     ((1, "hInstance"), (1, "lpCursorName"))
 )
 
-LoadImageW             = _ct.WINFUNCTYPE(HANDLE, HINSTANCE, LPCWSTR, UINT, _ct.c_int, _ct.c_int, UINT)(
+LoadImageW             = _ctypes.WINFUNCTYPE(HANDLE, HINSTANCE, LPCWSTR, UINT, _ctypes.c_int, _ctypes.c_int, UINT)(
     ("LoadImageW", _User32), 
     ((1, "hInst"), (1, "name"), (1, "_type"), (1, "cx"), (1, "cy"), (1, "fuLoad"))
 )
 
-MessageBoxW            = _ct.WINFUNCTYPE(_ct.c_int, HWND, LPCWSTR, LPCWSTR, UINT)(
+MessageBoxW            = _ctypes.WINFUNCTYPE(_ctypes.c_int, HWND, LPCWSTR, LPCWSTR, UINT)(
     ("MessageBoxW", _User32), 
     ((1, "hWnd", NULL), (1, "lpText", ""), (1, "lpCaption", ""), (1, "uType", 0))
 )
@@ -673,16 +674,16 @@ def OwnerlessMessageBox_FromNewThreadWithWait(lpText, lpCaption, uType):
     uType           : UINT
     Returns (ctypes.c_int). Same result values as MessageBoxW. 
     """
-    class ParameterPack(_ct.Structure):
+    class ParameterPack(_ctypes.Structure):
         _fields_ = [
             ("lpText",      LPCWSTR),
             ("lpCaption",   LPCWSTR),
             ("uType",       UINT),
-            ("iResult",     _ct.c_int),
+            ("iResult",     _ctypes.c_int),
         ]
 
     def ThreadFunction(param):
-        pack = _ct.cast(param, _ct.POINTER(ParameterPack))[0]
+        pack = _ctypes.cast(param, _ctypes.POINTER(ParameterPack))[0]
 
         pack.iResult = MessageBoxW(NULL, pack.lpText, pack.lpCaption, pack.uType)
         return 0
@@ -690,24 +691,24 @@ def OwnerlessMessageBox_FromNewThreadWithWait(lpText, lpCaption, uType):
 
     pack = ParameterPack(lpText, lpCaption, uType, 0)
 
-    thread_handle = CreateThread(NULL, 0, ThreadFunction, _ct.byref(pack), 0, NULL)
+    thread_handle = CreateThread(NULL, 0, ThreadFunction, _ctypes.byref(pack), 0, NULL)
     WaitForSingleObject(thread_handle, INFINITE)
 
     return pack.iResult
 
 ###
 
-RegisterClassExW        = _ct.WINFUNCTYPE(ATOM, _ct.POINTER(WNDCLASSEXW))(
+RegisterClassExW        = _ctypes.WINFUNCTYPE(ATOM, _ctypes.POINTER(WNDCLASSEXW))(
     ("RegisterClassExW", _User32), 
     ((1, "lpwcx"), )
 )
 
-UnregisterClassW        = _ct.WINFUNCTYPE(BOOL, LPCWSTR, HINSTANCE)(
+UnregisterClassW        = _ctypes.WINFUNCTYPE(BOOL, LPCWSTR, HINSTANCE)(
     ("UnregisterClassW", _User32), 
     ((1, "lpClassName"), (1, "hInstance"))
 )
 
-CreateWindowExW         = _ct.WINFUNCTYPE(HWND, DWORD, LPCWSTR, LPCWSTR, DWORD, _ct.c_int, _ct.c_int, _ct.c_int, _ct.c_int, HWND, HMENU, HINSTANCE, LPVOID)(
+CreateWindowExW         = _ctypes.WINFUNCTYPE(HWND, DWORD, LPCWSTR, LPCWSTR, DWORD, _ctypes.c_int, _ctypes.c_int, _ctypes.c_int, _ctypes.c_int, HWND, HMENU, HINSTANCE, LPVOID)(
     ("CreateWindowExW", _User32), 
     (
         (1, "dwExStyle", 0), 
@@ -722,104 +723,109 @@ CreateWindowExW         = _ct.WINFUNCTYPE(HWND, DWORD, LPCWSTR, LPCWSTR, DWORD, 
     )
 )
 
-DestroyWindow           = _ct.WINFUNCTYPE(BOOL, HWND)(
+DestroyWindow           = _ctypes.WINFUNCTYPE(BOOL, HWND)(
     ("DestroyWindow", _User32), 
     ((1, "hWnd"), )
 )
 
-CloseWindow             = _ct.WINFUNCTYPE(BOOL, HWND)(
+CloseWindow             = _ctypes.WINFUNCTYPE(BOOL, HWND)(
     ("CloseWindow", _User32), 
     ((1, "hWnd"), )
 )
 
-UpdateWindow            = _ct.WINFUNCTYPE(BOOL, HWND)(
+UpdateWindow            = _ctypes.WINFUNCTYPE(BOOL, HWND)(
     ("UpdateWindow", _User32), 
     ((1, "hWnd"), )
 )
 
-DefWindowProcW          = _ct.WINFUNCTYPE(LRESULT, HWND, UINT, WPARAM, LPARAM)(
+DefWindowProcW          = _ctypes.WINFUNCTYPE(LRESULT, HWND, UINT, WPARAM, LPARAM)(
     ("DefWindowProcW", _User32), 
     ((1, "hWnd"), (1, "Msg"), (1, "wParam"), (1, "lParam"))
 )
 
-GetMessageW             = _ct.WINFUNCTYPE(BOOL, _ct.POINTER(MSG), HWND, UINT, UINT)(
+GetMessageW             = _ctypes.WINFUNCTYPE(BOOL, _ctypes.POINTER(MSG), HWND, UINT, UINT)(
     ("GetMessageW", _User32), 
     ((1, "lpMsg"), (1, "hWnd"), (1, "wMsgFilterMin"), (1, "wMsgFilterMax"))
 )
 
-PeekMessageW            = _ct.WINFUNCTYPE(BOOL, _ct.POINTER(MSG), HWND, UINT, UINT, UINT)(
+PeekMessageW            = _ctypes.WINFUNCTYPE(BOOL, _ctypes.POINTER(MSG), HWND, UINT, UINT, UINT)(
     ("PeekMessageW", _User32), 
     ((1, "lpMsg"), (1, "hWnd"), (1, "wMsgFilterMin"), (1, "wMsgFilterMax"), (1, "wRemoveMsg"))
 )
 
-TranslateMessage        = _ct.WINFUNCTYPE(BOOL, _ct.POINTER(MSG))(
+TranslateMessage        = _ctypes.WINFUNCTYPE(BOOL, _ctypes.POINTER(MSG))(
     ("TranslateMessage", _User32), 
     ((1, "lpMsg"), )
 )
 
-DispatchMessageW        = _ct.WINFUNCTYPE(LRESULT, _ct.POINTER(MSG))(
+DispatchMessageW        = _ctypes.WINFUNCTYPE(LRESULT, _ctypes.POINTER(MSG))(
     ("DispatchMessageW", _User32), 
     ((1, "lpMsg"), )
 )
 
-PostQuitMessage        = _ct.WINFUNCTYPE(None, _ct.c_int)(
+PostQuitMessage        = _ctypes.WINFUNCTYPE(None, _ctypes.c_int)(
     ("PostQuitMessage", _User32), 
     ((1, "nExitCode"), )
 )
 
-PostMessageW            = _ct.WINFUNCTYPE(BOOL, HWND, UINT, WPARAM, LPARAM)(
+PostMessageW            = _ctypes.WINFUNCTYPE(BOOL, HWND, UINT, WPARAM, LPARAM)(
     ("PostMessageW", _User32), 
     ((1, "hWnd"), (1, "Msg"), (1, "wParam"), (1, "lParam"))
 )
 
-SendMessageW            = _ct.WINFUNCTYPE(LRESULT, HWND, UINT, WPARAM, LPARAM)(
+SendMessageW            = _ctypes.WINFUNCTYPE(LRESULT, HWND, UINT, WPARAM, LPARAM)(
     ("SendMessageW", _User32), 
     ((1, "hWnd"), (1, "Msg"), (1, "wParam"), (1, "lParam"))
 )
 
-GetQueueStatus          = _ct.WINFUNCTYPE(DWORD, UINT)(
+GetQueueStatus          = _ctypes.WINFUNCTYPE(DWORD, UINT)(
     ("GetQueueStatus", _User32), 
     ((1, "flags"), )
 )
 
-WaitForSingleObject = _ct.WINFUNCTYPE(DWORD, HANDLE, DWORD)(
+WaitForSingleObject = _ctypes.WINFUNCTYPE(DWORD, HANDLE, DWORD)(
     ("WaitForSingleObject", _Kernel32), 
     ((1, "hHandle"), (1, "dwMilliseconds"))
 )
 
-MsgWaitForMultipleObjectsEx = _ct.WINFUNCTYPE(DWORD, DWORD, _ct.POINTER(HANDLE), DWORD, DWORD, DWORD)(
+MsgWaitForMultipleObjectsEx = _ctypes.WINFUNCTYPE(DWORD, DWORD, _ctypes.POINTER(HANDLE), DWORD, DWORD, DWORD)(
     ("MsgWaitForMultipleObjectsEx", _User32), 
     ((1, "nCount"), (1, "pHandles"), (1, "dwMilliseconds"), (1, "dwWakeMask"), (1, "dwFlags"))
 )
 
-InSendMessage           = _ct.WINFUNCTYPE(BOOL)(
+InSendMessage           = _ctypes.WINFUNCTYPE(BOOL)(
     ("InSendMessage", _User32), 
     ()
 )
 
-ReplyMessage            = _ct.WINFUNCTYPE(BOOL, LRESULT)(
+ReplyMessage            = _ctypes.WINFUNCTYPE(BOOL, LRESULT)(
     ("ReplyMessage", _User32), 
     ((1, "lResult"), )
 )
 
+SetTimer                = _ctypes.WINFUNCTYPE(UINT_PTR, HWND, UINT_PTR, UINT, TIMERPROC)(
+    ("SetTimer", _User32), 
+    ((1, "hWnd"), (1, "nIDEvent"), (1, "uElapse"), (1, "lpTimerFunc"))
+)
+
 ### WinApi Functions - Mouse ###
 
-GetCursorPos            = _ct.WINFUNCTYPE(BOOL, LPPOINT)(
+GetCursorPos            = _ctypes.WINFUNCTYPE(BOOL, LPPOINT)(
     ("GetCursorPos", _User32), 
     ((1, "lpPoint"),)
 )
 
-SetCapture              = _ct.WINFUNCTYPE(HWND, HWND)(
+SetCapture              = _ctypes.WINFUNCTYPE(HWND, HWND)(
     ("SetCapture", _User32), 
     ((1, "hWnd"),)
 )
 
-GetCapture              = _ct.WINFUNCTYPE(HWND)(
+GetCapture              = _ctypes.WINFUNCTYPE(HWND)(
     ("GetCapture", _User32), 
     ()
 )
 
-ReleaseCapture          = _ct.WINFUNCTYPE(HWND)(
+ReleaseCapture          = _ctypes.WINFUNCTYPE(HWND)(
     ("ReleaseCapture", _User32), 
     ()
 )
@@ -829,18 +835,18 @@ ReleaseCapture          = _ct.WINFUNCTYPE(HWND)(
 CREATE_SUSPENDED                    = 0x00000004
 STACK_SIZE_PARAM_IS_A_RESERVATION   = 0x00010000
 
-class SECURITY_ATTRIBUTES(_ct.Structure):
+class SECURITY_ATTRIBUTES(_ctypes.Structure):
     _fields_ = [
         ("nLength",                 DWORD),
         ("lpSecurityDescriptor",    LPVOID),
         ("bInheritHandle",          BOOL)
     ]
 
-LPSECURITY_ATTRIBUTES   = _ct.POINTER(SECURITY_ATTRIBUTES)
-LPTHREAD_START_ROUTINE  = _ct.WINFUNCTYPE(DWORD, LPVOID)
+LPSECURITY_ATTRIBUTES   = _ctypes.POINTER(SECURITY_ATTRIBUTES)
+LPTHREAD_START_ROUTINE  = _ctypes.WINFUNCTYPE(DWORD, LPVOID)
 
 
-CreateThread            = _ct.WINFUNCTYPE(HANDLE, LPSECURITY_ATTRIBUTES, SIZE_T, LPTHREAD_START_ROUTINE, LPVOID, DWORD, LPDWORD)(
+CreateThread            = _ctypes.WINFUNCTYPE(HANDLE, LPSECURITY_ATTRIBUTES, SIZE_T, LPTHREAD_START_ROUTINE, LPVOID, DWORD, LPDWORD)(
     ("CreateThread", _Kernel32), 
     (
         (1, "lpThreadAttributes"), 
@@ -854,42 +860,42 @@ CreateThread            = _ct.WINFUNCTYPE(HANDLE, LPSECURITY_ATTRIBUTES, SIZE_T,
 
 ### Device Context / Rendering Context ###
 
-GetDC                   = _ct.WINFUNCTYPE(HDC, HWND)(
+GetDC                   = _ctypes.WINFUNCTYPE(HDC, HWND)(
     ("GetDC", _User32), 
     ((1, "hWnd"), )
 )
 
-ReleaseDC               = _ct.WINFUNCTYPE(_ct.c_int, HWND, HDC)(
+ReleaseDC               = _ctypes.WINFUNCTYPE(_ctypes.c_int, HWND, HDC)(
     ("ReleaseDC", _User32), 
     ((1, "hWnd"), (1, "hDC"), )
 )
 
-SwapBuffers             = _ct.WINFUNCTYPE(BOOL, HDC)(
+SwapBuffers             = _ctypes.WINFUNCTYPE(BOOL, HDC)(
     ("SwapBuffers", _Gdi32), 
     ((1, "hdc"),)
 )
 
-InvalidateRect          = _ct.WINFUNCTYPE(BOOL, HDC, LPRECT, BOOL)(
+InvalidateRect          = _ctypes.WINFUNCTYPE(BOOL, HDC, LPRECT, BOOL)(
     ("InvalidateRect", _User32), 
     ((1, "hWnd"), (1, "lpRect"), (1, "bErase"))
 )
 
-ValidateRect            = _ct.WINFUNCTYPE(BOOL, HDC, LPRECT)(
+ValidateRect            = _ctypes.WINFUNCTYPE(BOOL, HDC, LPRECT)(
     ("ValidateRect", _User32), 
     ((1, "hWnd"), (1, "lpRect"))
 )
 
-ChoosePixelFormat       = _ct.WINFUNCTYPE(_ct.c_int, HDC, _ct.POINTER(PIXELFORMATDESCRIPTOR))(
+ChoosePixelFormat       = _ctypes.WINFUNCTYPE(_ctypes.c_int, HDC, _ctypes.POINTER(PIXELFORMATDESCRIPTOR))(
     ("ChoosePixelFormat", _Gdi32), 
     ((1, "hdc"), (1, "ppfd"), )
 )
 
-SetPixelFormat          = _ct.WINFUNCTYPE(BOOL, HDC, _ct.c_int, _ct.POINTER(PIXELFORMATDESCRIPTOR))(
+SetPixelFormat          = _ctypes.WINFUNCTYPE(BOOL, HDC, _ctypes.c_int, _ctypes.POINTER(PIXELFORMATDESCRIPTOR))(
     ("SetPixelFormat", _Gdi32), 
     ((1, "hdc"), (1, "_format"), (1, "ppfd"), )
 )
 
-DescribePixelFormat     = _ct.WINFUNCTYPE(_ct.c_int, HDC, _ct.c_int, UINT, _ct.POINTER(PIXELFORMATDESCRIPTOR))(
+DescribePixelFormat     = _ctypes.WINFUNCTYPE(_ctypes.c_int, HDC, _ctypes.c_int, UINT, _ctypes.POINTER(PIXELFORMATDESCRIPTOR))(
     ("DescribePixelFormat", _Gdi32), 
     ((1, "hdc"), (1, "iPixelFormat"), (1, "nBytes"), (1, "ppfd"), )
 )

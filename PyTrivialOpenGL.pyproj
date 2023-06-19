@@ -45,6 +45,11 @@
     <Compile Include="src\PyTrivialOpenGL\Logger.py" />
     <Compile Include="src\PyTrivialOpenGL\Point.py" />
     <Compile Include="src\PyTrivialOpenGL\Size.py" />
+    <Compile Include="src\PyTrivialOpenGL\_C_GL\VERSION_1_1\Constants.py" />
+    <Compile Include="src\PyTrivialOpenGL\_C_GL\VERSION_1_1\Functions.py" />
+    <Compile Include="src\PyTrivialOpenGL\_C_GL\VERSION_1_1\Types.py" />
+    <Compile Include="src\PyTrivialOpenGL\_C_GL\VERSION_1_1\__init__.py" />
+    <Compile Include="src\PyTrivialOpenGL\_C_GL\__init__.py" />
     <Compile Include="src\PyTrivialOpenGL\_C_WGL.py" />
     <Compile Include="src\PyTrivialOpenGL\_C_WinApi.py" />
     <Compile Include="src\PyTrivialOpenGL\__init__.py" />
@@ -61,6 +66,8 @@
   <ItemGroup>
     <Folder Include="src\" />
     <Folder Include="src\PyTrivialOpenGL\" />
+    <Folder Include="src\PyTrivialOpenGL\_C_GL\" />
+    <Folder Include="src\PyTrivialOpenGL\_C_GL\VERSION_1_1\" />
     <Folder Include="tests\" />
     <Folder Include="tests\assets\" />
     <Folder Include="tests\unittests\" />

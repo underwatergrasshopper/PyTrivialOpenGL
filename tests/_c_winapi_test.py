@@ -1,6 +1,7 @@
 from msilib.schema import Icon
 from PyTrivialOpenGL._C_WinApi import *
 from PyTrivialOpenGL._C_WGL import *
+from PyTrivialOpenGL._C_GL import *
 from ctypes import *
 import time
 import os
@@ -463,64 +464,36 @@ example_manager.add_example("simple_window", simple_window)
 # opengl_window
 ################################################################################
 def opengl_window(name, options):
-    GLenum                  = c_uint
-    GLboolean               = c_ubyte
-    GLbitfield              = c_uint
-    GLbyte                  = c_byte
-    GLshort                 = c_short
-    GLint                   = c_int
-    GLsizei                 = c_int
-    GLubyte                 = c_ubyte
-    GLushort                = c_ushort
-    GLuint                  = c_uint
-    GLfloat                 = c_float
-    GLclampf                = c_float
-    GLdouble                = c_double
-    GLclampd                = c_double
-
-    GL_VERSION              = 0x1F02
-    GL_COLOR_BUFFER_BIT     = 0x00004000
-    GL_TRIANGLES            = 0x0004
-
-    GL_NO_ERROR             = 0
-    GL_INVALID_ENUM         = 0x0500
-
-    glGetError              = windll.opengl32.glGetString
-    glGetError.restype      = GLenum 
-
-    glGetString             = windll.opengl32.glGetString
-    glGetString.restype     = c_char_p 
-
-    glClearColor            = windll.opengl32.glClearColor
-    glClearColor.argtypes   = [GLfloat, GLfloat, GLfloat, GLfloat]
-
-    glClear                 = windll.opengl32.glClear
-    glClear.argtypes        = [GLbitfield]
-
-    glBegin                 = windll.opengl32.glBegin
-    glBegin.argtypes        = [GLenum]
-
-    glEnd                   = windll.opengl32.glEnd
-
-    glColor3f               = windll.opengl32.glColor3f
-    glColor3f.argtypes      = [GLfloat, GLfloat, GLfloat]
-
-    glVertex2f              = windll.opengl32.glVertex2f
-    glVertex2f.argtypes     = [GLfloat, GLfloat]
-
-    glViewport              = windll.opengl32.glViewport
-    glViewport.argtypes     = [GLint, GLint, GLsizei, GLsizei]
-
-    glPushMatrix            = windll.opengl32.glPushMatrix
-    glPopMatrix             = windll.opengl32.glPopMatrix
-
-    glRotatef               = windll.opengl32.glRotatef
-    glRotatef.argtypes      = [GLfloat, GLfloat, GLfloat, GLfloat]
+    TIMER_ID    = 1000
+    TIMER_DELAY = 20 # in milliseconds
 
     class Data:
-        hDC = NULL
-        hRC = NULL
+        hDC     = NULL
+        hRC     = NULL
+        angle   = 0.0
     data = Data()
+
+    def initialize():
+        glClearColor(0.0, 0.0, 0.5, 1.0)
+
+    def render():
+        glClear(GL_COLOR_BUFFER_BIT)
+
+        glPushMatrix()
+        glRotatef(data.angle, 0, 0, 1)
+
+        glBegin(GL_TRIANGLES)
+        glColor3f(1, 0, 0)
+        glVertex2f(0, 0.5)
+
+        glColor3f(0, 1, 0)
+        glVertex2f(0.5, -0.5)
+
+        glColor3f(0, 0, 1)
+        glVertex2f(-0.5, -0.5)
+        glEnd()
+
+        glPopMatrix()
 
     def MessageError(err_msg):
         print(err_msg)
@@ -625,10 +598,12 @@ def opengl_window(name, options):
             wglMakeCurrent(data.hDC, data.hRC)
         
             # --- Just getting info --- 
-            print("GL_VERSION: %s\n" % glGetString(GL_VERSION).decode("utf-8") , flush = True)
+            version_string = cast(glGetString(GL_VERSION), c_char_p).value.decode("utf-8")
+            print("GL_VERSION: %s\n" % version_string, flush = True)
+
             # ---
-        
-            glClearColor(0.0, 0.0, 0.5, 1.0)
+
+            initialize()
 
             # ---
 
@@ -648,19 +623,7 @@ def opengl_window(name, options):
             return 0
 
         if msg == WM_PAINT:
-            glClear(GL_COLOR_BUFFER_BIT)
-
-            glBegin(GL_TRIANGLES)
-            glColor3f(1, 0, 0)
-            glVertex2f(0, 0.5)
-
-            glColor3f(0, 1, 0)
-            glVertex2f(0.5, -0.5)
-
-            glColor3f(0, 0, 1)
-            glVertex2f(-0.5, -0.5)
-            glEnd()
-        
+            render()
             SwapBuffers(data.hDC)
             ValidateRect(hWnd, NULL)
             return 0;
@@ -668,6 +631,14 @@ def opengl_window(name, options):
         if msg == WM_ERASEBKGND:
             # Tells DefWindowProc to not erase background. It's unnecessary since background is handled by OpenGL.
             return 1
+
+        if msg == WM_TIMER:
+            if wParam == TIMER_ID:
+                # 15 degrees per second
+                data.angle += 15 * (TIMER_DELAY / 1000.0)
+
+                #InvalidateRect(hWnd, NULL, TRUE)
+            return 0
 
         if msg == WM_SIZE:
             glViewport(0, 0, LOWORD(lParam).value, HIWORD(lParam).value)
@@ -736,6 +707,8 @@ def opengl_window(name, options):
     if not hWnd:
         print("Error: Cannot create window.")
         exit(EXIT_FAILURE)
+
+    SetTimer(hWnd, TIMER_ID, TIMER_DELAY, TIMERPROC(0))
             
     UpdateWindow(hWnd)
     ShowWindow(hWnd, SW_SHOW)
@@ -754,7 +727,8 @@ def opengl_window(name, options):
                     TranslateMessage(byref(msg))
                     DispatchMessageW(byref(msg))
     
-                # ... render, update ...
+                render()
+                SwapBuffers(data.hDC)
         else:
             msg = MSG()
             while GetMessageW(byref(msg), NULL, 0, 0):
