@@ -1,3 +1,8 @@
+"""
+This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL package.
+
+Contains constants, types and functions of WGL.
+"""
 import ctypes           as _ctypes
 import ctypes.wintypes  as _wintypes
 
@@ -37,6 +42,11 @@ HDC         = _wintypes.HANDLE
 HGLRC       = _wintypes.HANDLE
 
 PROC        = _ctypes.c_void_p
+
+### Function Types ###
+
+# wglCreateContextAttribsARB
+PFNWGLCREATECONTEXTATTRIBSARBPROC = _ctypes.WINFUNCTYPE(HGLRC, HDC, HGLRC, _ctypes.POINTER(_ctypes.c_int))
 
 ### Functions - Rendering Context ###
 

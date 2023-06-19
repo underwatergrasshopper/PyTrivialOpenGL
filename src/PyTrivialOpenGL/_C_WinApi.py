@@ -1,7 +1,7 @@
 import ctypes           as _ctypes
 import ctypes.wintypes  as _wintypes
 
-### WinApi Libraries ###
+### Libraries ###
 
 _Kernel32   = _ctypes.windll.Kernel32
 _User32     = _ctypes.windll.User32
@@ -10,7 +10,7 @@ _Gdi32      = _ctypes.windll.Gdi32
 
 _IS_64_BIT  = _ctypes.sizeof(_ctypes.c_void_p) == 8
 
-### WinApi Constants ###
+### Constants ###
 
 # Window Styles
 WS_OVERLAPPED           = 0x00000000
@@ -337,7 +337,7 @@ COLOR_WINDOW            = 5
 
 INFINITE                = 0xFFFFFFFF
 
-### WinApi Types ###
+### Types ###
 
 NULL                    = None
 
@@ -414,7 +414,7 @@ HWND_BOTTOM             = HWND(1)
 HWND_TOPMOST            = HWND(-1)
 HWND_NOTOPMOST          = HWND(-2)
 
-### WinApi Structures ###
+### Structures ###
 
 POINT                   = _wintypes.POINT
 SIZE                    = _wintypes.SIZE
@@ -472,7 +472,7 @@ class PIXELFORMATDESCRIPTOR(_ctypes.Structure):
         ("dwDamageMask",    DWORD),
     ]
 
-### WinApi Macros ###
+### Macros ###
 
 def MAKEINTRESOURCEW(i):
     return LPWSTR(ULONG_PTR(WORD(i).value).value)
@@ -501,11 +501,11 @@ def IsMinimized(hwnd):
 def IsMaximized(hwnd):
     return IsZoomed(hwnd)
 
-### WinApi Constants which are macro dependent ###
+### Constants - macro dependent  ###
 
 IDC_ARROW               = MAKEINTRESOURCEW(32512)
 
-### WinApi Functions ###
+### Functions ###
 
 GetLastError            = _ctypes.WINFUNCTYPE(DWORD)(
     ("GetLastError", _Kernel32), 
@@ -527,7 +527,7 @@ SystemParametersInfoW   = _ctypes.WINFUNCTYPE(BOOL, UINT, UINT, PVOID, UINT)(
     ((1, "uiAction"), (1, "uiParam"), (1, "pvParam"), (1, "fWinIni"))
 )
 
-### WinApi Functions - Window ###
+### Functions - Window ###
 
 GetForegroundWindow     = _ctypes.WINFUNCTYPE(HWND)(
     ("GetForegroundWindow", _User32), 
@@ -808,7 +808,7 @@ SetTimer                = _ctypes.WINFUNCTYPE(UINT_PTR, HWND, UINT_PTR, UINT, TI
     ((1, "hWnd"), (1, "nIDEvent"), (1, "uElapse"), (1, "lpTimerFunc"))
 )
 
-### WinApi Functions - Mouse ###
+### Functions - Mouse ###
 
 GetCursorPos            = _ctypes.WINFUNCTYPE(BOOL, LPPOINT)(
     ("GetCursorPos", _User32), 
@@ -830,7 +830,7 @@ ReleaseCapture          = _ctypes.WINFUNCTYPE(HWND)(
     ()
 )
 
-### Thread ###
+### Functions - Thread ###
 
 CREATE_SUSPENDED                    = 0x00000004
 STACK_SIZE_PARAM_IS_A_RESERVATION   = 0x00010000
@@ -858,7 +858,7 @@ CreateThread            = _ctypes.WINFUNCTYPE(HANDLE, LPSECURITY_ATTRIBUTES, SIZ
     )
 )
 
-### Device Context / Rendering Context ###
+### Functions - Device Rendering Context ###
 
 GetDC                   = _ctypes.WINFUNCTYPE(HDC, HWND)(
     ("GetDC", _User32), 

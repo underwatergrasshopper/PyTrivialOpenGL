@@ -609,7 +609,7 @@ def opengl_window(name, options):
                 ]
                 attribute_list = (c_int * len(attribute_list))(*(attribute for attribute in attribute_list))
 
-                wglCreateContextAttribsARB = WINFUNCTYPE(HGLRC, HDC, HGLRC, POINTER(c_int))(wglGetProcAddress(b"wglCreateContextAttribsARB"))
+                wglCreateContextAttribsARB = PFNWGLCREATECONTEXTATTRIBSARBPROC(wglGetProcAddress(b"wglCreateContextAttribsARB"))
 
                 data.hRC = wglCreateContextAttribsARB(data.hDC, data.hRC, attribute_list)
                 if not data.hRC:
