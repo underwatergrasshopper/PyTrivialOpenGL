@@ -1,3 +1,8 @@
+"""
+This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL package.
+
+Contains constants, types and functions of WinApi.
+"""
 import ctypes           as _ctypes
 import ctypes.wintypes  as _wintypes
 
@@ -55,9 +60,7 @@ WS_POPUPWINDOW          = (
     WS_SYSMENU
 )
 
-WS_CHILDWINDOW          = (
-    WS_CHILD
-)
+WS_CHILDWINDOW          = WS_CHILD
 
 # Extended Window Styles
 WS_EX_DLGMODALFRAME         = 0x00000001
