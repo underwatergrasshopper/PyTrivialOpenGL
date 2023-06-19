@@ -8,7 +8,7 @@ import ctypes.wintypes  as _wintypes
 
 ### Libraries ###
 
-_OpenGL32   = _ctypes.windll.OpenGL32
+_OpenGL32 = _ctypes.windll.OpenGL32
 
 ### Constants ###
 

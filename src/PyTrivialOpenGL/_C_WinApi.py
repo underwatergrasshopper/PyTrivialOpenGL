@@ -861,7 +861,7 @@ CreateThread            = _ctypes.WINFUNCTYPE(HANDLE, LPSECURITY_ATTRIBUTES, SIZ
     )
 )
 
-### Functions - Device Rendering Context ###
+### Functions - Rendering Context, Device Context ###
 
 GetDC                   = _ctypes.WINFUNCTYPE(HDC, HWND)(
     ("GetDC", _User32), 
