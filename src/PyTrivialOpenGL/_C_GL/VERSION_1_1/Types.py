@@ -3,24 +3,24 @@ This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL pac
 
 Contains all types of OpenGL 1.1.
 """
-import ctypes as _ct
+import ctypes as _ctypes
 
-GLenum      = _ct.c_uint
-GLboolean   = _ct.c_ubyte
-GLbitfield  = _ct.c_uint
+GLenum      = _ctypes.c_uint
+GLboolean   = _ctypes.c_ubyte
+GLbitfield  = _ctypes.c_uint
 
-GLbyte      = _ct.c_byte
-GLshort     = _ct.c_short
-GLint       = _ct.c_int
-GLsizei     = _ct.c_int
+GLbyte      = _ctypes.c_byte
+GLshort     = _ctypes.c_short
+GLint       = _ctypes.c_int
+GLsizei     = _ctypes.c_int
 
-GLubyte     = _ct.c_ubyte
-GLushort    = _ct.c_ushort
-GLuint      = _ct.c_uint
+GLubyte     = _ctypes.c_ubyte
+GLushort    = _ctypes.c_ushort
+GLuint      = _ctypes.c_uint
 
-GLfloat     = _ct.c_float
-GLclampf    = _ct.c_float
-GLdouble    = _ct.c_double
-GLclampd    = _ct.c_double
+GLfloat     = _ctypes.c_float
+GLclampf    = _ctypes.c_float
+GLdouble    = _ctypes.c_double
+GLclampd    = _ctypes.c_double
 
 GLvoid      = None              # ctypes.POINTER(None) is ctypes.c_void_p

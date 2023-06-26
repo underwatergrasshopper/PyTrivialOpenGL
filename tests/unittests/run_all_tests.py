@@ -4,6 +4,7 @@ import test_point
 import test_area
 import test_logger
 import test_log
+import test_window
 
 if __name__ == "__main__":
     test_color.run()
@@ -12,3 +13,4 @@ if __name__ == "__main__":
     test_area.run()
     test_logger.run()
     test_log.run()
+    test_window.run()

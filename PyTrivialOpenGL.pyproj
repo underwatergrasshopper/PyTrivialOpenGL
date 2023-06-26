@@ -4,8 +4,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>55e85929-b5f6-427a-b4ea-c1be3f4cc622</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>tests\_c_winapi_test.py</StartupFile>
-    <SearchPath>src;tests</SearchPath>
+    <StartupFile>examples\all_examples.py</StartupFile>
+    <SearchPath>src;tests;examples</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>PyTrivialOpenGL</Name>
@@ -36,9 +36,12 @@
     <Content Include="tests\assets\icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="examples\all_examples.py" />
+    <Compile Include="examples\ExampleManager.py" />
     <Compile Include="setup.py" />
     <Compile Include="src\PyTrivialOpenGL\Area.py" />
     <Compile Include="src\PyTrivialOpenGL\SpecialDebug.py" />
+    <Compile Include="src\PyTrivialOpenGL\Window.py" />
     <Compile Include="src\PyTrivialOpenGL\_Basics.py" />
     <Compile Include="src\PyTrivialOpenGL\Color.py" />
     <Compile Include="src\PyTrivialOpenGL\Log.py" />
@@ -52,6 +55,7 @@
     <Compile Include="src\PyTrivialOpenGL\_C_GL\__init__.py" />
     <Compile Include="src\PyTrivialOpenGL\_C_WGL.py" />
     <Compile Include="src\PyTrivialOpenGL\_C_WinApi.py" />
+    <Compile Include="src\PyTrivialOpenGL\_SingletonGuardian.py" />
     <Compile Include="src\PyTrivialOpenGL\__init__.py" />
     <Compile Include="tests\smoke_test.py" />
     <Compile Include="tests\unittests\run_all_tests.py" />
@@ -61,9 +65,11 @@
     <Compile Include="tests\unittests\test_logger.py" />
     <Compile Include="tests\unittests\test_point.py" />
     <Compile Include="tests\unittests\test_size.py" />
+    <Compile Include="tests\unittests\test_window.py" />
     <Compile Include="tests\_c_winapi_test.py" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="examples\" />
     <Folder Include="src\" />
     <Folder Include="src\PyTrivialOpenGL\" />
     <Folder Include="src\PyTrivialOpenGL\_C_GL\" />
