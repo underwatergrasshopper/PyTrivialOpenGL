@@ -4,6 +4,12 @@ from PyTrivialOpenGL._C_WGL import *
 from PyTrivialOpenGL._C_GL import *
 from PyTrivialOpenGL.Utility import *
 from PyTrivialOpenGL.Key import *
+from PyTrivialOpenGL.Key import _vk_code_to_key_id
+from PyTrivialOpenGL.Key import _get_mouse_key_id
+from PyTrivialOpenGL.Key import _is_mouse_button_down
+from PyTrivialOpenGL.Key import _get_keyboard_side_id
+from PyTrivialOpenGL.Key import _vk_code_to_str
+from PyTrivialOpenGL.Key import _VirtualKeyData
 from ctypes import *
 from ExampleManager import ExampleManager
 import time
@@ -20,6 +26,20 @@ def print_size(s):
 
 def print_area(a):
     print(a.x, a.y, a.width, a.height)
+
+def print_bin_32(val):
+    val = int(val) & 0xFFFFFFFF
+
+    for ix in range(0, 32):
+        if ix > 0 and ix % 4 == 0:
+            print("`", end = "")
+
+        if val & (0x1 << (31 - ix)):
+            print("1", end = "")
+        else:
+            print("0", end = "")
+
+    print("")
 
 example_manager = ExampleManager()
 
@@ -233,9 +253,30 @@ def simple_window(name, options):
             return 0;
 
         elif msg == WM_KEYDOWN:
+            key_id = _vk_code_to_key_id(wParam)
+            print(key_id, _get_keyboard_side_id(key_id, _VirtualKeyData(lParam)))
+            #print(bin(lParam & 0xFFFFFFFF))
+            print(_vk_code_to_str(wParam))
+
+
+            #print_bin_32(lParam)
+            #print(_VirtualKeyData(lParam))
+
             return 0
     
         elif msg == WM_KEYUP:
+            key_id = _vk_code_to_key_id(wParam)
+            print(key_id, _get_keyboard_side_id(key_id, _VirtualKeyData(lParam)))
+            print(_vk_code_to_str(wParam))
+            #key_id = _vk_code_to_key_id(wParam)
+            #data = WPARAM(wParam)
+            #ptr = cast(byref(data), POINTER(_C_VirtualKeyData))
+            #
+            #print(key_id, _get_keyboard_side_id(key_id, ptr))
+            #print(bin(lParam & 0xFFFFFFFF))
+            #print_bin_32(lParam)
+            #print(_VirtualKeyData(lParam))
+
             count += 1
             print(count)
 
@@ -243,24 +284,66 @@ def simple_window(name, options):
                 DestroyWindow(hWnd)
             return 0
 
+        elif msg == WM_SYSKEYDOWN:
+            key_id = _vk_code_to_key_id(wParam)
+            print(key_id, _get_keyboard_side_id(key_id, _VirtualKeyData(lParam)))
+            print(_vk_code_to_str(wParam))
+
+            return 0
+
+        elif msg == WM_SYSKEYUP:
+            key_id = _vk_code_to_key_id(wParam)
+            print(key_id, _get_keyboard_side_id(key_id, _VirtualKeyData(lParam)))
+
+            return 0
+
         elif msg == WM_LBUTTONDOWN:
+            print(_get_mouse_key_id(msg, wParam), _is_mouse_button_down(msg))
+            print(_vk_code_to_str(wParam))
+
             if GetCapture() != hWnd:
                 SetCapture(hWnd)
             return 0
     
         elif msg == WM_LBUTTONUP:
+            print(_get_mouse_key_id(msg, wParam), _is_mouse_button_down(msg))
+
             if GetCapture() == hWnd:
                 ReleaseCapture()
             return 0
 
         elif msg == WM_RBUTTONDOWN:
+            print(_get_mouse_key_id(msg, wParam), _is_mouse_button_down(msg))
+
             return 0
     
         elif msg == WM_RBUTTONUP:
+            print(_get_mouse_key_id(msg, wParam), _is_mouse_button_down(msg))
+
             pos = POINT()
             GetCursorPos(byref(pos))
             ScreenToClient(hWnd, byref(pos))
             print(pos.x, pos.y)
+
+            return 0
+
+        elif msg == WM_MBUTTONDOWN:
+            print(_get_mouse_key_id(msg, wParam), _is_mouse_button_down(msg))
+
+            return 0
+    
+        elif msg == WM_MBUTTONUP:
+            print(_get_mouse_key_id(msg, wParam), _is_mouse_button_down(msg))
+
+            return 0
+
+        elif msg == WM_XBUTTONDOWN:
+            print(_get_mouse_key_id(msg, wParam), _is_mouse_button_down(msg))
+
+            return 0
+    
+        elif msg == WM_XBUTTONUP:
+            print(_get_mouse_key_id(msg, wParam), _is_mouse_button_down(msg))
 
             return 0
 

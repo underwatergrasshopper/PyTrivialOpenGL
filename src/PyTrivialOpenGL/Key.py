@@ -1,4 +1,5 @@
-import enum
+import enum     as _enum
+import ctypes   as _ctypes
 
 from . import _C_WinApi
 
@@ -9,7 +10,9 @@ __all__ = [
     "is_key_toggled",
 ]
 
-class KeyId(enum.IntEnum):
+################################################################################
+
+class KeyId(_enum.IntEnum):
     """
     Contains ids representing keyboard keys and mouse buttons.
 
@@ -19,133 +22,133 @@ class KeyId(enum.IntEnum):
     UNKNOWN             = 0
 
     NUM_0               = ord('0')              # same ids as ascii code points for characters: 0-9
-    NUM_1               = enum.auto()
-    NUM_2               = enum.auto()
-    NUM_3               = enum.auto()
-    NUM_4               = enum.auto()
-    NUM_5               = enum.auto()
-    NUM_6               = enum.auto()
-    NUM_7               = enum.auto()
-    NUM_8               = enum.auto()
-    NUM_9               = enum.auto()
+    NUM_1               = _enum.auto()
+    NUM_2               = _enum.auto()
+    NUM_3               = _enum.auto()
+    NUM_4               = _enum.auto()
+    NUM_5               = _enum.auto()
+    NUM_6               = _enum.auto()
+    NUM_7               = _enum.auto()
+    NUM_8               = _enum.auto()
+    NUM_9               = _enum.auto()
 
     A                   = ord('A')              # same ids as ascii code points for characters: A-Z
-    B                   = enum.auto()
-    C                   = enum.auto()
-    D                   = enum.auto()
-    E                   = enum.auto()
-    F                   = enum.auto()
-    G                   = enum.auto()
-    H                   = enum.auto()
-    I                   = enum.auto()
-    J                   = enum.auto()
-    K                   = enum.auto()
-    L                   = enum.auto()
-    M                   = enum.auto()
-    N                   = enum.auto()
-    O                   = enum.auto()
-    P                   = enum.auto()
-    Q                   = enum.auto()
-    R                   = enum.auto()
-    S                   = enum.auto()
-    T                   = enum.auto()
-    U                   = enum.auto()
-    V                   = enum.auto()
-    W                   = enum.auto()
-    X                   = enum.auto()
-    Y                   = enum.auto()
-    Z                   = enum.auto()
+    B                   = _enum.auto()
+    C                   = _enum.auto()
+    D                   = _enum.auto()
+    E                   = _enum.auto()
+    F                   = _enum.auto()
+    G                   = _enum.auto()
+    H                   = _enum.auto()
+    I                   = _enum.auto()
+    J                   = _enum.auto()
+    K                   = _enum.auto()
+    L                   = _enum.auto()
+    M                   = _enum.auto()
+    N                   = _enum.auto()
+    O                   = _enum.auto()
+    P                   = _enum.auto()
+    Q                   = _enum.auto()
+    R                   = _enum.auto()
+    S                   = _enum.auto()
+    T                   = _enum.auto()
+    U                   = _enum.auto()
+    V                   = _enum.auto()
+    W                   = _enum.auto()
+    X                   = _enum.auto()
+    Y                   = _enum.auto()
+    Z                   = _enum.auto()
 
     ESCAPE              = 256                   # out of ascii scope, no id collision with ascii code points
-    ENTER               = enum.auto()
-    CAPS_LOCK           = enum.auto()
-    TAB                 = enum.auto()
-    BACKSPACE           = enum.auto()
-    SPACE               = enum.auto()
+    ENTER               = _enum.auto()
+    CAPS_LOCK           = _enum.auto()
+    TAB                 = _enum.auto()
+    BACKSPACE           = _enum.auto()
+    SPACE               = _enum.auto()
 
-    SHIFT               = enum.auto()
-    CONTROL             = enum.auto()
-    ALT                 = enum.auto()
+    SHIFT               = _enum.auto()
+    CONTROL             = _enum.auto()
+    ALT                 = _enum.auto()
 
-    PAGE_UP             = enum.auto()  
-    PAGE_DOWN           = enum.auto()
-    END                 = enum.auto()
-    HOME                = enum.auto()
+    PAGE_UP             = _enum.auto()  
+    PAGE_DOWN           = _enum.auto()
+    END                 = _enum.auto()
+    HOME                = _enum.auto()
 
-    ARROW_LEFT          = enum.auto()
-    ARROW_UP            = enum.auto()
-    ARROW_RIGHT         = enum.auto()
-    ARROW_DOWN          = enum.auto()
+    ARROW_LEFT          = _enum.auto()
+    ARROW_UP            = _enum.auto()
+    ARROW_RIGHT         = _enum.auto()
+    ARROW_DOWN          = _enum.auto()
 
-    INSERT              = enum.auto()
-    DELETE              = enum.auto()
-    BREAK               = enum.auto()
-    PAUSE               = enum.auto()
-    PRINT               = enum.auto()
-    PRINT_SCREEN        = enum.auto()
+    INSERT              = _enum.auto()
+    DELETE              = _enum.auto()
+    BREAK               = _enum.auto()
+    PAUSE               = _enum.auto()
+    PRINT               = _enum.auto()
+    PRINT_SCREEN        = _enum.auto()
 
-    NUMPAD_0            = enum.auto()
-    NUMPAD_1            = enum.auto()
-    NUMPAD_2            = enum.auto()
-    NUMPAD_3            = enum.auto()
-    NUMPAD_4            = enum.auto()
-    NUMPAD_5            = enum.auto()
-    NUMPAD_6            = enum.auto()
-    NUMPAD_7            = enum.auto()
-    NUMPAD_8            = enum.auto()
-    NUMPAD_9            = enum.auto()
-    NUMPAD_MULTIPLY     = enum.auto()
-    NUMPAD_ADD          = enum.auto()
-    NUMPAD_SEPARATOR    = enum.auto()
-    NUMPAD_SUBTRACT     = enum.auto()
-    NUMPAD_DECIMAL      = enum.auto()
-    NUMPAD_DIVIDE       = enum.auto()
+    NUMPAD_0            = _enum.auto()
+    NUMPAD_1            = _enum.auto()
+    NUMPAD_2            = _enum.auto()
+    NUMPAD_3            = _enum.auto()
+    NUMPAD_4            = _enum.auto()
+    NUMPAD_5            = _enum.auto()
+    NUMPAD_6            = _enum.auto()
+    NUMPAD_7            = _enum.auto()
+    NUMPAD_8            = _enum.auto()
+    NUMPAD_9            = _enum.auto()
+    NUMPAD_MULTIPLY     = _enum.auto()
+    NUMPAD_ADD          = _enum.auto()
+    NUMPAD_SEPARATOR    = _enum.auto()
+    NUMPAD_SUBTRACT     = _enum.auto()
+    NUMPAD_DECIMAL      = _enum.auto()
+    NUMPAD_DIVIDE       = _enum.auto()
 
-    SEMICOLON           = enum.auto()   # ;
-    FORWARD_SLASH       = enum.auto()   # /
-    ACUTE               = enum.auto()   # `
-    OPEN_BRACKET        = enum.auto()   # [
-    BACK_SLASH          = enum.auto()   # \
-    CLOSE_BRACKET       = enum.auto()   # ]
-    APOSTROPHE          = enum.auto()   # '
-    COMMA               = enum.auto()   # ,
-    DOT                 = enum.auto()   # .
-    DASH                = enum.auto()   # -
-    EQUAL               = enum.auto()   # =
+    SEMICOLON           = _enum.auto()   # ;
+    FORWARD_SLASH       = _enum.auto()   # /
+    ACUTE               = _enum.auto()   # `
+    OPEN_BRACKET        = _enum.auto()   # [
+    BACK_SLASH          = _enum.auto()   # \
+    CLOSE_BRACKET       = _enum.auto()   # ]
+    APOSTROPHE          = _enum.auto()   # '
+    COMMA               = _enum.auto()   # ,
+    DOT                 = _enum.auto()   # .
+    DASH                = _enum.auto()   # -
+    EQUAL               = _enum.auto()   # =
 
-    F1                  = enum.auto()
-    F2                  = enum.auto()
-    F3                  = enum.auto()
-    F4                  = enum.auto()
-    F5                  = enum.auto()
-    F6                  = enum.auto()
-    F7                  = enum.auto()
-    F8                  = enum.auto()
-    F9                  = enum.auto()
-    F10                 = enum.auto()
-    F11                 = enum.auto()
-    F12                 = enum.auto()
-    F13                 = enum.auto()
-    F14                 = enum.auto()
-    F15                 = enum.auto()
-    F16                 = enum.auto()
-    F17                 = enum.auto()
-    F18                 = enum.auto()
-    F19                 = enum.auto()
-    F20                 = enum.auto()
-    F21                 = enum.auto()
-    F22                 = enum.auto()
-    F23                 = enum.auto()
-    F24                 = enum.auto()
+    F1                  = _enum.auto()
+    F2                  = _enum.auto()
+    F3                  = _enum.auto()
+    F4                  = _enum.auto()
+    F5                  = _enum.auto()
+    F6                  = _enum.auto()
+    F7                  = _enum.auto()
+    F8                  = _enum.auto()
+    F9                  = _enum.auto()
+    F10                 = _enum.auto()
+    F11                 = _enum.auto()
+    F12                 = _enum.auto()
+    F13                 = _enum.auto()
+    F14                 = _enum.auto()
+    F15                 = _enum.auto()
+    F16                 = _enum.auto()
+    F17                 = _enum.auto()
+    F18                 = _enum.auto()
+    F19                 = _enum.auto()
+    F20                 = _enum.auto()
+    F21                 = _enum.auto()
+    F22                 = _enum.auto()
+    F23                 = _enum.auto()
+    F24                 = _enum.auto()
 
-    NUMLOCK             = enum.auto()
-    SCROLL_LOCK         = enum.auto()
+    NUMLOCK             = _enum.auto()
+    SCROLL_LOCK         = _enum.auto()
 
-    LEFT_MOUSE_BUTTON   = enum.auto()
-    MIDDLE_MOUSE_BUTTON = enum.auto()
-    RIGHT_MOUSE_BUTTON  = enum.auto()
-    X1_MOUSE_BUTTON     = enum.auto()
-    X2_MOUSE_BUTTON     = enum.auto()
+    LEFT_MOUSE_BUTTON   = _enum.auto()
+    MIDDLE_MOUSE_BUTTON = _enum.auto()
+    RIGHT_MOUSE_BUTTON  = _enum.auto()
+    X1_MOUSE_BUTTON     = _enum.auto()
+    X2_MOUSE_BUTTON     = _enum.auto()
 
     def __eq__(self, other):
         """
@@ -163,7 +166,7 @@ class KeyId(enum.IntEnum):
             return int(self) != ord(other)
         return super().__ne__(other)
 
-class KeyboardSideId(enum.IntEnum):
+class KeyboardSideId(_enum.IntEnum):
     NONE    = 0
     LEFT    = 1
     RIGHT   = 2
@@ -203,6 +206,21 @@ _KEY_TOGGLE_BIT = 0x0001
 
 def is_key_toggled(key_id):
     return _C_WinApi.GetKeyState(_key_id_to_vk_code(key_id)) & _KEY_TOGGLE_BIT
+
+################################################################################
+
+class _VirtualKeyData:
+    def __init__(self, l_param):
+        self.count          = l_param           & 0x0000FFFF
+        self.scan_code      = (l_param >> 16)   & 0x000000FF
+        self.is_ext         = (l_param >> 24)   & 0x00000001
+        self.reserved1      = (l_param >> 25)   & 0x0000000F
+        self.context_code   = (l_param >> 29)   & 0x00000001
+        self.prev_state     = (l_param >> 30)   & 0x00000001
+        self.trans_state    = (l_param >> 31)   & 0x00000001
+
+    def __str__(self):
+        return "% 6u % 4u % 2u % 3u % 2u % 2u % 2u" % (self.count, self.scan_code, self.is_ext, self.reserved1, self.context_code, self.prev_state, self.trans_state)
 
 def _key_id_to_vk_code(key_id):
     """
@@ -455,4 +473,162 @@ def _vk_code_to_key_id(vk_code):
     }.get(vk_code, KeyId.UNKNOWN)
 
 def _get_key_id_from_w_param(w_param):
+    """
+    w_param : int
+    Returns (KeyId).
+    """
     return _vk_code_to_key_id(w_param)
+
+def _get_mouse_key_id(message, w_param):
+    """
+    message : int
+    w_param : int
+    Returns (KeyId).
+    """
+    key_id = {
+        _C_WinApi.WM_LBUTTONDOWN    : KeyId.LEFT_MOUSE_BUTTON,
+        _C_WinApi.WM_LBUTTONUP      : KeyId.LEFT_MOUSE_BUTTON,
+
+        _C_WinApi.WM_RBUTTONDOWN    : KeyId.RIGHT_MOUSE_BUTTON,
+        _C_WinApi.WM_RBUTTONUP      : KeyId.RIGHT_MOUSE_BUTTON,
+
+        _C_WinApi.WM_MBUTTONDOWN    : KeyId.MIDDLE_MOUSE_BUTTON,
+        _C_WinApi.WM_MBUTTONUP      : KeyId.MIDDLE_MOUSE_BUTTON,
+    }.get(int(message), None)
+
+    if key_id:
+        return key_id
+
+    if int(message) in (_C_WinApi.WM_XBUTTONDOWN, _C_WinApi.WM_XBUTTONUP):
+        if _C_WinApi.HIWORD(w_param).value == _C_WinApi.XBUTTON1:
+            return KeyId.X1_MOUSE_BUTTON
+        if _C_WinApi.HIWORD(w_param).value == _C_WinApi.XBUTTON2:
+            return KeyId.X2_MOUSE_BUTTON
+
+    return KeyId.UNKNOWN
+
+def _is_mouse_button_down(message):
+    """
+    message : int
+    Returns (bool).
+    """
+    return int(message) in (_C_WinApi.WM_LBUTTONDOWN, _C_WinApi.WM_RBUTTONDOWN, _C_WinApi.WM_MBUTTONDOWN, _C_WinApi.WM_XBUTTONDOWN)
+
+
+def _get_keyboard_side_id(key_id, virtual_key_data):
+    """
+    key_id : KeyId
+    virtual_key_data : _VirtualKeyData
+    Returns (KeyboardSideId).
+    """
+    if key_id == KeyId.SHIFT:
+        vk_code_ext = _C_WinApi.MapVirtualKeyA(virtual_key_data.scan_code, _C_WinApi.MAPVK_VSC_TO_VK_EX)
+        if vk_code_ext == _C_WinApi.VK_LSHIFT:
+            return KeyboardSideId.LEFT
+        if vk_code_ext == _C_WinApi.VK_RSHIFT:
+            return KeyboardSideId.RIGHT
+        return KeyboardSideId.NONE
+
+    if key_id in (KeyId.CONTROL, KeyId.ALT):
+        if virtual_key_data.is_ext:
+            return KeyboardSideId.RIGHT
+        return KeyboardSideId.LEFT
+
+    return KeyboardSideId.NONE
+
+def _vk_code_to_str(vk_code):
+    text = {
+        _C_WinApi.VK_CANCEL           : "VK_CANCEL",
+        _C_WinApi.VK_BACK             : "VK_BACK",
+        _C_WinApi.VK_TAB              : "VK_TAB",
+        _C_WinApi.VK_RETURN           : "VK_RETURN",
+        _C_WinApi.VK_SHIFT            : "VK_SHIFT",
+        _C_WinApi.VK_CONTROL          : "VK_CONTROL",
+        _C_WinApi.VK_MENU             : "VK_MENU",
+        _C_WinApi.VK_PAUSE            : "VK_PAUSE",
+        _C_WinApi.VK_CAPITAL          : "VK_CAPITAL",
+        _C_WinApi.VK_ESCAPE           : "VK_ESCAPE",
+        _C_WinApi.VK_SPACE            : "VK_SPACE",
+        _C_WinApi.VK_PRIOR            : "VK_PRIOR",
+        _C_WinApi.VK_NEXT             : "VK_NEXT",
+        _C_WinApi.VK_END              : "VK_END",
+        _C_WinApi.VK_HOME             : "VK_HOME",
+        _C_WinApi.VK_LEFT             : "VK_LEFT",
+        _C_WinApi.VK_UP               : "VK_UP",
+        _C_WinApi.VK_RIGHT            : "VK_RIGHT",
+        _C_WinApi.VK_DOWN             : "VK_DOWN",
+        _C_WinApi.VK_PRINT            : "VK_PRINT",
+        _C_WinApi.VK_SNAPSHOT         : "VK_SNAPSHOT",
+        _C_WinApi.VK_INSERT           : "VK_INSERT",
+        _C_WinApi.VK_DELETE           : "VK_DELETE",
+        _C_WinApi.VK_NUMPAD0          : "VK_NUMPAD0",
+        _C_WinApi.VK_NUMPAD1          : "VK_NUMPAD1",
+        _C_WinApi.VK_NUMPAD2          : "VK_NUMPAD2",
+        _C_WinApi.VK_NUMPAD3          : "VK_NUMPAD3",
+        _C_WinApi.VK_NUMPAD4          : "VK_NUMPAD4",
+        _C_WinApi.VK_NUMPAD5          : "VK_NUMPAD5",
+        _C_WinApi.VK_NUMPAD6          : "VK_NUMPAD6",
+        _C_WinApi.VK_NUMPAD7          : "VK_NUMPAD7",
+        _C_WinApi.VK_NUMPAD8          : "VK_NUMPAD8",
+        _C_WinApi.VK_NUMPAD9          : "VK_NUMPAD9",
+        _C_WinApi.VK_MULTIPLY         : "VK_MULTIPLY",
+        _C_WinApi.VK_ADD              : "VK_ADD",
+        _C_WinApi.VK_SEPARATOR        : "VK_SEPARATOR",
+        _C_WinApi.VK_SUBTRACT         : "VK_SUBTRACT",
+        _C_WinApi.VK_DECIMAL          : "VK_DECIMAL",
+        _C_WinApi.VK_DIVIDE           : "VK_DIVIDE",
+        _C_WinApi.VK_F1               : "VK_F1",
+        _C_WinApi.VK_F2               : "VK_F2",
+        _C_WinApi.VK_F3               : "VK_F3",
+        _C_WinApi.VK_F4               : "VK_F4",
+        _C_WinApi.VK_F5               : "VK_F5",
+        _C_WinApi.VK_F6               : "VK_F6",
+        _C_WinApi.VK_F7               : "VK_F7",
+        _C_WinApi.VK_F8               : "VK_F8",
+        _C_WinApi.VK_F9               : "VK_F9",
+        _C_WinApi.VK_F10              : "VK_F10",
+        _C_WinApi.VK_F11              : "VK_F11",
+        _C_WinApi.VK_F12              : "VK_F12",
+        _C_WinApi.VK_F13              : "VK_F13",
+        _C_WinApi.VK_F14              : "VK_F14",
+        _C_WinApi.VK_F15              : "VK_F15",
+        _C_WinApi.VK_F16              : "VK_F16",
+        _C_WinApi.VK_F17              : "VK_F17",
+        _C_WinApi.VK_F18              : "VK_F18",
+        _C_WinApi.VK_F19              : "VK_F19",
+        _C_WinApi.VK_F20              : "VK_F20",
+        _C_WinApi.VK_F21              : "VK_F21",
+        _C_WinApi.VK_F22              : "VK_F22",
+        _C_WinApi.VK_F23              : "VK_F23",
+        _C_WinApi.VK_F24              : "VK_F24",
+
+        _C_WinApi.VK_OEM_1            : "VK_OEM_1",
+        _C_WinApi.VK_OEM_2            : "VK_OEM_2",
+        _C_WinApi.VK_OEM_3            : "VK_OEM_3",
+        _C_WinApi.VK_OEM_4            : "VK_OEM_4",
+        _C_WinApi.VK_OEM_5            : "VK_OEM_5",
+        _C_WinApi.VK_OEM_6            : "VK_OEM_6",
+        _C_WinApi.VK_OEM_7            : "VK_OEM_7",
+        _C_WinApi.VK_OEM_COMMA        : "VK_OEM_COMMA",
+        _C_WinApi.VK_OEM_PERIOD       : "VK_OEM_PERIOD",
+        _C_WinApi.VK_OEM_MINUS        : "VK_OEM_MINUS",
+        _C_WinApi.VK_OEM_PLUS         : "VK_OEM_PLUS",
+
+        _C_WinApi.VK_NUMLOCK          : "VK_NUMLOCK",
+        _C_WinApi.VK_SCROLL           : "VK_SCROLL",
+        _C_WinApi.VK_LSHIFT           : "VK_LSHIFT",
+        _C_WinApi.VK_RSHIFT           : "VK_RSHIFT",
+        _C_WinApi.VK_LCONTROL         : "VK_LCONTROL",
+        _C_WinApi.VK_RCONTROL         : "VK_RCONTROL",
+        _C_WinApi.VK_LMENU            : "VK_LMENU",
+        _C_WinApi.VK_RMENU            : "VK_RMENU",
+    }.get(vk_code, None)
+
+    if not text:
+        if (vk_code >= ord('0') and vk_code <= ord('9')) or (vk_code >= ord('A') and vk_code <= ord('Z')):
+            return chr(vk_code)
+        return "(%u)" % (vk_code)
+
+    return text
+
+

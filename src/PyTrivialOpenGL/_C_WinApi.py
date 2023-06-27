@@ -483,6 +483,9 @@ WM_MOUSEWHEEL           = 0x020A
 
 WM_USER                 = 0x0400
 
+XBUTTON1                = 0x0001
+XBUTTON2                = 0x0002
+
 # LoadImage, _type
 IMAGE_BITMAP            = 0
 IMAGE_ICON              = 1
@@ -539,6 +542,13 @@ PFD_STEREO_DONTCARE         = 0x80000000
 PM_NOREMOVE             = 0x0000
 PM_REMOVE               = 0x0001
 PM_NOYIELD              = 0x0002
+
+# MapVirtualKeyA, uMapType
+MAPVK_VK_TO_VSC         = 0
+MAPVK_VSC_TO_VK         = 1
+MAPVK_VK_TO_CHAR        = 2
+MAPVK_VSC_TO_VK_EX      = 3
+MAPVK_VK_TO_VSC_EX      = 4
 
 # CreateWindowEx
 CW_USEDEFAULT           = 0x80000000
@@ -1065,6 +1075,11 @@ GetKeyState             = _ctypes.WINFUNCTYPE(SHORT, _ctypes.c_int)(
 GetAsyncKeyState        = _ctypes.WINFUNCTYPE(SHORT, _ctypes.c_int)(
     ("GetAsyncKeyState", _User32), 
     ((1, "vKey"),)
+)
+
+MapVirtualKeyA          = _ctypes.WINFUNCTYPE(UINT, UINT, UINT)(
+    ("MapVirtualKeyA", _User32), 
+    ((1, "uCode"), (1, "uMapType"))
 )
 
 ### Functions - Thread ###
