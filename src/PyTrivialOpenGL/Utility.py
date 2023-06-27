@@ -1,0 +1,54 @@
+from .Point import Point
+from .Size  import Size
+from .Area  import Area
+from .      import _C_WinApi
+
+import ctypes as _ctypes
+
+__all__ = [
+    "OpenGL_Version",
+    "get_desctop_area_no_task_bar",
+    "get_desctop_size_no_task_bar",
+    "get_screen_size",
+    "get_cursor_pos_in_screen",
+]
+
+################################################################################
+
+class OpenGL_Version:
+    def __init__(self, major, minor):
+        self.major = major
+        self.minor = minor
+
+################################################################################
+
+def get_desctop_area_no_task_bar():
+    """
+    Returns (PyTrivialOpenGL.Area).
+    """
+    rc = _C_WinApi.RECT()
+    _C_WinApi.SystemParametersInfoW(_C_WinApi.SPI_GETWORKAREA, 0, _ctypes.byref(rc), 0)
+    return Area(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top)
+
+def get_desctop_size_no_task_bar():
+    """
+    Returns (PyTrivialOpenGL.Size).
+    """
+    return get_desctop_area_no_task_bar().get_size()
+
+def get_screen_size():
+    """
+    Returns (PyTrivialOpenGL.Size).
+    """
+    width   = _C_WinApi.GetSystemMetrics(_C_WinApi.SM_CXSCREEN)
+    height  = _C_WinApi.GetSystemMetrics(_C_WinApi.SM_CYSCREEN)
+    return Size(width, height)
+
+def get_cursor_pos_in_screen():
+    """
+    Returns (PyTrivialOpenGL.Point).
+    """
+    pt = _C_WinApi.POINT()
+    if _C_WinApi.GetCursorPos(_ctypes.byref(pt)):
+        return Point(pt.x, pt.y)
+    return Point(0, 0)

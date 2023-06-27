@@ -5,6 +5,7 @@ import test_area
 import test_logger
 import test_log
 import test_window
+import test_key
 
 if __name__ == "__main__":
     test_color.run()
@@ -14,3 +15,4 @@ if __name__ == "__main__":
     test_logger.run()
     test_log.run()
     test_window.run()
+    test_key.run()

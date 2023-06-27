@@ -1,11 +1,9 @@
-from tkinter.ttk import Style
-from xml.dom.expatbuilder import DOCUMENT_NODE
 from ._SingletonGuardian    import _SingletonGuardian
 from .Area                  import Area
+from .Utility               import *
 
 __all__ = [
     "WindowStyleBit",
-    "OpenGL_Version",
     "Window",
     "to_window",
 ]
@@ -18,32 +16,28 @@ class WindowStyleBit:
     DRAW_AREA_ONLY              = 0x0010
     REDRAW_ON_CHANGE_OR_REQUEST = 0x0020
 
-class OpenGL_Version:
-    def __init__(self, major, minor):
-        self.major = major
-        self.minor = minor
-
 class Window:
     _singleton_guardian = _SingletonGuardian("Window")
 
     def __init__(self):
         self._singleton_guardian.count_as_created_instance()
 
-    def run(    self,
-                window_name              = "",
-                area                     = None,
-                style                    = 0,
-                opengl_version           = None,
-                icon_file_name           = "",
-                icon_resource_id         = 0,
-                timer_time_interval      = 0,
-                is_auto_sleep_blocked    = False,
+    def create_and_run(    
+            self,
+            window_name              = "",
+            area                     = None,
+            style                    = 0,
+            opengl_version           = None,
+            icon_file_name           = "",
+            icon_resource_id         = 0,
+            timer_time_interval      = 0,
+            is_auto_sleep_blocked    = False,
 
-                do_on_create             = None,
-                do_on_destroy            = None,
+            do_on_create             = None,
+            do_on_destroy            = None,
 
-                draw                     = None,
-                ):
+            draw                     = None,
+            ):
         """
         window_name             : str
         area                    : Area | Tuple[int, int, int, int] | None

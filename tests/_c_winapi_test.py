@@ -2,6 +2,8 @@ from msilib.schema import Icon
 from PyTrivialOpenGL._C_WinApi import *
 from PyTrivialOpenGL._C_WGL import *
 from PyTrivialOpenGL._C_GL import *
+from PyTrivialOpenGL.Utility import *
+from PyTrivialOpenGL.Key import *
 from ctypes import *
 from ExampleManager import ExampleManager
 import time
@@ -9,6 +11,15 @@ import os
 import re
 
 ################################################################################
+
+def print_point(p):
+    print(p.x, p.y)
+
+def print_size(s):
+    print(s.width, s.height)
+
+def print_area(a):
+    print(a.x, a.y, a.width, a.height)
 
 example_manager = ExampleManager()
 
@@ -180,6 +191,20 @@ def basics(name, options):
 
     assert GET_WHEEL_DELTA_WPARAM(0xFF12FF34).value == -238
     assert GET_KEYSTATE_WPARAM(0x12345678).value == 0x5678
+
+    ###
+
+    print_area(get_desctop_area_no_task_bar())
+    print_size(get_desctop_size_no_task_bar())
+    print_size(get_screen_size())
+    print_point(get_cursor_pos_in_screen())
+
+    ###
+
+    print("is caps lock toggled:", is_key_toggled(KeyId.CAPS_LOCK))
+    print("is insert toggled:", is_key_toggled(KeyId.INSERT))
+
+
 
     return 0
 example_manager.add_example("basics", basics, ["min_max"])
