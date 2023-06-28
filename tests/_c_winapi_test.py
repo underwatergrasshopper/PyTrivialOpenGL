@@ -10,6 +10,8 @@ from PyTrivialOpenGL.Key import _is_mouse_button_down
 from PyTrivialOpenGL.Key import _get_keyboard_side_id
 from PyTrivialOpenGL.Key import _vk_code_to_str
 from PyTrivialOpenGL.Key import _VirtualKeyData
+from PyTrivialOpenGL._WindowAreaCorrector import _WindowAreaCorrector
+
 from ctypes import *
 from ExampleManager import ExampleManager
 import time
@@ -241,6 +243,7 @@ def simple_window(name, options):
     
         if msg == WM_CREATE:
             print("X - Close (no prompt)")
+            print("0 - Test _WindowAreaCorrector (simulates maximize)")
             print("Hold LMB + RMB - Display Mouse Position")
             return 0
     
@@ -282,6 +285,13 @@ def simple_window(name, options):
 
             if wParam == ord("X"):
                 DestroyWindow(hWnd)
+            elif wParam == ord("0"):
+                # _WindowAreaCorrector test
+                area = get_desctop_area_no_task_bar()
+                window_area_corrector = _WindowAreaCorrector()
+                area = window_area_corrector.add_invisible_frame_to_area(area, hWnd)
+                SetWindowPos(hWnd, HWND_TOP, area.x, area.y, area.width, area.height, 0)
+
             return 0
 
         elif msg == WM_SYSKEYDOWN:

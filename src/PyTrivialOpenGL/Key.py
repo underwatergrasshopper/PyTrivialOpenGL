@@ -185,18 +185,6 @@ class KeyExtra:
         Note: Used for shift, control, alt keys. For ids: SHIFT, CONTROL, _ALT.
     """
     def __init__(self, count, x, y, keyboard_side_id):
-        """
-        count               : int
-            Repeat count of key stroke.
-        x                   : int
-            Cursor x position in window draw area.
-        y                   : int
-            Cursor y position in window draw area.
-        keyboard_side_id    : KeyboardSideId
-            Stores information that, on which side of keyboard is used key (left or right).
-            If side of keyboard doesn't matter or when key exists only on one side, then contains KeyBoardSideId_NONE. 
-            Note: Used for shift, control, alt keys. For ids: SHIFT, CONTROL, _ALT.
-        """
         self.count              = count
         self.x                  = x
         self.y                  = y

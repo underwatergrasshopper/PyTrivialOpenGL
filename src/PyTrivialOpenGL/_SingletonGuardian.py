@@ -1,3 +1,7 @@
+"""
+Provides singleton functionality to class.
+"""
+
 class _SingletonGuardian:
     """
     _is_instance_exist : bool

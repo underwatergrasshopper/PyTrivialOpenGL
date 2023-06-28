@@ -58,6 +58,7 @@
     <Compile Include="src\PyTrivialOpenGL\_C_WGL.py" />
     <Compile Include="src\PyTrivialOpenGL\_C_WinApi.py" />
     <Compile Include="src\PyTrivialOpenGL\_SingletonGuardian.py" />
+    <Compile Include="src\PyTrivialOpenGL\_WindowAreaCorrector.py" />
     <Compile Include="src\PyTrivialOpenGL\__init__.py" />
     <Compile Include="tests\smoke_test.py" />
     <Compile Include="tests\unittests\run_all_tests.py" />

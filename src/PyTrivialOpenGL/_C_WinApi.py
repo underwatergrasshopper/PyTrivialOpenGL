@@ -550,6 +550,9 @@ MAPVK_VK_TO_CHAR        = 2
 MAPVK_VSC_TO_VK_EX      = 3
 MAPVK_VK_TO_VSC_EX      = 4
 
+# MapVirtualKeyA, uMapType
+DWMWA_EXTENDED_FRAME_BOUNDS = 9
+
 # CreateWindowEx
 CW_USEDEFAULT           = 0x80000000
 
