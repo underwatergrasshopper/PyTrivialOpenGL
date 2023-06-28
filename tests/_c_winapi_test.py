@@ -10,6 +10,7 @@ from PyTrivialOpenGL.Key import _is_mouse_button_down
 from PyTrivialOpenGL.Key import _get_keyboard_side_id
 from PyTrivialOpenGL.Key import _vk_code_to_str
 from PyTrivialOpenGL.Key import _VirtualKeyData
+from PyTrivialOpenGL._Debug import _window_message_to_str
 from PyTrivialOpenGL._WindowAreaCorrector import _WindowAreaCorrector
 
 from ctypes import *
@@ -234,12 +235,28 @@ example_manager.add_example("basics", basics, ["min_max"])
 ################################################################################
 # simple_window
 ################################################################################
-count       = 0
+wm_paint_count = 0
 
 def simple_window(name, options):
 
     def WndProc(hWnd, msg, wParam, lParam):
-        global count
+        global wm_paint_count
+
+        if "all_wm" in options:
+            if msg == WM_PAINT:
+                if wm_paint_count == 0:
+                    print(_window_message_to_str(msg))
+                elif wm_paint_count == 1:
+                    print("...")
+                wm_paint_count += 1
+            else:
+                if wm_paint_count > 2:
+                    print("WM_PAINT x%u" % (wm_paint_count - 1))
+                elif wm_paint_count > 1:
+                    print("WM_PAINT")
+                else:
+                    print(_window_message_to_str(msg))
+                wm_paint_count = 0
     
         if msg == WM_CREATE:
             print("X - Close (no prompt)")
@@ -279,9 +296,6 @@ def simple_window(name, options):
             #print(bin(lParam & 0xFFFFFFFF))
             #print_bin_32(lParam)
             #print(_VirtualKeyData(lParam))
-
-            count += 1
-            print(count)
 
             if wParam == ord("X"):
                 DestroyWindow(hWnd)
@@ -447,7 +461,7 @@ def simple_window(name, options):
     UnregisterClassW(window_class_name, hInstance)
     return result
 
-example_manager.add_example("simple_window", simple_window)
+example_manager.add_example("simple_window", simple_window, ["all_wm"])
 
 ################################################################################
 # opengl_window

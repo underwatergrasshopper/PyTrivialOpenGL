@@ -57,6 +57,7 @@
     <Compile Include="src\PyTrivialOpenGL\_C_GL\__init__.py" />
     <Compile Include="src\PyTrivialOpenGL\_C_WGL.py" />
     <Compile Include="src\PyTrivialOpenGL\_C_WinApi.py" />
+    <Compile Include="src\PyTrivialOpenGL\_Debug.py" />
     <Compile Include="src\PyTrivialOpenGL\_SingletonGuardian.py" />
     <Compile Include="src\PyTrivialOpenGL\_WindowAreaCorrector.py" />
     <Compile Include="src\PyTrivialOpenGL\__init__.py" />
