@@ -1,15 +1,22 @@
 import ctypes as _ctypes
+import enum as _enum
 from . import _C_WinApi
 
 from ._SingletonGuardian    import _SingletonGuardian
+from ._WindowAreaCorrector  import _WindowAreaCorrector
 from .Area                  import Area
 from .Utility               import *
 from .Log                   import *
 
 from . import _Basics
+from ._Basics import clamp as _clamp
+from ._Basics import _MIN_I32, _MAX_I32, _MAX_U16, _MIN_U16
+
 
 __all__ = [
     "WindowStyleBit",
+    "WindowStateId",
+    "WindowOptionId",
     "Window",
     "to_window",
 ]
@@ -22,53 +29,113 @@ class WindowStyleBit:
     DRAW_AREA_ONLY              = 0x0010
     REDRAW_ON_CHANGE_OR_REQUEST = 0x0020
 
+class WindowStateId(_enum.IntEnum):
+    NORMAL                  = _enum.auto()
+    MAXIMIZED               = _enum.auto()
+    MINIMIZED               = _enum.auto()
+    WINDOWED_FULL_SCREENED  = _enum.auto()
+
+class WindowOptionId(_enum.IntEnum):
+    AUTO_SLEEP_MODE = _enum.auto()
+
+class _WindowAreaPartId(_enum.Enum):
+    POSITION            = _enum.auto()
+    POSITION_OFFSET     = _enum.auto()
+    SIZE                = _enum.auto()
+    ALL                 = _enum.auto()
+
 class Window:
     """
-    _window_name            : str
-    _area                   : Area | Tuple[int, int, int, int] | None
-    _style                  : int 
-    _opengl_version         : OpenGL_Version | None
-    _icon_file_name         : str
-    _icon_resource_id       : int
-    _timer_time_interval    : int
-    _is_auto_sleep_blocked  : bool
+    _window_name                : str
+    _window_class_name          : str
 
-    _do_on_create           : Callable[[], NoneType]
-    _do_on_create           : Callable[[], NoneType]
+    _area                       : Area | Tuple[int, int, int, int] | None
+    _style                      : int 
+    _opengl_version             : OpenGL_Version | None
+    _icon_file_name             : str
+    _icon_resource_id           : int
+    _timer_time_interval        : int
+    _is_auto_sleep_blocked      : bool
 
-    _draw                   : Callable[[], NoneType]
+    
+    _instance_handle            : _C_WinApi.HINSTANCE
+    _window_handle              : _C_WinApi.HWND
+    _device_context_handle      : _C_WinApi.HDC
+    _rendering_context_handle   : _C_WinApi.HGLRC
 
-    _window_class_name      : str
-    _instance_handle        : _C_WinApi.HANDLE
-    _window_style           : int
-    _window_extended_style  : int
-    _window_handle          : _C_WinApi.HWND
+    _window_style               : int
+    _window_extended_style      : int
+
+    _is_active                  : bool
+    _is_visible                 : bool
+    _is_frame                   : bool
+
+    _state                      : WindowStateId
+    _prev_state                 : WindowStateId
+
+    _is_apply_fake_width              : bool 
+    _is_enable_do_on_resize           : bool  
+    _is_enable_change_state_at_resize : bool  
+    _is_in_draw                       : bool
+
+    _is_enable_do_on_resize_stack              : List[bool]
+    _is_enable_change_state_at_resize_stack    : List[bool]
+
+    _do_on_create               : Callable[[], NoneType]
+    _do_on_create               : Callable[[], NoneType]
+
+    _draw                       : Callable[[], NoneType]
+
+
     """
     _singleton_guardian = _SingletonGuardian("Window")
 
     def __init__(self):
         self._singleton_guardian.count_as_created_instance()
 
-        self._window_name           = ""
-        self._window_class_name     = ""
+        self._DEFAULT_TIMER_ID              = 1001
 
-        self._area                  = Area(0, 0, 0, 0)
-        self._style                 = 0
-        self._opengl_version        = OpenGL_Version(0, 0)
-        self._icon_file_name        = ""
-        self._timer_time_interval   = 0
-        self._is_auto_sleep_blocked = False
+        self._window_name                   = ""
+        self._window_class_name             = ""
 
-        self._instance_handle       = None
-        self._window_handle         = None
+        self._area                          = Area(0, 0, 0, 0)
+        self._style                         = 0
+        self._opengl_version                = OpenGL_Version(0, 0)
+        self._icon_file_name                = ""
+        self._timer_time_interval           = 0
+        self._is_auto_sleep_blocked         = False
 
-        self._window_style          = 0
-        self._window_extended_style = 0
+        self._window_area_corrector         = _WindowAreaCorrector()
 
-        self._do_on_create          = None
-        self._do_on_create          = None
+        self._instance_handle               = None
+        self._window_handle                 = None
+        self._device_context_handle         = None
+        self._rendering_context_handle      = None
 
-        self._draw                  = None
+        self._window_style                  = 0
+        self._window_extended_style         = 0
+
+        self._is_active                     = False
+        self._is_visible                    = False
+        self._is_frame                      = True
+
+        self._state                         = WindowStateId.NORMAL
+        self._prev_state                    = self._state
+
+        self._is_apply_fake_width               = False
+        self._is_enable_do_on_resize            = True
+        self._is_enable_change_state_at_resize  = True
+        self._is_in_draw                        = False
+
+        self._is_enable_do_on_resize_stack              = []
+        self._is_enable_change_state_at_resize_stack    = []
+
+        ### callbacks ###
+
+        self._do_on_create                  = None
+        self._do_on_destory                 = None
+
+        self._draw                          = None
 
     def create_and_run(    
             self,
@@ -92,7 +159,6 @@ class Window:
             Bitfield of WindowStyleBit values.
         opengl_version          : OpenGL_Version | None
         icon_file_name          : str
-        icon_resource_id        : int
         timer_time_interval     : int
         is_auto_sleep_blocked   : bool
 
@@ -103,16 +169,19 @@ class Window:
         """
         self._window_name               = window_name
 
-        if not area:
-            self._area = _get_def_window_area()
+        if area is None:
+            self._area = None
 
         elif isinstance(area, tuple):
-            area = Area(area[0], area[1], area[2], area[3])
-            try:
-                _Basics.check_area_i32_u16(area)
-            except ValueError as e:
-                raise ValueError("Wrong value range in parameter 'area'.") from e
-            self._area = area
+            if len(area) == 4:
+                area = Area(area[0], area[1], area[2], area[3])
+                try:
+                    _Basics.check_area_i32_u16(area)
+                except ValueError as e:
+                    raise ValueError("Wrong value range in parameter 'area'.") from e
+                self._area = area
+            else:
+                raise ValueError("Tuple 'area' needs to contain four variables (x, y, width, height), either ints or floats.")
 
         elif isinstance(area, Area):
             try:
@@ -141,7 +210,7 @@ class Window:
         wc = _C_WinApi.WNDCLASSEXW()
         wc.cbSize           = _ctypes.sizeof(_C_WinApi.WNDCLASSEXW)
         wc.style            = _C_WinApi.CS_OWNDC | _C_WinApi.CS_HREDRAW | _C_WinApi.CS_VREDRAW
-        wc.lpfnWndProc      = _C_WindowProc
+        wc.lpfnWndProc      = _c_window_proc
         wc.cbClsExtra       = 0
         wc.cbWndExtra       = 0
         wc.hInstance        = self._instance_handle
@@ -183,9 +252,22 @@ class Window:
         else:
             log_fatal_error("Can not create window.")
 
+        if self._timer_time_interval > 0:
+            result = _C_WinApi.SetTimer(self._window_handle, self._DEFAULT_TIMER_ID, self._timer_time_interval, _C_WinApi.TIMERPROC(0))
+            if result == 0:
+               log_fatal_error("Can not set timer. (windows error code: %d)" % _C_WinApi.GetLastError());
+
+
         _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
         _C_WinApi.SetForegroundWindow(self._window_handle)
         _C_WinApi.SetFocus(self._window_handle)
+
+        self._change_area(self._area)
+
+        if self._do_on_create is not None:
+            self._do_on_create()
+
+        _C_WinApi.UpdateWindow(self._window_handle)
 
         result = self._execute_main_loop()
   
@@ -246,6 +328,179 @@ class Window:
         else:
             return _C_WinApi.NULL
 
+    def _change_area(self, area):
+        """
+        area : Area
+        """
+        self._set_area(self._generate_window_area(area), _WindowAreaPartId.ALL, self._style & WindowStyleBit.DRAW_AREA_ONLY)
+    
+
+    def _generate_window_area(self, area):
+        """
+        area : Area
+        Returns (Area).
+        """
+        window_area = Area(0, 0, 0, 0)
+
+        is_default = (area is None)
+
+        # --- Size --- #
+        desktop_area = get_desctop_area_no_task_bar()
+
+        window_area.width   = (desktop_area.width / 2) if is_default else area.width
+        window_area.height  = (desktop_area.height / 2) if is_default else area.height
+
+        # In a case of unreasonable values.
+        if window_area.width < 0:
+            window_area.width = 0
+        if window_area.height < 1:
+            window_area.height = 1
+
+        if (self._style & WindowStyleBit.DRAW_AREA_SIZE) and not (self._style & WindowStyleBit.DRAW_AREA_ONLY):
+            window_area_with_invisible_frame = _get_window_area_from_draw_area(window_area, self._window_style)
+
+            window_area = self._window_area_corrector.remove_invisible_frame_from_area(window_area_with_invisible_frame, self._window_handle);
+
+        # --- Position --- #
+
+        if self._style & WindowStyleBit.CENTERED:
+            window_area.x = (desktop_area.width - window_area.width) / 2
+            window_area.y = (desktop_area.height - window_area.height) / 2
+        else:
+            window_area.x = ((desktop_area.width - window_area.width) / 2)     if is_default else area.x
+            window_area.y = ((desktop_area.height - window_area.height) / 2)   if is_default else area.y
+
+        # No need for additional adjustment for invisible window frame. 
+        # Already done for both position and size in 'Size' section.
+
+        # ---
+        
+        return window_area
+
+    def _set_area(self, area, area_part_id, is_draw_area):
+        """
+        area            : Area
+        area_part_id    : _AreaPartId
+        is_draw_area    : bool
+        """
+        def get_flags(area_part_id):
+            if area_part_id == _WindowAreaPartId.POSITION:
+                return _C_WinApi.SWP_NOSIZE
+            if area_part_id == _WindowAreaPartId.POSITION_OFFSET:
+                return _C_WinApi.SWP_NOSIZE
+            if area_part_id == _WindowAreaPartId.SIZE:
+                return _C_WinApi.SWP_NOMOVE
+            if area_part_id == _WindowAreaPartId.ALL:
+                return 0
+            return 0
+
+        is_skip = _C_WinApi.IsMinimized(self._window_handle) and (area_part_id == _WindowAreaPartId.POSITION_OFFSET)
+
+        if not is_skip:
+            if not self._is_visible:
+                _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
+
+            self._restore()
+        
+            raw_area = Area(0, 0, 0, 0)
+        
+            if area_part_id == _WindowAreaPartId.POSITION_OFFSET:
+                raw_area = _get_window_area(self._window_handle)
+                raw_area.x += area.x
+                raw_area.y += area.y
+            elif is_draw_area:
+                raw_area = _get_window_area_from_draw_area(area, self._window_style);
+            else:
+                raw_area = self._window_area_corrector.add_invisible_frame_to_area(area, self._window_handle)
+
+            _C_WinApi.SetWindowPos(
+                self._window_handle, 
+                _C_WinApi.HWND_TOP, 
+                _clamp(int(raw_area.x), _MIN_I32, _MAX_I32), 
+                _clamp(int(raw_area.y), _MIN_I32, _MAX_I32), 
+                _clamp(int(raw_area.width), _MIN_U16, _MAX_U16), 
+                _clamp(int(raw_area.height), _MIN_U16, _MAX_U16), 
+                get_flags(area_part_id) | _C_WinApi.SWP_SHOWWINDOW
+            )
+        
+    def _restore(self):
+        if _C_WinApi.IsMaximized(self._window_handle):
+            if self._prev_state == WindowStateId.WINDOWED_FULL_SCREENED:
+                self._push_is_enable_do_on_resize(False)
+                self._push_is_enable_change_state_at_resize(False)
+
+                _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_RESTORE)
+
+                self._pop_is_enable_do_on_resize()
+                self._pop_is_enable_change_state_at_resize()
+            else:
+                _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_RESTORE)
+
+        if _C_WinApi.IsMinimized(self._window_handle):
+            _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_RESTORE)
+        
+        if self._state == WindowStateId.WINDOWED_FULL_SCREENED:
+            self._push_is_enable_do_on_resize(False)
+            self._push_is_enable_change_state_at_resize(False)
+        
+            _C_WinApi.SetWindowLongPtrW(self._window_handle, _C_WinApi.GWL_STYLE,   self._window_style);
+            _C_WinApi.SetWindowLongPtrW(self._window_handle, _C_WinApi.GWL_EXSTYLE, self._window_extended_style);
+            _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_NORMAL);
+        
+            self._pop_is_enable_do_on_resize()
+            self._pop_is_enable_change_state_at_resize()
+        
+    def _push_is_enable_do_on_resize(self, new_value):
+        """
+        new_value : bool
+        """
+        self._is_enable_do_on_resize_stack.append(self._is_enable_do_on_resize)
+        self._is_enable_do_on_resize = new_value
+
+    def _pop_is_enable_do_on_resize(self):
+        if len(self._is_enable_do_on_resize_stack) > 0:
+            self._is_enable_do_on_resize = self._is_enable_do_on_resize_stack.pop()
+
+    def _push_is_enable_change_state_at_resize(self, new_value):
+        """
+        new_value : bool
+        """
+        self._is_enable_change_state_at_resize_stack.append(self._is_enable_change_state_at_resize)
+        self._is_enable_change_state_at_resize = new_value
+
+    def _pop_is_enable_change_state_at_resize(self):
+        if len(self._is_enable_change_state_at_resize_stack) > 0:
+            self._is_enable_change_state_at_resize = self._is_enable_change_state_at_resize_stack.pop()
+
+    def _window_proc(self, window_handle, window_message, w_param, l_param):
+        """
+        window_handle   : HWND
+        window_message  : UINT
+        w_param         : WPARAM
+        l_param         : LPARAM
+        """
+
+        if window_message == _C_WinApi.WM_PAINT:
+            return 0
+
+        ### Create, Destroy, Close ###
+
+        elif window_message == _C_WinApi.WM_CLOSE:
+            _C_WinApi.DestroyWindow(window_handle)
+            return 0
+
+        elif window_message == _C_WinApi.WM_DESTROY:
+            if self._do_on_destroy is not None:
+                self._do_on_destroy()
+
+            _C_WinApi.PostQuitMessage(0)
+            return 0
+
+        elif window_message == _C_WinApi.WM_CREATE:
+            return 0
+
+        return _C_WinApi.DefWindowProcW(window_handle, window_message, w_param, l_param)
+
 _window = Window()
 
 def to_window():
@@ -253,17 +508,6 @@ def to_window():
     Returns (Window).
     """
     return _window
-
-def _get_def_window_area():
-    """
-    Returns (Area).
-    """
-    size    = get_desctop_size_no_task_bar() // 2
-
-    x       = size.width // 2
-    y       = size.height // 2
-
-    return Area(x, y, size.width, size.height)
 
 def _get_window_style_draw_area_only():
     """
@@ -277,25 +521,43 @@ def _get_window_extended_style_draw_area_only():
     """
     return _C_WinApi.WS_EX_APPWINDOW
 
-def _WindowProc(window_handle, window_message, w_param, l_param):
+def _make_area_from_rect(rect):
     """
-    window_handle   : HWND
-    window_message  : UINT
-    w_param         : WPARAM
-    l_param         : LPARAM
+    rect : _C_WinApi.RECT
     """
+    return Area(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top)
 
-    if window_message == _C_WinApi.WM_PAINT:
-        return 0
 
-    elif window_message == _C_WinApi.WM_CLOSE:
-        _C_WinApi.DestroyWindow(window_handle)
-        return 0
+def _get_window_area(window_handle):
+    """
+    window_handle : _C_WinApi.HWND
+    Returns (Area).
+    """
+    rect = _C_WinApi.RECT()
 
-    elif window_message == _C_WinApi.WM_DESTROY:
-        _C_WinApi.PostQuitMessage(0)
-        return 0
+    if _C_WinApi.GetWindowRect(window_handle, _ctypes.byref(rect)):
+        return _make_area_from_rect(rect)
+    
+    return Area(0, 0, 0, 0)
 
-    return _C_WinApi.DefWindowProcW(window_handle, window_message, w_param, l_param)
+def _get_window_area_from_draw_area(draw_area, window_style):
+    """
+    draw_area : Area
+    window_style : int
+    Returns (Area).
+    """
+    rect = _C_WinApi.RECT(
+        draw_area.x,
+        draw_area.y,
+        draw_area.x + draw_area.width,
+        draw_area.y + draw_area.height
+    )
 
-_C_WindowProc = _C_WinApi.WNDPROC(_WindowProc)
+    _C_WinApi.AdjustWindowRect(_ctypes.byref(rect), window_style, _C_WinApi.FALSE)
+
+    return _make_area_from_rect(rect)
+
+def _window_proc(window_handle, window_message, w_param, l_param):
+    return to_window()._window_proc(window_handle, window_message, w_param, l_param)
+
+_c_window_proc = _C_WinApi.WNDPROC(_window_proc)

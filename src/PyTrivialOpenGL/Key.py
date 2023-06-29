@@ -484,7 +484,7 @@ def _get_mouse_key_id(message, w_param):
         _C_WinApi.WM_MBUTTONUP      : KeyId.MIDDLE_MOUSE_BUTTON,
     }.get(int(message), None)
 
-    if key_id:
+    if key_id is not None:
         return key_id
 
     if int(message) in (_C_WinApi.WM_XBUTTONDOWN, _C_WinApi.WM_XBUTTONUP):
@@ -612,7 +612,7 @@ def _vk_code_to_str(vk_code):
         _C_WinApi.VK_RMENU            : "VK_RMENU",
     }.get(vk_code, None)
 
-    if not text:
+    if text is None:
         if (vk_code >= ord('0') and vk_code <= ord('9')) or (vk_code >= ord('A') and vk_code <= ord('Z')):
             return chr(vk_code)
         return "(%u)" % (vk_code)

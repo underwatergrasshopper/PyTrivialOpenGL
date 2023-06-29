@@ -71,6 +71,9 @@ class Area:
         """
         return pos.is_between(self.get_pos(), self.get_pos() + self.get_size())
 
+    def __str__(self):
+        return "%d %d %d %d" % (self.x, self.y, self.width, self.height)
+
 
     ### logic ###
 
