@@ -1,4 +1,4 @@
-from PyTrivialOpenGL    import *
+import PyTrivialOpenGL as togl
 from ExampleManager     import *
 
 ################################################################################
@@ -11,9 +11,13 @@ example_manager = ExampleManager()
 ################################################################################
 
 def run_window_example(name, options):
-    window = to_window()
+    togl.set_log_level(togl.LogLevel.DEBUG)
 
-    return window.create_and_run(area = Area(MAX_I32, MIN_I32, MAX_U16, MIN_U16))
+    window = togl.to_window()
+
+    return window.create_and_run(
+        icon_file_name = "tests\\assets\\icon.ico"
+    )
 
 example_manager.add_example("run_window", run_window_example)
 

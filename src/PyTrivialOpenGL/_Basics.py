@@ -35,14 +35,29 @@ def check_u16(v):
         raise ValueError("Value is not in rage of 16 bit unsigned integer.")
 
 def check_point_i32(p):
-    if not is_point_i32(p):
-        raise ValueError("Point's x and y are not in range of 32 bit integer.")
+    if not is_i32(p.x):
+        raise ValueError("Point's value 'x' are not in range of 32 bit integer.")
+
+    if not is_i32(p.y):
+        raise ValueError("Point's value 'y' are not in range of 32 bit integer.")
 
 def check_size_u16(s):
-    if not is_size_u16(s):
-        raise ValueError("Size's width and height are not in range of 16 bit unsigned integer.")
+    if not is_u16(s.width):
+        raise ValueError("Size's value 'width' are not in range of 16 bit unsigned integer.")
+
+    if not is_u16(s.height):
+        raise ValueError("Size's value 'height' are not in range of 16 bit unsigned integer.")
 
 def check_area_i32_u16(a):
-    if not is_area_i32_u16(a):
-        raise ValueError("Area's x and y are not in range of 32 bit integer. Area's width and height are not in range of 16 bit unsigned integer.")
+    if not is_i32(a.x):
+        raise ValueError("Area's value 'x' are not in range of 32 bit integer.")
+
+    if not is_i32(a.y):
+        raise ValueError("Area's value 'y' are not in range of 32 bit integer.")
+
+    if not is_u16(a.width):
+        raise ValueError("Area's value 'width' are not in range of 16 bit unsigned integer.")
+
+    if not is_u16(a.height):
+        raise ValueError("Area's value 'height' are not in range of 16 bit unsigned integer.")
 

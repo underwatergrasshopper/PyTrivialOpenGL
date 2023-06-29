@@ -111,7 +111,7 @@ def test_basics():
     try:
         check_size_u16(Size(MIN_U16 - 1, MIN_U16))
     except ValueError as e:
-        assert str(e) == "Size's width and height are not in range of 16 bit unsigned integer."
+        assert str(e) == "Size's value 'width' are not in range of 16 bit unsigned integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -120,7 +120,7 @@ def test_basics():
     try:
         check_size_u16(Size(MIN_U16, MIN_U16 - 1))
     except ValueError as e:
-        assert str(e) == "Size's width and height are not in range of 16 bit unsigned integer."
+        assert str(e) == "Size's value 'height' are not in range of 16 bit unsigned integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -129,7 +129,7 @@ def test_basics():
     try:
         check_size_u16(Size(MAX_U16 + 1, MAX_U16))
     except ValueError as e:
-        assert str(e) == "Size's width and height are not in range of 16 bit unsigned integer."
+        assert str(e) == "Size's value 'width' are not in range of 16 bit unsigned integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -138,7 +138,7 @@ def test_basics():
     try:
         check_size_u16(Size(MAX_U16, MAX_U16 + 1))
     except ValueError as e:
-        assert str(e) == "Size's width and height are not in range of 16 bit unsigned integer."
+        assert str(e) == "Size's value 'height' are not in range of 16 bit unsigned integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -167,7 +167,7 @@ def test_basics():
     try:
         check_point_i32(Point(MIN_I32 - 1, MIN_I32))
     except ValueError as e:
-        assert str(e) == "Point's x and y are not in range of 32 bit integer."
+        assert str(e) == "Point's value 'x' are not in range of 32 bit integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -176,7 +176,7 @@ def test_basics():
     try:
         check_point_i32(Point(MIN_I32, MIN_I32 - 1))
     except ValueError as e:
-        assert str(e) == "Point's x and y are not in range of 32 bit integer."
+        assert str(e) == "Point's value 'y' are not in range of 32 bit integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -185,7 +185,7 @@ def test_basics():
     try:
         check_point_i32(Point(MAX_I32 + 1, MAX_I32))
     except ValueError as e:
-        assert str(e) == "Point's x and y are not in range of 32 bit integer."
+        assert str(e) == "Point's value 'x' are not in range of 32 bit integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -194,7 +194,7 @@ def test_basics():
     try:
         check_point_i32(Point(MAX_I32, MAX_I32 + 1))
     except ValueError as e:
-        assert str(e) == "Point's x and y are not in range of 32 bit integer."
+        assert str(e) == "Point's value 'y' are not in range of 32 bit integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -227,7 +227,7 @@ def test_basics():
     try:
         check_area_i32_u16(Area(MIN_I32 - 1, MIN_I32, MIN_U16, MIN_U16))
     except ValueError as e:
-        assert str(e) == "Area's x and y are not in range of 32 bit integer. Area's width and height are not in range of 16 bit unsigned integer."
+        assert str(e) == "Area's value 'x' are not in range of 32 bit integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -236,7 +236,7 @@ def test_basics():
     try:
         check_area_i32_u16(Area(MIN_I32, MIN_I32 - 1, MIN_U16, MIN_U16))
     except ValueError as e:
-        assert str(e) == "Area's x and y are not in range of 32 bit integer. Area's width and height are not in range of 16 bit unsigned integer."
+        assert str(e) == "Area's value 'y' are not in range of 32 bit integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -245,7 +245,7 @@ def test_basics():
     try:
         check_area_i32_u16(Area(MIN_I32, MIN_I32, MIN_U16 - 1, MIN_U16))
     except ValueError as e:
-        assert str(e) == "Area's x and y are not in range of 32 bit integer. Area's width and height are not in range of 16 bit unsigned integer."
+        assert str(e) == "Area's value 'width' are not in range of 16 bit unsigned integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -254,7 +254,7 @@ def test_basics():
     try:
         check_area_i32_u16(Area(MIN_I32, MIN_I32, MIN_U16, MIN_U16 - 1))
     except ValueError as e:
-        assert str(e) == "Area's x and y are not in range of 32 bit integer. Area's width and height are not in range of 16 bit unsigned integer."
+        assert str(e) == "Area's value 'height' are not in range of 16 bit unsigned integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -263,7 +263,7 @@ def test_basics():
     try:
         check_area_i32_u16(Area(MAX_I32 + 1, MAX_I32, MAX_U16, MAX_U16))
     except ValueError as e:
-        assert str(e) == "Area's x and y are not in range of 32 bit integer. Area's width and height are not in range of 16 bit unsigned integer."
+        assert str(e) == "Area's value 'x' are not in range of 32 bit integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -272,7 +272,7 @@ def test_basics():
     try:
         check_area_i32_u16(Area(MAX_I32, MAX_I32 + 1, MAX_U16, MAX_U16))
     except ValueError as e:
-        assert str(e) == "Area's x and y are not in range of 32 bit integer. Area's width and height are not in range of 16 bit unsigned integer."
+        assert str(e) == "Area's value 'y' are not in range of 32 bit integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -281,7 +281,7 @@ def test_basics():
     try:
         check_area_i32_u16(Area(MAX_I32, MAX_I32, MAX_U16 + 1, MAX_U16))
     except ValueError as e:
-        assert str(e) == "Area's x and y are not in range of 32 bit integer. Area's width and height are not in range of 16 bit unsigned integer."
+        assert str(e) == "Area's value 'width' are not in range of 16 bit unsigned integer."
     except Exception:
         assert False, "Wrong exception."
     else:
@@ -290,7 +290,7 @@ def test_basics():
     try:
         check_area_i32_u16(Area(MAX_I32, MAX_I32, MAX_U16, MAX_U16 + 1))
     except ValueError as e:
-        assert str(e) == "Area's x and y are not in range of 32 bit integer. Area's width and height are not in range of 16 bit unsigned integer."
+        assert str(e) == "Area's value 'height' are not in range of 16 bit unsigned integer."
     except Exception:
         assert False, "Wrong exception."
     else:
