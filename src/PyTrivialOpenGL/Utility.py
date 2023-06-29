@@ -6,12 +6,24 @@ from .      import _C_WinApi
 import ctypes as _ctypes
 
 __all__ = [
+    "MIN_U16",
+    "MAX_U16",
+    "MIN_I32",
+    "MAX_I32",
     "OpenGL_Version",
     "get_desctop_area_no_task_bar",
     "get_desctop_size_no_task_bar",
     "get_screen_size",
     "get_cursor_pos_in_screen",
 ]
+
+################################################################################
+
+MIN_U16 = 0
+MAX_U16 = 2**31 - 1
+
+MIN_I32 = -(2**31)
+MAX_I32 = 2**31 - 1
 
 ################################################################################
 

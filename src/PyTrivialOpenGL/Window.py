@@ -2,6 +2,8 @@ from ._SingletonGuardian    import _SingletonGuardian
 from .Area                  import Area
 from .Utility               import *
 
+from . import _Basics
+
 __all__ = [
     "WindowStyleBit",
     "Window",
@@ -54,9 +56,38 @@ class Window:
 
         draw                    : Callable[[], NoneType]
         """
+
+        self.window_name              = window_name
+        self.area                     = area                    if area             else _get_def_window_area()
+        self.style                    = style
+        self.opengl_version           = opengl_version          if opengl_version   else OpenGL_Version(1, 1) 
+        self.icon_file_name           = icon_file_name
+        self.icon_resource_id         = icon_resource_id
+        self.timer_time_interval      = timer_time_interval
+        self.is_auto_sleep_blocked    = is_auto_sleep_blocked
+
+        self.do_on_create             = do_on_create
+        self.do_on_destroy            = do_on_destroy
+        self.draw                     = draw
+
+        _Basics.check_area_i32_u16(self.area)
+
+
+
         return 0
 
 _window = Window()
 
 def to_window():
     return _window
+
+def _get_def_window_area():
+    """
+    Returns (Area).
+    """
+    size    = get_desctop_size_no_task_bar() // 2
+
+    x       = size.width // 2
+    y       = size.height // 2
+
+    return Area(x, y, size.width, size.height)

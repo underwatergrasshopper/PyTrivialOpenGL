@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>55e85929-b5f6-427a-b4ea-c1be3f4cc622</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>tests\_c_winapi_test.py</StartupFile>
+    <StartupFile>examples\all_examples.py</StartupFile>
     <SearchPath>src;tests;examples</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -64,6 +64,7 @@
     <Compile Include="tests\smoke_test.py" />
     <Compile Include="tests\unittests\run_all_tests.py" />
     <Compile Include="tests\unittests\test_area.py" />
+    <Compile Include="tests\unittests\test_basics.py" />
     <Compile Include="tests\unittests\test_color.py" />
     <Compile Include="tests\unittests\test_key.py" />
     <Compile Include="tests\unittests\test_log.py" />

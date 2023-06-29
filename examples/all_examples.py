@@ -13,7 +13,7 @@ example_manager = ExampleManager()
 def run_window_example(name, options):
     window = to_window()
 
-    return window.run()
+    return window.create_and_run(area = Area(MAX_I32, MIN_I32, MAX_U16, MIN_U16))
 
 example_manager.add_example("run_window", run_window_example)
 
