@@ -7,6 +7,7 @@ from ._WindowAreaCorrector  import _WindowAreaCorrector
 from .Area                  import Area
 from .Utility               import *
 from .Log                   import *
+from .SpecialDebug          import *
 
 from . import _Basics
 from ._Basics import clamp as _clamp
@@ -88,7 +89,10 @@ class Window:
 
 
     """
+    _WIDTH_CORRECTION_TO_FAKE = 1
+
     _singleton_guardian = _SingletonGuardian("Window")
+
 
     def __init__(self):
         self._singleton_guardian.count_as_created_instance()
@@ -119,8 +123,8 @@ class Window:
         self._is_visible                    = False
         self._is_frame                      = True
 
-        self._state                         = WindowStateId.NORMAL
-        self._prev_state                    = self._state
+        self._state_id                      = WindowStateId.NORMAL
+        self._prev_state_id                 = self._state_id
 
         self._is_apply_fake_width               = False
         self._is_enable_do_on_resize            = True
@@ -278,6 +282,205 @@ class Window:
 
         return result
 
+    def request_close(self):
+        _C_WinApi.DestroyWindow(self._window_handle)
+
+    def request_draw(self):
+        _C_WinApi.InvalidateRect(self._window_handle, _C_WinApi.NULL, _C_WinApi.FALSE)
+
+    def draw_now(self):
+        if not self._is_in_draw:
+            self._is_in_draw = True
+
+            if to_special_debug().is_notify_draw_call:
+                log_debug("Window Draw Call")
+
+            if self._draw:
+                self._draw()
+
+            _C_WinApi.SwapBuffers(self._device_context_handle);
+            
+            self._is_in_draw = False
+
+    ###
+
+    def set_option(self, window_option_id, is_enabled):
+        """
+        window_option_id : WindowOptionId
+        is_enabled : bool
+        """
+        if window_option_id == WindowOptionId.AUTO_SLEEP_MODE:
+            self._is_auto_sleep_blocked = not is_enabled
+
+    def is_enabled(self, window_option_id):
+        """
+        window_option_id : WindowOptionId
+        is_enabled : bool
+        """
+        if window_option_id == WindowOptionId.AUTO_SLEEP_MODE:
+            return not self._is_auto_sleep_blocked
+        
+        raise RuntimeError("Unexpected window option id '%s'." % window_option_id.name)
+
+    ###
+
+    def move_to(self, x = None, y = None, pos = None, is_draw_area = False):
+        # TODO: Check x, y, pos value range.
+        if pos is not None:
+            area = Area(pos.x, pos.y, 0, 0)
+
+        elif (x is not None) and (y is not None):
+            area = Area(x, y, 0, 0)
+
+        else:
+            if is_draw_area:
+                pos = self.get_draw_area_pos()
+            else:
+                pos = self.get_pos()
+
+            if x is None:
+                x = pos.x
+
+            if y is None:
+                y = pos.y
+
+            area = Area(x, y, 0, 0)
+
+        self._set_area(area, _WindowAreaPartId.POSITION, is_draw_area)
+
+    # TODO:
+    # MoveTo
+    # MoveBy
+    # Resize
+    # SetArea
+    # Center
+
+    ###
+
+    def get_pos(self):
+        """
+        Returns (Point).
+        """
+        return self.get_area().get_pos()
+
+    def get_size(self):
+        """
+        Returns (Size).
+        """
+        return self.get_area().get_size()
+
+    def get_area(self):
+        """
+        Returns (Area).
+        """
+        if self._state_id == WindowStateId.MINIMIZED:
+            return Area(0, 0, 0, 0)
+
+        area = _get_window_area(self._window_handle)
+
+        # Workaround to problems with full screen.
+        if self.is_windowed_full_screen():
+           area.width -= self._WIDTH_CORRECTION_TO_FAKE
+
+        return self._window_area_corrector.remove_invisible_frame_from_area(area, self._window_handle)
+
+    def get_draw_area_pos(self):
+        """
+        Returns (Point) window draw area position in screen coordinates system.
+        """
+        return self.get_draw_area().get_pos()
+
+    def get_draw_area_size(self):
+        """
+        Returns (Size).
+        """
+        return self.get_draw_area().get_size()
+
+
+    def get_draw_area(self):
+        if self._state_id == WindowStateId.MINIMIZED:
+            return Area(0, 0, 0, 0)
+
+        rect    = _C_WinApi.RECT()
+        rect_p  = _ctypes.byref(rect)
+        pos1_p  = _ctypes.cast(rect_p, _C_WinApi.LPPOINT)
+        pos2_p  = _ctypes.cast(_ctypes.byref(rect.right), _C_WinApi.LPPOINT)
+
+        if (    _C_WinApi.GetClientRect(self._window_handle, rect_p) and 
+                _C_WinApi.ClientToScreen(self._window_handle, pos1_p) and 
+                _C_WinApi.ClientToScreen(self._window_handle, pos2_p)
+                ):
+            area = _make_area_from_rect(rect)
+        
+            # Workaround to problems with full screen.
+            if self.is_windowed_full_screen():
+               area.width -= self._WIDTH_CORRECTION_TO_FAKE
+        
+            return area
+        
+        return Area(0, 0, 0, 0)
+
+    ###
+
+    # TODO:
+    # Hide
+    # Show
+    # IsVisible
+
+    ###
+
+    # TODO:
+    # Minimize
+    # Maximize
+    # GoWindowedFullScreen
+
+    ###
+
+    def get_state_id(self):
+        """
+        Returns (WindowStateId).
+        """
+        return self._state_id
+
+    def is_normal(self):
+        """
+        Returns (bool).
+        """
+        return self.get_state_id() == WindowStateId.NORMAL
+
+    def is_minimized(self):
+        """
+        Returns (bool).
+        """
+        return self.get_state_id() == WindowStateId.MINIMIZED
+
+    def is_maximized(self):
+        """
+        Returns (bool).
+        """
+        return self.get_state_id() == WindowStateId.MAXIMIZED
+
+    def is_windowed_full_screen(self):
+        """
+        Returns (bool).
+        """
+        return self.get_state_id() == WindowStateId.WINDOWED_FULL_SCREENED
+
+    ###
+
+    # TODO:
+    # GoForeground
+    # IsForeground
+
+    ###
+    
+    # TODO:
+    # GetStyle
+    # GetCursorPosInDrawArea
+    # GetOpenGL_Version
+
+    ### Private ###
+
     def _execute_main_loop(self):
         msg = _C_WinApi.MSG()
 
@@ -303,8 +506,8 @@ class Window:
                     _C_WinApi.TranslateMessage(_ctypes.byref(msg))
                     _C_WinApi.DispatchMessageW(_ctypes.byref(msg))
                 else:
-                    pass
-                    # TODO: DrawNow()
+                    self.draw_now()
+                    
 
         return _C_WinApi.EXIT_FAILURE;
 
@@ -425,7 +628,7 @@ class Window:
         
     def _restore(self):
         if _C_WinApi.IsMaximized(self._window_handle):
-            if self._prev_state == WindowStateId.WINDOWED_FULL_SCREENED:
+            if self._prev_state_id == WindowStateId.WINDOWED_FULL_SCREENED:
                 self._push_is_enable_do_on_resize(False)
                 self._push_is_enable_change_state_at_resize(False)
 
@@ -439,7 +642,7 @@ class Window:
         if _C_WinApi.IsMinimized(self._window_handle):
             _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_RESTORE)
         
-        if self._state == WindowStateId.WINDOWED_FULL_SCREENED:
+        if self._state_id == WindowStateId.WINDOWED_FULL_SCREENED:
             self._push_is_enable_do_on_resize(False)
             self._push_is_enable_change_state_at_resize(False)
         
@@ -480,10 +683,69 @@ class Window:
         l_param         : LPARAM
         """
 
+        # TODO: log_all_window_messages()
+
+        ### Draw ###
+
         if window_message == _C_WinApi.WM_PAINT:
             return 0
 
-        ### Create, Destroy, Close ###
+        elif window_message == _C_WinApi.WM_ERASEBKGND:
+            # Tells DefWindowProc to not erase background. It's unnecessary since background is handled by OpenGL.
+            return 1
+
+        ### Mouse ###
+
+        # TODO:
+        # WM_MOUSEMOVE
+        # WM_MOUSEWHEEL
+        # WM_LBUTTONDOWN
+        # WM_LBUTTONUP
+        # WM_RBUTTONDOWN
+        # WM_RBUTTONUP
+        # WM_MBUTTONDOWN
+        # WM_MBUTTONUP
+        # WM_XBUTTONDOWN
+        # WM_XBUTTONUP
+        
+        ### Keyboard ###
+
+        # TODO:
+        # WM_KEYDOWN
+        # WM_KEYUP
+        # WM_SYSKEYDOWN
+        # WM_SYSKEYUP
+        # WM_CHAR
+        
+        ### Window ###
+
+        # TODO:
+        # WM_SIZING
+        # WM_SIZE
+        
+        ### Timer ###
+
+        # TODO:
+        # WM_TIMER
+        
+        ### State ###
+
+        # TODO:
+        # WM_SHOWWINDOW
+        # WM_ACTIVATE
+        # WM_ACTIVATEAPP
+        # WM_SYSCOMMAND
+        
+        ### Focus ###
+
+        # TODO:
+        # WM_SETFOCUS
+        # WM_KILLFOCUS
+
+        ### Create, Close, Destroy ###
+
+        elif window_message == _C_WinApi.WM_CREATE:
+            return 0
 
         elif window_message == _C_WinApi.WM_CLOSE:
             _C_WinApi.DestroyWindow(window_handle)
@@ -494,9 +756,6 @@ class Window:
                 self._do_on_destroy()
 
             _C_WinApi.PostQuitMessage(0)
-            return 0
-
-        elif window_message == _C_WinApi.WM_CREATE:
             return 0
 
         return _C_WinApi.DefWindowProcW(window_handle, window_message, w_param, l_param)

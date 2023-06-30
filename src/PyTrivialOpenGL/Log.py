@@ -69,6 +69,11 @@ def set_log_level(log_level):
     """
     log_level : int
         Might be: LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARNING or LogLevel.ERROR.
+        For:
+            LogLevel.DEBUG      - logs debug, info, warning and error messages,
+            LogLevel.INFO       - logs info, warning and error messages,
+            LogLevel.WARNING    - logs warning and error messages,
+            LogLevel.ERROR      - logs error messages only.
     """
     _logger.set_log_level(log_level)
 
