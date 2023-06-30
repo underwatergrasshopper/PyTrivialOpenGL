@@ -567,7 +567,7 @@ class Window:
 
         # --- Size --- #
 
-        desktop_area = get_desctop_area_no_task_bar()
+        desktop_area = get_desktop_area_no_task_bar()
 
         window_area.width   = (desktop_area.width / 2) if is_default else area.width
         window_area.height  = (desktop_area.height / 2) if is_default else area.height
