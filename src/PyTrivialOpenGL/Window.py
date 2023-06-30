@@ -141,6 +141,24 @@ class Window:
 
         self._draw                          = None
 
+        # TODO:
+        # do_on_key
+        # do_on_char
+        # do_on_char_utf16
+        # do_on_char_utf32
+        # 
+        # do_on_mouse_wheel_roll
+        # do_on_mouse_move
+        # 
+        # do_on_resize
+        # 
+        # do_on_state_change
+        # do_on_show
+        # do_on_hide
+        # do_on_foreground
+        # 
+        # do_on_time
+
     def create_and_run(    
             self,
             window_name              = "Window",
