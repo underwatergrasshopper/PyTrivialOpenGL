@@ -277,7 +277,7 @@ class Window:
         if self._timer_time_interval > 0:
             result = _C_WinApi.SetTimer(self._window_handle, self._DEFAULT_TIMER_ID, self._timer_time_interval, _C_WinApi.TIMERPROC(0))
             if result == 0:
-               log_fatal_error("Can not set timer. (windows error code: %d)" % _C_WinApi.GetLastError());
+               log_fatal_error("Can not set timer. (windows error code: %d)" % _C_WinApi.GetLastError())
 
 
         _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
@@ -370,7 +370,7 @@ class Window:
     # MoveTo
     # MoveBy
     # Resize
-    # SetArea
+    # SetArea / Reshape
     # Center
 
     ###
