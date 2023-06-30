@@ -375,6 +375,30 @@ class Window:
 
     ###
 
+    def get_x(self):
+        """
+        Returns (int).
+        """
+        return self.get_area().x
+
+    def get_y(self):
+        """
+        Returns (int).
+        """
+        return self.get_area().y
+
+    def get_width(self):
+        """
+        Returns (int).
+        """
+        return self.get_area().width
+
+    def get_height(self):
+        """
+        Returns (int).
+        """
+        return self.get_area().height
+
     def get_pos(self):
         """
         Returns (Point).
@@ -402,6 +426,30 @@ class Window:
 
         return self._window_area_corrector.remove_invisible_frame_from_area(area, self._window_handle)
 
+    def get_draw_area_x(self):
+        """
+        Returns (int).
+        """
+        return self.get_draw_area().x
+
+    def get_draw_area_y(self):
+        """
+        Returns (int).
+        """
+        return self.get_draw_area().y
+
+    def get_draw_area_width(self):
+        """
+        Returns (int).
+        """
+        return self.get_draw_area().width
+
+    def get_draw_area_height(self):
+        """
+        Returns (int).
+        """
+        return self.get_draw_area().height
+
     def get_draw_area_pos(self):
         """
         Returns (Point) window draw area position in screen coordinates system.
@@ -414,8 +462,10 @@ class Window:
         """
         return self.get_draw_area().get_size()
 
-
     def get_draw_area(self):
+        """
+        Returns (Area).
+        """
         if self._state_id == WindowStateId.MINIMIZED:
             return Area(0, 0, 0, 0)
 
