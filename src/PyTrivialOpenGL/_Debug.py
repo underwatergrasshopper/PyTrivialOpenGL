@@ -1,8 +1,8 @@
 from ._C_WinApi import *
 
-def _window_message_to_str(message):
+def _wm_to_str(window_message):
     """
-    message : int
+    window_message : int
         Window message id.
     Returns (str).
     """
@@ -257,9 +257,9 @@ def _window_message_to_str(message):
         WM_AFXLAST                          : "WM_AFXLAST",
         WM_PENWINFIRST                      : "WM_PENWINFIRST",
         WM_PENWINLAST                       : "WM_PENWINLAST",
-    }.get(message, None)
+    }.get(window_message, None)
 
-    if text:
+    if text is not None:
         return text
 
-    return "(%u)" % (message)
+    return "(%u)" % window_message

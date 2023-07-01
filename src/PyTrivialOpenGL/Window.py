@@ -7,6 +7,7 @@ import re       as _re
 from . import _C_WinApi
 from . import _C_WGL
 from . import _C_GL
+from . import Key
 
 from ._SingletonGuardian    import _SingletonGuardian
 from ._WindowAreaCorrector  import _WindowAreaCorrector
@@ -16,12 +17,16 @@ from .Area                  import Area
 from .Utility               import *
 from .Log                   import *
 from .SpecialDebug          import *
+from .Key                   import *
+from .Key                   import _VirtualKeyData, _vk_code_to_key_id, _vk_code_to_str, _is_mouse_button_down, _get_keyboard_side_id, _get_mouse_key_id, _is_mw_mouse_button, _is_mw_mouse_button_x
 
 from . import _Basics
 from ._Basics import clamp as _clamp
 from ._Basics import is_i32 as _is_i32
 from ._Basics import is_u16 as _is_U16
 from ._Basics import _MIN_I32, _MAX_I32, _MAX_U16, _MIN_U16
+
+from ._Debug import _wm_to_str
 
 
 __all__ = [
@@ -743,7 +748,14 @@ class Window:
     
     # TODO:
     # GetStyle
-    # GetCursorPosInDrawArea
+
+    def get_cursor_pos_in_draw_area(self):
+        pos = _C_WinApi.POINT()
+        if _C_WinApi.GetCursorPos(_ctypes.byref(pos)) and _C_WinApi.ScreenToClient(self._window_handle, _ctypes.byref(pos)):
+            return Point(pos.x, pos.y)
+        return Point(0, 0)
+
+    # TODO:
     # GetOpenGL_Version
 
     ### Private ###
@@ -944,6 +956,50 @@ class Window:
         if len(self._is_enable_change_state_at_resize_stack) > 0:
             self._is_enable_change_state_at_resize = self._is_enable_change_state_at_resize_stack.pop()
 
+    def _handle_do_on_mouse_key(self, window_message, w_param, l_param):
+        """
+        window_message  : int
+        w_param         : int
+        l_param         : int
+        """
+        is_down = _is_mouse_button_down(window_message)
+
+        if self._do_on_key:
+            key_id = _get_mouse_key_id(window_message, w_param);
+
+            extra = KeyExtra(
+                count               = 1,
+                x                   = _C_WinApi.GET_X_LPARAM(l_param).value,
+                y                   = _C_WinApi.GET_Y_LPARAM(l_param).value,
+                keyboard_side_id    = KeyboardSideId.NONE
+            )
+            self._do_on_key(key_id, is_down, extra);
+        
+        # Tracks mouse button up message when mouse button is down and cursor leave window draw (client) area.
+        if is_down:
+            _C_WinApi.SetCapture(self._window_handle)
+        elif _C_WinApi.GetCapture() == self._window_handle:
+            _C_WinApi.ReleaseCapture()
+
+    def _handle_do_on_keybard_key(self, is_down, w_param, l_param):
+        """
+        is_down : bool
+        w_param : int
+        l_param : int
+        """
+        if self._do_on_key:
+            vk_data = _VirtualKeyData(l_param)
+            key_id = _vk_code_to_key_id(w_param)
+
+            pos = self.get_cursor_pos_in_draw_area()
+
+            extra = KeyExtra(
+                count = vk_data.count,
+                x = pos.x,
+                y = pos.y,
+                keyboard_side_id = _get_keyboard_side_id(key_id, vk_data),
+            )
+            self._do_on_key(key_id, is_down, extra)
 
     def _create(self, window_handle):
         """
@@ -1091,25 +1147,77 @@ class Window:
 
         ### Mouse ###
 
-        # TODO:
-        # WM_MOUSEMOVE
-        # WM_MOUSEWHEEL
-        # WM_LBUTTONDOWN
-        # WM_LBUTTONUP
-        # WM_RBUTTONDOWN
-        # WM_RBUTTONUP
-        # WM_MBUTTONDOWN
-        # WM_MBUTTONUP
-        # WM_XBUTTONDOWN
-        # WM_XBUTTONUP
-        
+        elif window_message == _C_WinApi.WM_MOUSEMOVE:
+            if to_special_debug().is_notify_mouse_move:
+                wm_text = "WM_MOUSEMOVE"
+                x       = _C_WinApi.GET_X_LPARAM(l_param).value
+                y       = _C_WinApi.GET_Y_LPARAM(l_param).value
+
+                log_debug("%-20s: %d %d" % (wm_text, x, y))
+
+            if self._do_on_mouse_move:
+                self._do_on_mouse_move(_C_WinApi.GET_X_LPARAM(l_param).value, _C_WinApi.GET_Y_LPARAM(l_param).value)
+
+            return 0
+
+        elif window_message == _C_WinApi.WM_MOUSEWHEEL:
+            if is_log_level_at_least(LogLevel.DEBUG):
+                wm_text = "WM_MOUSEWHEEL"
+                delta   = _C_WinApi.GET_WHEEL_DELTA_WPARAM(w_param).value
+                x       = _C_WinApi.GET_X_LPARAM(l_param).value # in screen coordinates system
+                y       = _C_WinApi.GET_Y_LPARAM(l_param).value # in screen coordinates system
+
+                pos = _C_WinApi.POINT(x, y)
+                _C_WinApi.ScreenToClient(self._window_handle, _ctypes.byref(pos)) # in window client (draw area) coordinates system
+
+                mk_text = _mk_to_str(_C_WinApi.LOWORD(w_param).value)
+
+                log_debug("%-20s: %d (%d %d) %d %d %s" % (wm_text, delta, x, y, pos.x, pos.y, mk_text))
+
+            if self._do_on_mouse_wheel_roll:
+                step_count = _C_WinApi.GET_WHEEL_DELTA_WPARAM(w_param).value // 120
+
+                pos = _C_WinApi.POINT(_C_WinApi.GET_X_LPARAM(l_param), _C_WinApi.GET_Y_LPARAM(l_param))
+                _C_WinApi.ScreenToClient(self._window_handle, _ctypes.byref(pos))
+
+                self._do_on_mouse_wheel_roll(step_count, pos.x, pos.y)
+
+            return 0
+
+        elif _is_mw_mouse_button(window_message):
+            if is_log_level_at_least(LogLevel.DEBUG):
+                wm_text = _wm_to_str(window_message)
+
+                xb_text = ""
+                if _is_mw_mouse_button_x(window_message):
+                    if      _C_WinApi.HIWORD(w_param).value == _C_WinApi.XBUTTON1: xb_text = " XBUTTON1"
+                    elif    _C_WinApi.HIWORD(w_param).value == _C_WinApi.XBUTTON2: xb_text = " XBUTTON2"
+
+                x       = _C_WinApi.GET_X_LPARAM(l_param).value 
+                y       = _C_WinApi.GET_Y_LPARAM(l_param).value 
+                mk_text = _mk_to_str(_C_WinApi.LOWORD(w_param).value)
+
+                log_debug("%-20s:%s %d %d %s" % (wm_text, xb_text, x, y, mk_text))
+
+            self._handle_do_on_mouse_key(window_message, w_param, l_param)
+            return 0
+
         ### Keyboard ###
 
+        elif window_message in [_C_WinApi.WM_KEYDOWN, _C_WinApi.WM_KEYUP, _C_WinApi.WM_SYSKEYDOWN, _C_WinApi.WM_SYSKEYUP]:
+            if to_special_debug().is_notify_key_message:
+                wm_text = _wm_to_str(window_message)
+                vk_text = _vk_code_to_str(w_param)
+                vk_data = _VirtualKeyData(l_param)
+
+                log_debug("%-20s: %-13s %s" % (wm_text, vk_text, vk_data))
+
+            is_down = window_message in [_C_WinApi.WM_KEYDOWN, _C_WinApi.WM_SYSKEYDOWN]
+
+            self._handle_do_on_keybard_key(is_down, w_param, l_param)
+            return 0
+
         # TODO:
-        # WM_KEYDOWN
-        # WM_KEYUP
-        # WM_SYSKEYDOWN
-        # WM_SYSKEYUP
         # WM_CHAR
         
         ### Window ###
@@ -1216,6 +1324,22 @@ def _get_window_area_from_draw_area(draw_area, window_style):
     _C_WinApi.AdjustWindowRect(_ctypes.byref(rect), window_style, _C_WinApi.FALSE)
 
     return _make_area_from_rect(rect)
+
+def _mk_to_str(mk_code):
+    """
+    mk_code : int
+    Returns (str).
+    """
+    text = ""
+    if mk_code & _C_WinApi.MK_LBUTTON:  text += "MK_LBUTTON "
+    if mk_code & _C_WinApi.MK_RBUTTON:  text += "MK_RBUTTON "
+    if mk_code & _C_WinApi.MK_SHIFT:    text += "MK_SHIFT "
+    if mk_code & _C_WinApi.MK_CONTROL:  text += "MK_CONTROL "
+    if mk_code & _C_WinApi.MK_MBUTTON:  text += "MK_MBUTTON "
+    if mk_code & _C_WinApi.MK_XBUTTON1: text += "MK_XBUTTON1 "
+    if mk_code & _C_WinApi.MK_XBUTTON2: text += "MK_XBUTTON2 "
+    if len(text) > 0: text = text[:-1]
+    return text
 
 def _window_proc(window_handle, window_message, w_param, l_param):
     try:

@@ -190,6 +190,18 @@ class KeyExtra:
         self.y                  = y
         self.keyboard_side_id   = keyboard_side_id
 
+    def __str__(self):
+        """
+        Returns (str).
+        """
+        return "count=%d, x=%d, y=%d, keyboard_side_id=%s" % (self.count, self.x, self.y, self.keyboard_side_id.name)
+
+    def __repr__(self):
+        """
+        Returns (str).
+        """
+        return self.__str__()
+
 _KEY_TOGGLE_BIT = 0x0001
 
 def is_key_toggled(key_id):
@@ -208,7 +220,10 @@ class _VirtualKeyData:
         self.trans_state    = (l_param >> 31)   & 0x00000001
 
     def __str__(self):
-        return "% 6u % 4u % 2u % 3u % 2u % 2u % 2u" % (self.count, self.scan_code, self.is_ext, self.reserved1, self.context_code, self.prev_state, self.trans_state)
+        return "c=%u, sc=%u, e=%u, r=%u, cc=%u, ps=%u, ts=%u" % (self.count, self.scan_code, self.is_ext, self.reserved1, self.context_code, self.prev_state, self.trans_state)
+
+    def __repr__(self):
+        return self.__str__()
 
 def _key_id_to_vk_code(key_id):
     """
@@ -502,7 +517,6 @@ def _is_mouse_button_down(message):
     """
     return int(message) in (_C_WinApi.WM_LBUTTONDOWN, _C_WinApi.WM_RBUTTONDOWN, _C_WinApi.WM_MBUTTONDOWN, _C_WinApi.WM_XBUTTONDOWN)
 
-
 def _get_keyboard_side_id(key_id, virtual_key_data):
     """
     key_id : KeyId
@@ -619,4 +633,21 @@ def _vk_code_to_str(vk_code):
 
     return text
 
+def _is_mw_mouse_button(window_message):
+    return window_message in [
+        _C_WinApi.WM_LBUTTONDOWN,
+        _C_WinApi.WM_LBUTTONUP,
+        _C_WinApi.WM_RBUTTONDOWN,
+        _C_WinApi.WM_RBUTTONUP,
+        _C_WinApi.WM_MBUTTONDOWN,
+        _C_WinApi.WM_MBUTTONUP,
+        _C_WinApi.WM_XBUTTONDOWN,
+        _C_WinApi.WM_XBUTTONUP
+    ]
+
+def _is_mw_mouse_button_x(window_message):
+    return window_message in [
+        _C_WinApi.WM_XBUTTONDOWN,
+        _C_WinApi.WM_XBUTTONUP
+    ]
 

@@ -36,6 +36,7 @@ def display_info():
 def run_window_example(name, options):
     togl.set_log_level(togl.LogLevel.DEBUG)
     # togl.to_special_debug().is_full_exit_track_in_callback = True
+    # togl.to_special_debug().is_notify_mouse_move = True
 
     def do_on_create():
         print("Hi.")
@@ -44,6 +45,15 @@ def run_window_example(name, options):
 
     def do_on_destroy():
         print("Bye. Bye.")
+
+    def do_on_mouse_move(x, y):
+        print("do_on_mouse_move: %d %d" % (x, y))
+
+    def do_on_mouse_wheel_roll(step_cout, x, y):
+        print("do_on_mouse_wheel_roll: %d %d %d" % (step_cout, x, y))
+
+    def do_on_key(key_id, is_down, extra):
+        print("do_on_key: key_id=%s, is_down=%d, %s" % (key_id.name, is_down, extra))
 
     def draw():
         glClear(GL_COLOR_BUFFER_BIT)
@@ -71,9 +81,13 @@ def run_window_example(name, options):
 
         style = togl.WindowStyleBit.CENTERED,
 
-        do_on_create = do_on_create,
-        do_on_destroy = do_on_destroy,
-        draw = draw,
+        do_on_create        = do_on_create,
+        do_on_destroy       = do_on_destroy,
+        draw                = draw,
+
+        # do_on_mouse_move        = do_on_mouse_move,
+        do_on_mouse_wheel_roll  = do_on_mouse_wheel_roll,
+        do_on_key               = do_on_key,
     )
 
 example_manager.add_example("run_window", run_window_example)

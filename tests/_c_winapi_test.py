@@ -10,7 +10,7 @@ from PyTrivialOpenGL.Key import _is_mouse_button_down
 from PyTrivialOpenGL.Key import _get_keyboard_side_id
 from PyTrivialOpenGL.Key import _vk_code_to_str
 from PyTrivialOpenGL.Key import _VirtualKeyData
-from PyTrivialOpenGL._Debug import _window_message_to_str
+from PyTrivialOpenGL._Debug import _wm_to_str
 from PyTrivialOpenGL._WindowAreaCorrector import _WindowAreaCorrector
 
 from ctypes import *
@@ -245,7 +245,7 @@ def simple_window(name, options):
         if "all_wm" in options:
             if msg == WM_PAINT:
                 if wm_paint_count == 0:
-                    print(_window_message_to_str(msg))
+                    print(_wm_to_str(msg))
                 elif wm_paint_count == 1:
                     print("...")
                 wm_paint_count += 1
@@ -255,7 +255,7 @@ def simple_window(name, options):
                 elif wm_paint_count > 1:
                     print("WM_PAINT")
                 else:
-                    print(_window_message_to_str(msg))
+                    print(_wm_to_str(msg))
                 wm_paint_count = 0
     
         if msg == WM_CREATE:
