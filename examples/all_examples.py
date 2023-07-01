@@ -1,5 +1,7 @@
+from ExampleManager import *
+
 import PyTrivialOpenGL as togl
-from ExampleManager     import *
+from PyTrivialOpenGL._C_GL import *
 
 import PyTrivialOpenGL._C_WinApi as _C_WinApi
 from PyTrivialOpenGL._WindowAreaCorrector import _WindowAreaCorrector
@@ -33,17 +35,35 @@ def display_info():
 
 def run_window_example(name, options):
     togl.set_log_level(togl.LogLevel.DEBUG)
+    # togl.to_special_debug().is_full_exit_track_in_callback = True
 
     def do_on_create():
         print("Hi.")
-        display_info()
+        #display_info()
+        glClearColor(0, 0, 0.2, 1)
 
     def do_on_destroy():
         print("Bye. Bye.")
 
+    def draw():
+        glClear(GL_COLOR_BUFFER_BIT)
+
+        glBegin(GL_TRIANGLES)
+        glColor3f(1, 0, 0)
+        glVertex2f(-0.5, -0.5)
+
+        glColor3f(0, 1, 0)
+        glVertex2f(0.5, -0.5)
+
+        glColor3f(0, 0, 1)
+        glVertex2f(0, 0.5)
+
+        glEnd()
+
     return togl.to_window().create_and_run(
         window_name = "Some Window",
         area = (0, 0, 800, 400),
+        opengl_version = (3, 3),
 
         icon_file_name  = "tests\\assets\\icon.ico",
 
@@ -53,7 +73,7 @@ def run_window_example(name, options):
 
         do_on_create = do_on_create,
         do_on_destroy = do_on_destroy,
-
+        draw = draw,
     )
 
 example_manager.add_example("run_window", run_window_example)

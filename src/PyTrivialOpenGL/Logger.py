@@ -1,4 +1,5 @@
-from enum import Enum
+import enum as _enum
+
 
 __all__ = [
     "LogLevel",
@@ -13,7 +14,7 @@ class LogLevel:
     INFO    = 2
     DEBUG   = 4
 
-class LogMessageTypeId(Enum):
+class LogMessageTypeId(_enum.Enum):
     DEBUG       = 0
     INFO        = 1
     WARNING     = 2

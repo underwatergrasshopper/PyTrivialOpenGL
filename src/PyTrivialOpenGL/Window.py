@@ -1,9 +1,17 @@
-import ctypes as _ctypes
-import enum as _enum
+import ctypes   as _ctypes
+import enum     as _enum
+import os       as _os
+import logging  as _logging
+import re       as _re
+
 from . import _C_WinApi
+from . import _C_WGL
+from . import _C_GL
 
 from ._SingletonGuardian    import _SingletonGuardian
 from ._WindowAreaCorrector  import _WindowAreaCorrector
+from .Point                 import Point
+from .Size                  import Size
 from .Area                  import Area
 from .Utility               import *
 from .Log                   import *
@@ -11,6 +19,8 @@ from .SpecialDebug          import *
 
 from . import _Basics
 from ._Basics import clamp as _clamp
+from ._Basics import is_i32 as _is_i32
+from ._Basics import is_u16 as _is_U16
 from ._Basics import _MIN_I32, _MAX_I32, _MAX_U16, _MIN_U16
 
 
@@ -83,11 +93,66 @@ class Window:
     _is_enable_change_state_at_resize_stack    : List[bool]
 
     _do_on_create               : Callable[[], NoneType]
+        Called right after window is created.
+
     _do_on_create               : Callable[[], NoneType]
+        Called right before window is closed.
 
     _draw                       : Callable[[], NoneType]
+        Called each time when window content needs to be redrawn.
 
+    _do_on_key                  : Callable[[KeyId, bool, KeyExtra], NoneType]
+        Call naming convention: do_on_key(key_id, is_down, extra).
+        Called when window receive keyboard key or mouse button message.
+        is_down          - true when key is down, false when key is up.
+        extra            - Contains additional informations, like: 
+                           cursor position in draw area (extra.x, extra.y), 
+                           indicator if pressed key is left or right or doesn't matter (extra.keyboard_side_id).
 
+    _do_on_text                 : Callable[[str], NoneType]
+        Call naming convention: do_on_text(text).
+        Called when window receive character message (from keyboard single key or key combination).
+        text            - Text received from keyboard. At least one character.
+
+    _do_on_mouse_wheel_roll     : Callable[[int, int, int], NoneType]
+        Call naming convention: do_on_mouse_wheel_roll(step_count, x, y).
+        Called when mouse wheel is rolled.
+        step_count      - Number of wheel rotation steps. 
+                          Positive number if away from user. 
+                          Negative number if towards user.
+        x, y            - Cursor position in draw area.
+
+    _do_on_mouse_move           : Callable[[int, int], NoneType]
+        Call naming convention: do_on_mouse_move(x, y).
+        Called when cursor change position in draw area.
+        x, y            - Cursor position in draw area.
+
+    _do_on_resize               : Callable[[], NoneType]
+        Call naming convention: do_on_resize(width, height).
+        Called each time window resize.
+        width           - Width of draw area.
+        height          - Height of draw area.
+
+    _do_on_state_change         : Callable[[WindowStateId], NoneType]
+        Call naming convention: do_on_state_change(state_id).
+        Called each time when window state change.
+
+    _do_on_show                 : Callable[[], NoneType]
+        Called when window is about to show.
+
+    _do_on_hide                 : Callable[[], NoneType]
+        Called when window is about to hide.
+
+    _do_on_foreground           : Callable[[bool], NoneType]
+        Call naming convention: do_on_foreground(is_gain).
+        Called when window goes to foreground (gain keyboard focus or is activated).
+        is_gain         - True  - when window goes to foreground,
+                          False - when window loses foreground position.
+
+    _do_on_time                 : Callable[[int], NoneType]
+        Call naming convention: do_on_time(time_interval).
+        Called periodically. Call delay is taken from timer_time_interval variable and is provided as time_interval parameter.
+        time_interval   - in milliseconds
     """
     _WIDTH_CORRECTION_TO_FAKE = 1
 
@@ -140,24 +205,23 @@ class Window:
         self._do_on_destory                 = None
 
         self._draw                          = None
+                        
+        self._do_on_key                     = None
+        self._do_on_text                    = None
+        
+        self._do_on_mouse_wheel_roll        = None
+        self._do_on_mouse_move              = None
+        
+        self._do_on_resize                  = None
+        
+        self._do_on_state_change            = None
+        self._do_on_show                    = None
+        self._do_on_hide                    = None
+        self._do_on_foreground              = None
+        
+        self._do_on_time                    = None
 
-        # TODO:
-        # do_on_key
-        # do_on_char
-        # do_on_char_utf16
-        # do_on_char_utf32
-        # 
-        # do_on_mouse_wheel_roll
-        # do_on_mouse_move
-        # 
-        # do_on_resize
-        # 
-        # do_on_state_change
-        # do_on_show
-        # do_on_hide
-        # do_on_foreground
-        # 
-        # do_on_time
+
 
     def create_and_run(    
             self,
@@ -173,6 +237,21 @@ class Window:
             do_on_destroy            = None,
 
             draw                     = None,
+
+            do_on_key                = None,
+            do_on_text               = None,
+            
+            do_on_mouse_wheel_roll   = None,
+            do_on_mouse_move         = None,
+            
+            do_on_resize             = None,
+            
+            do_on_state_change       = None,
+            do_on_show               = None,
+            do_on_hide               = None,
+            do_on_foreground         = None,
+            
+            do_on_time               = None,
             ):
         """
         window_name             : str
@@ -184,10 +263,67 @@ class Window:
         timer_time_interval     : int
         is_auto_sleep_blocked   : bool
 
-        do_on_create            : Callable[[], NoneType]
-        do_on_create            : Callable[[], NoneType]
+        do_on_create                : Callable[[], NoneType]
+            Called right after window is created.
 
-        draw                    : Callable[[], NoneType]
+        do_on_create                : Callable[[], NoneType]
+            Called right before window is closed.
+
+        draw                        : Callable[[], NoneType]
+            Called each time when window content needs to be redrawn.
+
+        do_on_key                   : Callable[[KeyId, bool, KeyExtra], NoneType]
+            Call naming convention: do_on_key(key_id, is_down, extra).
+            Called when window receive keyboard key or mouse button message.
+            is_down          - true when key is down, false when key is up.
+            extra            - Contains additional informations, like: 
+                               cursor position in draw area (extra.x, extra.y), 
+                               indicator if pressed key is left or right or doesn't matter (extra.keyboard_side_id).
+
+        do_on_text                  : Callable[[str], NoneType]
+            Call naming convention: do_on_text(text).
+            Called when window receive character message (from keyboard single key or key combination).
+            text            - Text received from keyboard. At least one character.
+
+        do_on_mouse_wheel_roll      : Callable[[int, int, int], NoneType]
+            Call naming convention: do_on_mouse_wheel_roll(step_count, x, y).
+            Called when mouse wheel is rolled.
+            step_count      - Number of wheel rotation steps. 
+                              Positive number if away from user. 
+                              Negative number if towards user.
+            x, y            - Cursor position in draw area.
+
+        do_on_mouse_move            : Callable[[int, int], NoneType]
+            Call naming convention: do_on_mouse_move(x, y).
+            Called when cursor change position in draw area.
+            x, y            - Cursor position in draw area.
+
+        do_on_resize                : Callable[[], NoneType]
+            Call naming convention: do_on_resize(width, height).
+            Called each time window resize.
+            width           - Width of draw area.
+            height          - Height of draw area.
+
+        do_on_state_change          : Callable[[WindowStateId], NoneType]
+            Call naming convention: do_on_state_change(state_id).
+            Called each time when window state change.
+
+        do_on_show                  : Callable[[], NoneType]
+            Called when window is about to show.
+
+        do_on_hide                  : Callable[[], NoneType]
+            Called when window is about to hide.
+
+        do_on_foreground            : Callable[[bool], NoneType]
+            Call naming convention: do_on_foreground(is_gain).
+            Called when window goes to foreground (gain keyboard focus or is activated).
+            is_gain         - True  - when window goes to foreground,
+                              False - when window loses foreground position.
+
+        do_on_time                  : Callable[[int], NoneType]
+            Call naming convention: do_on_time(time_interval).
+            Called periodically. Call delay is taken from timer_time_interval variable and is provided as time_interval parameter.
+            time_interval   - in milliseconds
         """
         self._window_name               = window_name
 
@@ -216,14 +352,46 @@ class Window:
             raise TypeError("Wrong type of parameter 'area'.")
 
         self._style                     = style
-        self._opengl_version            = opengl_version          if opengl_version   else OpenGL_Version(1, 1) 
+
+        if opengl_version is None:
+            self._opengl_version = OpenGL_Version(1, 1)
+        elif isinstance(opengl_version, OpenGL_Version):
+            self._opengl_version = opengl_version
+        elif isinstance(opengl_version, tuple):
+            if len(opengl_version) == 2:
+                self._opengl_version = OpenGL_Version(opengl_version[0], opengl_version[1])
+            else:
+                raise ValueError("Wrong number of values in parameter 'opengl_version'. Should be 2.") 
+        else:
+            TypeError("Wrong type of parameter 'opengl_version'. Should be 'Tuple[int, int]' or 'OpenGL_Version'.")
+
         self._icon_file_name            = icon_file_name
         self._timer_time_interval       = timer_time_interval
         self._is_auto_sleep_blocked     = is_auto_sleep_blocked
 
+        ### callbacks ###
+
         self._do_on_create              = do_on_create
         self._do_on_destroy             = do_on_destroy
+
         self._draw                      = draw
+
+        self._do_on_key                 = do_on_key
+        self._do_on_text                = do_on_text            
+        
+        self._do_on_mouse_wheel_roll    = do_on_mouse_wheel_roll
+        self._do_on_mouse_move          = do_on_mouse_move      
+        
+        self._do_on_resize              = do_on_resize          
+        
+        self._do_on_state_change        = do_on_state_change    
+        self._do_on_show                = do_on_show            
+        self._do_on_hide                = do_on_hide            
+        self._do_on_foreground          = do_on_foreground      
+        
+        self._do_on_time                = do_on_time        
+        
+        ###
 
         self._instance_handle = _C_WinApi.GetModuleHandleW(_C_WinApi.NULL);
 
@@ -343,7 +511,38 @@ class Window:
     ###
 
     def move_to(self, x = None, y = None, pos = None, is_draw_area = False):
-        # TODO: Check x, y, pos value range.
+        """
+        Moves window to new position.
+        Calling convention:
+            move_to(10, 30)                                     - Moves to (10, 30). 
+            move_to(x = 10)                                     - Moves only on X axis.
+            move_to(y = 10)                                     - Moves only on Y axis.
+            move_to(10, 30, is_draw_area = True)                - Moves left-top corner of draw area to (10, 30). 
+            move_to(pos = Point(10, 30))                        - Moves to (10, 30). 
+            move_to(pos = Point(10, 30), is_draw_area = True)   - Moves left-top corner of draw area to (10, 30). 
+
+        x               : int | None
+            New position of window in screen coordinates in X axis.
+        y               : int | None
+            New position of window in screen coordinates in Y axis.
+        pos             : Point | None
+            New position of window in screen coordinates.
+        is_draw_area    : bool
+            If True, then new position of window corresponding to left-top corner of draw area.
+            (default) If False, then new position of window corresponding to left-top corner of window.
+        """
+        if x is not None and not _is_i32(x):
+            raise ValueError("Argument 'x' is out of range for 32 bit integer.")
+        if y is not None and not _is_i32(y):
+            raise ValueError("Argument 'y' is out of range for 32 bit integer.")
+        if pos is not None:
+            if not isinstance(pos, Point):
+                raise TypeError("Type of argument 'pos' is not 'Point'.")
+            if not _is_i32(pos.x):
+                raise ValueError("Value 'x' of argument 'pos' is out of range for 32 bit integer.")
+            if not _is_i32(pos.y):
+                raise ValueError("Value 'y' of argument 'pos' is out of range for 32 bit integer.")
+
         if pos is not None:
             area = Area(pos.x, pos.y, 0, 0)
 
@@ -577,7 +776,8 @@ class Window:
                     self.draw_now()
                     
 
-        return _C_WinApi.EXIT_FAILURE;
+        return _C_WinApi.EXIT_FAILURE
+
 
     def _try_load_icon(self):
         """
@@ -744,6 +944,126 @@ class Window:
         if len(self._is_enable_change_state_at_resize_stack) > 0:
             self._is_enable_change_state_at_resize = self._is_enable_change_state_at_resize_stack.pop()
 
+
+    def _create(self, window_handle):
+        """
+        window_handle : _C_WinApi.HWND
+        """
+        pfd = _C_WinApi.PIXELFORMATDESCRIPTOR()
+        pfd.nSize           = _ctypes.sizeof(_C_WinApi.PIXELFORMATDESCRIPTOR)
+        pfd.nVersion        = 1
+        pfd.dwFlags         = _C_WinApi.PFD_DRAW_TO_WINDOW | _C_WinApi.PFD_SUPPORT_OPENGL | _C_WinApi.PFD_DOUBLEBUFFER
+        pfd.iPixelType      = _C_WinApi.PFD_TYPE_RGBA
+        pfd.cColorBits      = 24
+        pfd.cAlphaBits      = 8
+        pfd.cDepthBits      = 32
+        pfd.cStencilBits    = 8
+        pfd.iLayerType      = _C_WinApi.PFD_MAIN_PLANE
+
+        self._device_context_handle = _C_WinApi.GetDC(window_handle)
+        if not self._device_context_handle:
+           log_fatal_error("Can not get device context.")
+
+        pfi = _C_WinApi.ChoosePixelFormat(self._device_context_handle, _ctypes.byref(pfd))
+        if not pfi:
+           log_fatal_error("Can not choose pixel format. (windows error code: %d)" % _C_WinApi.GetLastError())
+
+        result = _C_WinApi.SetPixelFormat(self._device_context_handle, pfi, _ctypes.byref(pfd))
+        if not result:
+            log_fatal_error("Can not set pixel format. (windows error code: %d))" % _C_WinApi.GetLastError())
+
+        # --- Displaying Format Info --- #
+
+        if is_log_level_at_least(LogLevel.INFO):
+            pfd = _C_WinApi.PIXELFORMATDESCRIPTOR()
+            max_pfi = _C_WinApi.DescribePixelFormat(self._device_context_handle, pfi, _ctypes.sizeof(_C_WinApi.PIXELFORMATDESCRIPTOR), _ctypes.byref(pfd))
+            if not max_pfi:
+               log_fatal_error("Can not get pixel format. (windows error code: %d)" % _C_WinApi.GetLastError())
+
+            log_info("OpenGL Pixel Format: Red:%d Green:%d Blue:%d Alpha:%d Depth:%d Stencil:%d." % (pfd.cRedBits, pfd.cGreenBits, pfd.cBlueBits, pfd.cAlphaBits, pfd.cDepthBits, pfd.cStencilBits))
+
+        # --- Creates OpenGL Rendering Context --- #
+
+        self._rendering_context_handle = _C_WGL.wglCreateContext(self._device_context_handle)
+        if not self._rendering_context_handle:
+           log_fatal_error("Can not create OpenGl Rendering Context. (windows error code: %d))" % _C_WinApi.GetLastError())
+
+        if not _C_WGL.wglMakeCurrent(self._device_context_handle, self._rendering_context_handle):
+            log_fatal_error("Can not set created OpenGl Rendering Context to be current.")
+
+        # --- Creates OpenGL Rendering Context with required minimum version --- #
+
+        if self._opengl_version.major != 0 and self._opengl_version.minor != 0:
+            wglCreateContextAttribsARB = _C_WGL.PFNWGLCREATECONTEXTATTRIBSARBPROC(_C_WGL.wglGetProcAddress(b"wglCreateContextAttribsARB"))
+            if not wglCreateContextAttribsARB:
+                log_fatal_error("Can not load wglCreateContextAttribsARB function.")
+
+            attribute_list = [
+                _C_WGL.WGL_CONTEXT_MAJOR_VERSION_ARB, self._opengl_version.major,
+                _C_WGL.WGL_CONTEXT_MINOR_VERSION_ARB, self._opengl_version.minor,
+                _C_WGL.WGL_CONTEXT_FLAGS_ARB, _C_WGL.WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+                0
+            ]
+            attribute_list = (_ctypes.c_int * len(attribute_list))(*(attribute for attribute in attribute_list))
+
+            rendering_context_handle = wglCreateContextAttribsARB(self._device_context_handle, 0, attribute_list)
+            if not rendering_context_handle:
+                log_fatal_error("Can not create OpenGl Rendering Context for version %d.%d." % (self._opengl_version.major, self._opengl_version.minor))
+            
+
+            if not _C_WGL.wglMakeCurrent(self._device_context_handle, rendering_context_handle):
+                log_fatal_error( "Can not set created OpenGl Rendering Context for version %d.%d to be current." % (self._opengl_version.major, self._opengl_version.minor))
+            
+            self._rendering_context_handle = rendering_context_handle
+
+        # --- Fetch OpenGL Versions --- #
+
+        major = _ctypes.c_int()
+        minor = _ctypes.c_int()
+        
+        # From OpenGl v3.0
+        GL_MAJOR_VERSION = 0x821B
+        GL_MINOR_VERSION = 0x821C
+        
+        _C_GL.glGetIntegerv(GL_MAJOR_VERSION, _ctypes.byref(major))
+        gl_error_code = _C_GL.glGetError()
+        
+        if gl_error_code == _C_GL.GL_NO_ERROR:
+            _C_GL.glGetIntegerv(GL_MINOR_VERSION, _ctypes.byref(minor));
+            gl_error_code = _C_GL.glGetError()
+
+        if gl_error_code == _C_GL.GL_NO_ERROR:
+            self._opengl_version = OpenGL_Version(major, minor)
+
+        elif gl_error_code == _C_GL.GL_INVALID_ENUM:
+            version_text = _ctypes.cast(_C_GL.glGetString(_C_GL.GL_VERSION), _ctypes.c_char_p).value.decode()
+
+            result = _re.search(r"^([1-9][0-9]*)\.([0-9]+).*$", version_text)
+            if result and result.lastindex == 2:
+                self._opengl_version = OpenGL_Version(int(result.group(1)), int(result.group(2)))
+            else:
+                log_fatal_error("Can not receive OpenGL version from string.")
+        else:
+            log_fatal_error("Can not receive OpenGL version.")
+
+        if is_log_level_at_least(LogLevel.INFO):
+            version_text = _ctypes.cast(_C_GL.glGetString(_C_GL.GL_VERSION), _ctypes.c_char_p).value.decode()
+            log_info("OpenGl Version: %s." % version_text)
+
+    def _destroy(self):
+        if self._do_on_destroy:
+            self._do_on_destroy()
+
+        _C_WGL.wglMakeCurrent(_C_WinApi.NULL, _C_WinApi.NULL)
+        _C_WGL.wglDeleteContext(self._rendering_context_handle)
+        self._rendering_context_handle = _C_WinApi.NULL
+
+        _C_WinApi.ReleaseDC(self._window_handle, self._device_context_handle);
+        self._device_context_handle = _C_WinApi.NULL
+
+        _C_WinApi.PostQuitMessage(0)
+
+
     def _window_proc(self, window_handle, window_message, w_param, l_param):
         """
         window_handle   : HWND
@@ -757,9 +1077,15 @@ class Window:
         ### Draw ###
 
         if window_message == _C_WinApi.WM_PAINT:
+            if to_special_debug().is_notify_any_message:
+                log_debug("WM_PAINT")
+
+            self.draw_now()
             return 0
 
         elif window_message == _C_WinApi.WM_ERASEBKGND:
+            if to_special_debug().is_notify_any_message:
+                log_debug("WM_ERASEBKGND")
             # Tells DefWindowProc to not erase background. It's unnecessary since background is handled by OpenGL.
             return 1
 
@@ -814,17 +1140,23 @@ class Window:
         ### Create, Close, Destroy ###
 
         elif window_message == _C_WinApi.WM_CREATE:
-            return 0
+            if is_log_level_at_least(LogLevel.DEBUG):
+                log_debug("WM_CREATE")
+
+            self._create(window_handle)
 
         elif window_message == _C_WinApi.WM_CLOSE:
+            if is_log_level_at_least(LogLevel.DEBUG):
+                log_debug("WM_CLOSE")
+
             _C_WinApi.DestroyWindow(window_handle)
             return 0
 
         elif window_message == _C_WinApi.WM_DESTROY:
-            if self._do_on_destroy is not None:
-                self._do_on_destroy()
+            if is_log_level_at_least(LogLevel.DEBUG):
+                log_debug("WM_DESTROY")
 
-            _C_WinApi.PostQuitMessage(0)
+            self._destroy()
             return 0
 
         return _C_WinApi.DefWindowProcW(window_handle, window_message, w_param, l_param)
@@ -870,8 +1202,8 @@ def _get_window_area(window_handle):
 
 def _get_window_area_from_draw_area(draw_area, window_style):
     """
-    draw_area : Area
-    window_style : int
+    draw_area       : Area
+    window_style    : int
     Returns (Area).
     """
     rect = _C_WinApi.RECT(
@@ -886,6 +1218,17 @@ def _get_window_area_from_draw_area(draw_area, window_style):
     return _make_area_from_rect(rect)
 
 def _window_proc(window_handle, window_message, w_param, l_param):
-    return to_window()._window_proc(window_handle, window_message, w_param, l_param)
+    try:
+        return to_window()._window_proc(window_handle, window_message, w_param, l_param)
+    except SystemExit as e:
+        if to_special_debug().is_full_exit_track_in_callback:
+            _logging.exception("From _window_proc callback.")
+        else:
+            print("SystemExit: %d" % e.code)
+        _os._exit(e.code)
+    except Exception as e:
+        _logging.exception("")
+        _os._exit(1)
+
 
 _c_window_proc = _C_WinApi.WNDPROC(_window_proc)
