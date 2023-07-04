@@ -1262,7 +1262,7 @@ class Window:
                 else: # ascii or single utf-16 code unit
                     code_text = "cp=%Xh(%d), chr='%s'" % (code, code, chr(code))
         
-                print("%-20s: %s, %s" % (wm_text, code_text, vk_data))
+                log_debug("%-20s: %s, %s" % (wm_text, code_text, vk_data))
         
             if self._do_on_text:
                 code = w_param
@@ -1316,7 +1316,7 @@ class Window:
                 rect_p = _ctypes.cast(l_param, _C_WinApi.LPRECT)
                 drag_rect_text = "drag_rect=%d %d %d %d" % (rect_p[0].left, rect_p[0].top, rect_p[0].right, rect_p[0].bottom)
         
-                print("%-20s: %s, %s" % (wm_text, edge_name, drag_rect_text))
+                log_debug("%-20s: %s, %s" % (wm_text, edge_name, drag_rect_text))
         
             return _C_WinApi.TRUE
         
@@ -1341,7 +1341,7 @@ class Window:
                 if not self._is_enable_do_on_resize:
                     additional += ", without:do_on_resize"
         
-                print("%-20s: %d %d, %s%s" % (wm_text, width, height, request_name, additional))
+                log_debug("%-20s: %d %d, %s%s" % (wm_text, width, height, request_name, additional))
         
             self._is_visible = True
         
@@ -1371,7 +1371,7 @@ class Window:
                 wm_text         = "WM_TIMER"
                 timer_id        = w_param
                 callback_addr   = l_param
-                print("%-20s: id=%d, callback_addr=%d" % (wm_text, timer_id, callback_addr))
+                log_debug("%-20s: id=%d, callback_addr=%d" % (wm_text, timer_id, callback_addr))
 
             if w_param == self._DEFAULT_TIMER_ID:
                 if self._do_on_time:
@@ -1399,7 +1399,7 @@ class Window:
                 else:
                     status_name = ""
 
-                print("%-20s: %s %s" % (wm_text, visibility_text, status_name))
+                log_debug("%-20s: %s %s" % (wm_text, visibility_text, status_name))
 
             is_visible = (w_param == _C_WinApi.TRUE)
 
@@ -1438,7 +1438,7 @@ class Window:
                 else:
                     transition_text = ""
 
-                print("%-20s:%s %s%s" % (wm_text, minimized_text, activation_state_name, transition_text))
+                log_debug("%-20s:%s %s%s" % (wm_text, minimized_text, activation_state_name, transition_text))
 
             if is_active != self._is_active:
                 self._is_active = is_active
@@ -1448,15 +1448,63 @@ class Window:
 
             return 0
 
-        # TODO:
-        # WM_ACTIVATEAPP
-        # WM_SYSCOMMAND
-        
+        elif window_message == _C_WinApi.WM_SYSCOMMAND:
+            if is_log_level_at_least(LogLevel.DEBUG):
+                wm_text = "WM_SYSCOMMAND"
+
+                def get_system_command_name(cmd_id):        
+                    if cmd_id == _C_WinApi.SC_SIZE:         return "SC_SIZE"        
+                    if cmd_id == _C_WinApi.SC_MOVE:         return "SC_MOVE"
+                    if cmd_id == _C_WinApi.SC_MINIMIZE:     return "SC_MINIMIZE"
+                    if cmd_id == _C_WinApi.SC_MAXIMIZE:     return "SC_MAXIMIZE"
+                    if cmd_id == _C_WinApi.SC_NEXTWINDOW:   return "SC_NEXTWINDOW"
+                    if cmd_id == _C_WinApi.SC_PREVWINDOW:   return "SC_PREVWINDOW"
+                    if cmd_id == _C_WinApi.SC_CLOSE:        return "SC_CLOSE"
+                    if cmd_id == _C_WinApi.SC_VSCROLL:      return "SC_VSCROLL"
+                    if cmd_id == _C_WinApi.SC_HSCROLL:      return "SC_HSCROLL"
+                    if cmd_id == _C_WinApi.SC_MOUSEMENU:    return "SC_MOUSEMENU"
+                    if cmd_id == _C_WinApi.SC_KEYMENU:      return "SC_KEYMENU"
+                    if cmd_id == _C_WinApi.SC_ARRANGE:      return "SC_ARRANGE"
+                    if cmd_id == _C_WinApi.SC_RESTORE:      return "SC_RESTORE"
+                    if cmd_id == _C_WinApi.SC_TASKLIST:     return "SC_TASKLIST"
+                    if cmd_id == _C_WinApi.SC_SCREENSAVE:   return "SC_SCREENSAVE"
+                    if cmd_id == _C_WinApi.SC_HOTKEY:       return "SC_HOTKEY"
+                    if cmd_id == _C_WinApi.SC_DEFAULT:      return "SC_DEFAULT"
+                    if cmd_id == _C_WinApi.SC_MONITORPOWER: return "SC_MONITORPOWER"
+                    if cmd_id == _C_WinApi.SC_CONTEXTHELP:  return "SC_CONTEXTHELP"
+                    if cmd_id == _C_WinApi.SC_SEPARATOR:    return "SC_SEPARATOR"
+                    return "(%d)" % cmd_id
+                system_command_name = get_system_command_name(w_param)
+
+                # if not used, both might be 0
+                x = _C_WinApi.GET_X_LPARAM(l_param).value # screen coordinates
+                y = _C_WinApi.GET_X_LPARAM(l_param).value # screen coordinates
+
+                log_debug("%-20s: %d %d %s" % (wm_text, x, y, system_command_name))
+
+            if self._is_auto_sleep_blocked:
+                system_command_id = w_param
+
+                if system_command_id == _C_WinApi.SC_SCREENSAVE: 
+                    # Blocks screen saver.
+                    return 0
+                elif system_command_id == _C_WinApi.SC_MONITORPOWER: 
+                    # Blocks entering to power save mode.
+                    return 0
+
         ### Focus ###
 
-        # TODO:
-        # WM_SETFOCUS
-        # WM_KILLFOCUS
+        elif window_message == _C_WinApi.WM_SETFOCUS:
+            if is_log_level_at_least(LogLevel.DEBUG):
+                log_debug("WM_SETFOCUS")
+
+            return 0
+
+        elif window_message == _C_WinApi.WM_KILLFOCUS:
+            if is_log_level_at_least(LogLevel.DEBUG):
+                log_debug("WM_KILLFOCUS")
+
+            return 0
 
         ### Create, Close, Destroy ###
 
@@ -1480,9 +1528,9 @@ class Window:
             self._destroy()
             return 0
 
-        # TODO:
-        #else:
-        #    log_debug(_wm_to_str(window_message))
+        else:
+            if to_special_debug().is_notify_any_message:
+                log_debug(_wm_to_str(window_message))
 
         return _C_WinApi.DefWindowProcW(window_handle, window_message, w_param, l_param)
 
