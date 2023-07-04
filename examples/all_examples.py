@@ -37,9 +37,10 @@ def run_window_example(name, options):
     togl.set_log_level(togl.LogLevel.DEBUG)
     # togl.to_special_debug().is_full_exit_track_in_callback = True
     # togl.to_special_debug().is_notify_mouse_move = True
+    togl.to_special_debug().is_notify_character_message = True
 
     def do_on_create():
-        print("Hi.")
+        print("X - Exit")
         #display_info()
         glClearColor(0, 0, 0.2, 1)
 
@@ -53,7 +54,13 @@ def run_window_example(name, options):
         print("do_on_mouse_wheel_roll: %d %d %d" % (step_cout, x, y))
 
     def do_on_key(key_id, is_down, extra):
-        print("do_on_key: key_id=%s, is_down=%d, %s" % (key_id.name, is_down, extra))
+        # print("do_on_key: key_id=%s, is_down=%d, %s" % (key_id.name, is_down, extra))
+        if is_down:
+            if key_id == 'X':
+                togl.to_window().request_close()
+
+    def do_on_text(text, is_correct):
+        print("text='%s', code_point=%Xh, is_correct=%d" % (text, ord(text), is_correct))
 
     def draw():
         glClear(GL_COLOR_BUFFER_BIT)
@@ -88,6 +95,7 @@ def run_window_example(name, options):
         # do_on_mouse_move        = do_on_mouse_move,
         do_on_mouse_wheel_roll  = do_on_mouse_wheel_roll,
         do_on_key               = do_on_key,
+        do_on_text              = do_on_text,
     )
 
 example_manager.add_example("run_window", run_window_example)

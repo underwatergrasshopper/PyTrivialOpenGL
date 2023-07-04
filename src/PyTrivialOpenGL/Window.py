@@ -115,9 +115,10 @@ class Window:
                            indicator if pressed key is left or right or doesn't matter (extra.keyboard_side_id).
 
     _do_on_text                 : Callable[[str], NoneType]
-        Call naming convention: do_on_text(text).
+        Call naming convention: do_on_text(text, is_correct).
         Called when window receive character message (from keyboard single key or key combination).
         text            - Text received from keyboard. At least one character.
+        is_correct      - True - if there was no decoding error.
 
     _do_on_mouse_wheel_roll     : Callable[[int, int, int], NoneType]
         Call naming convention: do_on_mouse_wheel_roll(step_count, x, y).
@@ -203,6 +204,12 @@ class Window:
 
         self._is_enable_do_on_resize_stack              = []
         self._is_enable_change_state_at_resize_stack    = []
+
+        # character decoding
+        self._dbg_code_utf32                = 0
+        self._code_utf32                    = 0
+        self._is_two_utf16_code_units       = False
+        self._is_decode_fail                = False
 
         ### callbacks ###
 
@@ -1148,7 +1155,7 @@ class Window:
         ### Mouse ###
 
         elif window_message == _C_WinApi.WM_MOUSEMOVE:
-            if to_special_debug().is_notify_mouse_move:
+            if to_special_debug().is_notify_mouse_move or to_special_debug().is_notify_any_message:
                 wm_text = "WM_MOUSEMOVE"
                 x       = _C_WinApi.GET_X_LPARAM(l_param).value
                 y       = _C_WinApi.GET_Y_LPARAM(l_param).value
@@ -1205,7 +1212,7 @@ class Window:
         ### Keyboard ###
 
         elif window_message in [_C_WinApi.WM_KEYDOWN, _C_WinApi.WM_KEYUP, _C_WinApi.WM_SYSKEYDOWN, _C_WinApi.WM_SYSKEYUP]:
-            if to_special_debug().is_notify_key_message:
+            if to_special_debug().is_notify_key_message or to_special_debug().is_notify_any_message:
                 wm_text = _wm_to_str(window_message)
                 vk_text = _vk_code_to_str(w_param)
                 vk_data = _VirtualKeyData(l_param)
@@ -1217,8 +1224,56 @@ class Window:
             self._handle_do_on_keybard_key(is_down, w_param, l_param)
             return 0
 
-        # TODO:
-        # WM_CHAR
+        elif window_message == _C_WinApi.WM_CHAR:
+            if to_special_debug().is_notify_character_message or to_special_debug().is_notify_any_message:
+                wm_text = "WM_CHAR"
+                vk_data = _VirtualKeyData(l_param)
+                
+                code = w_param
+
+                if (0xDC00 & code) == 0xDC00: # second utf-16 code unit
+                    self._dbg_code_utf32 += (code & 0x000003FF) + 0x00010000
+                    code_text = "cu2=%04Xh, cp=%Xh(%d), chr='%s'" % (code, self._dbg_code_utf32, self._dbg_code_utf32, chr(self._dbg_code_utf32))
+
+                elif (0xD800 & code) == 0xD800: # first utf-16 code unit
+                    self._dbg_code_utf32 = (code & 0x000003FF) << 10
+                    code_text = "cu1=%04Xh" % (code)
+
+                else: # ascii or single utf-16 code unit
+                    code_text = "cp=%Xh(%d), chr='%s'" % (code, code, chr(code))
+
+                print("%-20s: %s, %s" % (wm_text, code_text, vk_data))
+
+            if self._do_on_text:
+                code = w_param
+
+                if (0xDC00 & code) == 0xDC00: # second utf-16 code unit
+                    if not self._is_two_utf16_code_units:
+                        self._is_decode_fail = True
+
+                    self._code_utf32 += (code & 0x000003FF) + 0x00010000
+                    self._do_on_text(chr(self._code_utf32), not self._is_decode_fail)
+
+                    self._is_decode_fail = False
+                    self._is_two_utf16_code_units = False
+
+                elif (0xD800 & code) == 0xD800: # first utf-16 code unit
+                    if self._is_two_utf16_code_units:
+                        self._is_decode_fail = True
+
+                    self._code_utf32 = (code & 0x000003FF) << 10
+
+                    self._is_two_utf16_code_units = True
+
+                else: # ascii or single utf-16 code unit
+                    if self._is_two_utf16_code_units:
+                        self._is_decode_fail = True
+                        self._is_two_utf16_code_units = False
+
+                    self._do_on_text(chr(code), not self._is_decode_fail)
+
+                    self._is_decode_fail = False
+            return 0
         
         ### Window ###
 
