@@ -1150,8 +1150,6 @@ class Window:
         l_param         : LPARAM
         """
 
-        # TODO: log_all_window_messages()
-
         ### Draw ###
 
         if window_message == _C_WinApi.WM_PAINT:
@@ -1159,143 +1157,144 @@ class Window:
                 log_debug("WM_PAINT")
 
             self.draw_now()
+            _C_WinApi.ValidateRect(self._window_handle, _C_WinApi.NULL)
             return 0
-
+        
         elif window_message == _C_WinApi.WM_ERASEBKGND:
             if to_special_debug().is_notify_any_message:
                 log_debug("WM_ERASEBKGND")
             # Tells DefWindowProc to not erase background. It's unnecessary since background is handled by OpenGL.
             return 1
-
-        ### Mouse ###
-
+        
+        ## Mouse ###
+        
         elif window_message == _C_WinApi.WM_MOUSEMOVE:
             if to_special_debug().is_notify_mouse_move or to_special_debug().is_notify_any_message:
                 wm_text = "WM_MOUSEMOVE"
                 x       = _C_WinApi.GET_X_LPARAM(l_param).value
                 y       = _C_WinApi.GET_Y_LPARAM(l_param).value
-
+        
                 log_debug("%-20s: %d %d" % (wm_text, x, y))
-
+        
             if self._do_on_mouse_move:
                 self._do_on_mouse_move(_C_WinApi.GET_X_LPARAM(l_param).value, _C_WinApi.GET_Y_LPARAM(l_param).value)
-
+        
             return 0
-
+        
         elif window_message == _C_WinApi.WM_MOUSEWHEEL:
             if is_log_level_at_least(LogLevel.DEBUG):
                 wm_text = "WM_MOUSEWHEEL"
                 delta   = _C_WinApi.GET_WHEEL_DELTA_WPARAM(w_param).value
                 x       = _C_WinApi.GET_X_LPARAM(l_param).value # in screen coordinates system
                 y       = _C_WinApi.GET_Y_LPARAM(l_param).value # in screen coordinates system
-
+        
                 pos = _C_WinApi.POINT(x, y)
                 _C_WinApi.ScreenToClient(self._window_handle, _ctypes.byref(pos)) # in window client (draw area) coordinates system
-
+        
                 mk_text = _mk_to_str(_C_WinApi.LOWORD(w_param).value)
-
+        
                 log_debug("%-20s: %d (%d %d) %d %d %s" % (wm_text, delta, x, y, pos.x, pos.y, mk_text))
-
+        
             if self._do_on_mouse_wheel_roll:
                 step_count = _C_WinApi.GET_WHEEL_DELTA_WPARAM(w_param).value // 120
-
+        
                 pos = _C_WinApi.POINT(_C_WinApi.GET_X_LPARAM(l_param), _C_WinApi.GET_Y_LPARAM(l_param))
                 _C_WinApi.ScreenToClient(self._window_handle, _ctypes.byref(pos))
-
+        
                 self._do_on_mouse_wheel_roll(step_count, pos.x, pos.y)
-
+        
             return 0
-
+        
         elif _is_mw_mouse_button(window_message):
             if is_log_level_at_least(LogLevel.DEBUG):
                 wm_text = _wm_to_str(window_message)
-
+        
                 xb_text = ""
                 if _is_mw_mouse_button_x(window_message):
                     if      _C_WinApi.HIWORD(w_param).value == _C_WinApi.XBUTTON1: xb_text = " XBUTTON1"
                     elif    _C_WinApi.HIWORD(w_param).value == _C_WinApi.XBUTTON2: xb_text = " XBUTTON2"
-
+        
                 x       = _C_WinApi.GET_X_LPARAM(l_param).value 
                 y       = _C_WinApi.GET_Y_LPARAM(l_param).value 
                 mk_text = _mk_to_str(_C_WinApi.LOWORD(w_param).value)
-
+        
                 log_debug("%-20s:%s %d %d %s" % (wm_text, xb_text, x, y, mk_text))
-
+        
             self._handle_do_on_mouse_key(window_message, w_param, l_param)
             return 0
-
+        
         ### Keyboard ###
-
+        
         elif window_message in [_C_WinApi.WM_KEYDOWN, _C_WinApi.WM_KEYUP, _C_WinApi.WM_SYSKEYDOWN, _C_WinApi.WM_SYSKEYUP]:
             if to_special_debug().is_notify_key_message or to_special_debug().is_notify_any_message:
                 wm_text = _wm_to_str(window_message)
                 vk_text = _vk_code_to_str(w_param)
                 vk_data = _VirtualKeyData(l_param)
-
+        
                 log_debug("%-20s: %-13s %s" % (wm_text, vk_text, vk_data))
-
+        
             is_down = window_message in [_C_WinApi.WM_KEYDOWN, _C_WinApi.WM_SYSKEYDOWN]
-
+        
             self._handle_do_on_keybard_key(is_down, w_param, l_param)
             return 0
-
+        
         elif window_message == _C_WinApi.WM_CHAR:
             if to_special_debug().is_notify_character_message or to_special_debug().is_notify_any_message:
                 wm_text = "WM_CHAR"
                 vk_data = _VirtualKeyData(l_param)
                 
                 code = w_param
-
+        
                 if (0xDC00 & code) == 0xDC00: # second utf-16 code unit
                     self._dbg_code_utf32 += (code & 0x000003FF) + 0x00010000
                     code_text = "cu2=%04Xh, cp=%Xh(%d), chr='%s'" % (code, self._dbg_code_utf32, self._dbg_code_utf32, chr(self._dbg_code_utf32))
-
+        
                 elif (0xD800 & code) == 0xD800: # first utf-16 code unit
                     self._dbg_code_utf32 = (code & 0x000003FF) << 10
                     code_text = "cu1=%04Xh" % (code)
-
+        
                 else: # ascii or single utf-16 code unit
                     code_text = "cp=%Xh(%d), chr='%s'" % (code, code, chr(code))
-
+        
                 print("%-20s: %s, %s" % (wm_text, code_text, vk_data))
-
+        
             if self._do_on_text:
                 code = w_param
-
+        
                 if (0xDC00 & code) == 0xDC00: # second utf-16 code unit
                     if not self._is_two_utf16_code_units:
                         self._is_decode_fail = True
-
+        
                     self._code_utf32 += (code & 0x000003FF) + 0x00010000
                     self._do_on_text(chr(self._code_utf32), not self._is_decode_fail)
-
+        
                     self._is_decode_fail = False
                     self._is_two_utf16_code_units = False
-
+        
                 elif (0xD800 & code) == 0xD800: # first utf-16 code unit
                     if self._is_two_utf16_code_units:
                         self._is_decode_fail = True
-
+        
                     self._code_utf32 = (code & 0x000003FF) << 10
-
+        
                     self._is_two_utf16_code_units = True
-
+        
                 else: # ascii or single utf-16 code unit
                     if self._is_two_utf16_code_units:
                         self._is_decode_fail = True
                         self._is_two_utf16_code_units = False
-
+        
                     self._do_on_text(chr(code), not self._is_decode_fail)
-
+        
                     self._is_decode_fail = False
             return 0
         
         ### Window ###
-
+        
         elif window_message == _C_WinApi.WM_SIZING:
             if is_log_level_at_least(LogLevel.DEBUG):
                 wm_text = "WM_SIZING"
-
+        
                 def get_edge_name(edge_id):
                     if edge_id == _C_WinApi.WMSZ_LEFT:          return "WMSZ_LEFT"         
                     if edge_id == _C_WinApi.WMSZ_RIGHT:         return "WMSZ_RIGHT"        
@@ -1307,20 +1306,20 @@ class Window:
                     if edge_id == _C_WinApi.WMSZ_BOTTOMRIGHT:   return "WMSZ_BOTTOMRIGHT"
                     return "(%d)" % edge_id
                 edge_name = get_edge_name(w_param)
-
+        
                 rect_p = _ctypes.cast(l_param, _C_WinApi.LPRECT)
                 drag_rect_text = "drag_rect=%d %d %d %d" % (rect_p[0].left, rect_p[0].top, rect_p[0].right, rect_p[0].bottom)
-
+        
                 print("%-20s: %s, %s" % (wm_text, edge_name, drag_rect_text))
-
+        
             return _C_WinApi.TRUE
-
+        
         elif window_message == _C_WinApi.WM_SIZE:
             if is_log_level_at_least(LogLevel.DEBUG):
                 wm_text     = "WM_SIZE"
                 width       = _C_WinApi.LOWORD(l_param).value
                 height      = _C_WinApi.HIWORD(l_param).value
-
+        
                 def get_request_nama(request_id):
                     if request_id == _C_WinApi.SIZE_MAXHIDE:    return "SIZE_MAXHIDE"
                     if request_id == _C_WinApi.SIZE_MAXIMIZED:  return "SIZE_MAXIMIZED"
@@ -1329,17 +1328,17 @@ class Window:
                     if request_id == _C_WinApi.SIZE_RESTORED:   return "SIZE_RESTORED"
                     return "(%d)" % request_id
                 request_name = get_request_nama(w_param)
-
+        
                 additional = ""
                 if self._is_apply_fake_width:
                     additional += ", fake_width=%d" % self._WIDTH_CORRECTION_TO_FAKE
                 if not self._is_enable_do_on_resize:
                     additional += ", without:do_on_resize"
-
+        
                 print("%-20s: %d %d, %s%s" % (wm_text, width, height, request_name, additional))
-
+        
             self._is_visible = True
-
+        
             if self._do_on_resize:
                 if self._is_enable_do_on_resize:
                     width = _C_WinApi.LOWORD(l_param).value
@@ -1348,7 +1347,7 @@ class Window:
                         self._do_on_resize(width - self._WIDTH_CORRECTION_TO_FAKE, height)
                     else:
                         self._do_on_resize(width, height)
-
+        
             if self._is_enable_change_state_at_resize:
                 if w_param == _C_WinApi.SIZE_MAXIMIZED:  
                     self._set_state(WindowStateId.MAXIMIZED)
@@ -1359,11 +1358,11 @@ class Window:
                
             return 0
         
-        ### Timer ###
+        ## Timer ###
 
         elif window_message == _C_WinApi.WM_TIMER:
             if to_special_debug().is_notify_timer or to_special_debug().is_notify_any_message:
-                wm_text         = "WM_SIZE"
+                wm_text         = "WM_TIMER"
                 timer_id        = w_param
                 callback_addr   = l_param
                 print("%-20s: id=%d, callback_addr=%d" % (wm_text, timer_id, callback_addr))
@@ -1410,6 +1409,7 @@ class Window:
             self._destroy()
             return 0
 
+        # TODO:
         #else:
         #    log_debug(_wm_to_str(window_message))
 
