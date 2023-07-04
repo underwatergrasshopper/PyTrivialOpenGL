@@ -873,13 +873,18 @@ WMSZ_BOTTOM             = 6
 WMSZ_BOTTOMLEFT         = 7
 WMSZ_BOTTOMRIGHT        = 8
 
-
 # WM_SIZE, wParam
 SIZE_RESTORED           = 0
 SIZE_MINIMIZED          = 1
 SIZE_MAXIMIZED          = 2
 SIZE_MAXSHOW            = 3
 SIZE_MAXHIDE            = 4
+
+# WM_SHOWWINDOW, lParam
+SW_PARENTCLOSING        = 1
+SW_OTHERZOOM            = 2
+SW_PARENTOPENING        = 3
+SW_OTHERUNZOOM          = 4
 
 ### Structures ###
 

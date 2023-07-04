@@ -707,9 +707,15 @@ class Window:
     ###
 
     # TODO:
-    # Hide
-    # Show
-    # IsVisible
+    
+    def show(self):
+        _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
+
+    def hide(self):
+        _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_HIDE)
+
+    def is_visible(self):
+        return self._is_visible
 
     ###
 
@@ -1375,8 +1381,39 @@ class Window:
         
         ### State ###
 
+        elif window_message == _C_WinApi.WM_SHOWWINDOW:
+            if is_log_level_at_least(LogLevel.DEBUG):
+                wm_text = "WM_SHOWWINDOW"
+
+                visibility_text = "SHOW" if w_param == _C_WinApi.TRUE else "HIDE"
+
+                def get_status_name(status_id):
+                    if status_id == _C_WinApi.SW_OTHERUNZOOM:    return "SW_OTHERUNZOOM"
+                    if status_id == _C_WinApi.SW_OTHERZOOM:      return "SW_OTHERZOOM"
+                    if status_id == _C_WinApi.SW_PARENTCLOSING:  return "SW_PARENTCLOSING"
+                    if status_id == _C_WinApi.SW_PARENTOPENING:  return "SW_PARENTOPENING"
+                    return "(%d)" % status_id
+
+                if l_param:
+                    status_name = get_status_name(l_param)
+                else:
+                    status_name = ""
+
+                print("%-20s: %s %s" % (wm_text, visibility_text, status_name))
+
+            is_visible = (w_param == _C_WinApi.TRUE)
+
+            if is_visible != self._is_visible:
+                self._is_visible = is_visible
+
+                if self._is_visible and self._do_on_show:
+                    self._do_on_show()
+                elif (not self._is_visible) and self._do_on_hide:
+                    self._do_on_hide()
+
+            return 0
+
         # TODO:
-        # WM_SHOWWINDOW
         # WM_ACTIVATE
         # WM_ACTIVATEAPP
         # WM_SYSCOMMAND

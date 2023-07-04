@@ -36,6 +36,7 @@
     <Content Include="tests\assets\icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="examples\ActionManager.py" />
     <Compile Include="examples\all_examples.py" />
     <Compile Include="examples\ExampleManager.py" />
     <Compile Include="setup.py" />

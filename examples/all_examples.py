@@ -1,4 +1,5 @@
 from ExampleManager import *
+from ActionManager import *
 
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL._C_GL import *
@@ -13,6 +14,7 @@ EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
 
 example_manager = ExampleManager()
+action_manager = ActionManager()
 
 def print_rect(r):
     print("%d %d %d %d" % (r.left, r.top, r.right, r.bottom))
@@ -41,9 +43,12 @@ def run_window_example(name, options):
     # togl.to_special_debug().is_notify_timer = True
 
     def do_on_create():
+        print("0 - Show -> Hide")
         print("X - Exit")
         #display_info()
         glClearColor(0, 0, 0.2, 1)
+
+        action_manager.reset()
 
     def do_on_destroy():
         print("Bye. Bye.")
@@ -59,6 +64,18 @@ def run_window_example(name, options):
         if is_down:
             if key_id == 'X':
                 togl.to_window().request_close()
+            elif key_id == 'I':
+                display_info()
+            elif key_id == '0':
+                def do():
+                    togl.to_window().hide()
+                action_manager.add(0, do)
+
+                def do():
+                    togl.to_window().show()
+                action_manager.add(1, do)
+
+
 
     def do_on_text(text, is_correct):
         # print("do_on_text: text='%s', code_point=%Xh, is_correct=%d" % (text, ord(text), is_correct))
@@ -88,6 +105,8 @@ def run_window_example(name, options):
         glVertex2f(0, 0.5)
 
         glEnd()
+
+        action_manager.update()
 
     return togl.to_window().create_and_run(
         window_name = "Some Window",
