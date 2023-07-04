@@ -582,9 +582,48 @@ class Window:
 
         self._set_area(area, _WindowAreaPartId.POSITION, is_draw_area)
 
+    def move_by(self, offset_x = None, offset_y = None, offset = None):
+        """
+        Moves window by offset
+        Calling convention:
+            move_by(10, 30)                                     - Moves by (10, 30). 
+            move_by(offset_x = 10)                              - Moves by 10 only on X axis.
+            move_by(offset_y = 10)                              - Moves by 10 only on Y axis.
+            move_by(offset = Point(10, 30))                     - Moves by (10, 30). 
+        offset_x    : int | None
+        offset_y    : int | None
+        offset      : Point | None
+        """
+        if offset_x is not None and not _is_i32(offset_x):
+            raise ValueError("Argument 'offset_x' is out of range for 32 bit integer.")
+        if offset_y is not None and not _is_i32(offset_y):
+            raise ValueError("Argument 'offset_y' is out of range for 32 bit integer.")
+        if offset is not None:
+            if not isinstance(offset, Point):
+                raise TypeError("Type of argument 'offset' is not 'Point'.")
+            if not _is_i32(offset.x):
+                raise ValueError("Value 'x' of argument 'offset' is out of range for 32 bit integer.")
+            if not _is_i32(offset.y):
+                raise ValueError("Value 'y' of argument 'offset' is out of range for 32 bit integer.")
+
+        if offset is not None:
+            area = Area(offset.x, offset.y, 0, 0)
+
+        elif (offset_x is not None) and (offset_y is not None):
+            area = Area(offset_x, offset_y, 0, 0)
+
+        else:
+            if offset_x is None:
+                offset_x = 0
+
+            if offset_y is None:
+                offset_y = 0
+
+            area = Area(offset_x, offset_y, 0, 0)
+
+        self._set_area(area, _WindowAreaPartId.POSITION_OFFSET, False)
+
     # TODO:
-    # MoveTo
-    # MoveBy
     # Resize
     # SetArea / Reshape
     # Center
@@ -706,8 +745,6 @@ class Window:
 
     ###
 
-    # TODO:
-    
     def show(self):
         _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
 

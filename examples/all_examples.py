@@ -50,7 +50,7 @@ def run_window_example(name, options):
     def do_on_create():
         print("0 - Show -> Hide")
         print("X - Exit")
-        #display_info()
+
         glClearColor(0, 0, 0.2, 1)
 
         action_manager.reset()
@@ -71,6 +71,16 @@ def run_window_example(name, options):
                 togl.to_window().request_close()
             elif key_id == 'I':
                 display_info()
+
+            elif key_id == togl.KeyId.ARROW_LEFT:
+                togl.to_window().move_by(-30, 0)
+            elif key_id == togl.KeyId.ARROW_RIGHT:
+                togl.to_window().move_by(30, 0)
+            elif key_id == togl.KeyId.ARROW_UP:
+                togl.to_window().move_by(0, -30)
+            elif key_id == togl.KeyId.ARROW_DOWN:
+                togl.to_window().move_by(0, 30)
+
             elif key_id == '0':
                 def do():
                     display_info()

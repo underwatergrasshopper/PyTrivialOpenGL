@@ -5,4 +5,5 @@ from .Area          import *
 from .Log           import *
 from .Utility       import *
 from .SpecialDebug  import *
+from .Key           import *
 from .Window        import *
