@@ -469,12 +469,12 @@ class Window:
         if self._do_on_create is not None:
             self._do_on_create()
 
-        _C_WinApi.UpdateWindow(self._window_handle)
-
         if self._timer_time_interval > 0:
             result = _C_WinApi.SetTimer(self._window_handle, self._DEFAULT_TIMER_ID, self._timer_time_interval, _C_WinApi.TIMERPROC(0))
             if result == 0:
                log_fatal_error("Can not set timer. (windows error code: %d)" % _C_WinApi.GetLastError())
+
+        _C_WinApi.UpdateWindow(self._window_handle)
 
         result = self._execute_main_loop()
   
