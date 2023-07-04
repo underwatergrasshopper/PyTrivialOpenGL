@@ -1412,9 +1412,43 @@ class Window:
                     self._do_on_hide()
 
             return 0
+        
+        elif window_message == _C_WinApi.WM_ACTIVATE:
+            is_active = _C_WinApi.LOWORD(w_param).value != _C_WinApi.WA_INACTIVE
+
+            if is_log_level_at_least(LogLevel.DEBUG):
+                wm_text = "WM_ACTIVATE"
+
+                is_minimized = _C_WinApi.HIWORD(w_param).value
+
+                if is_minimized:
+                    minimized_text = " MINIMIZED"
+                else:
+                    minimized_text = ""
+
+                def get_activation_state_name(state_id):
+                    if state_id == _C_WinApi.WA_ACTIVE:         return "WA_ACTIVE"
+                    elif state_id == _C_WinApi.WA_CLICKACTIVE:  return "WA_CLICKACTIVE"
+                    elif state_id == _C_WinApi.WA_INACTIVE:     return "WA_INACTIVE"
+                    return "(%d)" % state_id
+                activation_state_name = get_activation_state_name(_C_WinApi.LOWORD(w_param).value)
+
+                if is_active != self._is_active:
+                    transition_text = " active->inactive" if self._is_active else " inactive->active"
+                else:
+                    transition_text = ""
+
+                print("%-20s:%s %s%s" % (wm_text, minimized_text, activation_state_name, transition_text))
+
+            if is_active != self._is_active:
+                self._is_active = is_active
+
+                if self._do_on_foreground:
+                    self._do_on_foreground(is_active)
+
+            return 0
 
         # TODO:
-        # WM_ACTIVATE
         # WM_ACTIVATEAPP
         # WM_SYSCOMMAND
         

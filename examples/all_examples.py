@@ -99,6 +99,10 @@ def run_window_example(name, options):
     def do_on_time(time_interval):
         print("time_interval: %dms" % time_interval)
 
+    def do_on_foreground(is_gain):
+        text = "gain" if is_gain else "lose"
+        print("do_on_forground: %s" % text)
+
     def draw():
         glClear(GL_COLOR_BUFFER_BIT)
 
@@ -138,6 +142,7 @@ def run_window_example(name, options):
         do_on_resize            = do_on_resize,
         do_on_state_change      = do_on_state_change,
         # do_on_time              = do_on_time,
+        do_on_foreground        = do_on_foreground,
     )
 
 example_manager.add_example("run_window", run_window_example)

@@ -886,6 +886,11 @@ SW_OTHERZOOM            = 2
 SW_PARENTOPENING        = 3
 SW_OTHERUNZOOM          = 4
 
+# WM_ACTIVATE, LOWORD(w_param)
+WA_INACTIVE             = 0
+WA_ACTIVE               = 1
+WA_CLICKACTIVE          = 2
+
 ### Structures ###
 
 POINT                   = _wintypes.POINT
