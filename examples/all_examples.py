@@ -37,7 +37,8 @@ def run_window_example(name, options):
     togl.set_log_level(togl.LogLevel.DEBUG)
     # togl.to_special_debug().is_full_exit_track_in_callback = True
     # togl.to_special_debug().is_notify_mouse_move = True
-    togl.to_special_debug().is_notify_character_message = True
+    # togl.to_special_debug().is_notify_character_message = True
+    togl.to_special_debug().is_notify_timer = True
 
     def do_on_create():
         print("X - Exit")
@@ -60,7 +61,15 @@ def run_window_example(name, options):
                 togl.to_window().request_close()
 
     def do_on_text(text, is_correct):
-        print("text='%s', code_point=%Xh, is_correct=%d" % (text, ord(text), is_correct))
+        # print("do_on_text: text='%s', code_point=%Xh, is_correct=%d" % (text, ord(text), is_correct))
+        pass
+
+    def do_on_resize(width, height):
+        print("do_on_resize: %d %d" % (width, height))
+        glViewport(0, 0, width, height)
+
+    def do_on_state_change(state_id):
+        print("do_on_state_change: %s" % state_id.name)
 
     def draw():
         glClear(GL_COLOR_BUFFER_BIT)
@@ -84,7 +93,7 @@ def run_window_example(name, options):
 
         icon_file_name  = "tests\\assets\\icon.ico",
 
-        # timer_time_interval = 200,
+        timer_time_interval = 200,
 
         style = togl.WindowStyleBit.CENTERED,
 
@@ -96,6 +105,8 @@ def run_window_example(name, options):
         do_on_mouse_wheel_roll  = do_on_mouse_wheel_roll,
         do_on_key               = do_on_key,
         do_on_text              = do_on_text,
+        do_on_resize            = do_on_resize,
+        do_on_state_change      = do_on_state_change,
     )
 
 example_manager.add_example("run_window", run_window_example)

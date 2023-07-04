@@ -97,6 +97,11 @@ class Window:
     _is_enable_do_on_resize_stack              : List[bool]
     _is_enable_change_state_at_resize_stack    : List[bool]
 
+    _dbg_code_utf32             : int
+    _code_utf32                 : int
+    _is_two_utf16_code_units    : bool
+    _is_decode_fail             : bool
+
     _do_on_create               : Callable[[], NoneType]
         Called right after window is created.
 
@@ -114,7 +119,7 @@ class Window:
                            cursor position in draw area (extra.x, extra.y), 
                            indicator if pressed key is left or right or doesn't matter (extra.keyboard_side_id).
 
-    _do_on_text                 : Callable[[str], NoneType]
+    _do_on_text                 : Callable[[str, bool], NoneType]
         Call naming convention: do_on_text(text, is_correct).
         Called when window receive character message (from keyboard single key or key combination).
         text            - Text received from keyboard. At least one character.
@@ -292,10 +297,11 @@ class Window:
                                cursor position in draw area (extra.x, extra.y), 
                                indicator if pressed key is left or right or doesn't matter (extra.keyboard_side_id).
 
-        do_on_text                  : Callable[[str], NoneType]
-            Call naming convention: do_on_text(text).
+        do_on_text                  : Callable[[str, bool], NoneType]
+            Call naming convention: do_on_text(text, is_correct).
             Called when window receive character message (from keyboard single key or key combination).
             text            - Text received from keyboard. At least one character.
+            is_correct      - True - if there was no decoding error.
 
         do_on_mouse_wheel_roll      : Callable[[int, int, int], NoneType]
             Call naming convention: do_on_mouse_wheel_roll(step_count, x, y).
@@ -454,12 +460,6 @@ class Window:
         else:
             log_fatal_error("Can not create window.")
 
-        if self._timer_time_interval > 0:
-            result = _C_WinApi.SetTimer(self._window_handle, self._DEFAULT_TIMER_ID, self._timer_time_interval, _C_WinApi.TIMERPROC(0))
-            if result == 0:
-               log_fatal_error("Can not set timer. (windows error code: %d)" % _C_WinApi.GetLastError())
-
-
         _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
         _C_WinApi.SetForegroundWindow(self._window_handle)
         _C_WinApi.SetFocus(self._window_handle)
@@ -470,6 +470,11 @@ class Window:
             self._do_on_create()
 
         _C_WinApi.UpdateWindow(self._window_handle)
+
+        if self._timer_time_interval > 0:
+            result = _C_WinApi.SetTimer(self._window_handle, self._DEFAULT_TIMER_ID, self._timer_time_interval, _C_WinApi.TIMERPROC(0))
+            if result == 0:
+               log_fatal_error("Can not set timer. (windows error code: %d)" % _C_WinApi.GetLastError())
 
         result = self._execute_main_loop()
   
@@ -1008,6 +1013,16 @@ class Window:
             )
             self._do_on_key(key_id, is_down, extra)
 
+    def _set_state(self, state_id):
+        """
+        state_id : WindowStateId
+        """
+        self._prev_state_id = self._state_id
+        self._state_id      = state_id
+
+        if (self._state_id != self._prev_state_id) and self._do_on_state_change:
+           self._do_on_state_change(state_id)
+
     def _create(self, window_handle):
         """
         window_handle : _C_WinApi.HWND
@@ -1277,14 +1292,87 @@ class Window:
         
         ### Window ###
 
-        # TODO:
-        # WM_SIZING
-        # WM_SIZE
+        elif window_message == _C_WinApi.WM_SIZING:
+            if is_log_level_at_least(LogLevel.DEBUG):
+                wm_text = "WM_SIZING"
+
+                def get_edge_name(edge_id):
+                    if edge_id == _C_WinApi.WMSZ_LEFT:          return "WMSZ_LEFT"         
+                    if edge_id == _C_WinApi.WMSZ_RIGHT:         return "WMSZ_RIGHT"        
+                    if edge_id == _C_WinApi.WMSZ_TOP:           return "WMSZ_TOP"         
+                    if edge_id == _C_WinApi.WMSZ_TOPLEFT:       return "WMSZ_TOPLEFT"
+                    if edge_id == _C_WinApi.WMSZ_TOPRIGHT:      return "WMSZ_TOPRIGHT"
+                    if edge_id == _C_WinApi.WMSZ_BOTTOM:        return "WMSZ_BOTTOM"   
+                    if edge_id == _C_WinApi.WMSZ_BOTTOMLEFT:    return "WMSZ_BOTTOMLEFT"
+                    if edge_id == _C_WinApi.WMSZ_BOTTOMRIGHT:   return "WMSZ_BOTTOMRIGHT"
+                    return "(%d)" % edge_id
+                edge_name = get_edge_name(w_param)
+
+                rect_p = _ctypes.cast(l_param, _C_WinApi.LPRECT)
+                drag_rect_text = "drag_rect=%d %d %d %d" % (rect_p[0].left, rect_p[0].top, rect_p[0].right, rect_p[0].bottom)
+
+                print("%-20s: %s, %s" % (wm_text, edge_name, drag_rect_text))
+
+            return _C_WinApi.TRUE
+
+        elif window_message == _C_WinApi.WM_SIZE:
+            if is_log_level_at_least(LogLevel.DEBUG):
+                wm_text     = "WM_SIZE"
+                width       = _C_WinApi.LOWORD(l_param).value
+                height      = _C_WinApi.HIWORD(l_param).value
+
+                def get_request_nama(request_id):
+                    if request_id == _C_WinApi.SIZE_MAXHIDE:    return "SIZE_MAXHIDE"
+                    if request_id == _C_WinApi.SIZE_MAXIMIZED:  return "SIZE_MAXIMIZED"
+                    if request_id == _C_WinApi.SIZE_MAXSHOW:    return "SIZE_MAXSHOW"
+                    if request_id == _C_WinApi.SIZE_MINIMIZED:  return "SIZE_MINIMIZED"
+                    if request_id == _C_WinApi.SIZE_RESTORED:   return "SIZE_RESTORED"
+                    return "(%d)" % request_id
+                request_name = get_request_nama(w_param)
+
+                additional = ""
+                if self._is_apply_fake_width:
+                    additional += ", fake_width=%d" % self._WIDTH_CORRECTION_TO_FAKE
+                if not self._is_enable_do_on_resize:
+                    additional += ", without:do_on_resize"
+
+                print("%-20s: %d %d, %s%s" % (wm_text, width, height, request_name, additional))
+
+            self._is_visible = True
+
+            if self._do_on_resize:
+                if self._is_enable_do_on_resize:
+                    width = _C_WinApi.LOWORD(l_param).value
+                    height = _C_WinApi.HIWORD(l_param).value
+                    if self._is_apply_fake_width:
+                        self._do_on_resize(width - self._WIDTH_CORRECTION_TO_FAKE, height)
+                    else:
+                        self._do_on_resize(width, height)
+
+            if self._is_enable_change_state_at_resize:
+                if w_param == _C_WinApi.SIZE_MAXIMIZED:  
+                    self._set_state(WindowStateId.MAXIMIZED)
+                elif w_param == _C_WinApi.SIZE_MINIMIZED:    
+                    self._set_state(WindowStateId.MINIMIZED)
+                elif w_param == _C_WinApi.SIZE_RESTORED:    
+                    self._set_state(WindowStateId.NORMAL)
+               
+            return 0
         
         ### Timer ###
 
-        # TODO:
-        # WM_TIMER
+        elif window_message == _C_WinApi.WM_TIMER:
+            if to_special_debug().is_notify_timer or to_special_debug().is_notify_any_message:
+                wm_text         = "WM_SIZE"
+                timer_id        = w_param
+                callback_addr   = l_param
+                print("%-20s: id=%d, callback_addr=%d" % (wm_text, timer_id, callback_addr))
+
+            if w_param == self._DEFAULT_TIMER_ID:
+                if self._do_on_time:
+                   self._do_on_time(self._timer_time_interval)
+
+            return 0
         
         ### State ###
 
@@ -1321,6 +1409,9 @@ class Window:
 
             self._destroy()
             return 0
+
+        #else:
+        #    log_debug(_wm_to_str(window_message))
 
         return _C_WinApi.DefWindowProcW(window_handle, window_message, w_param, l_param)
 

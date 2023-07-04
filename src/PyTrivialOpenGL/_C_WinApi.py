@@ -863,6 +863,24 @@ HWND_BOTTOM             = HWND(1)
 HWND_TOPMOST            = HWND(-1)
 HWND_NOTOPMOST          = HWND(-2)
 
+# WM_SIZING, wParam
+WMSZ_LEFT               = 1
+WMSZ_RIGHT              = 2
+WMSZ_TOP                = 3
+WMSZ_TOPLEFT            = 4
+WMSZ_TOPRIGHT           = 5
+WMSZ_BOTTOM             = 6
+WMSZ_BOTTOMLEFT         = 7
+WMSZ_BOTTOMRIGHT        = 8
+
+
+# WM_SIZE, wParam
+SIZE_RESTORED           = 0
+SIZE_MINIMIZED          = 1
+SIZE_MAXIMIZED          = 2
+SIZE_MAXSHOW            = 3
+SIZE_MAXHIDE            = 4
+
 ### Structures ###
 
 POINT                   = _wintypes.POINT

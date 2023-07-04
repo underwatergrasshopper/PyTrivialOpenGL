@@ -18,6 +18,7 @@ class SpecialDebug:
         self.is_notify_mouse_move           = False
         self.is_notify_key_message          = False
         self.is_notify_character_message    = False
+        self.is_notify_timer                = False
         self.is_full_exit_track_in_callback = False
 
 _special_debug = SpecialDebug()
