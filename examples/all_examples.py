@@ -23,15 +23,20 @@ def rect_to_area(r):
     return togl.Area(r.left, r.top, r.right - r.left, r.bottom - r.top)
 
 def display_info():
-        window_area_corrector = _WindowAreaCorrector()
+    print("--- Info ---")
 
-        window_handle = _C_WinApi.GetForegroundWindow()
+    window_area_corrector = _WindowAreaCorrector()
 
-        window_rect = _C_WinApi.RECT()
-        _C_WinApi.GetWindowRect(window_handle, ctypes.byref(window_rect))
-        area = window_area_corrector.remove_invisible_frame_from_area(rect_to_area(window_rect), window_handle)
+    window_handle = _C_WinApi.GetForegroundWindow()
 
-        print("Window Area:", area)
+    window_rect = _C_WinApi.RECT()
+    _C_WinApi.GetWindowRect(window_handle, ctypes.byref(window_rect))
+    area = window_area_corrector.remove_invisible_frame_from_area(rect_to_area(window_rect), window_handle)
+
+    print("Window Area:", area)
+    print("is_visible:", togl.to_window().is_visible())
+
+    print("---")
 
 ################################################################################
 
@@ -68,11 +73,14 @@ def run_window_example(name, options):
                 display_info()
             elif key_id == '0':
                 def do():
+                    display_info()
                     togl.to_window().hide()
+                    display_info()
                 action_manager.add(0, do)
 
                 def do():
                     togl.to_window().show()
+                    display_info()
                 action_manager.add(1, do)
 
 
