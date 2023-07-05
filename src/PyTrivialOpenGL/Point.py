@@ -126,3 +126,11 @@ class Point:
                 raise TypeError("Value of '%s' can not be converted to int." % (name))
 
             self.__dict__[name] = value
+
+    ### 
+
+    def __str__(self):
+        return "%d %d" % (self.x, self.y)
+
+    def __repr__(self):
+        return self.__str__()

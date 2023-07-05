@@ -11,6 +11,7 @@ __all__ = [
     "MIN_I32",
     "MAX_I32",
     "OpenGL_Version",
+    "get_work_area",
     "get_desktop_area_no_task_bar",
     "get_desktop_size_no_task_bar",
     "get_screen_size",
@@ -33,6 +34,12 @@ class OpenGL_Version:
         self.minor = minor
 
 ################################################################################
+
+def get_work_area():
+    """
+    Returns (PyTrivialOpenGL.Area) desktop area without task bar.
+    """
+    return get_desktop_area_no_task_bar()
 
 def get_desktop_area_no_task_bar():
     """

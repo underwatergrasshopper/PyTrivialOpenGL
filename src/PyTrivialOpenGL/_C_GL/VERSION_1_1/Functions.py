@@ -85,3 +85,28 @@ glRotatef               = _ctypes.WINFUNCTYPE(GLvoid, GLfloat, GLfloat, GLfloat,
     ("glRotatef", _OpenGL32), 
     ((1, "angle"), (1, "x"), (1, "y"), (1, "z"))
 )
+
+glTranslatef            = _ctypes.WINFUNCTYPE(GLvoid, GLfloat, GLfloat, GLfloat)(
+    ("glTranslatef", _OpenGL32), 
+    ((1, "x"), (1, "y"), (1, "z"))
+)
+
+glScalef                = _ctypes.WINFUNCTYPE(GLvoid, GLfloat, GLfloat, GLfloat)(
+    ("glScalef", _OpenGL32), 
+    ((1, "x"), (1, "y"), (1, "z"))
+)
+
+glOrtho                 = _ctypes.WINFUNCTYPE(GLvoid, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble)(
+    ("glOrtho", _OpenGL32), 
+    ((1, "left"), (1, "right"), (1, "bottom"), (1, "top"), (1, "nearVal"), (1, "farVal"))
+)
+
+glMatrixMode            = _ctypes.WINFUNCTYPE(GLvoid, GLenum)(
+    ("glMatrixMode", _OpenGL32), 
+    ((1, "mode"),)
+)
+
+glLoadIdentity          = _ctypes.WINFUNCTYPE(GLvoid)(
+    ("glLoadIdentity", _OpenGL32), 
+    ()
+)

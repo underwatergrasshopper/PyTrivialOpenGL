@@ -23,7 +23,7 @@ from .Key                   import _VirtualKeyData, _vk_code_to_key_id, _vk_code
 from . import _Basics
 from ._Basics import clamp as _clamp
 from ._Basics import is_i32 as _is_i32
-from ._Basics import is_u16 as _is_U16
+from ._Basics import is_u16 as _is_u16
 from ._Basics import _MIN_I32, _MAX_I32, _MAX_U16, _MIN_U16
 
 from ._Debug import _wm_to_str
@@ -531,19 +531,19 @@ class Window:
         """
         Moves window to new position.
         Calling convention:
-            move_to(10, 30)                                     - Moves to (10, 30). 
-            move_to(x = 10)                                     - Moves only on X axis.
-            move_to(y = 10)                                     - Moves only on Y axis.
-            move_to(10, 30, is_draw_area = True)                - Moves left-top corner of draw area to (10, 30). 
-            move_to(pos = Point(10, 30))                        - Moves to (10, 30). 
-            move_to(pos = Point(10, 30), is_draw_area = True)   - Moves left-top corner of draw area to (10, 30). 
+            move_to(10, 30)                                     - Moves to new position.
+            move_to(x = 10)                                     - Moves to new position only at X axis.
+            move_to(y = 10)                                     - Moves to new position only at Y axis.
+            move_to(10, 30, is_draw_area = True)                - Moves left-top corner of draw area to new position. 
+            move_to(pos = Point(10, 30))                        - Moves to new position.
+            move_to(pos = Point(10, 30), is_draw_area = True)   - Moves left-top corner of draw area to new position. 
 
         x               : int | None
-            New position of window in screen coordinates in X axis.
+            New position in screen coordinate system in X axis.
         y               : int | None
-            New position of window in screen coordinates in Y axis.
+            New position in screen coordinate system in Y axis.
         pos             : Point | None
-            New position of window in screen coordinates.
+            New position in screen coordinate system.
         is_draw_area    : bool
             If True, then new position of window corresponding to left-top corner of draw area.
             (default) If False, then new position of window corresponding to left-top corner of window.
@@ -572,11 +572,8 @@ class Window:
             else:
                 pos = self.get_pos()
 
-            if x is None:
-                x = pos.x
-
-            if y is None:
-                y = pos.y
+            if x is None: x = pos.x
+            if y is None: y = pos.y
 
             area = Area(x, y, 0, 0)
 
@@ -591,8 +588,11 @@ class Window:
             move_by(offset_y = 10)                              - Moves by 10 only on Y axis.
             move_by(offset = Point(10, 30))                     - Moves by (10, 30). 
         offset_x    : int | None
+            Offset in screen coordinate system at X axis.
         offset_y    : int | None
+            Offset in screen coordinate system at Y axis.
         offset      : Point | None
+            Offset in screen coordinate system.
         """
         if offset_x is not None and not _is_i32(offset_x):
             raise ValueError("Argument 'offset_x' is out of range for 32 bit integer.")
@@ -613,15 +613,63 @@ class Window:
             area = Area(offset_x, offset_y, 0, 0)
 
         else:
-            if offset_x is None:
-                offset_x = 0
-
-            if offset_y is None:
-                offset_y = 0
+            if offset_x is None: offset_x = 0
+            if offset_y is None: offset_y = 0
 
             area = Area(offset_x, offset_y, 0, 0)
 
         self._set_area(area, _WindowAreaPartId.POSITION_OFFSET, False)
+
+    def resize(self, width = None, height = None, size = None, is_draw_area = False):
+        """
+        Moves window to new position.
+        Calling convention:
+            resize(100, 300)                                    - Changes both width and height of window.
+            resize(width = 100)                                 - Changes only width of window.
+            resize(height = 100)                                - Changes only height of window.
+            resize(100, 300, is_draw_area = True)               - Changes both width and height of window's draw area.
+            resize(size = Size(100, 300))                       - Changes both width and height of window.
+            resize(size = Size(100, 300), is_draw_area = True)  - Changes both width and height of window's draw area.
+        width           : int | None
+            New width in screen coordinate system.
+        height          : int | None
+            New height in screen coordinate system.
+        size            : Point | None
+            New size in screen coordinate system.
+        is_draw_area    : bool
+            If True, then draw area of window is resized.
+            (default) If False, then window is resized.
+        """
+        if width is not None and not _is_u16(width):
+            raise ValueError("Argument 'width' is out of range for 16 bit unsigned integer.")
+        if height is not None and not _is_u16(height):
+            raise ValueError("Argument 'height' is out of range for 16 bit unsigned integer.")
+        if size is not None:
+            if not isinstance(size, Size):
+                raise TypeError("Type of argument 'size' is not 'Size'.")
+            if not _is_u16(size.width):
+                raise ValueError("Value 'width' of argument 'size' is out of range for 16 bit unsigned integer.")
+            if not _is_u16(size.height):
+                raise ValueError("Value 'height' of argument 'size' is out of range for 16 bit unsigned integer.")
+
+        if size is not None:
+            area = Area(0, 0, size.width, size.height)
+
+        elif (width is not None) and (height is not None):
+            area = Area(0, 0, width, height)
+
+        else:
+            if is_draw_area:
+                size = self.get_draw_area_size()
+            else:
+                size = self.get_size()
+
+            if width is None:   width   = size.width
+            if height is None:  height  = size.height
+
+            area = Area(0, 0, width, height)
+
+        self._set_area(area, _WindowAreaPartId.SIZE, is_draw_area)
 
     # TODO:
     # Resize
@@ -727,7 +775,7 @@ class Window:
         rect    = _C_WinApi.RECT()
         rect_p  = _ctypes.byref(rect)
         pos1_p  = _ctypes.cast(rect_p, _C_WinApi.LPPOINT)
-        pos2_p  = _ctypes.cast(_ctypes.byref(rect.right), _C_WinApi.LPPOINT)
+        pos2_p  = _ctypes.cast(_ctypes.byref(pos1_p[1]), _C_WinApi.LPPOINT)
 
         if (    _C_WinApi.GetClientRect(self._window_handle, rect_p) and 
                 _C_WinApi.ClientToScreen(self._window_handle, pos1_p) and 
@@ -884,10 +932,10 @@ class Window:
 
         # --- Size --- #
 
-        desktop_area = get_desktop_area_no_task_bar()
+        work_area = get_work_area()
 
-        window_area.width   = (desktop_area.width / 2) if is_default else area.width
-        window_area.height  = (desktop_area.height / 2) if is_default else area.height
+        window_area.width   = (work_area.width / 2) if is_default else area.width
+        window_area.height  = (work_area.height / 2) if is_default else area.height
 
         # In a case of unreasonable values.
         if window_area.width < 0:
@@ -903,11 +951,11 @@ class Window:
         # --- Position --- #
 
         if self._style & WindowStyleBit.CENTERED:
-            window_area.x = (desktop_area.width - window_area.width) / 2
-            window_area.y = (desktop_area.height - window_area.height) / 2
+            window_area.x = (work_area.width - window_area.width) / 2 + work_area.x
+            window_area.y = (work_area.height - window_area.height) / 2 + work_area.y
         else:
-            window_area.x = ((desktop_area.width - window_area.width) / 2)     if is_default else area.x
-            window_area.y = ((desktop_area.height - window_area.height) / 2)   if is_default else area.y
+            window_area.x = ((work_area.width - window_area.width) / 2 + work_area.x)     if is_default else area.x
+            window_area.y = ((work_area.height - window_area.height) / 2 + work_area.y)   if is_default else area.y
 
         # No need for additional adjustment for invisible window frame. 
         # Already done for both position and size in 'Size' section.
