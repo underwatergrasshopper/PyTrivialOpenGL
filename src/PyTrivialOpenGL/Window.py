@@ -4,6 +4,8 @@ import os       as _os
 import logging  as _logging
 import re       as _re
 
+from copy import deepcopy as _deepcopy
+
 from . import _C_WinApi
 from . import _C_WGL
 from . import _C_GL
@@ -364,7 +366,7 @@ class Window:
                 _Basics.check_area_i32_u16(area)
             except ValueError as e:
                 raise ValueError("Wrong value range in parameter 'area'.") from e
-            self._area = area
+            self._area = _deepcopy(area)
 
         else:
             raise TypeError("Wrong type of parameter 'area'.")
@@ -374,7 +376,7 @@ class Window:
         if opengl_version is None:
             self._opengl_version = OpenGL_Version(1, 1)
         elif isinstance(opengl_version, OpenGL_Version):
-            self._opengl_version = opengl_version
+            self._opengl_version = _deepcopy(opengl_version)
         elif isinstance(opengl_version, tuple):
             if len(opengl_version) == 2:
                 self._opengl_version = OpenGL_Version(opengl_version[0], opengl_version[1])
@@ -622,7 +624,7 @@ class Window:
 
     def resize(self, width = None, height = None, size = None, is_draw_area = False):
         """
-        Moves window to new position.
+        Resizes window.
         Calling convention:
             resize(100, 300)                                    - Changes both width and height of window.
             resize(width = 100)                                 - Changes only width of window.
@@ -671,10 +673,119 @@ class Window:
 
         self._set_area(area, _WindowAreaPartId.SIZE, is_draw_area)
 
-    # TODO:
-    # Resize
-    # SetArea / Reshape
-    # Center
+    def reshape(self, x = None, y = None, width = None, height = None, area = None, is_draw_area = False):
+        """
+        Changes area of the window.
+        Calling convention:
+            reshape(10, 20, 100, 300)                           - Reshapes area of window.
+            reshape(x = 10)                                     - Changes only x of window.
+            reshape(y = 20)                                     - Changes only y of window.
+            reshape(width = 100)                                - Changes only width of window.
+            reshape(height = 100)                               - Changes only height of window.
+            reshape(10, 20, 100, 300, is_draw_area = True)      - Reshapes area of window. Coordinates corresponds to draw area.
+            reshape(area = Area(100, 300))                      - Reshapes area of window.
+            reshape(area = Area(100, 300), is_draw_area = True) - Reshapes area of window. Coordinates corresponds to draw area.
+        x               : int | None
+            New position in screen coordinate system in X axis.
+        y               : int | None
+            New position in screen coordinate system in Y axis.
+        width           : int | None
+            New width in screen coordinate system.
+        height          : int | None
+            New height in screen coordinate system.
+        size            : Point | None
+            New size in screen coordinate system.
+        is_draw_area    : bool
+            If True, then draw area of window is reshaped.
+            (default) If False, then window is reshaped.
+        """
+        if x is not None and not _is_i32(x):
+            raise ValueError("Argument 'x' is out of range for 32 bit integer.")
+        if y is not None and not _is_i32(y):
+            raise ValueError("Argument 'y' is out of range for 32 bit integer.")
+        if width is not None and not _is_u16(width):
+            raise ValueError("Argument 'width' is out of range for 16 bit unsigned integer.")
+        if height is not None and not _is_u16(height):
+            raise ValueError("Argument 'height' is out of range for 16 bit unsigned integer.")
+        if area is not None:
+            if not isinstance(area, Area):
+                raise TypeError("Type of argument 'area' is not 'Area'.")
+            if not _is_i32(area.x):
+                raise ValueError("Value 'x' of argument 'area' is out of range for 32 bit integer.")
+            if not _is_i32(area.y):
+                raise ValueError("Value 'y' of argument 'area' is out of range for 32 bit integer.")
+            if not _is_u16(area.width):
+                raise ValueError("Value 'width' of argument 'area' is out of range for 16 bit unsigned integer.")
+            if not _is_u16(area.height):
+                raise ValueError("Value 'height' of argument 'area' is out of range for 16 bit unsigned integer.")
+
+        if area is not None:
+            area = _deepcopy(area)
+
+        elif (x is not None) and (y is not None) and (width is not None) and (height is not None):
+            area = Area(x, y, width, height)
+
+        else:
+            if is_draw_area:
+                area = self.get_draw_area()
+            else:
+                area = self.get_area()
+
+            if x is not None:
+                area.x = x
+
+            if y is not None:
+                area.y = y
+
+            if width is not None:
+                area.width = width
+
+            if height is not None:
+                area.height = height
+
+        self._set_area(area, _WindowAreaPartId.ALL, is_draw_area)
+
+    def center(self, width = None, height = None, size = None, is_draw_area_size = False):
+        if width is not None and not _is_u16(width):
+            raise ValueError("Argument 'width' is out of range for 16 bit unsigned integer.")
+        if height is not None and not _is_u16(height):
+            raise ValueError("Argument 'height' is out of range for 16 bit unsigned integer.")
+        if size is not None:
+            if not isinstance(size, Size):
+                raise TypeError("Type of argument 'size' is not 'Size'.")
+            if not _is_u16(size.width):
+                raise ValueError("Value 'width' of argument 'size' is out of range for 16 bit unsigned integer.")
+            if not _is_u16(size.height):
+                raise ValueError("Value 'height' of argument 'size' is out of range for 16 bit unsigned integer.")
+
+        if size is not None:
+            size = _deepcopy(size)
+
+        elif (width is not None) and (height is not None):
+            size = Size(width, height)
+
+        else:
+            if is_draw_area_size:
+                size = self.get_draw_area_size()
+            else:
+                size = self.get_size()
+
+            if width is not None:   size.width   = width
+            if height is not None:  size.height  = height
+
+        work_area = get_work_area()
+        window_area = Area(0, 0, size.width, size.height)
+
+        self._restore()
+
+        if is_draw_area_size:
+            window_area = _get_window_area_from_draw_area(window_area, self._window_style)
+            window_area = self._window_area_corrector.remove_invisible_frame_from_area(window_area, self._window_handle)
+
+        window_area.x = (work_area.width - window_area.width) / 2 + work_area.x
+        window_area.y = (work_area.height - window_area.height) / 2 + work_area.y
+        
+        self.reshape(area = window_area)
 
     ###
 

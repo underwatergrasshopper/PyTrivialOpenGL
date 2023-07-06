@@ -9,6 +9,7 @@ from PyTrivialOpenGL._WindowAreaCorrector import _WindowAreaCorrector
 
 import ctypes
 import math
+import copy
 
 ################################################################################
 
@@ -181,6 +182,16 @@ def run_window_example(name, options):
             elif key_id == '6':
                 togl.to_window().resize(width = 400, is_draw_area = True)
 
+            elif key_id == '7':
+                togl.to_window().reshape(100, 50, 400, 300)
+
+            elif key_id == '8':
+                #togl.to_window().center(600, 300)
+                togl.to_window().center()
+
+            elif key_id == '9':
+                togl.to_window().center(600, 300, is_draw_area_size = True)
+
             elif key_id == '0':
                 def do():
                     display_info()
@@ -204,7 +215,7 @@ def run_window_example(name, options):
 
         area.width  = width
         area.height = height
-
+        
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
         glOrtho(0, area.width, 0, area.height, 1, -1)
@@ -221,6 +232,7 @@ def run_window_example(name, options):
         text = "gain" if is_gain else "lose"
         print("do_on_forground: %s" % text)
 
+    print(area)
     return togl.to_window().create_and_run(
         window_name         = "Some Window",
         area                = area,
