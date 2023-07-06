@@ -1,94 +1,12 @@
-from ExampleManager import *
-from ActionChain import *
+from ExampleSupport import *
 
-import PyTrivialOpenGL as togl
-from PyTrivialOpenGL._C_GL import *
-
-import PyTrivialOpenGL._C_WinApi as _C_WinApi
-from PyTrivialOpenGL._WindowAreaCorrector import _WindowAreaCorrector
-
-import ctypes
-import math
-import copy
+import simple_triangle_example
+import window_area_example
 
 ################################################################################
 
-EXIT_SUCCESS = 0
-EXIT_FAILURE = 1
-
 example_manager = ExampleManager()
 action_chain = ActionChain()
-
-def print_rect(r):
-    print("%d %d %d %d" % (r.left, r.top, r.right, r.bottom))
-
-def rect_to_area(r):
-    return togl.Area(r.left, r.top, r.right - r.left, r.bottom - r.top)
-
-def display_info():
-    print("--- Info ---")
-
-    window_area_corrector = _WindowAreaCorrector()
-
-    window_handle = _C_WinApi.GetForegroundWindow()
-
-    window_area = togl.to_window().get_area()
-    print("%-20s: %s" % ("Window Area", window_area))
-
-    draw_area = togl.to_window().get_draw_area()
-    print("%-20s: %s" % ("Window Draw Area", draw_area))
-
-    screen_size = togl.get_screen_size()
-
-    print("%-20s: %s" % ("Screen Size", screen_size))
-
-    work_area = togl.get_work_area()
-
-    print("%-20s: %s" % ("Work Area", work_area))
-
-    print("%-20s: %s" % ("is_visible", togl.to_window().is_visible()))
-
-    center_check_size = togl.Size(
-        (window_area.x - work_area.x) * 2 + window_area.width,
-        (window_area.y - work_area.y) * 2 + window_area.height
-    )
-    print("%-20s: %s (= %s)" % ("Window Center Check", center_check_size, work_area.get_size()))
-
-    print("---")
-
-def draw_rgb_triangle(x, y, scale, angle):
-    glPushMatrix()
-    glTranslatef(x, y, 0)
-    glRotatef(angle, 0, 0, 1)
-    glScalef(scale, scale, 0)
-
-    glBegin(GL_TRIANGLES)
-
-    glColor3f(1, 0, 0)
-    angle = 0
-    glVertex2f(math.sin(angle), math.cos(angle))
-
-    glColor3f(0, 1, 0)
-    angle += math.pi * 2 / 3
-    glVertex2f(math.sin(angle), math.cos(angle))
-            
-    glColor3f(0, 0, 1)
-    angle += math.pi * 2 / 3
-    glVertex2f(math.sin(angle), math.cos(angle))
-
-    glEnd()
-
-    glPopMatrix()
-
-def draw_rectangle(x, y, width, height):
-    glBegin(GL_TRIANGLE_FAN)
-
-    glVertex2f(x, y)
-    glVertex2f(x + width, y)
-    glVertex2f(x + width, y + height)
-    glVertex2f(x, y + height)
-
-    glEnd()
 
 ################################################################################
 
@@ -133,7 +51,7 @@ def run_window_example(name, options):
         glColor3f(0, 0, 0.5)
         draw_rectangle(1, 1, area.width - 2, area.height - 2)
         
-        scale = area.height if area.height < area.width else area.height
+        scale = area.height if area.height < area.width else area.width
         scale /= 3
 
         draw_rgb_triangle(area.width / 2, area.height / 2, scale, data.angle)
@@ -257,6 +175,8 @@ def run_window_example(name, options):
     )
 
 example_manager.add_example("run_window", run_window_example)
+example_manager.add_example("simple_triangle", simple_triangle_example.run)
+example_manager.add_example("window_area", window_area_example.run)
 
 ################################################################################
 

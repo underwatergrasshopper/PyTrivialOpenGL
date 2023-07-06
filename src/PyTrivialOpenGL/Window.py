@@ -374,7 +374,7 @@ class Window:
         self._style                     = style
 
         if opengl_version is None:
-            self._opengl_version = OpenGL_Version(1, 1)
+            self._opengl_version = OpenGL_Version(0, 0)
         elif isinstance(opengl_version, OpenGL_Version):
             self._opengl_version = _deepcopy(opengl_version)
         elif isinstance(opengl_version, tuple):
@@ -1281,14 +1281,14 @@ class Window:
             attribute_list = [
                 _C_WGL.WGL_CONTEXT_MAJOR_VERSION_ARB, self._opengl_version.major,
                 _C_WGL.WGL_CONTEXT_MINOR_VERSION_ARB, self._opengl_version.minor,
-                _C_WGL.WGL_CONTEXT_FLAGS_ARB, _C_WGL.WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+                _C_WGL.WGL_CONTEXT_PROFILE_MASK_ARB, _C_WGL.WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
                 0
             ]
             attribute_list = (_ctypes.c_int * len(attribute_list))(*(attribute for attribute in attribute_list))
 
             rendering_context_handle = wglCreateContextAttribsARB(self._device_context_handle, 0, attribute_list)
             if not rendering_context_handle:
-                log_fatal_error("Can not create OpenGl Rendering Context for version %d.%d." % (self._opengl_version.major, self._opengl_version.minor))
+                log_fatal_error("Can not create OpenGl Rendering Context for version %d.%d (error code = %d)." % (self._opengl_version.major, self._opengl_version.minor, _C_WinApi.GetLastError()))
             
 
             if not _C_WGL.wglMakeCurrent(self._device_context_handle, rendering_context_handle):
@@ -1645,7 +1645,7 @@ class Window:
             return 0
 
         elif window_message == _C_WinApi.WM_SYSCOMMAND:
-            if is_log_level_at_least(LogLevel.DEBUG):
+            if to_special_debug().is_notify_any_message:
                 wm_text = "WM_SYSCOMMAND"
 
                 def get_system_command_name(cmd_id):        
