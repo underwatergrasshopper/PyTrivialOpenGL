@@ -26,12 +26,14 @@ def rect_to_area(r):
 def display_info():
     print("--- Info ---")
 
+    window = togl.to_window()
+
     window_handle = _C_WinApi.GetForegroundWindow()
 
-    window_area = togl.to_window().get_area()
+    window_area = window.get_area()
     print("%-20s: %s" % ("Window Area", window_area))
 
-    draw_area = togl.to_window().get_draw_area()
+    draw_area = window.get_draw_area()
     print("%-20s: %s" % ("Window Draw Area", draw_area))
 
     screen_size = togl.get_screen_size()
@@ -42,13 +44,25 @@ def display_info():
 
     print("%-20s: %s" % ("Work Area", work_area))
 
-    print("%-20s: %s" % ("is_visible", togl.to_window().is_visible()))
+    print("%-20s: %s" % ("is_visible", window.is_visible()))
+    print("%-20s: %s" % ("is_foreground", window.is_foreground()))
 
     center_check_size = togl.Size(
         (window_area.x - work_area.x) * 2 + window_area.width,
         (window_area.y - work_area.y) * 2 + window_area.height
     )
     print("%-20s: %s (= %s)" % ("Window Center Check", center_check_size, work_area.get_size()))
+
+    print("%-20s: %s" % ("OpenGL Version", window.get_opengl_version()))
+
+    print("HmNMf")
+    flags = list("     ")
+    if not window.is_visible():             flags[0] = "+"
+    if window.is_minimized():               flags[1] = "+"
+    if window.is_normal():                  flags[2] = "+"
+    if window.is_maximized():               flags[3] = "+"
+    if window.is_windowed_full_screen():    flags[4] = "+"
+    print("".join(flags))
 
     print("---")
 

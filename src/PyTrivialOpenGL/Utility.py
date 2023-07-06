@@ -33,6 +33,12 @@ class OpenGL_Version:
         self.major = major
         self.minor = minor
 
+    def __str__(self):
+        return "%d.%d" % (self.major, self.minor)
+
+    def __repr__(self):
+        return self.__str__()
+
 ################################################################################
 
 def get_work_area():

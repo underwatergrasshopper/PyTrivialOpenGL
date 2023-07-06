@@ -86,7 +86,7 @@ def do_on_resize(width, height):
     set_ortogonal_projection(width, height)
 
 def run(name, options):
-    togl.set_log_level(togl.LogLevel.DEBUG)
+    togl.set_log_level(togl.LogLevel.INFO)
 
     return togl.to_window().create_and_run(
         window_name         = "Window Area",

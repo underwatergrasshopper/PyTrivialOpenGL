@@ -22,6 +22,7 @@ def run_window_example(name, options):
     class Data:
         def __init__(self):
             self.angle = 0
+            self.is_shift_down = False
     data = Data()
 
     def do_on_create():
@@ -66,7 +67,7 @@ def run_window_example(name, options):
 
     def do_on_key(key_id, is_down, extra):
         # print("do_on_key: key_id=%s, is_down=%d, %s" % (key_id.name, is_down, extra))
-        if is_down:
+        if not is_down:
             if key_id == 'X':
                 togl.to_window().request_close()
 
@@ -110,6 +111,34 @@ def run_window_example(name, options):
             elif key_id == '9':
                 togl.to_window().center(600, 300, is_draw_area_size = True)
 
+            elif key_id == 'C':
+                togl.to_window().center(600, 300, is_draw_area_size = True)
+
+            elif key_id == 'M':
+                if data.is_shift_down:
+                    togl.to_window().maximize()
+                else:
+                    def do():
+                        display_info()
+                        togl.to_window().minimize()
+                        display_info()
+                    action_chain.add(0, do)
+
+                    def do():
+                        togl.to_window().center(600, 300, is_draw_area_size = True)
+                        display_info()
+                    action_chain.add(1, do)
+
+            elif key_id == 'F':
+                togl.to_window().go_windowed_full_screen()
+
+            elif key_id == 'T':
+                def do():
+                    display_info()
+                    togl.to_window().go_foreground()
+                    display_info()
+                action_chain.add(2, do)
+
             elif key_id == '0':
                 def do():
                     display_info()
@@ -121,6 +150,12 @@ def run_window_example(name, options):
                     togl.to_window().show()
                     display_info()
                 action_chain.add(1, do)
+
+            elif key_id == togl.KeyId.SHIFT:
+                data.is_shift_down = False
+        else:
+            if key_id == togl.KeyId.SHIFT:
+                data.is_shift_down = True
 
     def do_on_text(text, is_correct):
         # print("do_on_text: text='%s', code_point=%Xh, is_correct=%d" % (text, ord(text), is_correct))

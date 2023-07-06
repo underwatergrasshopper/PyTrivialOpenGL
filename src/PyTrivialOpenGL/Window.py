@@ -202,7 +202,7 @@ class Window:
         self._is_frame                      = True
 
         self._state_id                      = WindowStateId.NORMAL
-        self._prev_state_id                 = self._state_id
+        self._previous_state_id             = self._state_id
 
         self._is_apply_fake_width               = False
         self._is_enable_do_on_resize            = True
@@ -915,10 +915,90 @@ class Window:
 
     ###
 
-    # TODO:
-    # Minimize
-    # Maximize
-    # GoWindowedFullScreen
+    def minimize(self):
+        if self._state_id == WindowStateId.WINDOWED_FULL_SCREENED:
+            self._push_is_enable_do_on_resize(False)
+            self._push_is_enable_change_state_at_resize(False)
+
+            _C_WinApi.SetWindowLongPtrW(self._window_handle, _C_WinApi.GWL_STYLE, self._window_style)
+            _C_WinApi.SetWindowLongPtrW(self._window_handle, _C_WinApi.GWL_EXSTYLE, self._window_extended_style)
+            _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_NORMAL);
+
+            self._pop_is_enable_change_state_at_resize()
+            self._pop_is_enable_do_on_resize()
+
+        elif self._state_id == WindowStateId.MAXIMIZED:
+            self._push_is_enable_do_on_resize(False)
+            self._push_is_enable_change_state_at_resize(False)
+
+            _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_RESTORE)
+
+            self._pop_is_enable_change_state_at_resize()
+            self._pop_is_enable_do_on_resize()
+
+        _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_MINIMIZE)
+
+    def maximize(self):
+        if not self._is_visible:
+            _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
+
+        if self._state_id == WindowStateId.WINDOWED_FULL_SCREENED:
+            self._push_is_enable_do_on_resize(False)
+            self._push_is_enable_change_state_at_resize(False)
+
+            _C_WinApi.SetWindowLongPtrW(self._window_handle, _C_WinApi.GWL_STYLE, self._window_style)
+            _C_WinApi.SetWindowLongPtrW(self._window_handle, _C_WinApi.GWL_EXSTYLE, self._window_extended_style)
+
+            self._pop_is_enable_change_state_at_resize()
+            self._pop_is_enable_do_on_resize()
+
+        elif self._state_id == WindowStateId.MINIMIZED:
+            _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_RESTORE)
+
+        if self._style & WindowStyleBit.DRAW_AREA_ONLY:
+            work_area = get_work_area()
+
+            self._push_is_enable_change_state_at_resize(False)
+
+            _C_WinApi.SetWindowPos(self._window_handle, _C_WinApi.HWND_TOP, work_area.x, work_area.y, work_area.width, work_area.height, _C_WinApi.SWP_SHOWWINDOW)
+
+            self._pop_is_enable_change_state_at_resize()
+
+            self._set_state(WindowStateId.MAXIMIZED)
+        else:
+            _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_MAXIMIZE)
+
+    def go_windowed_full_screen(self):
+        if not self._is_visible:
+            _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
+        
+        self._push_is_enable_do_on_resize(False)
+        self._push_is_enable_change_state_at_resize(False)
+
+        _C_WinApi.SetWindowLongPtrW(self._window_handle, _C_WinApi.GWL_STYLE, _get_window_style_draw_area_only())
+        _C_WinApi.SetWindowLongPtrW(self._window_handle, _C_WinApi.GWL_EXSTYLE, _get_window_extended_style_draw_area_only())
+
+        self._pop_is_enable_change_state_at_resize()
+        self._pop_is_enable_do_on_resize()
+
+        # Workaround.
+        # In Windows 7, if window is borderless and covers exactly whole screen then alt+tab is not working. 
+        # To omit that, size of window is extended beyond borders of screen, internally.
+        # Library provides size of window without this internal adjustment.
+        screen_size = get_screen_size()
+        screen_rect = _C_WinApi.RECT(0, 0, screen_size.width, screen_size.height)
+        _C_WinApi.AdjustWindowRectEx(_ctypes.byref(screen_rect), _get_window_style_draw_area_only(), _C_WinApi.FALSE, _get_window_extended_style_draw_area_only())
+        screen_area = _make_area_from_rect(screen_rect)
+
+        self._push_is_enable_change_state_at_resize(False)
+        self._is_apply_fake_width = True
+
+        _C_WinApi.SetWindowPos(self._window_handle, _C_WinApi.HWND_TOP, screen_area.x, screen_area.y, screen_area.width + self._WIDTH_CORRECTION_TO_FAKE, screen_area.height, _C_WinApi.SWP_SHOWWINDOW)
+
+        self._is_apply_fake_width = False
+        self._pop_is_enable_change_state_at_resize()
+
+        self._set_state(WindowStateId.WINDOWED_FULL_SCREENED)
 
     ###
 
@@ -927,6 +1007,12 @@ class Window:
         Returns (WindowStateId).
         """
         return self._state_id
+
+    def get_previous_state_id(self):
+        """
+        Returns (WindowStateId).
+        """
+        return self._previous_state_id
 
     def is_normal(self):
         """
@@ -954,23 +1040,37 @@ class Window:
 
     ###
 
-    # TODO:
-    # GoForeground
-    # IsForeground
+    def go_foreground(self):
+        _C_WinApi.SetForegroundWindow(self._window_handle)
+
+    def is_foreground(self):
+        """
+        Returns (bool).
+        """
+        return _C_WinApi.GetForegroundWindow() == self._window_handle
 
     ###
     
-    # TODO:
-    # GetStyle
+    def get_style(self):
+        """
+        Returns (int) bitfield made of values from WindowStyleBit or 0.
+        """
+        return self._style
 
     def get_cursor_pos_in_draw_area(self):
+        """
+        Returns (Point).
+        """
         pos = _C_WinApi.POINT()
         if _C_WinApi.GetCursorPos(_ctypes.byref(pos)) and _C_WinApi.ScreenToClient(self._window_handle, _ctypes.byref(pos)):
             return Point(pos.x, pos.y)
         return Point(0, 0)
 
-    # TODO:
-    # GetOpenGL_Version
+    def get_opengl_version(self):
+        """
+        Returns (OpenGL_Version).
+        """
+        return _deepcopy(self._opengl_version)
 
     ### Private ###
 
@@ -1123,7 +1223,7 @@ class Window:
         
     def _restore(self):
         if _C_WinApi.IsMaximized(self._window_handle):
-            if self._prev_state_id == WindowStateId.WINDOWED_FULL_SCREENED:
+            if self._previous_state_id == WindowStateId.WINDOWED_FULL_SCREENED:
                 self._push_is_enable_do_on_resize(False)
                 self._push_is_enable_change_state_at_resize(False)
 
@@ -1219,10 +1319,10 @@ class Window:
         """
         state_id : WindowStateId
         """
-        self._prev_state_id = self._state_id
-        self._state_id      = state_id
+        self._previous_state_id = self._state_id
+        self._state_id = state_id
 
-        if (self._state_id != self._prev_state_id) and self._do_on_state_change:
+        if (self._state_id != self._previous_state_id) and self._do_on_state_change:
            self._do_on_state_change(state_id)
 
     def _create(self, window_handle):
@@ -1313,7 +1413,7 @@ class Window:
             gl_error_code = _C_GL.glGetError()
 
         if gl_error_code == _C_GL.GL_NO_ERROR:
-            self._opengl_version = OpenGL_Version(major, minor)
+            self._opengl_version = OpenGL_Version(major.value, minor.value)
 
         elif gl_error_code == _C_GL.GL_INVALID_ENUM:
             version_text = _ctypes.cast(_C_GL.glGetString(_C_GL.GL_VERSION), _ctypes.c_char_p).value.decode()
