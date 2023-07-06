@@ -53,3 +53,9 @@ class ActionChain:
                 self._actions.pop(0)
 
         self._begin = self._end
+
+    def is_empty(self):
+        """
+        Returns (bool).
+        """
+        return len(self._actions) == 0

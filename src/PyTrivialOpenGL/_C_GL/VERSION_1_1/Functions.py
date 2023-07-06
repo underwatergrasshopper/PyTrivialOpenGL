@@ -110,3 +110,14 @@ glLoadIdentity          = _ctypes.WINFUNCTYPE(GLvoid)(
     ("glLoadIdentity", _OpenGL32), 
     ()
 )
+
+glPushAttrib            = _ctypes.WINFUNCTYPE(GLvoid, GLbitfield)(
+    ("glPushAttrib", _OpenGL32), 
+    ((1, "mask"),)
+)
+
+glPopAttrib             = _ctypes.WINFUNCTYPE(GLvoid)(
+    ("glPopAttrib", _OpenGL32), 
+    ()
+)
+

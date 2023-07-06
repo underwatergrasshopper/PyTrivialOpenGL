@@ -1,21 +1,23 @@
-from ExampleManager import *
-from ActionChain import *
-
-import PyTrivialOpenGL as togl
-from PyTrivialOpenGL._C_GL import *
-
-import PyTrivialOpenGL._C_WinApi as _C_WinApi
-
 import ctypes
 import math
 import copy
 
-################################################################################
+import PyTrivialOpenGL as togl
+from PyTrivialOpenGL._C_GL import *
+import PyTrivialOpenGL._C_WinApi as _C_WinApi
+
+__all__ = [
+    "EXIT_SUCCESS",
+    "EXIT_FAILURE",
+    "print_rect",
+    "rect_to_area",
+    "display_info",
+    "draw_rgb_triangle",
+    "draw_rectangle",
+]
 
 EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
-
-################################################################################
 
 def print_rect(r):
     print("%d %d %d %d" % (r.left, r.top, r.right, r.bottom))
@@ -26,37 +28,47 @@ def rect_to_area(r):
 def display_info():
     print("--- Info ---")
 
-    window = togl.to_window()
-
-    window_handle = _C_WinApi.GetForegroundWindow()
-
-    window_area = window.get_area()
-    print("%-20s: %s" % ("Window Area", window_area))
-
-    draw_area = window.get_draw_area()
-    print("%-20s: %s" % ("Window Draw Area", draw_area))
-
+    padding = 30
     screen_size = togl.get_screen_size()
-
-    print("%-20s: %s" % ("Screen Size", screen_size))
+    print("%-*s: %s" % (padding, "Screen Size", screen_size))
 
     work_area = togl.get_work_area()
+    print("%-*s: %s" % (padding, "Work Area", work_area))
 
-    print("%-20s: %s" % ("Work Area", work_area))
+    window = togl.to_window()
 
-    print("%-20s: %s" % ("is_visible", window.is_visible()))
-    print("%-20s: %s" % ("is_foreground", window.is_foreground()))
+    window_area = window.get_area()
+    print("%-*s: %s" % (padding, "Window Area", window_area))
+
+    draw_area = window.get_draw_area()
+    print("%-*s: %s" % (padding, "Window Draw Area", draw_area))
 
     center_check_size = togl.Size(
         (window_area.x - work_area.x) * 2 + window_area.width,
         (window_area.y - work_area.y) * 2 + window_area.height
     )
-    print("%-20s: %s (= %s)" % ("Window Center Check", center_check_size, work_area.get_size()))
+    print("%-*s: %s (= %s)" % (padding, "Window Center Check", center_check_size, work_area.get_size()))
 
-    print("%-20s: %s" % ("OpenGL Version", window.get_opengl_version()))
+    cursor_pos = window.get_cursor_pos_in_draw_area()
+    print("%-*s: %s" % (padding, "Cursor Pos. in Draw Area", cursor_pos))
+    
+    print("%-*s: %s" % (padding, "is_running", window.is_running()))
+    print("%-*s: %s" % (padding, "is_visible", window.is_visible()))
+    print("%-*s: %s" % (padding, "is_foreground", window.is_foreground()))
+    print("%-*s: %s" % (padding, "is_enabled AUTO_SLEEP_MODE", window.is_enabled(togl.WindowOptionId.AUTO_SLEEP_MODE)))
 
+    print("%-*s: %s" % (padding, "OpenGL Version", window.get_opengl_version()))
+    print("%-*s: %s" % (padding, "Previous State", window.get_previous_state_id()))
+    print("%-*s: %s" % (padding, "Style", togl.window_style_bitfield_to_str(window.get_style())))
     print("HmNMf")
+
     flags = list("     ")
+    ps_id = window.get_previous_state_id()
+    if ps_id == togl.WindowStateId.MINIMIZED:               flags[1] = "-"
+    if ps_id == togl.WindowStateId.NORMAL:                  flags[2] = "-"
+    if ps_id == togl.WindowStateId.MAXIMIZED:               flags[3] = "-"
+    if ps_id == togl.WindowStateId.WINDOWED_FULL_SCREENED:  flags[4] = "-"
+
     if not window.is_visible():             flags[0] = "+"
     if window.is_minimized():               flags[1] = "+"
     if window.is_normal():                  flags[2] = "+"
@@ -65,6 +77,7 @@ def display_info():
     print("".join(flags))
 
     print("---")
+ 
 
 def draw_rgb_triangle(x, y, scale, angle):
     glPushMatrix()

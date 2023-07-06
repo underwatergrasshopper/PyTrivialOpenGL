@@ -33,6 +33,7 @@ from ._Debug import _wm_to_str
 
 __all__ = [
     "WindowStyleBit",
+    "window_style_bitfield_to_str",
     "WindowStateId",
     "WindowOptionId",
     "Window",
@@ -46,6 +47,23 @@ class WindowStyleBit:
     DRAW_AREA_SIZE              = 0x0008
     DRAW_AREA_ONLY              = 0x0010
     REDRAW_ON_CHANGE_OR_REQUEST = 0x0020
+
+def window_style_bitfield_to_str(style):
+    """
+    style : int
+        Bitfield made from values of WindowStyleBit or 0.
+    Returns (str).
+    """
+    names = []
+
+    if style & WindowStyleBit.NO_RESIZE:                    names += ["NO_RESIZE"]
+    if style & WindowStyleBit.NO_MAXIMIZE:                  names += ["NO_MAXIMIZE"]
+    if style & WindowStyleBit.CENTERED:                     names += ["CENTERED"]
+    if style & WindowStyleBit.DRAW_AREA_SIZE:               names += ["DRAW_AREA_SIZE"]
+    if style & WindowStyleBit.DRAW_AREA_ONLY:               names += ["DRAW_AREA_ONLY"]
+    if style & WindowStyleBit.REDRAW_ON_CHANGE_OR_REQUEST:  names += ["REDRAW_ON_CHANGE_OR_REQUEST"]
+
+    return " | ".join(names)
 
 class WindowStateId(_enum.IntEnum):
     NORMAL                  = _enum.auto()
@@ -167,80 +185,14 @@ class Window:
         Called periodically. Call delay is taken from timer_time_interval variable and is provided as time_interval parameter.
         time_interval   - in milliseconds
     """
-    _WIDTH_CORRECTION_TO_FAKE = 1
+    _WIDTH_CORRECTION_TO_FAKE       = 1
+    _DEFAULT_TIMER_ID               = 1001
 
-    _singleton_guardian = _SingletonGuardian("Window")
-
+    _singleton_guardian = _SingletonGuardian("Window") # shared
 
     def __init__(self):
         self._singleton_guardian.count_as_created_instance()
-
-        self._DEFAULT_TIMER_ID              = 1001
-
-        self._window_name                   = ""
-        self._window_class_name             = ""
-
-        self._area                          = Area(0, 0, 0, 0)
-        self._style                         = 0
-        self._opengl_version                = OpenGL_Version(0, 0)
-        self._icon_file_name                = ""
-        self._timer_time_interval           = 0
-        self._is_auto_sleep_blocked         = False
-
-        self._window_area_corrector         = _WindowAreaCorrector()
-
-        self._instance_handle               = None
-        self._window_handle                 = None
-        self._device_context_handle         = None
-        self._rendering_context_handle      = None
-
-        self._window_style                  = 0
-        self._window_extended_style         = 0
-
-        self._is_active                     = False
-        self._is_visible                    = False
-        self._is_frame                      = True
-
-        self._state_id                      = WindowStateId.NORMAL
-        self._previous_state_id             = self._state_id
-
-        self._is_apply_fake_width               = False
-        self._is_enable_do_on_resize            = True
-        self._is_enable_change_state_at_resize  = True
-        self._is_in_draw                        = False
-
-        self._is_enable_do_on_resize_stack              = []
-        self._is_enable_change_state_at_resize_stack    = []
-
-        # character decoding
-        self._dbg_code_utf32                = 0
-        self._code_utf32                    = 0
-        self._is_two_utf16_code_units       = False
-        self._is_decode_fail                = False
-
-        ### callbacks ###
-
-        self._do_on_create                  = None
-        self._do_on_destory                 = None
-
-        self._draw                          = None
-                        
-        self._do_on_key                     = None
-        self._do_on_text                    = None
-        
-        self._do_on_mouse_wheel_roll        = None
-        self._do_on_mouse_move              = None
-        
-        self._do_on_resize                  = None
-        
-        self._do_on_state_change            = None
-        self._do_on_show                    = None
-        self._do_on_hide                    = None
-        self._do_on_foreground              = None
-        
-        self._do_on_time                    = None
-
-
+        self._reset()
 
     def create_and_run(    
             self,
@@ -345,7 +297,13 @@ class Window:
             Called periodically. Call delay is taken from timer_time_interval variable and is provided as time_interval parameter.
             time_interval   - in milliseconds
         """
-        self._window_name               = window_name
+        if self._is_running:
+            raise RuntimeError("Window is already running.")
+        self._reset()
+
+        self._is_running = True
+
+        self._window_name = window_name
 
         if area is None:
             self._area = None
@@ -485,7 +443,15 @@ class Window:
         else:
             log_fatal_error("Can not unregister window class.")
 
+        self._is_running = False
+
         return result
+
+    def is_running(self):
+        """
+        Returns (bool).
+        """
+        return self._is_running
 
     def request_close(self):
         _C_WinApi.DestroyWindow(self._window_handle)
@@ -1074,6 +1040,84 @@ class Window:
 
     ### Private ###
 
+    def _reset(self):
+        self._is_running                    = False 
+
+        self._window_name                   = ""
+        self._window_class_name             = ""
+
+        self._area                          = Area(0, 0, 0, 0)
+        self._style                         = 0
+        self._opengl_version                = OpenGL_Version(0, 0)
+        self._icon_file_name                = ""
+        self._timer_time_interval           = 0
+        self._is_auto_sleep_blocked         = False
+
+        self._window_area_corrector         = _WindowAreaCorrector()
+
+        self._instance_handle               = None
+        self._window_handle                 = None
+        self._device_context_handle         = None
+        self._rendering_context_handle      = None
+
+        self._window_style                  = 0
+        self._window_extended_style         = 0
+
+        self._is_active                     = False
+        self._is_visible                    = False
+        self._is_frame                      = True
+
+        self._state_id                      = WindowStateId.NORMAL
+        self._previous_state_id             = self._state_id
+
+        self._is_apply_fake_width               = False
+        self._is_enable_do_on_resize            = True
+        self._is_enable_change_state_at_resize  = True
+        self._is_in_draw                        = False
+
+        self._is_enable_do_on_resize_stack              = []
+        self._is_enable_change_state_at_resize_stack    = []
+
+        self._is_shift_down                 = False
+        self._is_alt_down                   = False
+        self._is_ctrl_down                  = False
+
+        self._is_left_shift_down            = False
+        self._is_left_alt_down              = False
+        self._is_left_ctrl_down             = False
+
+        self._is_right_shift_down           = False
+        self._is_right_alt_down             = False
+        self._is_right_ctrl_down            = False
+
+        # character decoding
+        self._dbg_code_utf32                = 0
+        self._code_utf32                    = 0
+        self._is_two_utf16_code_units       = False
+        self._is_decode_fail                = False
+
+        ### callbacks ###
+
+        self._do_on_create                  = None
+        self._do_on_destory                 = None
+
+        self._draw                          = None
+                        
+        self._do_on_key                     = None
+        self._do_on_text                    = None
+        
+        self._do_on_mouse_wheel_roll        = None
+        self._do_on_mouse_move              = None
+        
+        self._do_on_resize                  = None
+        
+        self._do_on_state_change            = None
+        self._do_on_show                    = None
+        self._do_on_hide                    = None
+        self._do_on_foreground              = None
+        
+        self._do_on_time                    = None
+
     def _execute_main_loop(self):
         msg = _C_WinApi.MSG()
 
@@ -1288,6 +1332,16 @@ class Window:
                 keyboard_side_id    = KeyboardSideId.NONE
             )
             self._do_on_key(key_id, is_down, extra);
+
+            extra.is_shift_down         = self._is_shift_down
+            extra.is_alt_down           = self._is_alt_down
+            extra.is_ctrl_down          = self._is_ctrl_down
+            extra.is_left_shift_down    = self._is_left_shift_down
+            extra.is_left_alt_down      = self._is_left_alt_down
+            extra.is_left_ctrl_down     = self._is_left_ctrl_down
+            extra.is_right_shift_down   = self._is_right_shift_down
+            extra.is_right_alt_down     = self._is_right_alt_down
+            extra.is_right_ctrl_down    = self._is_right_ctrl_down   
         
         # Tracks mouse button up message when mouse button is down and cursor leave window draw (client) area.
         if is_down:
@@ -1313,6 +1367,59 @@ class Window:
                 y = pos.y,
                 keyboard_side_id = _get_keyboard_side_id(key_id, vk_data),
             )
+
+            if key_id == KeyId.SHIFT:
+                if is_down:
+                    if extra.keyboard_side_id == KeyboardSideId.LEFT:
+                        self._is_left_shift_down = True
+                    elif extra.keyboard_side_id == KeyboardSideId.RIGHT:
+                        self._is_right_shift_down = True
+                else:
+                    if extra.keyboard_side_id == KeyboardSideId.LEFT:
+                        self._is_left_shift_down = False
+                    elif extra.keyboard_side_id == KeyboardSideId.RIGHT:
+                        self._is_right_shift_down = False
+
+                self._is_shift_down = self._is_left_shift_down | self._is_right_shift_down
+
+            elif key_id == KeyId.ALT:
+                if is_down:
+                    if extra.keyboard_side_id == KeyboardSideId.LEFT:
+                        self._is_left_alt_down = True
+                    elif extra.keyboard_side_id == KeyboardSideId.RIGHT:
+                        self._is_right_alt_down = True
+                else:
+                    if extra.keyboard_side_id == KeyboardSideId.LEFT:
+                        self._is_left_alt_down = False
+                    elif extra.keyboard_side_id == KeyboardSideId.RIGHT:
+                        self._is_right_alt_down = False
+
+                self._is_alt_down = self._is_left_alt_down | self._is_right_alt_down
+
+            elif key_id == KeyId.CONTROL:
+                if is_down:
+                    if extra.keyboard_side_id == KeyboardSideId.LEFT:
+                        self._is_left_ctrl_down = True
+                    elif extra.keyboard_side_id == KeyboardSideId.RIGHT:
+                        self._is_right_ctrl_down = True
+                else:
+                    if extra.keyboard_side_id == KeyboardSideId.LEFT:
+                        self._is_left_ctrl_down = False
+                    elif extra.keyboard_side_id == KeyboardSideId.RIGHT:
+                        self._is_right_ctrl_down = False
+
+                self._is_ctrl_down = self._is_left_ctrl_down | self._is_right_ctrl_down
+
+            extra.is_shift_down         = self._is_shift_down
+            extra.is_alt_down           = self._is_alt_down
+            extra.is_ctrl_down          = self._is_ctrl_down
+            extra.is_left_shift_down    = self._is_left_shift_down
+            extra.is_left_alt_down      = self._is_left_alt_down
+            extra.is_left_ctrl_down     = self._is_left_ctrl_down
+            extra.is_right_shift_down   = self._is_right_shift_down
+            extra.is_right_alt_down     = self._is_right_alt_down
+            extra.is_right_ctrl_down    = self._is_right_ctrl_down   
+
             self._do_on_key(key_id, is_down, extra)
 
     def _set_state(self, state_id):

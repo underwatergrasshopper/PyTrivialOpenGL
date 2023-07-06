@@ -8,7 +8,8 @@ import test_log
 import test_key
 import test_window
 
-if __name__ == "__main__":
+
+def run():
     test_basics.run()
     test_color.run()
     test_size.run()
@@ -18,3 +19,6 @@ if __name__ == "__main__":
     test_log.run()
     test_key.run()
     test_window.run()
+
+if __name__ == "__main__":
+    run()

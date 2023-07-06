@@ -1,0 +1,321 @@
+import enum
+
+import PyTrivialOpenGL as togl
+from PyTrivialOpenGL._C_GL import *
+
+from ExampleSupport    import *
+from ExampleManager    import *
+from ActionChain       import *
+
+__all__ = [
+    "run"
+]
+
+_WIDTH      = 600   # in pixels
+_HEIGHT     = 300   # in pixels
+
+_MOVE_STEP  = 30    # in pixels
+
+_action_chain   = ActionChain()
+_area           = togl.Area(0, 0, _WIDTH, _HEIGHT)
+
+
+class ModeId(enum.Enum):
+    CONTROL_AREA    = enum.auto()
+    CONTROL_STATE   = enum.auto()
+
+class Data:
+    def __init__(self):
+        self.angle          = 0
+        self.is_draw_area   = False
+
+        self.mode_id        = ModeId.CONTROL_AREA
+
+
+_data   = Data()
+_window = togl.to_window()
+
+_legend = """--- Legend ---
+Arrows      - Move by 30px
+T           - Delay 3s -> Foreground                        [wait for 'done']
+H           - Hide 1s -> Show                               [wait for 'done']
+M           - Minimize 1s -> Center (width=600, height=300) [wait for 'done']
+Shift + M   - Maximize
+F           - Windowed Full Screen
+
+C           - Center
+Shift + C   - Center (width=800, height=400)
+L. Ctrl + C - Center Draw Area (width=800, height=400)
+R. Ctrl + C - Center Window Area (width=800, height=400)
+ 
+P           - Move to (x=10, y=50)
+L. Ctrl + P - Move to (x=10)
+R. Ctrl + P - Move to (y=50)
+O           - Move to (x=0, y=0)
+Shift + O   - Move to (pos=Point(0,0))
+    
+S           - Resize (width=400, height=200)
+L. Ctrl + S - Resize (width=400)
+R. Ctrl + S - Resize (height=200)
+Shift + S   - Resize (width=800, height=400)
+    
+A           - Reshape(x=10, y=50, width=800, height=400)
+Shift + A     - Reshape(area=Area(10, 50, 800, 400)
+L. Ctrl + A - Reshape(x=10, width=800)
+R. Ctrl + A - Reshape(y=50, height=400)
+    
+D           - Toggle: by Window Area <-> by Draw Area
+R           - Request Draw
+        
+0           - Move by (none) 1s -> Move to (none) 1s -> Resize (none) 1s -> 
+              Reshape (none)  1s -> Center (none)           [wait for 'done']
+    
+I           - Info
+L           - Legend
+Escape      - Exit
+---
+"""
+
+def display_legend():
+    print(_legend)
+
+def set_orthogonal_projection(width, height):
+    glPushAttrib(GL_TRANSFORM_BIT)
+
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    glOrtho(0, width, 0, height, 1, -1)
+
+    glPopAttrib()
+
+def do_on_create():
+    display_legend()
+
+    set_orthogonal_projection(_WIDTH, _HEIGHT)
+
+    glClearColor(0, 0, 0.5, 1)
+
+    _action_chain.reset()
+
+def do_on_destroy():
+    print("Bye. Bye.")
+
+def draw():
+    glClear(GL_COLOR_BUFFER_BIT)
+
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+
+    glColor3f(1, 0, 0)
+    draw_rectangle(0, 0, _area.width, _area.height)
+
+    glColor3f(0, 0, 0.5)
+    draw_rectangle(1, 1, _area.width - 2, _area.height - 2)
+        
+    scale = min(_area.width, _area.height)
+    scale /= 3
+
+    draw_rgb_triangle(_area.width / 2, _area.height / 2, scale, _data.angle)
+
+    _action_chain.try_execute()
+
+def do_on_mouse_move(x, y):
+    # print("do_on_mouse_move: %d %d" % (x, y))
+    pass
+
+def do_on_mouse_wheel_roll(step_cout, x, y):
+    # print("do_on_mouse_wheel_roll: %d %d %d" % (step_cout, x, y))
+    pass
+
+def do_on_key(key_id, is_down, extra):
+    # print("do_on_key: key_id=%s, is_down=%d, %s" % (key_id.name, is_down, extra))
+
+    if False:
+        pass
+
+    elif key_id == togl.KeyId.ARROW_LEFT and is_down:
+        _window.move_by(-_MOVE_STEP, 0)
+    elif key_id == togl.KeyId.ARROW_RIGHT and is_down:
+        _window.move_by(_MOVE_STEP, 0)
+    elif key_id == togl.KeyId.ARROW_UP and is_down:
+        _window.move_by(0, -_MOVE_STEP)
+    elif key_id == togl.KeyId.ARROW_DOWN and is_down:
+        _window.move_by(0, _MOVE_STEP)
+
+    elif key_id == 'T' and not is_down:
+        def do():
+            display_info()
+            _window.go_foreground()
+            print("done")
+        _action_chain.add(3, do)
+
+    elif key_id == 'H' and not is_down:
+        def do():
+            _window.hide()
+            display_info()
+        _action_chain.add(0, do)
+
+        def do():
+            _window.show()
+            print("done")
+        _action_chain.add(1, do)
+
+    elif key_id == 'M' and not is_down:
+        if extra.is_shift_down:
+            _window.maximize()
+        else:
+            def do():
+                _window.minimize()
+                display_info()
+            _action_chain.add(0, do)
+
+            def do():
+                _window.center(_WIDTH, _HEIGHT, is_draw_area_size = _data.is_draw_area)
+                print("done")
+            _action_chain.add(1, do)
+
+    elif key_id == 'F' and not is_down:
+        _window.go_windowed_full_screen()
+
+    elif key_id == 'C' and not is_down:
+        if extra.is_shift_down:
+            _window.center(_WIDTH, _HEIGHT, is_draw_area_size = _data.is_draw_area)
+        elif extra.is_left_ctrl_down:
+            _window.center(_WIDTH, _HEIGHT, is_draw_area_size = True)
+        elif extra.is_right_ctrl_down:
+            _window.center(_WIDTH, _HEIGHT, is_draw_area_size = False)
+        else:
+            _window.center()
+
+    elif key_id == 'P' and not is_down:
+        if extra.is_left_ctrl_down:
+            _window.move_to(x = 10, is_draw_area = _data.is_draw_area)
+        elif extra.is_right_ctrl_down:
+            _window.move_to(y = 50, is_draw_area = _data.is_draw_area)
+        else:
+            _window.move_to(10, 50, is_draw_area = _data.is_draw_area)
+
+    elif key_id == 'O' and not is_down:
+        if extra.is_shift_down:
+            _window.move_to(pos = togl.Point(0, 0), is_draw_area = _data.is_draw_area)
+        else:
+            _window.move_to(0, 0, is_draw_area = _data.is_draw_area)
+
+    elif key_id == 'S' and not is_down:
+        if extra.is_shift_down:
+            _window.resize(_WIDTH, _HEIGHT, is_draw_area = _data.is_draw_area)
+        elif extra.is_left_ctrl_down:
+            _window.resize(width = _WIDTH / 2, is_draw_area = _data.is_draw_area)
+        elif extra.is_right_ctrl_down:
+            _window.resize(height = _HEIGHT / 2, is_draw_area = _data.is_draw_area)
+        else:
+            _window.resize(_WIDTH / 2, _HEIGHT / 2, is_draw_area = _data.is_draw_area)
+
+    elif key_id == 'A' and not is_down:
+        if extra.is_shift_down:
+            _window.reshape(area = togl.Area(10, 50, _WIDTH, _HEIGHT), is_draw_area = _data.is_draw_area)
+        elif extra.is_left_ctrl_down:
+            _window.reshape(x = 10, width = _WIDTH, is_draw_area = _data.is_draw_area)
+        elif extra.is_right_ctrl_down:
+            _window.reshape(y = 50, height = _HEIGHT, is_draw_area = _data.is_draw_area)
+        else:
+            _window.reshape(10, 50, _WIDTH, _HEIGHT, is_draw_area = _data.is_draw_area)
+ 
+    elif key_id == 'D' and not is_down:
+        _data.is_draw_area = not _data.is_draw_area
+   
+    elif key_id == 'R' and not is_down:
+        _window.request_draw()
+
+    elif key_id == '0' and not is_down:
+        def do():
+            _window.move_by()
+            display_info()
+        _action_chain.add(0, do)
+
+        def do():
+            _window.move_to()
+            display_info()
+        _action_chain.add(1, do)
+
+        def do():
+            _window.resize()
+            display_info()
+        _action_chain.add(1, do)
+
+        def do():
+            _window.reshape()
+            display_info()
+        _action_chain.add(1, do)
+
+        def do():
+            _window.center()
+            print("done")
+        _action_chain.add(1, do)
+
+    elif key_id == 'I' and not is_down:
+        display_info()
+
+    elif key_id == 'L' and not is_down:
+        display_legend()
+
+    elif key_id == togl.KeyId.ESCAPE and not is_down:
+        _window.request_close()
+
+
+def do_on_text(text, is_correct):
+    # print("do_on_text: text='%s', code_point=%Xh, is_correct=%d" % (text, ord(text), is_correct))
+    pass
+
+def do_on_resize(width, height):
+    print("do_on_resize: %d %d" % (width, height))
+
+    glViewport(0, 0, width, height)
+
+    _area.width  = width
+    _area.height = height
+        
+    set_orthogonal_projection(width, height)
+
+def do_on_state_change(state_id):
+    print("do_on_state_change: %s" % state_id.name)
+
+def do_on_time(time_interval):
+    # print("time_interval: %dms" % time_interval)
+
+    _data.angle += 10 * (time_interval / 1000) # degrees per second
+
+def do_on_foreground(is_gain):
+    text = "gain" if is_gain else "lose"
+    print("do_on_forground: %s" % text)
+
+
+def run(name, options):
+    togl.set_log_level(togl.LogLevel.DEBUG)
+    # togl.to_special_debug().is_full_exit_track_in_callback = True
+    # togl.to_special_debug().is_notify_mouse_move = True
+    # togl.to_special_debug().is_notify_character_message = True
+    # togl.to_special_debug().is_notify_timer = True
+
+    return togl.to_window().create_and_run(
+        window_name         = "Area and State (debug)",
+        area                = _area,
+        style               = togl.WindowStyleBit.CENTERED | togl.WindowStyleBit.DRAW_AREA_SIZE,
+
+        opengl_version      = (3, 3),
+        timer_time_interval = 20,
+        icon_file_name      = "tests\\assets\\icon.ico",
+
+        do_on_create            = do_on_create,
+        do_on_destroy           = do_on_destroy,
+        draw                    = draw,
+
+        # do_on_mouse_move        = do_on_mouse_move,
+        do_on_mouse_wheel_roll  = do_on_mouse_wheel_roll,
+        do_on_key               = do_on_key,
+        do_on_text              = do_on_text,
+        do_on_resize            = do_on_resize,
+        do_on_state_change      = do_on_state_change,
+        do_on_time              = do_on_time,
+        do_on_foreground        = do_on_foreground,
+    )
