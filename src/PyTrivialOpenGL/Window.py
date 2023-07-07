@@ -1562,7 +1562,7 @@ class Window:
         ### Draw ###
 
         if window_message == _C_WinApi.WM_PAINT:
-            if to_special_debug().is_notify_any_message:
+            if to_special_debug().is_notify_remaining_messages:
                 log_debug("WM_PAINT")
 
             self.draw_now()
@@ -1570,7 +1570,7 @@ class Window:
             return 0
         
         elif window_message == _C_WinApi.WM_ERASEBKGND:
-            if to_special_debug().is_notify_any_message:
+            if to_special_debug().is_notify_remaining_messages:
                 log_debug("WM_ERASEBKGND")
             # Tells DefWindowProc to not erase background. It's unnecessary since background is handled by OpenGL.
             return 1
@@ -1578,7 +1578,7 @@ class Window:
         ## Mouse ###
         
         elif window_message == _C_WinApi.WM_MOUSEMOVE:
-            if to_special_debug().is_notify_mouse_move or to_special_debug().is_notify_any_message:
+            if to_special_debug().is_notify_mouse_move:
                 wm_text = "WM_MOUSEMOVE"
                 x       = _C_WinApi.GET_X_LPARAM(l_param).value
                 y       = _C_WinApi.GET_Y_LPARAM(l_param).value
@@ -1635,7 +1635,7 @@ class Window:
         ### Keyboard ###
         
         elif window_message in [_C_WinApi.WM_KEYDOWN, _C_WinApi.WM_KEYUP, _C_WinApi.WM_SYSKEYDOWN, _C_WinApi.WM_SYSKEYUP]:
-            if to_special_debug().is_notify_key_message or to_special_debug().is_notify_any_message:
+            if to_special_debug().is_notify_key_message:
                 wm_text = _wm_to_str(window_message)
                 vk_text = _vk_code_to_str(w_param)
                 vk_data = _VirtualKeyData(l_param)
@@ -1648,7 +1648,7 @@ class Window:
             return 0
         
         elif window_message == _C_WinApi.WM_CHAR:
-            if to_special_debug().is_notify_character_message or to_special_debug().is_notify_any_message:
+            if to_special_debug().is_notify_character_message:
                 wm_text = "WM_CHAR"
                 vk_data = _VirtualKeyData(l_param)
                 
@@ -1770,7 +1770,7 @@ class Window:
         ## Timer ###
 
         elif window_message == _C_WinApi.WM_TIMER:
-            if to_special_debug().is_notify_timer or to_special_debug().is_notify_any_message:
+            if to_special_debug().is_notify_timer:
                 wm_text         = "WM_TIMER"
                 timer_id        = w_param
                 callback_addr   = l_param
@@ -1852,7 +1852,7 @@ class Window:
             return 0
 
         elif window_message == _C_WinApi.WM_SYSCOMMAND:
-            if to_special_debug().is_notify_any_message:
+            if to_special_debug().is_notify_remaining_messages:
                 wm_text = "WM_SYSCOMMAND"
 
                 def get_system_command_name(cmd_id):        
@@ -1932,7 +1932,7 @@ class Window:
             return 0
 
         else:
-            if to_special_debug().is_notify_any_message:
+            if to_special_debug().is_notify_remaining_messages:
                 log_debug(_wm_to_str(window_message))
 
         return _C_WinApi.DefWindowProcW(window_handle, window_message, w_param, l_param)

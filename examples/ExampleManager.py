@@ -1,4 +1,5 @@
 import re as _re
+import os as _os
 
 __all__ = [
     "Example",
@@ -63,20 +64,28 @@ class ExampleManager:
         self.examples[name] = Example(name, function, possible_options, default_options)
 
     def _display_examples(self):
+        max_len = max(len(example_name) for example_name in self.examples.keys())
+        separator_offset = 2 # ', '
+        max_num_of_columns = max(1, _os.get_terminal_size().columns // (max_len + separator_offset))
+
         count = 0
         for example_name in self.examples.keys():
-            print("% 19s, " % example_name, end = "")
+            print("% *s, " % (max_len, example_name), end = "")
             count +=1
-            if count % 4 == 0:
+            if count % max_num_of_columns == 0:
                 print("")
         print("")
 
     def _display_possible_options(self, example):
+        max_len = max(len(option) for option in example.possible_options)
+        separator_offset = 2 # ', '
+        max_num_of_columns = max(1, _os.get_terminal_size().columns // (max_len + separator_offset))
+
         count = 0
         for option in example.possible_options:
-            print("% 19s, " % option, end = "")
+            print("% *s, " % (max_len, option), end = "")
             count +=1
-            if count % 4 == 0:
+            if count % max_num_of_columns == 0:
                 print("")
         print("")
 

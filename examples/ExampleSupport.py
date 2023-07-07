@@ -4,7 +4,6 @@ import copy
 
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL._C_GL import *
-import PyTrivialOpenGL._C_WinApi as _C_WinApi
 
 __all__ = [
     "EXIT_SUCCESS",

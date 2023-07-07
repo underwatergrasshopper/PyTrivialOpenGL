@@ -6,6 +6,7 @@ from PyTrivialOpenGL._C_GL import *
 from ExampleSupport    import *
 from ExampleManager    import *
 from ActionChain       import *
+from AnimatedTriangle  import *
 
 __all__ = [
     "run"
@@ -16,21 +17,24 @@ _HEIGHT     = 300   # in pixels
 
 _MOVE_STEP  = 30    # in pixels
 
-_action_chain   = ActionChain()
-_area           = togl.Area(0, 0, _WIDTH, _HEIGHT)
-
-
-class ModeId(enum.Enum):
-    CONTROL_AREA    = enum.auto()
-    CONTROL_STATE   = enum.auto()
-
 class Data:
+    """
+    angle               : int | float
+    is_draw_area        : bool
+    area                : Area
+    options             : Set[str]
+    action_chain        : ActionChain
+    animated_triangle   : AnimatedTriangle
+    """
     def __init__(self):
-        self.angle          = 0
-        self.is_draw_area   = False
+        self.reset()
 
-        self.mode_id        = ModeId.CONTROL_AREA
-
+    def reset(self):
+        self.angle              = 0
+        self.is_draw_area       = False
+        self.options            = set() 
+        self.action_chain       = ActionChain()
+        self.animated_triangle  = AnimatedTriangle()
 
 _data   = Data()
 _window = togl.to_window()
@@ -95,7 +99,9 @@ def do_on_create():
 
     glClearColor(0, 0, 0.5, 1)
 
-    _action_chain.reset()
+    if "maximized" in _data.options:                 togl.to_window().maximize()
+    elif "minimized" in _data.options:               togl.to_window().minimize()
+    elif "windowed_full_screened" in _data.options:  togl.to_window().go_windowed_full_screen()
 
 def do_on_destroy():
     print("Bye. Bye.")
@@ -106,18 +112,9 @@ def draw():
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
 
-    glColor3f(1, 0, 0)
-    draw_rectangle(0, 0, _area.width, _area.height)
+    _data.animated_triangle.draw()
 
-    glColor3f(0, 0, 0.5)
-    draw_rectangle(1, 1, _area.width - 2, _area.height - 2)
-        
-    scale = min(_area.width, _area.height)
-    scale /= 3
-
-    draw_rgb_triangle(_area.width / 2, _area.height / 2, scale, _data.angle)
-
-    _action_chain.try_execute()
+    _data.action_chain.try_execute()
 
 def do_on_mouse_move(x, y):
     # print("do_on_mouse_move: %d %d" % (x, y))
@@ -134,31 +131,31 @@ def do_on_key(key_id, is_down, extra):
         pass
 
     elif key_id == togl.KeyId.ARROW_LEFT and is_down:
-        _window.move_by(-_MOVE_STEP, 0)
+        _window.move_by(-_data.MOVE_STEP, 0)
     elif key_id == togl.KeyId.ARROW_RIGHT and is_down:
-        _window.move_by(_MOVE_STEP, 0)
+        _window.move_by(_data.MOVE_STEP, 0)
     elif key_id == togl.KeyId.ARROW_UP and is_down:
-        _window.move_by(0, -_MOVE_STEP)
+        _window.move_by(0, -_data.MOVE_STEP)
     elif key_id == togl.KeyId.ARROW_DOWN and is_down:
-        _window.move_by(0, _MOVE_STEP)
+        _window.move_by(0, _data.MOVE_STEP)
 
     elif key_id == 'T' and not is_down:
         def do():
             display_info()
             _window.go_foreground()
             print("done")
-        _action_chain.add(3, do)
+        _data.action_chain.add(3, do)
 
     elif key_id == 'H' and not is_down:
         def do():
             _window.hide()
             display_info()
-        _action_chain.add(0, do)
+        _data.action_chain.add(0, do)
 
         def do():
             _window.show()
             print("done")
-        _action_chain.add(1, do)
+        _data.action_chain.add(1, do)
 
     elif key_id == 'M' and not is_down:
         if extra.is_shift_down:
@@ -167,12 +164,12 @@ def do_on_key(key_id, is_down, extra):
             def do():
                 _window.minimize()
                 display_info()
-            _action_chain.add(0, do)
+            _data.action_chain.add(0, do)
 
             def do():
                 _window.center(_WIDTH, _HEIGHT, is_draw_area_size = _data.is_draw_area)
                 print("done")
-            _action_chain.add(1, do)
+            _data.action_chain.add(1, do)
 
     elif key_id == 'F' and not is_down:
         _window.go_windowed_full_screen()
@@ -231,27 +228,27 @@ def do_on_key(key_id, is_down, extra):
         def do():
             _window.move_by()
             display_info()
-        _action_chain.add(0, do)
+        _data.action_chain.add(0, do)
 
         def do():
             _window.move_to()
             display_info()
-        _action_chain.add(1, do)
+        _data.action_chain.add(1, do)
 
         def do():
             _window.resize()
             display_info()
-        _action_chain.add(1, do)
+        _data.action_chain.add(1, do)
 
         def do():
             _window.reshape()
             display_info()
-        _action_chain.add(1, do)
+        _data.action_chain.add(1, do)
 
         def do():
             _window.center()
             print("done")
-        _action_chain.add(1, do)
+        _data.action_chain.add(1, do)
 
     elif key_id == 'I' and not is_down:
         display_info()
@@ -272,8 +269,7 @@ def do_on_resize(width, height):
 
     glViewport(0, 0, width, height)
 
-    _area.width  = width
-    _area.height = height
+    _data.animated_triangle.resize(width, height)
         
     set_orthogonal_projection(width, height)
 
@@ -283,7 +279,7 @@ def do_on_state_change(state_id):
 def do_on_time(time_interval):
     # print("time_interval: %dms" % time_interval)
 
-    _data.angle += 10 * (time_interval / 1000) # degrees per second
+    _data.animated_triangle.update(time_interval / 1000.0)
 
 def do_on_foreground(is_gain):
     text = "gain" if is_gain else "lose"
@@ -291,18 +287,36 @@ def do_on_foreground(is_gain):
 
 
 def run(name, options):
+    _data.reset()
+    _data.options = options
+
     togl.set_log_level(togl.LogLevel.DEBUG)
-    # togl.to_special_debug().is_full_exit_track_in_callback = True
-    # togl.to_special_debug().is_notify_mouse_move = True
-    # togl.to_special_debug().is_notify_character_message = True
-    # togl.to_special_debug().is_notify_timer = True
+
+    if "notify_remaining_messages" in options:      togl.to_special_debug().is_notify_remaining_messages           = True
+    if "notify_draw_call" in options:               togl.to_special_debug().is_notify_draw_call             = True
+    if "notify_mouse_move" in options:              togl.to_special_debug().is_notify_mouse_move            = True
+    if "notify_key_message" in options:             togl.to_special_debug().is_notify_key_message           = True
+    if "notify_character_message" in options:       togl.to_special_debug().is_notify_character_message     = True
+    if "notify_timer" in options:                   togl.to_special_debug().is_notify_timer                 = True
+    if "full_exit_track_in_callback" in options:    togl.to_special_debug().is_full_exit_track_in_callback  = True
+
+    if "disable_auto_sleep" in options:             togl.to_window().set_option(togl.WindowOptionId.AUTO_SLEEP_MODE)
+
+    style = 0
+    if "no_resize" in options:          style |= togl.WindowStyleBit.NO_RESIZE
+    if "no_maximize" in options:        style |= togl.WindowStyleBit.NO_MAXIMIZE
+    if "centered" in options:           style |= togl.WindowStyleBit.CENTERED
+    if "draw_area_size" in options:     style |= togl.WindowStyleBit.DRAW_AREA_SIZE
+    if "draw_area_only" in options:     style |= togl.WindowStyleBit.DRAW_AREA_ONLY
+    if "redraw_on_request" in options:  style |= togl.WindowStyleBit.REDRAW_ON_CHANGE_OR_REQUEST
 
     return togl.to_window().create_and_run(
         window_name         = "Area and State (debug)",
-        area                = _area,
-        style               = togl.WindowStyleBit.CENTERED | togl.WindowStyleBit.DRAW_AREA_SIZE,
+        area                = (0, 0, _WIDTH, _HEIGHT),
+        style               = style,
 
-        opengl_version      = (3, 3),
+        opengl_version      = (3, 3) if "opengl_3_3" in options else None,
+
         timer_time_interval = 20,
         icon_file_name      = "tests\\assets\\icon.ico",
 
