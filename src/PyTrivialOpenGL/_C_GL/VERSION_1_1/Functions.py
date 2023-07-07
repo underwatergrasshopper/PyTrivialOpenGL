@@ -121,3 +121,7 @@ glPopAttrib             = _ctypes.WINFUNCTYPE(GLvoid)(
     ()
 )
 
+glFlush                 = _ctypes.WINFUNCTYPE(GLvoid)(
+    ("glFlush", _OpenGL32), 
+    ()
+)

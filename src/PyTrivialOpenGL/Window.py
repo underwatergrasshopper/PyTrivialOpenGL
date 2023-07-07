@@ -80,6 +80,12 @@ class _WindowAreaPartId(_enum.Enum):
     SIZE                = _enum.auto()
     ALL                 = _enum.auto()
 
+class _DelayedAreaChange:
+    def __init__(self, area, area_part_id, is_draw_area):
+        self.area           = area
+        self.area_part_id   = area_part_id
+        self.is_draw_area   = is_draw_area
+
 class Window:
     """
     _window_name                : str
@@ -131,13 +137,16 @@ class Window:
     _draw                       : Callable[[], NoneType]
         Called each time when window content needs to be redrawn.
 
-    _do_on_key                  : Callable[[KeyId, bool, KeyExtra], NoneType]
+    _do_on_key                  : Callable[[KeyId, bool, KeyExtra], NoneType | bool]
         Call naming convention: do_on_key(key_id, is_down, extra).
         Called when window receive keyboard key or mouse button message.
         is_down          - true when key is down, false when key is up.
         extra            - Contains additional informations, like: 
                            cursor position in draw area (extra.x, extra.y), 
                            indicator if pressed key is left or right or doesn't matter (extra.keyboard_side_id).
+        If do not returns any value, then received key message is discarded from further system interpretation.
+        If returns True, then received key message is discarded from further system interpretation.
+        If returns False, then received key message is NOT discarded from further system interpretation (useful for Alt+F4).
 
     _do_on_text                 : Callable[[str, bool], NoneType]
         Call naming convention: do_on_text(text, is_correct).
@@ -228,7 +237,7 @@ class Window:
         window_name             : str
         area                    : Area | Tuple[int, int, int, int] | None
         style                   : int 
-            Bitfield of WindowStyleBit values.
+            Bitfield made of WindowStyleBit's values or 0.
         opengl_version          : OpenGL_Version | None
         icon_file_name          : str
         timer_time_interval     : int
@@ -243,13 +252,16 @@ class Window:
         draw                        : Callable[[], NoneType]
             Called each time when window content needs to be redrawn.
 
-        do_on_key                   : Callable[[KeyId, bool, KeyExtra], NoneType]
+        do_on_key                   : Callable[[KeyId, bool, KeyExtra], NoneType | bool]
             Call naming convention: do_on_key(key_id, is_down, extra).
             Called when window receive keyboard key or mouse button message.
             is_down          - true when key is down, false when key is up.
             extra            - Contains additional informations, like: 
                                cursor position in draw area (extra.x, extra.y), 
                                indicator if pressed key is left or right or doesn't matter (extra.keyboard_side_id).
+            If do not returns any value, then received key message is discarded from further system interpretation.
+            If returns True, then received key message is discarded from further system interpretation.
+            If returns False, then received key message is NOT discarded from further system interpretation (useful for Alt+F4).
 
         do_on_text                  : Callable[[str, bool], NoneType]
             Call naming convention: do_on_text(text, is_correct).
@@ -420,14 +432,15 @@ class Window:
         else:
             log_fatal_error("Can not create window.")
 
+        if self._do_on_create is not None:
+            self._do_on_create()
+
         _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
+        self._change_area(self._area)
         _C_WinApi.SetForegroundWindow(self._window_handle)
         _C_WinApi.SetFocus(self._window_handle)
 
-        self._change_area(self._area)
-
-        if self._do_on_create is not None:
-            self._do_on_create()
+        #self._is_delayed_area_enabled
 
         if self._timer_time_interval > 0:
             result = _C_WinApi.SetTimer(self._window_handle, self._DEFAULT_TIMER_ID, self._timer_time_interval, _C_WinApi.TIMERPROC(0))
@@ -1200,8 +1213,8 @@ class Window:
 
         if (self._style & WindowStyleBit.DRAW_AREA_SIZE) and not (self._style & WindowStyleBit.DRAW_AREA_ONLY):
             window_area_with_invisible_frame = _get_window_area_from_draw_area(window_area, self._window_style)
-
-            window_area = self._window_area_corrector.remove_invisible_frame_from_area(window_area_with_invisible_frame, self._window_handle);
+     
+            window_area = self._window_area_corrector.remove_invisible_frame_from_area(window_area_with_invisible_frame, self._window_handle)
 
         # --- Position --- #
 
@@ -1216,7 +1229,7 @@ class Window:
         # Already done for both position and size in 'Size' section.
 
         # ---
-        
+  
         return window_area
 
     def _set_area(self, area, area_part_id, is_draw_area):
@@ -1319,7 +1332,10 @@ class Window:
         window_message  : int
         w_param         : int
         l_param         : int
+        Returns (bool).
         """
+        is_discard = True
+
         is_down = _is_mouse_button_down(window_message)
 
         if self._do_on_key:
@@ -1331,7 +1347,6 @@ class Window:
                 y                   = _C_WinApi.GET_Y_LPARAM(l_param).value,
                 keyboard_side_id    = KeyboardSideId.NONE
             )
-            self._do_on_key(key_id, is_down, extra);
 
             extra.is_shift_down         = self._is_shift_down
             extra.is_alt_down           = self._is_alt_down
@@ -1342,6 +1357,10 @@ class Window:
             extra.is_right_shift_down   = self._is_right_shift_down
             extra.is_right_alt_down     = self._is_right_alt_down
             extra.is_right_ctrl_down    = self._is_right_ctrl_down   
+
+            is_discard = self._do_on_key(key_id, is_down, extra)
+            if is_discard is None: 
+                is_discard = True
         
         # Tracks mouse button up message when mouse button is down and cursor leave window draw (client) area.
         if is_down:
@@ -1349,12 +1368,17 @@ class Window:
         elif _C_WinApi.GetCapture() == self._window_handle:
             _C_WinApi.ReleaseCapture()
 
+        return is_discard
+
     def _handle_do_on_keybard_key(self, is_down, w_param, l_param):
         """
         is_down : bool
         w_param : int
         l_param : int
+        Returns (bool).
         """
+        is_discard = True
+
         if self._do_on_key:
             vk_data = _VirtualKeyData(l_param)
             key_id = _vk_code_to_key_id(w_param)
@@ -1420,7 +1444,11 @@ class Window:
             extra.is_right_alt_down     = self._is_right_alt_down
             extra.is_right_ctrl_down    = self._is_right_ctrl_down   
 
-            self._do_on_key(key_id, is_down, extra)
+            is_discard = self._do_on_key(key_id, is_down, extra)
+            if is_discard is None: 
+                is_discard = True
+
+        return is_discard
 
     def _set_state(self, state_id):
         """
@@ -1562,7 +1590,7 @@ class Window:
         ### Draw ###
 
         if window_message == _C_WinApi.WM_PAINT:
-            if to_special_debug().is_notify_remaining_messages:
+            if True or to_special_debug().is_notify_remaining_messages:
                 log_debug("WM_PAINT")
 
             self.draw_now()
@@ -1629,8 +1657,9 @@ class Window:
         
                 log_debug("%-20s:%s %d %d %s" % (wm_text, xb_text, x, y, mk_text))
         
-            self._handle_do_on_mouse_key(window_message, w_param, l_param)
-            return 0
+            is_discard = self._handle_do_on_mouse_key(window_message, w_param, l_param)
+            if is_discard:
+                return 0
         
         ### Keyboard ###
         
@@ -1644,8 +1673,9 @@ class Window:
         
             is_down = window_message in [_C_WinApi.WM_KEYDOWN, _C_WinApi.WM_SYSKEYDOWN]
         
-            self._handle_do_on_keybard_key(is_down, w_param, l_param)
-            return 0
+            is_discard = self._handle_do_on_keybard_key(is_down, w_param, l_param)
+            if is_discard:
+                return 0
         
         elif window_message == _C_WinApi.WM_CHAR:
             if to_special_debug().is_notify_character_message:
@@ -1916,6 +1946,7 @@ class Window:
                 log_debug("WM_CREATE")
 
             self._create(window_handle)
+            return 0
 
         elif window_message == _C_WinApi.WM_CLOSE:
             if is_log_level_at_least(LogLevel.DEBUG):
@@ -1982,6 +2013,7 @@ def _get_window_area_from_draw_area(draw_area, window_style):
     window_style    : int
     Returns (Area).
     """
+    draw_area = draw_area.get_area_i()
     rect = _C_WinApi.RECT(
         draw_area.x,
         draw_area.y,

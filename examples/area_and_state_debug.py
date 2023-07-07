@@ -93,12 +93,12 @@ def set_orthogonal_projection(width, height):
     glPopAttrib()
 
 def do_on_create():
-    display_legend()
+    print("L - Legend")
 
     set_orthogonal_projection(_WIDTH, _HEIGHT)
 
-    glClearColor(0, 0, 0.5, 1)
-
+    glClearColor(0, 0, 0, 1)
+    
     if "maximized" in _data.options:                 togl.to_window().maximize()
     elif "minimized" in _data.options:               togl.to_window().minimize()
     elif "windowed_full_screened" in _data.options:  togl.to_window().go_windowed_full_screen()
@@ -116,17 +116,7 @@ def draw():
 
     _data.action_chain.try_execute()
 
-def do_on_mouse_move(x, y):
-    # print("do_on_mouse_move: %d %d" % (x, y))
-    pass
-
-def do_on_mouse_wheel_roll(step_cout, x, y):
-    # print("do_on_mouse_wheel_roll: %d %d %d" % (step_cout, x, y))
-    pass
-
 def do_on_key(key_id, is_down, extra):
-    # print("do_on_key: key_id=%s, is_down=%d, %s" % (key_id.name, is_down, extra))
-
     if False:
         pass
 
@@ -220,6 +210,11 @@ def do_on_key(key_id, is_down, extra):
  
     elif key_id == 'D' and not is_down:
         _data.is_draw_area = not _data.is_draw_area
+        if _data.is_draw_area:
+            print("window area -> draw area")
+        else:
+            print("draw area -> window area")
+
    
     elif key_id == 'R' and not is_down:
         _window.request_draw()
@@ -259,25 +254,24 @@ def do_on_key(key_id, is_down, extra):
     elif key_id == togl.KeyId.ESCAPE and not is_down:
         _window.request_close()
 
-
-def do_on_text(text, is_correct):
-    # print("do_on_text: text='%s', code_point=%Xh, is_correct=%d" % (text, ord(text), is_correct))
-    pass
-
 def do_on_resize(width, height):
     print("do_on_resize: %d %d" % (width, height))
+    if height < 1: 
+        height = 1
 
     glViewport(0, 0, width, height)
 
-    _data.animated_triangle.resize(width, height)
-        
     set_orthogonal_projection(width, height)
+
+    _data.animated_triangle.resize(width, height)
+
 
 def do_on_state_change(state_id):
     print("do_on_state_change: %s" % state_id.name)
 
 def do_on_time(time_interval):
-    # print("time_interval: %dms" % time_interval)
+    if "notify_timer" in _data.options: 
+        print("time_interval: %dms" % time_interval)
 
     _data.animated_triangle.update(time_interval / 1000.0)
 
@@ -292,7 +286,8 @@ def run(name, options):
 
     togl.set_log_level(togl.LogLevel.DEBUG)
 
-    if "notify_remaining_messages" in options:      togl.to_special_debug().is_notify_remaining_messages           = True
+    togl.to_special_debug().reset()
+    if "notify_remaining_messages" in options:      togl.to_special_debug().is_notify_remaining_messages    = True
     if "notify_draw_call" in options:               togl.to_special_debug().is_notify_draw_call             = True
     if "notify_mouse_move" in options:              togl.to_special_debug().is_notify_mouse_move            = True
     if "notify_key_message" in options:             togl.to_special_debug().is_notify_key_message           = True
@@ -310,24 +305,24 @@ def run(name, options):
     if "draw_area_only" in options:     style |= togl.WindowStyleBit.DRAW_AREA_ONLY
     if "redraw_on_request" in options:  style |= togl.WindowStyleBit.REDRAW_ON_CHANGE_OR_REQUEST
 
+    opengl_version          = (3, 3) if "opengl_3_3" in options else None
+
     return togl.to_window().create_and_run(
-        window_name         = "Area and State (debug)",
-        area                = (0, 0, _WIDTH, _HEIGHT),
-        style               = style,
+        window_name             = "Area and State (debug)",
+        area                    = (0, 0, _WIDTH, _HEIGHT),
+        style                   = style,
 
-        opengl_version      = (3, 3) if "opengl_3_3" in options else None,
+        opengl_version          = opengl_version,
 
-        timer_time_interval = 20,
-        icon_file_name      = "tests\\assets\\icon.ico",
+        timer_time_interval     = 20,
+        icon_file_name          = "tests\\assets\\icon.ico",
 
         do_on_create            = do_on_create,
         do_on_destroy           = do_on_destroy,
         draw                    = draw,
 
-        # do_on_mouse_move        = do_on_mouse_move,
-        do_on_mouse_wheel_roll  = do_on_mouse_wheel_roll,
         do_on_key               = do_on_key,
-        do_on_text              = do_on_text,
+
         do_on_resize            = do_on_resize,
         do_on_state_change      = do_on_state_change,
         do_on_time              = do_on_time,

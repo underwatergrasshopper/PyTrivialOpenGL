@@ -1,6 +1,7 @@
 from ExampleManager import *
 
 import area_and_state_debug
+import mouse_and_keyboard_debug
 import simple_triangle
 import window_area
 
@@ -18,6 +19,8 @@ run_options = [
     "maximized",
     "minimized",
     "windowed_full_screened",
+
+    "opengl_3_3"
 ]
 
 special_debug_options = [        
@@ -33,6 +36,12 @@ special_debug_options = [
 example_manager.add_example(
     "area_and_state_debug", 
     area_and_state_debug.run, 
+    run_options + special_debug_options, 
+    ["centered", "draw_area_size"]
+)
+example_manager.add_example(
+    "mouse_and_keyboard_debug", 
+    mouse_and_keyboard_debug.run, 
     run_options + special_debug_options, 
     ["centered", "draw_area_size"]
 )

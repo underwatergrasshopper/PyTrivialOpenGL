@@ -13,6 +13,9 @@ class SpecialDebug:
     is_full_exit_track_in_callback  : bool
     """
     def __init__(self):
+        self.reset()
+
+    def reset(self):
         self.is_notify_remaining_messages   = False
         self.is_notify_draw_call            = False
         self.is_notify_mouse_move           = False

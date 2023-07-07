@@ -214,6 +214,9 @@ def test_area():
     assert not Area(10, 20, 50, 100).is_in(Point(59, 120))
     assert not Area(10, 20, 50, 100).is_in(Point(60, 119))
 
+    ### to_area_i ###
+    assert Area(10.1, 20.1, 50.1, 100.1).get_area_i() == Area(10, 20, 50, 100)
+
 def run():
     print("test_area start")
     test_area()
