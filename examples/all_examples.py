@@ -20,6 +20,8 @@ run_options = [
     "minimized",
     "windowed_full_screened",
 
+    "hidden",
+
     "opengl_3_3"
 ]
 

@@ -63,10 +63,6 @@ def do_on_create():
 
     glClearColor(0, 0, 0.5, 1)
 
-    if "maximized" in _data.options:                 togl.to_window().maximize()
-    elif "minimized" in _data.options:               togl.to_window().minimize()
-    elif "windowed_full_screened" in _data.options:  togl.to_window().go_windowed_full_screen()
-
 def do_on_destroy():
     print("Bye. Bye.")
 
@@ -152,10 +148,19 @@ def run(name, options):
     if "draw_area_only" in options:     style |= togl.WindowStyleBit.DRAW_AREA_ONLY
     if "redraw_on_request" in options:  style |= togl.WindowStyleBit.REDRAW_ON_CHANGE_OR_REQUEST
 
+    if "minimized" in options:                  state_id = togl.WindowStateId.MINIMIZED
+    elif "maximized" in options:                state_id = togl.WindowStateId.MAXIMIZED
+    elif "windowed_full_screened" in options:   state_id = togl.WindowStateId.WINDOWED_FULL_SCREENED
+    else:                                       state_id = togl.WindowStateId.NORMAL
+
+    is_hidden = True if "hidden" in options else False
+
     return togl.to_window().create_and_run(
         window_name         = "Area and State (debug)",
         area                = (0, 0, _WIDTH, _HEIGHT),
         style               = style,
+        state_id            = state_id,
+        is_hidden           = is_hidden,
 
         opengl_version      = (3, 3) if "opengl_3_3" in options else None,
 

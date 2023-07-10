@@ -65,12 +65,12 @@ class ExampleManager:
 
     def _display_examples(self):
         max_len = max(len(example_name) for example_name in self.examples.keys())
-        separator_offset = 2 # ', '
-        max_num_of_columns = max(1, _os.get_terminal_size().columns // (max_len + separator_offset))
+        max_len += 2 # offset for ', '
+        max_num_of_columns = max(1, _os.get_terminal_size().columns // max_len)
 
         count = 0
         for example_name in self.examples.keys():
-            print("% *s, " % (max_len, example_name), end = "")
+            print("%-*s" % (max_len, example_name + ", "), end = "")
             count +=1
             if count % max_num_of_columns == 0:
                 print("")
@@ -78,12 +78,12 @@ class ExampleManager:
 
     def _display_possible_options(self, example):
         max_len = max(len(option) for option in example.possible_options) if len(example.possible_options) > 0 else 0
-        separator_offset = 2 # ', '
-        max_num_of_columns = max(1, _os.get_terminal_size().columns // (max_len + separator_offset))
+        max_len += 2 # offset for ', '
+        max_num_of_columns = max(1, _os.get_terminal_size().columns // max_len)
 
         count = 0
         for option in example.possible_options:
-            print("% *s, " % (max_len, option), end = "")
+            print("%-*s" % (max_len, option + ", "), end = "")
             count +=1
             if count % max_num_of_columns == 0:
                 print("")

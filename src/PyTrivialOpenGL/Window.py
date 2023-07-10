@@ -205,33 +205,35 @@ class Window:
 
     def create_and_run(    
             self,
-            window_name              = "Window",
-            area                     = None,
-            style                    = 0,
-            opengl_version           = None,
-            icon_file_name           = "",
-            timer_time_interval      = 0,
-            is_auto_sleep_blocked    = False,
+            window_name             = "Window",
+            area                    = None,
+            style                   = 0,
+            state_id                = WindowStateId.NORMAL,
+            is_hidden               = False,
+            opengl_version          = None,
+            icon_file_name          = "",
+            timer_time_interval     = 0,
+            is_auto_sleep_blocked   = False,
 
-            do_on_create             = None,
-            do_on_destroy            = None,
+            do_on_create            = None,
+            do_on_destroy           = None,
 
-            draw                     = None,
+            draw                    = None,
 
-            do_on_key                = None,
-            do_on_text               = None,
+            do_on_key               = None,
+            do_on_text              = None,
             
-            do_on_mouse_wheel_roll   = None,
-            do_on_mouse_move         = None,
+            do_on_mouse_wheel_roll  = None,
+            do_on_mouse_move        = None,
             
-            do_on_resize             = None,
+            do_on_resize            = None,
             
-            do_on_state_change       = None,
-            do_on_show               = None,
-            do_on_hide               = None,
-            do_on_foreground         = None,
+            do_on_state_change      = None,
+            do_on_show              = None,
+            do_on_hide              = None,
+            do_on_foreground        = None,
             
-            do_on_time               = None,
+            do_on_time              = None,
             ):
         """
         window_name             : str
@@ -317,17 +319,13 @@ class Window:
 
         self._window_name = window_name
 
-        if area is None:
-            self._area = None
-
-        elif isinstance(area, tuple):
+        if isinstance(area, tuple):
             if len(area) == 4:
                 area = Area(area[0], area[1], area[2], area[3])
                 try:
                     _Basics.check_area_i32_u16(area)
                 except ValueError as e:
                     raise ValueError("Wrong value range in parameter 'area'.") from e
-                self._area = area
             else:
                 raise ValueError("Tuple 'area' needs to contain four variables (x, y, width, height), either ints or floats.")
 
@@ -336,7 +334,7 @@ class Window:
                 _Basics.check_area_i32_u16(area)
             except ValueError as e:
                 raise ValueError("Wrong value range in parameter 'area'.") from e
-            self._area = _deepcopy(area)
+            area = _deepcopy(area)
 
         else:
             raise TypeError("Wrong type of parameter 'area'.")
@@ -433,14 +431,28 @@ class Window:
             log_fatal_error("Can not create window.")
 
         if self._do_on_create is not None:
+            self._is_during_do_on_create = True
             self._do_on_create()
+            self._is_during_do_on_create = False
 
-        _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
-        self._change_area(self._area)
-        _C_WinApi.SetForegroundWindow(self._window_handle)
-        _C_WinApi.SetFocus(self._window_handle)
+        if state_id == WindowStateId.NORMAL:
+            self._solve_and_set_area(area)
 
-        #self._is_delayed_area_enabled
+        elif state_id == WindowStateId.MINIMIZED:
+            self._solve_and_set_area(area)
+            self.minimize()
+
+        elif state_id == WindowStateId.MAXIMIZED:
+            self.maximize()
+
+        elif state_id == WindowStateId.WINDOWED_FULL_SCREENED:
+            self.go_windowed_full_screen()
+
+        if is_hidden:
+            _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_HIDE)
+        elif self._state_id != WindowStateId.MINIMIZED:
+            _C_WinApi.SetForegroundWindow(self._window_handle)
+            _C_WinApi.SetFocus(self._window_handle)
 
         if self._timer_time_interval > 0:
             result = _C_WinApi.SetTimer(self._window_handle, self._DEFAULT_TIMER_ID, self._timer_time_interval, _C_WinApi.TIMERPROC(0))
@@ -529,6 +541,9 @@ class Window:
             If True, then new position of window corresponding to left-top corner of draw area.
             (default) If False, then new position of window corresponding to left-top corner of window.
         """
+        if self._is_during_do_on_create:
+            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
+
         if x is not None and not _is_i32(x):
             raise ValueError("Argument 'x' is out of range for 32 bit integer.")
         if y is not None and not _is_i32(y):
@@ -575,6 +590,9 @@ class Window:
         offset      : Point | None
             Offset in screen coordinate system.
         """
+        if self._is_during_do_on_create:
+            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
+
         if offset_x is not None and not _is_i32(offset_x):
             raise ValueError("Argument 'offset_x' is out of range for 32 bit integer.")
         if offset_y is not None and not _is_i32(offset_y):
@@ -621,6 +639,9 @@ class Window:
             If True, then draw area of window is resized.
             (default) If False, then window is resized.
         """
+        if self._is_during_do_on_create:
+            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
+
         if width is not None and not _is_u16(width):
             raise ValueError("Argument 'width' is out of range for 16 bit unsigned integer.")
         if height is not None and not _is_u16(height):
@@ -678,6 +699,9 @@ class Window:
             If True, then draw area of window is reshaped.
             (default) If False, then window is reshaped.
         """
+        if self._is_during_do_on_create:
+            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
+
         if x is not None and not _is_i32(x):
             raise ValueError("Argument 'x' is out of range for 32 bit integer.")
         if y is not None and not _is_i32(y):
@@ -725,6 +749,9 @@ class Window:
         self._set_area(area, _WindowAreaPartId.ALL, is_draw_area)
 
     def center(self, width = None, height = None, size = None, is_draw_area_size = False):
+        if self._is_during_do_on_create:
+            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
+
         if width is not None and not _is_u16(width):
             raise ValueError("Argument 'width' is out of range for 16 bit unsigned integer.")
         if height is not None and not _is_u16(height):
@@ -884,9 +911,15 @@ class Window:
     ###
 
     def show(self):
+        if self._is_during_do_on_create:
+            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
+
         _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
 
     def hide(self):
+        if self._is_during_do_on_create:
+            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
+
         _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_HIDE)
 
     def is_visible(self):
@@ -895,6 +928,9 @@ class Window:
     ###
 
     def minimize(self):
+        if self._is_during_do_on_create:
+            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
+
         if self._state_id == WindowStateId.WINDOWED_FULL_SCREENED:
             self._push_is_enable_do_on_resize(False)
             self._push_is_enable_change_state_at_resize(False)
@@ -918,6 +954,9 @@ class Window:
         _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_MINIMIZE)
 
     def maximize(self):
+        if self._is_during_do_on_create:
+            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
+
         if not self._is_visible:
             _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
 
@@ -948,6 +987,9 @@ class Window:
             _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_MAXIMIZE)
 
     def go_windowed_full_screen(self):
+        if self._is_during_do_on_create:
+            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
+
         if not self._is_visible:
             _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
         
@@ -1020,6 +1062,9 @@ class Window:
     ###
 
     def go_foreground(self):
+        if self._is_during_do_on_create:
+            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
+
         _C_WinApi.SetForegroundWindow(self._window_handle)
 
     def is_foreground(self):
@@ -1059,7 +1104,6 @@ class Window:
         self._window_name                   = ""
         self._window_class_name             = ""
 
-        self._area                          = Area(0, 0, 0, 0)
         self._style                         = 0
         self._opengl_version                = OpenGL_Version(0, 0)
         self._icon_file_name                = ""
@@ -1102,6 +1146,8 @@ class Window:
         self._is_right_shift_down           = False
         self._is_right_alt_down             = False
         self._is_right_ctrl_down            = False
+
+        self._is_during_do_on_create        = False
 
         # character decoding
         self._dbg_code_utf32                = 0
@@ -1182,14 +1228,23 @@ class Window:
         else:
             return _C_WinApi.NULL
 
-    def _change_area(self, area):
-        """
-        area : Area
-        """
-        self._set_area(self._generate_window_area(area), _WindowAreaPartId.ALL, self._style & WindowStyleBit.DRAW_AREA_ONLY)
-    
+    def _solve_and_set_area(self, area):
+        # Position of window is always in screen coordinate system and correspond to left-top corner of window.
+        # Area's width and height correspond to window or draw area.
 
-    def _generate_window_area(self, area):
+        _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
+
+        # Note: Faster solution.
+        self._set_area(self._solve_window_area(area), _WindowAreaPartId.ALL, self._style & WindowStyleBit.DRAW_AREA_ONLY)
+
+        # Note: More readable solution.
+        #if self._style & WindowStyleBit.CENTERED:
+        #    self.center(area.width, area.height, is_draw_area_size = self._style & WindowStyleBit.DRAW_AREA_SIZE)
+        #else:
+        #    self.move_to(area.x, area.y)
+        #    self.resize(area.width, area.height, is_draw_area = self._style & WindowStyleBit.DRAW_AREA_SIZE)
+
+    def _solve_window_area(self, area):
         """
         area : Area
         Returns (Area).
@@ -1386,10 +1441,10 @@ class Window:
             pos = self.get_cursor_pos_in_draw_area()
 
             extra = KeyExtra(
-                count = vk_data.count,
-                x = pos.x,
-                y = pos.y,
-                keyboard_side_id = _get_keyboard_side_id(key_id, vk_data),
+                count               = vk_data.count,
+                x                   = pos.x,
+                y                   = pos.y,
+                keyboard_side_id    = _get_keyboard_side_id(key_id, vk_data),
             )
 
             if key_id == KeyId.SHIFT:
@@ -1404,7 +1459,7 @@ class Window:
                     elif extra.keyboard_side_id == KeyboardSideId.RIGHT:
                         self._is_right_shift_down = False
 
-                self._is_shift_down = self._is_left_shift_down | self._is_right_shift_down
+                self._is_shift_down = self._is_left_shift_down or self._is_right_shift_down
 
             elif key_id == KeyId.ALT:
                 if is_down:
@@ -1418,7 +1473,7 @@ class Window:
                     elif extra.keyboard_side_id == KeyboardSideId.RIGHT:
                         self._is_right_alt_down = False
 
-                self._is_alt_down = self._is_left_alt_down | self._is_right_alt_down
+                self._is_alt_down = self._is_left_alt_down or self._is_right_alt_down
 
             elif key_id == KeyId.CONTROL:
                 if is_down:
@@ -1432,7 +1487,7 @@ class Window:
                     elif extra.keyboard_side_id == KeyboardSideId.RIGHT:
                         self._is_right_ctrl_down = False
 
-                self._is_ctrl_down = self._is_left_ctrl_down | self._is_right_ctrl_down
+                self._is_ctrl_down = self._is_left_ctrl_down or self._is_right_ctrl_down
 
             extra.is_shift_down         = self._is_shift_down
             extra.is_alt_down           = self._is_alt_down
