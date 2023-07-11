@@ -1165,7 +1165,7 @@ def OwnerlessMessageBox_FromNewThreadWithWait(lpText, lpCaption, uType):
 
     Warning! If called withing window message procedure, 
     then new messages (which are coming to the callee window) still can be stacked in the message queue, 
-    even when current thread waits to this function finish. 
+    even when current thread waits to this function to finish. 
     Their dispatching resumes after this function finish.
     
     lpText          : LPCWSTR

@@ -25,6 +25,7 @@ run_options = [
     "opengl_3_3",
     "no_icon",
     "alt_center",
+    "ask_on_close",
 ]
 
 special_debug_options = [        

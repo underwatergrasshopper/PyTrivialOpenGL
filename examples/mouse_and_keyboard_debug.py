@@ -63,6 +63,10 @@ def do_on_create():
 
     glClearColor(0, 0, 0.5, 1)
 
+
+def do_on_close():
+    return togl.run_question_box("Close", "Are you sure?")
+
 def do_on_destroy():
     print("Bye. Bye.")
 
@@ -166,6 +170,7 @@ def run(name, options):
         icon_file_name      = "tests\\assets\\icon.ico" if "no_icon" not in options else "",
 
         do_on_create            = do_on_create,
+        do_on_close             = do_on_close if "ask_on_close" in options else None,
         do_on_destroy           = do_on_destroy,
         draw                    = draw,
 

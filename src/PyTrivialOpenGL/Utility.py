@@ -14,6 +14,7 @@ __all__ = [
     "get_work_area",
     "get_screen_size",
     "get_cursor_pos_in_screen",
+    "run_question_box",
 ]
 
 ################################################################################
@@ -72,3 +73,15 @@ def get_cursor_pos_in_screen():
     if _C_WinApi.GetCursorPos(_ctypes.byref(pt)):
         return Point(pt.x, pt.y)
     return Point(0, 0)
+
+################################################################################
+
+def run_question_box(title = None, message = None):
+    """
+    Run question box and waits for answer.
+    title   : str | None
+    content : str | None
+    Returns (bool) True, when 'Yes' was pressed. False, when 'No' was pressed.
+    """
+    result = _C_WinApi.OwnerlessMessageBox_FromNewThreadWithWait(message if message else "", title if title else "", _C_WinApi.MB_ICONQUESTION | _C_WinApi.MB_YESNO)
+    return result == _C_WinApi.IDYES

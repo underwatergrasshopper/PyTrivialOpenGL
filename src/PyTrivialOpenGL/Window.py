@@ -141,7 +141,8 @@ class Window:
     _is_decode_fail                 : bool
 
     _do_on_create                   : Callable[[], None]
-    _do_on_create                   : Callable[[], None]
+    _do_on_close                    : Callable[[], bool]
+    _do_on_destroy                  : Callable[[], None]
     _draw                           : Callable[[], None]
     _do_on_key                      : Callable[[KeyId, bool, KeyExtra], None | bool]
     _do_on_text                     : Callable[[str, bool], None]
@@ -176,6 +177,7 @@ class Window:
             is_auto_sleep_blocked   = False,
 
             do_on_create            = None,
+            do_on_close             = None,
             do_on_destroy           = None,
 
             draw                    = None,
@@ -240,6 +242,11 @@ class Window:
 
         do_on_create            : Callable[[], None]
             Called right after window is created.
+
+        do_on_close                    : Callable[[], bool]
+            Called when window is about to be destroyed.
+            If returns True, then window is destroyed.
+            If returns False, then window destroy is aborted, and window continues running.
 
         do_on_destroy           : Callable[[], None]
             Called right before window is destroyed.
@@ -382,6 +389,7 @@ class Window:
         ### callbacks ###
 
         self._do_on_create              = do_on_create
+        self._do_on_close               = do_on_close
         self._do_on_destroy             = do_on_destroy
 
         self._draw                      = draw
@@ -1181,6 +1189,7 @@ class Window:
         ### callbacks ###
 
         self._do_on_create                  = None
+        self._do_on_close                   = None
         self._do_on_destory                 = None
 
         self._draw                          = None
@@ -1211,7 +1220,7 @@ class Window:
 
                 if self._is_requested_close:
                     self._is_requested_close = False
-                    _C_WinApi.DestroyWindow(self._window_handle)
+                    self._close()
             
             if msg.message == _C_WinApi.WM_QUIT:
                 self._window_handle = _C_WinApi.NULL
@@ -1232,7 +1241,7 @@ class Window:
 
                     if self._is_requested_close:
                         self._is_requested_close = False
-                        _C_WinApi.DestroyWindow(self._window_handle)
+                        self._close()
                 else:
                     self.draw_now()
                     
@@ -1652,6 +1661,20 @@ class Window:
             version_text = _ctypes.cast(_C_GL.glGetString(_C_GL.GL_VERSION), _ctypes.c_char_p).value.decode()
             log_info("OpenGl Version: %s." % version_text)
 
+    def _close(self):
+        """
+        Returns (bool) False, when window destroy is aborted.
+        """
+        if self._do_on_close:
+            is_abort = not self._do_on_close()
+        else:
+            is_abort = False
+
+        if not is_abort:
+            _C_WinApi.DestroyWindow(self._window_handle)
+           
+        return not is_abort
+
     def _destroy(self):
         if self._do_on_destroy:
             self._do_on_destroy()
@@ -2039,7 +2062,7 @@ class Window:
             if is_log_level_at_least(LogLevel.DEBUG):
                 log_debug("WM_CLOSE")
 
-            _C_WinApi.DestroyWindow(window_handle)
+            self._close()
             return 0
 
         elif window_message == _C_WinApi.WM_DESTROY:
