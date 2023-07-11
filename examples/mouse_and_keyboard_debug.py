@@ -153,14 +153,12 @@ def run(name, options):
     elif "windowed_full_screened" in options:   state_id = togl.WindowStateId.WINDOWED_FULL_SCREENED
     else:                                       state_id = togl.WindowStateId.NORMAL
 
-    is_hidden = True if "hidden" in options else False
-
     return togl.to_window().create_and_run(
-        window_name         = "Area and State (debug)",
-        area                = (0, 0, _WIDTH, _HEIGHT),
+        window_name         = "Mouse and Keyboard (debug)",
+        area                = (0, 0, _WIDTH, _HEIGHT) if "alt_center" not in options else (None, None, _WIDTH, _HEIGHT),
         style               = style,
         state_id            = state_id,
-        is_hidden           = is_hidden,
+        is_hidden           = True if "hidden" in options else False,
 
         opengl_version      = (3, 3) if "opengl_3_3" in options else None,
 

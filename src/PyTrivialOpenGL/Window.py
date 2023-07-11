@@ -321,7 +321,11 @@ class Window:
 
         if isinstance(area, tuple):
             if len(area) == 4:
-                area = Area(area[0], area[1], area[2], area[3])
+                if area[0] is None and area[1] is None:
+                    style |= WindowStyleBit.CENTERED
+                    area = Area(0, 0, area[2], area[3])
+                else:
+                    area = Area(area[0], area[1], area[2], area[3])
                 try:
                     _Basics.check_area_i32_u16(area)
                 except ValueError as e:
@@ -339,7 +343,7 @@ class Window:
         else:
             raise TypeError("Wrong type of parameter 'area'.")
 
-        self._style                     = style
+        self._style = style
 
         if opengl_version is None:
             self._opengl_version = OpenGL_Version(0, 0)

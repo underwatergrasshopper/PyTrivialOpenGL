@@ -23,7 +23,8 @@ run_options = [
     "hidden",
 
     "opengl_3_3",
-    "no_icon"
+    "no_icon",
+    "alt_center",
 ]
 
 special_debug_options = [        
