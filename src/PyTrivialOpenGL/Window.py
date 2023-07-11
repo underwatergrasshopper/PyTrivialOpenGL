@@ -841,7 +841,7 @@ class Window:
         area = _get_window_area(self._window_handle)
 
         # Workaround to problems with full screen.
-        if self.is_windowed_full_screen():
+        if self.is_windowed_full_screened():
            area.width -= self._WIDTH_CORRECTION_TO_FAKE
 
         return self._window_area_corrector.remove_invisible_frame_from_area(area, self._window_handle)
@@ -901,7 +901,7 @@ class Window:
             area = _make_area_from_rect(rect)
         
             # Workaround to problems with full screen.
-            if self.is_windowed_full_screen():
+            if self.is_windowed_full_screened():
                area.width -= self._WIDTH_CORRECTION_TO_FAKE
         
             return area
@@ -1053,7 +1053,7 @@ class Window:
         """
         return self.get_state_id() == WindowStateId.MAXIMIZED
 
-    def is_windowed_full_screen(self):
+    def is_windowed_full_screened(self):
         """
         Returns (bool).
         """
