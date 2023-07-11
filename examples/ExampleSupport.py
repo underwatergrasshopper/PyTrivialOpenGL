@@ -72,7 +72,7 @@ def display_info():
     if window.is_minimized():               flags[1] = "+"
     if window.is_normal():                  flags[2] = "+"
     if window.is_maximized():               flags[3] = "+"
-    if window.is_windowed_full_screened():    flags[4] = "+"
+    if window.is_windowed_full_screened():  flags[4] = "+"
     print("".join(flags))
 
     print("---")
