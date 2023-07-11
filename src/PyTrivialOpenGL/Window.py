@@ -88,111 +88,71 @@ class _DelayedAreaChange:
 
 class Window:
     """
-    _window_name                : str
-    _window_class_name          : str
+    _window_name                    : str
+    _window_class_name              : str
+    _style                          : int
+    _opengl_version                 : OpenGL_Version
+    _icon_file_name                 : str
+    _icon_resource_id               : int
+    _timer_time_interval            : int
+    _is_auto_sleep_blocked          : bool
 
-    _area                       : Area | Tuple[int, int, int, int] | None
-    _style                      : int 
-    _opengl_version             : OpenGL_Version | None
-    _icon_file_name             : str
-    _icon_resource_id           : int
-    _timer_time_interval        : int
-    _is_auto_sleep_blocked      : bool
+    _instance_handle                : _C_WinApi.HINSTANCE
+    _window_handle                  : _C_WinApi.HWND
+    _device_context_handle          : _C_WinApi.HDC
+    _rendering_context_handle       : _C_WinApi.HGLRC
 
-    
-    _instance_handle            : _C_WinApi.HINSTANCE
-    _window_handle              : _C_WinApi.HWND
-    _device_context_handle      : _C_WinApi.HDC
-    _rendering_context_handle   : _C_WinApi.HGLRC
+    _window_style                   : int
+    _window_extended_style          : int
 
-    _window_style               : int
-    _window_extended_style      : int
+    _is_active                      : bool
+    _is_visible                     : bool
 
-    _is_active                  : bool
-    _is_visible                 : bool
-    _is_frame                   : bool
+    _state                          : WindowStateId
+    _prev_state                     : WindowStateId
 
-    _state                      : WindowStateId
-    _prev_state                 : WindowStateId
+    _is_apply_fake_width                    : bool 
+    _is_enable_do_on_resize                 : bool  
+    _is_enable_change_state_at_resize       : bool  
+    _is_in_draw                             : bool
 
-    _is_apply_fake_width              : bool 
-    _is_enable_do_on_resize           : bool  
-    _is_enable_change_state_at_resize : bool  
-    _is_in_draw                       : bool
+    _is_enable_do_on_resize_stack           : List[bool]
+    _is_enable_change_state_at_resize_stack : List[bool]
 
-    _is_enable_do_on_resize_stack              : List[bool]
-    _is_enable_change_state_at_resize_stack    : List[bool]
+    _is_shift_down                  : bool
+    _is_alt_down                    : bool
+    _is_ctrl_down                   : bool
 
-    _dbg_code_utf32             : int
-    _code_utf32                 : int
-    _is_two_utf16_code_units    : bool
-    _is_decode_fail             : bool
+    _is_left_shift_down             : bool
+    _is_left_alt_down               : bool
+    _is_left_ctrl_down              : bool
 
-    _do_on_create               : Callable[[], NoneType]
-        Called right after window is created.
+    _is_right_shift_down            : bool
+    _is_right_alt_down              : bool
+    _is_right_ctrl_down             : bool
 
-    _do_on_create               : Callable[[], NoneType]
-        Called right before window is closed.
+    _is_during_do_on_create         : bool
 
-    _draw                       : Callable[[], NoneType]
-        Called each time when window content needs to be redrawn.
+    _is_requested_close             : bool
 
-    _do_on_key                  : Callable[[KeyId, bool, KeyExtra], NoneType | bool]
-        Call naming convention: do_on_key(key_id, is_down, extra).
-        Called when window receive keyboard key or mouse button message.
-        is_down          - true when key is down, false when key is up.
-        extra            - Contains additional informations, like: 
-                           cursor position in draw area (extra.x, extra.y), 
-                           indicator if pressed key is left or right or doesn't matter (extra.keyboard_side_id).
-        If do not returns any value, then received key message is discarded from further system interpretation.
-        If returns True, then received key message is discarded from further system interpretation.
-        If returns False, then received key message is NOT discarded from further system interpretation (useful for Alt+F4).
+    _dbg_code_utf32                 : int
+    _code_utf32                     : int
+    _is_two_utf16_code_units        : bool
+    _is_decode_fail                 : bool
 
-    _do_on_text                 : Callable[[str, bool], NoneType]
-        Call naming convention: do_on_text(text, is_correct).
-        Called when window receive character message (from keyboard single key or key combination).
-        text            - Text received from keyboard. At least one character.
-        is_correct      - True - if there was no decoding error.
-
-    _do_on_mouse_wheel_roll     : Callable[[int, int, int], NoneType]
-        Call naming convention: do_on_mouse_wheel_roll(step_count, x, y).
-        Called when mouse wheel is rolled.
-        step_count      - Number of wheel rotation steps. 
-                          Positive number if away from user. 
-                          Negative number if towards user.
-        x, y            - Cursor position in draw area.
-
-    _do_on_mouse_move           : Callable[[int, int], NoneType]
-        Call naming convention: do_on_mouse_move(x, y).
-        Called when cursor change position in draw area.
-        x, y            - Cursor position in draw area.
-
-    _do_on_resize               : Callable[[], NoneType]
-        Call naming convention: do_on_resize(width, height).
-        Called each time window resize.
-        width           - Width of draw area.
-        height          - Height of draw area.
-
-    _do_on_state_change         : Callable[[WindowStateId], NoneType]
-        Call naming convention: do_on_state_change(state_id).
-        Called each time when window state change.
-
-    _do_on_show                 : Callable[[], NoneType]
-        Called when window is about to show.
-
-    _do_on_hide                 : Callable[[], NoneType]
-        Called when window is about to hide.
-
-    _do_on_foreground           : Callable[[bool], NoneType]
-        Call naming convention: do_on_foreground(is_gain).
-        Called when window goes to foreground (gain keyboard focus or is activated).
-        is_gain         - True  - when window goes to foreground,
-                          False - when window loses foreground position.
-
-    _do_on_time                 : Callable[[int], NoneType]
-        Call naming convention: do_on_time(time_interval).
-        Called periodically. Call delay is taken from timer_time_interval variable and is provided as time_interval parameter.
-        time_interval   - in milliseconds
+    _do_on_create                   : Callable[[], None]
+    _do_on_create                   : Callable[[], None]
+    _draw                           : Callable[[], None]
+    _do_on_key                      : Callable[[KeyId, bool, KeyExtra], None | bool]
+    _do_on_text                     : Callable[[str, bool], None]
+    _do_on_mouse_wheel_roll         : Callable[[int, int, int], None]
+    _do_on_mouse_move               : Callable[[int, int], None]
+    _do_on_resize                   : Callable[[], None]
+    _do_on_state_change             : Callable[[WindowStateId], None]
+    _do_on_show                     : Callable[[], None]
+    _do_on_hide                     : Callable[[], None]
+    _do_on_foreground               : Callable[[bool], None]
+    _do_on_time                     : Callable[[int], None]
     """
     _WIDTH_CORRECTION_TO_FAKE       = 1
     _DEFAULT_TIMER_ID               = 1001
@@ -237,79 +197,137 @@ class Window:
             ):
         """
         window_name             : str
-        area                    : Area | Tuple[int, int, int, int] | None
-        style                   : int 
-            Bitfield made of WindowStyleBit's values or 0.
-        opengl_version          : OpenGL_Version | None
-        icon_file_name          : str
-        timer_time_interval     : int
-        is_auto_sleep_blocked   : bool
+        area                    : Area | Tuple[int, int, int, int] | Tuple[int, int] | None
+            Position and size of created window. 
 
-        do_on_create                : Callable[[], NoneType]
+            When Area, then:
+                Values area.x and area.y corresponds to left-top corner of window in screen coordinate system.
+                Values area.width and area.height corresponds to window size or draw area size if style is DRAW_AREA_SIZE.
+                All values must be int type or convertible to int.
+            
+            When Tuple[int, int, int, int], then:
+                Values area[0] and area[0] corresponds to left-top corner of window in screen coordinate system,
+                Values area[1] and area[2] corresponds to window size or draw area size if style is DRAW_AREA_SIZE.
+
+            When Tuple[int, int], then:
+                Values area[0] and area[0] corresponds to window size or draw area size if style is DRAW_AREA_SIZE.
+                Window is centered to middle of work area (desktop area without task bar).
+
+            When None, then:
+                Window have one fourth size of work area (desktop area without task bar)
+                and it is centered to middle of work area.
+
+        style                   : int 
+            Bitfield made of value from WindowStyleBit or 0.
+
+        opengl_version          : OpenGL_Version | Tuple[int, int] | None
+            Request creating rendering context with minimal version of OpenGL. 
+
+            When Tuple[int, int], then:
+                Value opengl_version[0] corresponds to major version.
+                Value opengl_version[1] corresponds to minor version.
+            When None, then it's OpenGL 1.1.
+
+        icon_file_name          : str
+            File name of icon file to be loaded.
+            If loaded successfully, then will displayed on title bar and task bar.
+
+        timer_time_interval     : int
+            Time interval in milliseconds for do_on_time callback.
+
+        is_auto_sleep_blocked   : bool
+            If True, then prevents system from going to sleep mode while window is running.
+
+        do_on_create            : Callable[[], None]
             Called right after window is created.
 
-        do_on_create                : Callable[[], NoneType]
-            Called right before window is closed.
+        do_on_destroy           : Callable[[], None]
+            Called right before window is destroyed.
 
-        draw                        : Callable[[], NoneType]
+        draw                    : Callable[[], None]
             Called each time when window content needs to be redrawn.
 
-        do_on_key                   : Callable[[KeyId, bool, KeyExtra], NoneType | bool]
-            Call naming convention: do_on_key(key_id, is_down, extra).
-            Called when window receive keyboard key or mouse button message.
-            is_down          - true when key is down, false when key is up.
-            extra            - Contains additional informations, like: 
-                               cursor position in draw area (extra.x, extra.y), 
-                               indicator if pressed key is left or right or doesn't matter (extra.keyboard_side_id).
+        do_on_key               : Callable[[KeyId, bool, KeyExtra], None | bool]
+            Argument name convention: do_on_key(key_id, is_down, extra).
+            Called when window receive keyboard key message or mouse button message.
+            is_down
+                True when key is down, False when key is up.
+            extra 
+                Contains additional key informations, like: 
+                cursor position in draw area (extra.x, extra.y), 
+                indicator if pressed key is left or right or doesn't matter (extra.keyboard_side_id).
             If do not returns any value, then received key message is discarded from further system interpretation.
             If returns True, then received key message is discarded from further system interpretation.
             If returns False, then received key message is NOT discarded from further system interpretation (useful for Alt+F4).
 
-        do_on_text                  : Callable[[str, bool], NoneType]
-            Call naming convention: do_on_text(text, is_correct).
-            Called when window receive character message (from keyboard single key or key combination).
-            text            - Text received from keyboard. At least one character.
-            is_correct      - True - if there was no decoding error.
+        do_on_text              : Callable[[str, bool], None]
+            Argument name convention: do_on_text(text, is_correct).
+            Called when window receive text message from keyboard (single key or key combination).
+            text  
+                Text received from keyboard. At least one character.
+            is_correct 
+                True when there was no decoding error.
 
-        do_on_mouse_wheel_roll      : Callable[[int, int, int], NoneType]
-            Call naming convention: do_on_mouse_wheel_roll(step_count, x, y).
+        do_on_mouse_wheel_roll  : Callable[[int, int, int], None]
+            Argument name convention: do_on_mouse_wheel_roll(step_count, x, y).
             Called when mouse wheel is rolled.
-            step_count      - Number of wheel rotation steps. 
-                              Positive number if away from user. 
-                              Negative number if towards user.
-            x, y            - Cursor position in draw area.
+            step_count
+                Number of wheel rotation steps. 
+                Positive number if away from user. 
+                Negative number if towards user.
+            x, y
+                Cursor position in draw area.
 
-        do_on_mouse_move            : Callable[[int, int], NoneType]
-            Call naming convention: do_on_mouse_move(x, y).
+        do_on_mouse_move        : Callable[[int, int], None]
+            Argument name convention: do_on_mouse_move(x, y).
             Called when cursor change position in draw area.
-            x, y            - Cursor position in draw area.
+            x, y
+                Cursor position in draw area.
 
-        do_on_resize                : Callable[[], NoneType]
-            Call naming convention: do_on_resize(width, height).
+        do_on_resize            : Callable[[int, int], None]
+            Argument name convention: do_on_resize(width, height).
             Called each time window resize.
-            width           - Width of draw area.
-            height          - Height of draw area.
+            width
+                Width of draw area.
+            height
+                Height of draw area.
 
-        do_on_state_change          : Callable[[WindowStateId], NoneType]
-            Call naming convention: do_on_state_change(state_id).
-            Called each time when window state change.
+        do_on_state_change      : Callable[[WindowStateId], None]
+            Argument name convention: do_on_state_change(state_id).
+            Called each time when window state changes.
 
-        do_on_show                  : Callable[[], NoneType]
+        do_on_show              : Callable[[], None]
             Called when window is about to show.
 
-        do_on_hide                  : Callable[[], NoneType]
+        do_on_hide              : Callable[[], None]
             Called when window is about to hide.
 
-        do_on_foreground            : Callable[[bool], NoneType]
-            Call naming convention: do_on_foreground(is_gain).
-            Called when window goes to foreground (gain keyboard focus or is activated).
-            is_gain         - True  - when window goes to foreground,
-                              False - when window loses foreground position.
+        do_on_foreground        : Callable[[bool], None]
+            Argument name convention: do_on_foreground(is_gain).
+            Called when window gains foreground position (gain keyboard focus or is activated) or leaves foreground position.
+            is_gain    
+                True, when window gains foreground position.
+                False, when window leaves foreground position.
 
-        do_on_time                  : Callable[[int], NoneType]
-            Call naming convention: do_on_time(time_interval).
-            Called periodically. Call delay is taken from timer_time_interval variable and is provided as time_interval parameter.
-            time_interval   - in milliseconds
+        do_on_time              : Callable[[int], None]
+            Argument name convention: do_on_time(time_interval).
+            Called periodically. Each call is delayed by time_interval. 
+            Value of time_interval argument is taken form timer_time_interval argument.
+            time_interval
+                Time in milliseconds.
+
+        Exceptions:
+            ValueError
+                When either area.x, area.y, area[0] or area[1] is not in range <-2^31, 2^31-1>. 
+                When either area.width, area.height, area[2] or area[3] is not in range <0, 2^31-1>.
+                When area is tuple with length other than 2 or 4.
+                When opengl_verion is tuple with length other than 2.
+            TypeError
+                When any value of area is not int type.
+                When type of area is unexpected.
+                When type of opengl_version is unexpected.
+            RunTimeError
+                When this method is called while window already running.
         """
         if self._is_running:
             raise RuntimeError("Window is already running.")
@@ -321,17 +339,17 @@ class Window:
 
         if isinstance(area, tuple):
             if len(area) == 4:
-                if area[0] is None and area[1] is None:
-                    style |= WindowStyleBit.CENTERED
-                    area = Area(0, 0, area[2], area[3])
-                else:
-                    area = Area(area[0], area[1], area[2], area[3])
-                try:
-                    _Basics.check_area_i32_u16(area)
-                except ValueError as e:
-                    raise ValueError("Wrong value range in parameter 'area'.") from e
+                area = Area(area[0], area[1], area[2], area[3])
+            elif len(area) == 2:
+                style |= WindowStyleBit.CENTERED
+                area = Area(0, 0, area[0], area[1])
             else:
-                raise ValueError("Tuple 'area' needs to contain four variables (x, y, width, height), either ints or floats.")
+                raise ValueError("Tuple 'area' needs to contain four variables (x, y, width, height) or two variables (width, height), either ints or convertible to ints.")
+
+            try:
+                _Basics.check_area_i32_u16(area)
+            except ValueError as e:
+                raise ValueError("Wrong value range in parameter 'area'.") from e
 
         elif isinstance(area, Area):
             try:
@@ -483,7 +501,7 @@ class Window:
         return self._is_running
 
     def request_close(self):
-        _C_WinApi.DestroyWindow(self._window_handle)
+        self._is_requested_close = True
 
     def request_draw(self):
         _C_WinApi.InvalidateRect(self._window_handle, _C_WinApi.NULL, _C_WinApi.FALSE)
@@ -1126,10 +1144,9 @@ class Window:
 
         self._is_active                     = False
         self._is_visible                    = False
-        self._is_frame                      = True
 
         self._state_id                      = WindowStateId.NORMAL
-        self._previous_state_id             = self._state_id
+        self._previous_state_id             = WindowStateId.NORMAL
 
         self._is_apply_fake_width               = False
         self._is_enable_do_on_resize            = True
@@ -1152,6 +1169,8 @@ class Window:
         self._is_right_ctrl_down            = False
 
         self._is_during_do_on_create        = False
+
+        self._is_requested_close            = False
 
         # character decoding
         self._dbg_code_utf32                = 0
@@ -1189,11 +1208,16 @@ class Window:
             while _C_WinApi.GetMessageW(_ctypes.byref(msg), _C_WinApi.NULL, 0, 0):
                 _C_WinApi.TranslateMessage(_ctypes.byref(msg))
                 _C_WinApi.DispatchMessageW(_ctypes.byref(msg))
+
+                if self._is_requested_close:
+                    self._is_requested_close = False
+                    _C_WinApi.DestroyWindow(self._window_handle)
             
             if msg.message == _C_WinApi.WM_QUIT:
                 self._window_handle = _C_WinApi.NULL
                 log_debug("Destroyed window.")
                 return int(msg.wParam)
+
 
         else:
             while True:
@@ -1205,6 +1229,10 @@ class Window:
 
                     _C_WinApi.TranslateMessage(_ctypes.byref(msg))
                     _C_WinApi.DispatchMessageW(_ctypes.byref(msg))
+
+                    if self._is_requested_close:
+                        self._is_requested_close = False
+                        _C_WinApi.DestroyWindow(self._window_handle)
                 else:
                     self.draw_now()
                     

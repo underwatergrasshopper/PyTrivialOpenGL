@@ -313,7 +313,7 @@ def run(name, options):
 
     return togl.to_window().create_and_run(
         window_name             = "Area and State (debug)",
-        area                    = (0, 0, _WIDTH, _HEIGHT) if "alt_center" not in options else (None, None, _WIDTH, _HEIGHT),
+        area                    = (0, 0, _WIDTH, _HEIGHT) if "alt_center" not in options else (_WIDTH, _HEIGHT),
         style                   = style,
         state_id                = state_id,
         is_hidden               = True if "hidden" in options else False,
