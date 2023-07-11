@@ -165,7 +165,7 @@ def run(name, options):
         opengl_version      = (3, 3) if "opengl_3_3" in options else None,
 
         timer_time_interval = 20,
-        icon_file_name      = "tests\\assets\\icon.ico",
+        icon_file_name      = "tests\\assets\\icon.ico" if "no_icon" not in options else "",
 
         do_on_create            = do_on_create,
         do_on_destroy           = do_on_destroy,

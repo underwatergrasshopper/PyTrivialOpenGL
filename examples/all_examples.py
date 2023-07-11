@@ -22,7 +22,8 @@ run_options = [
 
     "hidden",
 
-    "opengl_3_3"
+    "opengl_3_3",
+    "no_icon"
 ]
 
 special_debug_options = [        
