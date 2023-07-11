@@ -244,7 +244,7 @@ class Window:
             Called right after window is created.
 
         do_on_close                    : Callable[[], bool]
-            Called when window is about to be destroyed.
+            Called when window is about to be destroyed. Caused by pressing window close button or calling request_close method.
             If returns True, then window is destroyed.
             If returns False, then window destroy is aborted, and window continues running.
 
@@ -509,12 +509,22 @@ class Window:
         return self._is_running
 
     def request_close(self):
+        """
+        Should be called from inside of do_on... callback function (except do_on_close and do_on_destroy).
+        Window will be closed after processing current do_on... callback function.
+        """
         self._is_requested_close = True
 
     def request_draw(self):
+        """
+        Content of draw area will be re-rendered after processing current do_on... callback function.
+        """
         _C_WinApi.InvalidateRect(self._window_handle, _C_WinApi.NULL, _C_WinApi.FALSE)
 
     def draw_now(self):
+        """
+        Force re-render of draw area right now.
+        """
         if not self._is_in_draw:
             self._is_in_draw = True
 
@@ -533,7 +543,11 @@ class Window:
     def set_option(self, window_option_id, is_enabled):
         """
         window_option_id : WindowOptionId
+            AUTO_SLEEP_MODE
+                No going into sleep mode by system while window is running.
         is_enabled : bool
+            When True, then enables option.
+            When False, then disables option.
         """
         if window_option_id == WindowOptionId.AUTO_SLEEP_MODE:
             self._is_auto_sleep_blocked = not is_enabled
@@ -541,7 +555,9 @@ class Window:
     def is_enabled(self, window_option_id):
         """
         window_option_id : WindowOptionId
-        is_enabled : bool
+        Returns (bool).
+            True, when option is enabled.
+            False, when option is disabled.
         """
         if window_option_id == WindowOptionId.AUTO_SLEEP_MODE:
             return not self._is_auto_sleep_blocked
@@ -553,6 +569,7 @@ class Window:
     def move_to(self, x = None, y = None, pos = None, is_draw_area = False):
         """
         Moves window to new position.
+
         Calling convention:
             move_to(10, 30)                                     - Moves to new position.
             move_to(x = 10)                                     - Moves to new position only at X axis.
@@ -570,6 +587,15 @@ class Window:
         is_draw_area    : bool
             If True, then new position of window corresponding to left-top corner of draw area.
             (default) If False, then new position of window corresponding to left-top corner of window.
+
+        Exceptions:
+            TypeError
+                When pos type is not Point.
+            ValueError
+                When either x, y, pos.x, pos.y is not in range <-2^31, 2^31-1>.
+            RuntimeError
+                When called from do_on_create.
+
         """
         if self._is_during_do_on_create:
             raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
