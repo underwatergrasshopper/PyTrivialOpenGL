@@ -217,8 +217,7 @@ def basics(name, options):
 
     ###
 
-    print_area(get_desktop_area_no_task_bar())
-    print_size(get_desktop_size_no_task_bar())
+    print_area(get_work_area())
     print_size(get_screen_size())
     print_point(get_cursor_pos_in_screen())
 
@@ -301,7 +300,7 @@ def simple_window(name, options):
                 DestroyWindow(hWnd)
             elif wParam == ord("0"):
                 # _WindowAreaCorrector test
-                area = get_desktop_area_no_task_bar()
+                area = get_work_area()
                 window_area_corrector = _WindowAreaCorrector()
                 area = window_area_corrector.add_invisible_frame_to_area(area, hWnd)
                 SetWindowPos(hWnd, HWND_TOP, area.x, area.y, area.width, area.height, 0)

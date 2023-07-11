@@ -12,8 +12,6 @@ __all__ = [
     "MAX_I32",
     "OpenGL_Version",
     "get_work_area",
-    "get_desktop_area_no_task_bar",
-    "get_desktop_size_no_task_bar",
     "get_screen_size",
     "get_cursor_pos_in_screen",
 ]
@@ -45,21 +43,18 @@ def get_work_area():
     """
     Returns (PyTrivialOpenGL.Area) desktop area without task bar.
     """
-    return get_desktop_area_no_task_bar()
+    rc = _C_WinApi.RECT()
+    _C_WinApi.SystemParametersInfoW(_C_WinApi.SPI_GETWORKAREA, 0, _ctypes.byref(rc), 0)
+    return Area(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top)
 
-def get_desktop_area_no_task_bar():
+
+def get_work_area():
     """
     Returns (PyTrivialOpenGL.Area).
     """
     rc = _C_WinApi.RECT()
     _C_WinApi.SystemParametersInfoW(_C_WinApi.SPI_GETWORKAREA, 0, _ctypes.byref(rc), 0)
     return Area(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top)
-
-def get_desktop_size_no_task_bar():
-    """
-    Returns (PyTrivialOpenGL.Size).
-    """
-    return get_desktop_area_no_task_bar().get_size()
 
 def get_screen_size():
     """

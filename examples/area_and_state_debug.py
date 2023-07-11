@@ -101,7 +101,8 @@ def do_on_create():
 
     glClearColor(0, 0, 0, 1)
 
-    togl.to_window().center()
+    # Cause exception.
+    #togl.to_window().center()
 
 def do_on_destroy():
     print("Bye. Bye.")
