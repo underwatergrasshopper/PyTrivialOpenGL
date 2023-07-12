@@ -1,21 +1,23 @@
 """
-Base functionality and support for PyTrivialOpenGL submodules.
+This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL package.
+
+Contains functionality and support for PyTrivialOpenGL submodules.
 """
 
-_MIN_U16 = 0
-_MAX_U16 = 2**31 - 1
+MIN_U16 = 0
+MAX_U16 = 2**31 - 1
 
-_MIN_I32 = -(2**31)
-_MAX_I32 = 2**31 - 1
+MIN_I32 = -(2**31)
+MAX_I32 = 2**31 - 1
 
 def clamp(val, min_val, max_val):
     return max(min(val, max_val), min_val)
 
 def is_i32(v):
-    return _MIN_I32 <= v and v <= _MAX_I32
+    return MIN_I32 <= v and v <= MAX_I32
 
 def is_u16(v):
-    return _MIN_U16 <= v and v <= _MAX_U16
+    return MIN_U16 <= v and v <= MAX_U16
 
 def is_point_i32(p):
     return is_i32(p.x) and is_i32(p.y)

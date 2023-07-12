@@ -72,6 +72,10 @@ class Area:
         return pos.is_between(self.get_pos(), self.get_pos() + self.get_size())
 
     def get_area_i(self):
+        """
+        Converts all variables to int.
+        Returns (Area).
+        """
         return Area(
             x = int(self.x),
             y = int(self.y),

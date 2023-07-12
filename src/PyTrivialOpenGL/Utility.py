@@ -28,9 +28,24 @@ MAX_I32 = 2**31 - 1
 ################################################################################
 
 class OpenGL_Version:
+    """
+    major : int
+    minor : int
+    """
     def __init__(self, major, minor):
         self.major = major
         self.minor = minor
+
+    def __setattr__(self, name, value):
+        if isinstance(value, int):
+            self.__dict__[name] = value
+        else:
+            try:
+                value = int(value)
+            except:
+                raise TypeError("Value of '%s' can not be converted to int." % (name))
+
+            self.__dict__[name] = value
 
     def __str__(self):
         return "%d.%d" % (self.major, self.minor)
@@ -42,7 +57,7 @@ class OpenGL_Version:
 
 def get_work_area():
     """
-    Returns (PyTrivialOpenGL.Area) desktop area without task bar.
+    Returns (Area) desktop area without task bar.
     """
     rc = _C_WinApi.RECT()
     _C_WinApi.SystemParametersInfoW(_C_WinApi.SPI_GETWORKAREA, 0, _ctypes.byref(rc), 0)
@@ -51,7 +66,7 @@ def get_work_area():
 
 def get_work_area():
     """
-    Returns (PyTrivialOpenGL.Area).
+    Returns (Area).
     """
     rc = _C_WinApi.RECT()
     _C_WinApi.SystemParametersInfoW(_C_WinApi.SPI_GETWORKAREA, 0, _ctypes.byref(rc), 0)
@@ -59,7 +74,7 @@ def get_work_area():
 
 def get_screen_size():
     """
-    Returns (PyTrivialOpenGL.Size).
+    Returns (Size).
     """
     width   = _C_WinApi.GetSystemMetrics(_C_WinApi.SM_CXSCREEN)
     height  = _C_WinApi.GetSystemMetrics(_C_WinApi.SM_CYSCREEN)
@@ -67,7 +82,7 @@ def get_screen_size():
 
 def get_cursor_pos_in_screen():
     """
-    Returns (PyTrivialOpenGL.Point).
+    Returns (Point).
     """
     pt = _C_WinApi.POINT()
     if _C_WinApi.GetCursorPos(_ctypes.byref(pt)):
@@ -83,5 +98,16 @@ def run_question_box(title = None, message = None):
     content : str | None
     Returns (bool) True, when 'Yes' was pressed. False, when 'No' was pressed.
     """
-    result = _C_WinApi.OwnerlessMessageBox_FromNewThreadWithWait(message if message else "", title if title else "", _C_WinApi.MB_ICONQUESTION | _C_WinApi.MB_YESNO)
+    if title is None:
+        title = ""
+    elif not isinstance(title, str):
+        title = str(title)
+
+    if message is None:
+        message = ""
+    elif not isinstance(message, str):
+        message = str(message)
+
+    result = _C_WinApi.OwnerlessMessageBox_FromNewThreadWithWait(message, title, _C_WinApi.MB_ICONQUESTION | _C_WinApi.MB_YESNO)
+
     return result == _C_WinApi.IDYES

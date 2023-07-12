@@ -23,10 +23,13 @@ from .Key                   import *
 from .Key                   import _VirtualKeyData, _vk_code_to_key_id, _vk_code_to_str, _is_mouse_button_down, _get_keyboard_side_id, _get_mouse_key_id, _is_mw_mouse_button, _is_mw_mouse_button_x
 
 from . import _Basics
-from ._Basics import clamp as _clamp
-from ._Basics import is_i32 as _is_i32
-from ._Basics import is_u16 as _is_u16
-from ._Basics import _MIN_I32, _MAX_I32, _MAX_U16, _MIN_U16
+from ._Basics import clamp      as _clamp
+from ._Basics import is_i32     as _is_i32
+from ._Basics import is_u16     as _is_u16
+from ._Basics import MIN_I32    as _MIN_I32
+from ._Basics import MAX_I32    as _MAX_I32
+from ._Basics import MAX_U16    as _MAX_U16
+from ._Basics import MIN_U16    as _MIN_U16
 
 from ._Debug import _wm_to_str
 

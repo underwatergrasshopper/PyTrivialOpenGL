@@ -1,6 +1,3 @@
-"""
-Corrects window coordinates and size to match position and size of visible part of window.
-"""
 import ctypes as _ctypes
 from . import _C_WinApi
 from .Area import Area
@@ -10,6 +7,9 @@ from .Point import Point
 __all__ = []
 
 class _WindowAreaCorrector:
+    """
+    Corrects window coordinates and size to match position and size of visible part of window.
+    """
     def __init__(self):
         pass
 

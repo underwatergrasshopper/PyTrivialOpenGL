@@ -39,7 +39,7 @@ class Key:
 
 class KeyId(_enum.IntEnum):
     """
-    Contains ids representing keyboard keys and mouse buttons.
+    Identifier of keyboard key or mouse button.
 
     Single character string, from ranges '0-9' and 'A-Z', can be used instead of key id for comparisons with '==' and '!='. 
     For example: '0' '1' ... '0' 'A' 'B' ... 'Z'.
@@ -239,6 +239,9 @@ class KeyExtra:
         self.is_right_ctrl_down     = False
 
     def _all_is_down_to_str(self):
+        """
+        Returns (str).
+        """
         def as_text(is_down):
             if is_down:
                 return "DOWN"
@@ -249,15 +252,9 @@ class KeyExtra:
         return text
 
     def __str__(self):
-        """
-        Returns (str).
-        """
         return "count=%d, x=%d, y=%d, keyboard_side_id=%s, %s" % (self.count, self.x, self.y, self.keyboard_side_id.name, self._all_is_down_to_str())
 
     def __repr__(self):
-        """
-        Returns (str).
-        """
         return self.__str__()
 
 _KEY_TOGGLE_BIT = 0x0001
@@ -268,6 +265,15 @@ def is_key_toggled(key_id):
 ################################################################################
 
 class _VirtualKeyData:
+    """
+    count           : int
+    scan_code       : int
+    is_ext          : int
+    reserved1       : int
+    context_code    : int
+    prev_state      : int
+    trans_state     : int
+    """
     def __init__(self, l_param):
         self.count          = l_param           & 0x0000FFFF
         self.scan_code      = (l_param >> 16)   & 0x000000FF
@@ -597,6 +603,9 @@ def _get_keyboard_side_id(key_id, virtual_key_data):
     return KeyboardSideId.NONE
 
 def _vk_code_to_str(vk_code):
+    """
+    Returns (str).
+    """
     text = {
         _C_WinApi.VK_CANCEL           : "VK_CANCEL",
         _C_WinApi.VK_BACK             : "VK_BACK",
@@ -692,6 +701,9 @@ def _vk_code_to_str(vk_code):
     return text
 
 def _is_mw_mouse_button(window_message):
+    """
+    Returns (bool).
+    """
     return window_message in [
         _C_WinApi.WM_LBUTTONDOWN,
         _C_WinApi.WM_LBUTTONUP,
@@ -704,6 +716,9 @@ def _is_mw_mouse_button(window_message):
     ]
 
 def _is_mw_mouse_button_x(window_message):
+    """
+    Returns (bool).
+    """
     return window_message in [
         _C_WinApi.WM_XBUTTONDOWN,
         _C_WinApi.WM_XBUTTONUP

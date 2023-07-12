@@ -11,11 +11,6 @@ __all__ = [
 ]
 
 def test_basics():
-    MIN_U16 = 0
-    MAX_U16 = 2**31 - 1
-    MIN_I32 = -(2**31)
-    MAX_I32 = 2**31 - 1
-
     ### is_i32, check_i32 ###
 
     assert is_i32(MIN_I32)

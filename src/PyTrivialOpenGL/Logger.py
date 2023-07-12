@@ -1,6 +1,5 @@
 import enum as _enum
 
-
 __all__ = [
     "LogLevel",
     "LogMessageTypeId",
