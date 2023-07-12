@@ -48,9 +48,9 @@ Shift + M   - Maximize
 F           - Windowed Full Screen
 
 C           - Center
-Shift + C   - Center (width=800, height=400)
-L. Ctrl + C - Center Draw Area (width=800, height=400)
-R. Ctrl + C - Center Window Area (width=800, height=400)
+Shift + C   - Center (width=600, height=300)
+L. Ctrl + C - Center Draw Area (width=600, height=300)
+R. Ctrl + C - Center Window Area (width=600, height=300)
  
 P           - Move to (x=10, y=50)
 L. Ctrl + P - Move to (x=10)
@@ -58,22 +58,23 @@ R. Ctrl + P - Move to (y=50)
 O           - Move to (x=0, y=0)
 Shift + O   - Move to (pos=Point(0,0))
     
-S           - Resize (width=400, height=200)
-L. Ctrl + S - Resize (width=400)
+S           - Resize (width=300, height=200)
+L. Ctrl + S - Resize (width=300)
 R. Ctrl + S - Resize (height=200)
-Shift + S   - Resize (width=800, height=400)
+Shift + S   - Resize (width=600, height=300)
     
-A           - Reshape(x=10, y=50, width=800, height=400)
-Shift + A     - Reshape(area=Area(10, 50, 800, 400)
-L. Ctrl + A - Reshape(x=10, width=800)
-R. Ctrl + A - Reshape(y=50, height=400)
+A           - Reshape(x=10, y=50, width=600, height=300)
+Shift + A   - Reshape(area=Area(10, 50, 600, 300)
+L. Ctrl + A - Reshape(x=10, width=600)
+R. Ctrl + A - Reshape(y=50, height=300)
     
 D           - Toggle: by Window Area <-> by Draw Area
 R           - Request Draw
         
 0           - Move by (none) 1s -> Move to (none) 1s -> Resize (none) 1s -> 
               Reshape (none)  1s -> Center (none)           [wait for 'done']
-    
+1           - Minimize -> Move by (30, 0) -> Resize (600, 300) [wait for 'done']
+
 I           - Info
 L           - Legend
 Escape      - Exit
@@ -93,6 +94,7 @@ def set_orthogonal_projection(width, height):
     glPopAttrib()
 
 def do_on_create():
+    print("do_on_create")
     print("L - Legend")
 
     set_orthogonal_projection(_WIDTH, _HEIGHT)
@@ -103,9 +105,11 @@ def do_on_create():
     #togl.to_window().center()
 
 def do_on_close():
+    print("do_on_close")
     return togl.run_question_box("Close", "Are you sure?")
 
 def do_on_destroy():
+    print("do_on_destroy")
     print("Bye. Bye.")
 
 def draw():
@@ -115,8 +119,6 @@ def draw():
     glLoadIdentity()
 
     _data.animated_triangle.draw()
-
-    _data.action_chain.try_execute()
 
 def do_on_key(key_id, is_down, extra):
     if False:
@@ -247,6 +249,22 @@ def do_on_key(key_id, is_down, extra):
             print("done")
         _data.action_chain.add(1, do)
 
+    elif key_id == '1' and not is_down:
+        def do():
+            display_info()
+            _window.minimize()
+        _data.action_chain.add(0, do)
+
+        def do():
+            _window.move_by(30, 0)
+        _data.action_chain.add(0, do)
+
+        def do():
+            _window.resize(_WIDTH, _HEIGHT, is_draw_area = _data.is_draw_area)
+            display_info()
+            print("done")
+        _data.action_chain.add(0, do)
+
     elif key_id == 'I' and not is_down:
         display_info()
 
@@ -276,6 +294,13 @@ def do_on_time(time_interval):
         print("time_interval: %dms" % time_interval)
 
     _data.animated_triangle.update(time_interval / 1000.0)
+    _data.action_chain.try_execute()
+
+def do_on_hide():
+    print("do_on_hide")
+
+def do_on_show():
+    print("do_on_show")
 
 def do_on_foreground(is_gain):
     text = "gain" if is_gain else "lose"
@@ -286,7 +311,8 @@ def run(name, options):
     _data.reset()
     _data.options = options
 
-    togl.set_log_level(togl.LogLevel.DEBUG)
+    if "no_debug" in options:   togl.set_log_level(togl.LogLevel.INFO)
+    else:                       togl.set_log_level(togl.LogLevel.DEBUG)
 
     togl.to_special_debug().reset()
     if "notify_remaining_messages" in options:      togl.to_special_debug().is_notify_remaining_messages    = True
@@ -297,7 +323,7 @@ def run(name, options):
     if "notify_timer" in options:                   togl.to_special_debug().is_notify_timer                 = True
     if "full_exit_track_in_callback" in options:    togl.to_special_debug().is_full_exit_track_in_callback  = True
 
-    if "disable_auto_sleep" in options:             togl.to_window().set_option(togl.WindowOptionId.AUTO_SLEEP_MODE)
+    if "disable_auto_sleep" in options:             togl.to_window().set_option(togl.WindowOptionId.AUTO_SLEEP_MODE, True)
 
     style = 0
     if "no_resize" in options:          style |= togl.WindowStyleBit.NO_RESIZE
@@ -333,6 +359,10 @@ def run(name, options):
 
         do_on_resize            = do_on_resize,
         do_on_state_change      = do_on_state_change,
-        do_on_time              = do_on_time,
+
+        do_on_hide              = do_on_hide,
+        do_on_show              = do_on_show,
         do_on_foreground        = do_on_foreground,
+
+        do_on_time              = do_on_time,
     )

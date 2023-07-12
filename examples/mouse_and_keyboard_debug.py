@@ -131,7 +131,8 @@ def run(name, options):
     _data.reset()
     _data.options = options
 
-    togl.set_log_level(togl.LogLevel.DEBUG)
+    if "no_debug" in options:   togl.set_log_level(togl.LogLevel.INFO)
+    else:                       togl.set_log_level(togl.LogLevel.DEBUG)
     
     togl.to_special_debug().reset()
     if "notify_remaining_messages" in options:      togl.to_special_debug().is_notify_remaining_messages    = True
@@ -142,7 +143,7 @@ def run(name, options):
     if "notify_timer" in options:                   togl.to_special_debug().is_notify_timer                 = True
     if "full_exit_track_in_callback" in options:    togl.to_special_debug().is_full_exit_track_in_callback  = True
 
-    if "disable_auto_sleep" in options:             togl.to_window().set_option(togl.WindowOptionId.AUTO_SLEEP_MODE)
+    if "disable_auto_sleep" in options:             togl.to_window().set_option(togl.WindowOptionId.AUTO_SLEEP_MODE, True)
 
     style = 0
     if "no_resize" in options:          style |= togl.WindowStyleBit.NO_RESIZE

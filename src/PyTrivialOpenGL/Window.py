@@ -666,6 +666,7 @@ class Window:
     def move_by(self, offset_x = None, offset_y = None, offset = None):
         """
         Moves window by offset.
+        Won't work when window is minimized.
 
         Calling convention:
             move_by(10, 30)                                     - Moves by (10, 30). 

@@ -15,6 +15,8 @@ run_options = [
     "draw_area_size",
     "draw_area_only",
     "redraw_on_request",
+
+    "no_debug",
      
     "maximized",
     "minimized",
