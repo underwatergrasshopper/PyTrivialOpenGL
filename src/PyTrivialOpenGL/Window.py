@@ -947,43 +947,43 @@ class Window:
 
     def get_x(self):
         """
-        Returns (int).
+        Returns (int) position in screen X axis of left-top corner of window.
         """
         return self.get_area().x
 
     def get_y(self):
         """
-        Returns (int).
+        Returns (int) position in screen Y axis of left-top corner of window.
         """
         return self.get_area().y
 
     def get_width(self):
         """
-        Returns (int).
+        Returns (int) width of window.
         """
         return self.get_area().width
 
     def get_height(self):
         """
-        Returns (int).
+        Returns (int) height of window.
         """
         return self.get_area().height
 
     def get_pos(self):
         """
-        Returns (Point).
+        Returns (Point) position in screen of left-top corner of window.
         """
         return self.get_area().get_pos()
 
     def get_size(self):
         """
-        Returns (Size).
+        Returns (Size) size of window.
         """
         return self.get_area().get_size()
 
     def get_area(self):
         """
-        Returns (Area).
+        Returns (Area) area of window.
         """
         if self._state_id == WindowStateId.MINIMIZED:
             return Area(0, 0, 0, 0)
@@ -998,43 +998,43 @@ class Window:
 
     def get_draw_area_x(self):
         """
-        Returns (int).
+        Returns (int) position in screen X axis of left-top corner of draw area.
         """
         return self.get_draw_area().x
 
     def get_draw_area_y(self):
         """
-        Returns (int).
+        Returns (int) position in screen Y axis of left-top corner of draw area.
         """
         return self.get_draw_area().y
 
     def get_draw_area_width(self):
         """
-        Returns (int).
+        Returns (int) width of draw area.
         """
         return self.get_draw_area().width
 
     def get_draw_area_height(self):
         """
-        Returns (int).
+        Returns (int) height of draw area.
         """
         return self.get_draw_area().height
 
     def get_draw_area_pos(self):
         """
-        Returns (Point) window draw area position in screen coordinates system.
+        Returns (Point) position in screen of left-top corner of draw area.
         """
         return self.get_draw_area().get_pos()
 
     def get_draw_area_size(self):
         """
-        Returns (Size).
+        Returns (Size) size of draw area.
         """
         return self.get_draw_area().get_size()
 
     def get_draw_area(self):
         """
-        Returns (Area).
+        Returns (Area) area of draw area.
         """
         if self._state_id == WindowStateId.MINIMIZED:
             return Area(0, 0, 0, 0)
@@ -1330,6 +1330,9 @@ class Window:
         self._do_on_time                    = None
 
     def _execute_main_loop(self):
+        """
+        Returns (int).
+        """
         msg = _C_WinApi.MSG()
 
         if self._style & WindowStyleBit.REDRAW_ON_CHANGE_OR_REQUEST:
@@ -2283,6 +2286,5 @@ def _window_proc(window_handle, window_message, w_param, l_param):
     except Exception as e:
         _logging.exception("")
         _os._exit(1)
-
 
 _c_window_proc = _C_WinApi.WNDPROC(_window_proc)

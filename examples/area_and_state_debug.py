@@ -313,7 +313,7 @@ def run(name, options):
     else:                                       state_id = togl.WindowStateId.NORMAL
 
     return togl.to_window().create_and_run(
-        window_name             = 1, # "Area and State (debug)",
+        window_name             = "Area and State (debug)",
         area                    = (0, 0, _WIDTH, _HEIGHT) if "alt_center" not in options else (_WIDTH, _HEIGHT),
         style                   = style,
         state_id                = state_id,
