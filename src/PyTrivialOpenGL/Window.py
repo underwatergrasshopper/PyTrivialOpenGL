@@ -443,7 +443,7 @@ class Window:
 
         self._instance_handle = _C_WinApi.GetModuleHandleW(_C_WinApi.NULL);
 
-        self._window_class_name = window_name + " WINDOW CLASS"
+        self._window_class_name = self._window_name + " WINDOW CLASS"
 
         wc = _C_WinApi.WNDCLASSEXW()
         wc.cbSize           = _ctypes.sizeof(_C_WinApi.WNDCLASSEXW)
