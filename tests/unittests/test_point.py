@@ -263,6 +263,11 @@ def test_point():
     assert not Point(1, 2).is_between(Point(-1, -1), Point(1, 1))
     assert not Point(2, 2).is_between(Point(-1, -1), Point(1, 1))
 
+    ### auto conversion ###
+
+    assert str(Point(1, 2)) == "1 2"
+    assert tuple(Point(1, 2)) == (1, 2)
+
 def run():
     print("test_point start")
     test_point()

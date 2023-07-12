@@ -80,7 +80,16 @@ class Area:
         )
 
     def __str__(self):
-        return "%d %d %d %d" % (self.x, self.y, self.width, self.height)
+        return "%s %s %s %s" % (self.x, self.y, self.width, self.height)
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __iter__(self):
+        yield self.x
+        yield self.y
+        yield self.width
+        yield self.height
 
     ### logic ###
 

@@ -214,6 +214,11 @@ def test_size():
     assert not Size(0, 2).is_zero()
     assert not Size(1, 2).is_zero()
 
+    ### auto conversion ###
+
+    assert str(Size(1, 2)) == "1 2"
+    assert tuple(Size(1, 2)) == (1, 2)
+
 def run():
     print("test_size start")
     test_size()

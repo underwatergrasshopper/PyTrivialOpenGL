@@ -104,6 +104,18 @@ class ColorB(Color):
 
         self.__dict__[name] = value
 
+    def __str__(self):
+        return "%s %s %s %s" % (self.r, self.g, self.b, self.a)
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __iter__(self):
+        yield self.r
+        yield self.g
+        yield self.b
+        yield self.a
+
 class ColorF(Color):
     """
     Contains color with three color channels and one alpha channel.
@@ -166,6 +178,18 @@ class ColorF(Color):
             raise ValueError("Value of '%s' is out of acceptable range 0..1." % (name))
 
         self.__dict__[name] = value
+
+    def __str__(self):
+        return "%s %s %s %s" % (self.r, self.g, self.b, self.a)
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __iter__(self):
+        yield self.r
+        yield self.g
+        yield self.b
+        yield self.a
 
 
 

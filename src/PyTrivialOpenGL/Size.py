@@ -108,7 +108,11 @@ class Size:
     ### 
 
     def __str__(self):
-        return "%d %d" % (self.width, self.height)
+        return "%s %s" % (self.width, self.height)
 
     def __repr__(self):
         return self.__str__()
+
+    def __iter__(self):
+        yield self.width
+        yield self.height

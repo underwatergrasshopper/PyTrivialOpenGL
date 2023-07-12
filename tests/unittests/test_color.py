@@ -155,6 +155,11 @@ def test_color_b():
     assert isinstance(color_b, ColorB)
     assert not isinstance(color_b, ColorF)
 
+    ### auto conversion ###
+
+    assert str(ColorB(1, 2, 3, 4)) == "1 2 3 4"
+    assert tuple(ColorB(1, 2, 3, 4)) == (1, 2, 3 ,4)
+
 
 def test_color_f():
     ### constructor ###
@@ -292,6 +297,11 @@ def test_color_f():
     assert isinstance(color_f, Color)
     assert not isinstance(color_f, ColorB)
     assert isinstance(color_f, ColorF)
+
+    ### auto conversion ###
+
+    assert str(ColorF(0.1, 0.2, 0.3, 0.4)) == "0.1 0.2 0.3 0.4"
+    assert tuple(ColorF(0.1, 0.2, 0.3, 0.4)) == (0.1, 0.2, 0.3, 0.4)
 
 def run():
     print("test_color start")

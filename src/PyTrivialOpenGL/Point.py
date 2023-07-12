@@ -130,7 +130,11 @@ class Point:
     ### 
 
     def __str__(self):
-        return "%d %d" % (self.x, self.y)
+        return "%s %s" % (self.x, self.y)
 
     def __repr__(self):
         return self.__str__()
+
+    def __iter__(self):
+        yield self.x
+        yield self.y
