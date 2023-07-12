@@ -1,6 +1,6 @@
 from ExampleSupport import *
 import PyTrivialOpenGL as togl
-from PyTrivialOpenGL._C_GL import *
+from PyTrivialOpenGL.GL import *
 
 __all__ = [
     "AnimatedTriangle"

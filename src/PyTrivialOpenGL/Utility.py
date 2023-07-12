@@ -111,3 +111,18 @@ def run_question_box(title = None, message = None):
     result = _C_WinApi.OwnerlessMessageBox_FromNewThreadWithWait(message, title, _C_WinApi.MB_ICONQUESTION | _C_WinApi.MB_YESNO)
 
     return result == _C_WinApi.IDYES
+
+################################################################################
+
+def is_defined(target):
+    """
+    target : str
+        OpenGl extension name or OpenGL core version name.
+    Returns (bool) True, when constants and functions for target are defined.
+
+    Note: Even if constants and functions are defined, GPU vendor might not provide them.
+    """
+    return target in set(
+        "GL_VERSION_1_0",
+        "GL_VERSION_1_1",
+    )

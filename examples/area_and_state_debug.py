@@ -1,12 +1,13 @@
 import enum
 
 import PyTrivialOpenGL as togl
-from PyTrivialOpenGL._C_GL import *
+from PyTrivialOpenGL.GL import *
 
 from ExampleSupport    import *
 from ExampleManager    import *
 from ActionChain       import *
 from AnimatedTriangle  import *
+from examples.ExampleSupport import FPS_Counter
 
 __all__ = [
     "run"
@@ -35,6 +36,7 @@ class Data:
         self.options            = set() 
         self.action_chain       = ActionChain()
         self.animated_triangle  = AnimatedTriangle()
+        self.fps_counter        = FPS_Counter()
 
 _data   = Data()
 _window = togl.to_window()
@@ -101,6 +103,8 @@ def do_on_create():
 
     glClearColor(0, 0, 0, 1)
 
+    _data.fps_counter.reset()
+
     # Cause exception.
     #togl.to_window().center()
 
@@ -119,6 +123,8 @@ def draw():
     glLoadIdentity()
 
     _data.animated_triangle.draw()
+
+    if "show_fps" in _data.options: _data.fps_counter.update()
 
 def do_on_key(key_id, is_down, extra):
     if False:

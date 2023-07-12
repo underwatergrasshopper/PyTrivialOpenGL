@@ -28,6 +28,8 @@ run_options = [
     "no_icon",
     "alt_center",
     "ask_on_close",
+
+    "show_fps",
 ]
 
 special_debug_options = [        

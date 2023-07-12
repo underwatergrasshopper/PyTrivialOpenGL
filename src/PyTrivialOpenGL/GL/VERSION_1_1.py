@@ -1,41 +1,30 @@
-"""
-This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL package.
-
-Contains all functions of OpenGL 1.1.
-"""
 import ctypes as _ctypes
-from .Types import *    # internal module, can be loaded as a whole
 
-### Internal ###
-
-_POINTER = _ctypes.POINTER
-
-### Libraries ###
-
-_OpenGL32 = _ctypes.windll.OpenGL32
-
-### Functions ###
+from .._C_GL.VERSION_1_1.Constants import *
+from .._C_GL import VERSION_1_1 as _C_GL_1_1
 
 ### Command Execution ###
 
-glGetError              = _ctypes.WINFUNCTYPE(GLenum)(
-    ("glGetError", _OpenGL32), 
-    ()
-)
+#GLenum glGetError(void);
+
+def glGetError():
+    """
+    Returns (int).
+    """
+    return int(_C_GL_1_1.glGetError())
 
 ### Vertex Specification ###
 
 # Begin and End
 
-glBegin                 = _ctypes.WINFUNCTYPE(GLvoid, GLenum)(
-    ("glBegin", _OpenGL32), 
-    ((1, "mode"), )
-)
+def glBegin(mode):
+    """
+    mode : int
+    """
+    _C_GL_1_1.glBegin(int(mode))
 
-glEnd                   = _ctypes.WINFUNCTYPE(GLvoid)(
-    ("glEnd", _OpenGL32), 
-    ()
-)
+def glEnd():
+    _C_GL_1_1.glEnd()
 
 # Polygon Edges
 
@@ -47,10 +36,14 @@ glEnd                   = _ctypes.WINFUNCTYPE(GLvoid)(
 #void glVertex2d(GLdouble x,GLdouble y);
 #void glVertex2dv(const GLdouble *v);
 
-glVertex2f              = _ctypes.WINFUNCTYPE(GLvoid, GLfloat, GLfloat)(
-    ("glVertex2f", _OpenGL32), 
-    ((1, "x"), (1, "y"))
-)
+def glVertex2f(x, y):
+    """
+    x : float
+    y : float
+    """
+    _C_GL_1_1.glVertex2f(float(x), float(y))
+
+#void glVertex2f(GLfloat x,GLfloat y);
 
 #void glVertex2fv(const GLfloat *v);
 #void glVertex2i(GLint x,GLint y);
@@ -123,10 +116,16 @@ glVertex2f              = _ctypes.WINFUNCTYPE(GLvoid, GLfloat, GLfloat)(
 #void glColor3d(GLdouble red,GLdouble green,GLdouble blue);
 #void glColor3dv(const GLdouble *v);
 
-glColor3f               = _ctypes.WINFUNCTYPE(GLvoid, GLfloat, GLfloat, GLfloat)(
-    ("glColor3f", _OpenGL32), 
-    ((1, "red"), (1, "green"), (1, "blue"))
-)
+#void glColor3f(GLfloat red,GLfloat green,GLfloat blue);
+
+def glColor3f(red, green, blue):
+    """
+    red     : float
+    green   : float
+    blue    : float
+    """
+    _C_GL_1_1.glColor3f(float(red), float(green), float(blue))
+
 
 #void glColor3fv(const GLfloat *v);
 #void glColor3i(GLint red,GLint green,GLint blue);
@@ -199,58 +198,71 @@ glColor3f               = _ctypes.WINFUNCTYPE(GLvoid, GLfloat, GLfloat, GLfloat)
 
 # Matrices
 
-glMatrixMode            = _ctypes.WINFUNCTYPE(GLvoid, GLenum)(
-    ("glMatrixMode", _OpenGL32), 
-    ((1, "mode"),)
-)
+def glMatrixMode(mode):
+    """
+    mode : int
+    """
+    _C_GL_1_1.glMatrixMode(int(mode))
 
 #void glLoadMatrixd(const GLdouble *m);
 #void glLoadMatrixf(const GLfloat *m);
 #void glMultMatrixd(const GLdouble *m);
 #void glMultMatrixf(const GLfloat *m);
 
-glLoadIdentity          = _ctypes.WINFUNCTYPE(GLvoid)(
-    ("glLoadIdentity", _OpenGL32), 
-    ()
-)
+def glLoadIdentity():
+    _C_GL_1_1.glLoadIdentity()
 
 #void glRotated(GLdouble angle,GLdouble x,GLdouble y,GLdouble z);
 
-glRotatef               = _ctypes.WINFUNCTYPE(GLvoid, GLfloat, GLfloat, GLfloat, GLfloat)(
-    ("glRotatef", _OpenGL32), 
-    ((1, "angle"), (1, "x"), (1, "y"), (1, "z"))
-)
+def glRotatef(angle, x, y, z):
+    """
+    angle   : float
+    x       : float
+    y       : float
+    z       : float
+    """
+    _C_GL_1_1.glRotatef(float(angle), float(x), float(y), float(z))
+
 
 #void glTranslated(GLdouble x,GLdouble y,GLdouble z);
 
-glTranslatef            = _ctypes.WINFUNCTYPE(GLvoid, GLfloat, GLfloat, GLfloat)(
-    ("glTranslatef", _OpenGL32), 
-    ((1, "x"), (1, "y"), (1, "z"))
-)
+def glTranslatef(x, y, z):
+    """
+    x       : float
+    y       : float
+    z       : float
+    """
+    _C_GL_1_1.glTranslatef(float(x), float(y), float(z))
+
 
 #void glScaled(GLdouble x,GLdouble y,GLdouble z);
 
-glScalef                = _ctypes.WINFUNCTYPE(GLvoid, GLfloat, GLfloat, GLfloat)(
-    ("glScalef", _OpenGL32), 
-    ((1, "x"), (1, "y"), (1, "z"))
-)
+def glScalef(x, y, z):
+    """
+    x       : float
+    y       : float
+    z       : float
+    """
+    _C_GL_1_1.glScalef(float(x), float(y), float(z))
 
 #void glFrustum(GLdouble left,GLdouble right,GLdouble bottom,GLdouble top,GLdouble zNear,GLdouble zFar);
 
-glOrtho                 = _ctypes.WINFUNCTYPE(GLvoid, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble)(
-    ("glOrtho", _OpenGL32), 
-    ((1, "left"), (1, "right"), (1, "bottom"), (1, "top"), (1, "nearVal"), (1, "farVal"))
-)
+def glOrtho(left, right, bottom, top, zNear, zFar):
+    """
+    left    : float
+    right   : float
+    bottom  : float
+    top     : float
+    zNear   : float
+    zFar    : float
+    """
+    _C_GL_1_1.glOrtho(float(left), float(right), float(bottom), float(top), float(zNear), float(zFar))
 
-glPushMatrix            = _ctypes.WINFUNCTYPE(GLvoid)(
-    ("glPushMatrix", _OpenGL32), 
-    ()
-)
+def glPushMatrix():
+    _C_GL_1_1.glPushMatrix()
 
-glPopMatrix             = _ctypes.WINFUNCTYPE(GLvoid)(
-    ("glPopMatrix", _OpenGL32), 
-    ()
-)
+def glPopMatrix():
+    _C_GL_1_1.glPopMatrix()
 
 # Generating Texture Coordinates
 
@@ -267,10 +279,14 @@ glPopMatrix             = _ctypes.WINFUNCTYPE(GLvoid)(
 
 #void glDepthRange (GLclampd zNear,GLclampd zFar);
 
-glViewport              = _ctypes.WINFUNCTYPE(GLvoid, GLint, GLint, GLsizei, GLsizei)(
-    ("glViewport", _OpenGL32), 
-    ((1, "x"), (1, "y"), (1, "width"), (1, "height"))
-)
+def glViewport(x, y, width, height):
+    """
+    x       : int
+    y       : int
+    width   : int
+    height  : int
+    """
+    _C_GL_1_1.glViewport(int(x), int(y), int(width), int(height))
 
 # Clipping
 
@@ -523,15 +539,20 @@ glViewport              = _ctypes.WINFUNCTYPE(GLvoid, GLint, GLint, GLsizei, GLs
 
 # Clearing the Buffers
 
-glClear                 = _ctypes.WINFUNCTYPE(GLvoid, GLbitfield)(
-    ("glClear", _OpenGL32), 
-    ((1, "mask"), )
-)
+def glClear(mask):
+    """
+    mask : int
+    """
+    _C_GL_1_1.glClear(int(mask))
 
-glClearColor            = _ctypes.WINFUNCTYPE(GLvoid, GLfloat, GLfloat, GLfloat, GLfloat)(
-    ("glClearColor", _OpenGL32), 
-    ((1, "red"), (1, "green"), (1, "blue"), (1, "alpha"))
-)
+def glClearColor(red, green, blue, alpha):
+    """
+    red     : float
+    green   : float
+    blue    : float
+    alpha   : float
+    """
+    _C_GL_1_1.glClearColor(float(red), float(green), float(blue), float(alpha))
 
 #void glClearIndex(GLfloat c);
 #void glClearDepth(GLclampd depth);
@@ -606,10 +627,8 @@ glClearColor            = _ctypes.WINFUNCTYPE(GLvoid, GLfloat, GLfloat, GLfloat,
 
 # Flush and Finish 
 
-glFlush                 = _ctypes.WINFUNCTYPE(GLvoid)(
-    ("glFlush", _OpenGL32), 
-    ()
-)
+def glFlush():
+    _C_GL_1_1.glFlush()
 
 #void glFinish(void);
 
@@ -622,10 +641,17 @@ glFlush                 = _ctypes.WINFUNCTYPE(GLvoid)(
 
 #void glGetBooleanv(GLenum pname,GLboolean *params);
 
-glGetIntegerv           = _ctypes.WINFUNCTYPE(GLvoid, GLenum, _POINTER(GLint))(
-    ("glGetIntegerv", _OpenGL32), 
-    ((1, "pname"), (1, "data"))
-)
+def glGetIntegerv(pname, n):
+    """
+    pname   : int
+    n       : int
+        Number of integers.
+    Returns (List[int]).
+    """
+    params = (_C_GL_1_1.GLint * n)()
+    _C_GL_1_1.glGetIntegerv(int(pname), _ctypes.byref(params))
+    return [int(param) for param in params]
+
 
 #void glGetFloatv(GLenum pname,GLfloat *params);
 #void glGetDoublev(GLenum pname,GLdouble *params);
@@ -635,22 +661,23 @@ glGetIntegerv           = _ctypes.WINFUNCTYPE(GLvoid, GLenum, _POINTER(GLint))(
 
 #void glGetPointerv(GLenum pname,GLvoid **params);
 
-glGetString             = _ctypes.WINFUNCTYPE(_POINTER(GLubyte), GLenum)(
-    ("glGetString", _OpenGL32), 
-    ((1, "name"), )
-)
+def glGetString(name):
+    """
+    name   : int
+    Returns (str).
+    """
+    return _ctypes.cast(_C_GL_1_1.glGetString(int(name)), _ctypes.c_char_p).value.decode()
 
 # Saving and Restoring State
 
-glPushAttrib            = _ctypes.WINFUNCTYPE(GLvoid, GLbitfield)(
-    ("glPushAttrib", _OpenGL32), 
-    ((1, "mask"),)
-)
+def glPushAttrib(mask):
+    """
+    mask : int
+    """
+    _C_GL_1_1.glPushAttrib(int(mask))
 
-glPopAttrib             = _ctypes.WINFUNCTYPE(GLvoid)(
-    ("glPopAttrib", _OpenGL32), 
-    ()
-)
+def glPopAttrib():
+    _C_GL_1_1.glPopAttrib()
 
 #void glPushClientAttrib(GLbitfield mask);
 #void glPopClientAttrib(void);

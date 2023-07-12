@@ -47,6 +47,8 @@
     <Compile Include="examples\simple_triangle.py" />
     <Compile Include="setup.py" />
     <Compile Include="src\PyTrivialOpenGL\Area.py" />
+    <Compile Include="src\PyTrivialOpenGL\GL\VERSION_1_1.py" />
+    <Compile Include="src\PyTrivialOpenGL\GL\__init__.py" />
     <Compile Include="src\PyTrivialOpenGL\Key.py" />
     <Compile Include="src\PyTrivialOpenGL\SpecialDebug.py" />
     <Compile Include="src\PyTrivialOpenGL\Utility.py" />
@@ -85,6 +87,7 @@
     <Folder Include="examples\" />
     <Folder Include="src\" />
     <Folder Include="src\PyTrivialOpenGL\" />
+    <Folder Include="src\PyTrivialOpenGL\GL\" />
     <Folder Include="src\PyTrivialOpenGL\_C_GL\" />
     <Folder Include="src\PyTrivialOpenGL\_C_GL\VERSION_1_1\" />
     <Folder Include="tests\" />

@@ -1,9 +1,10 @@
 import ctypes
 import math
 import copy
+from timeit import default_timer as _timer
 
 import PyTrivialOpenGL as togl
-from PyTrivialOpenGL._C_GL import *
+from PyTrivialOpenGL.GL import *
 
 __all__ = [
     "EXIT_SUCCESS",
@@ -76,6 +77,39 @@ def display_info():
     print("".join(flags))
 
     print("---")
+
+class FPS_Counter:
+    def __init__(self, interval = 1):
+        """
+        interval : float
+            In seconds.
+        """
+        self._now       = 0
+        self._accum     = 0
+        self._count     = 0
+        self._interval  = interval
+
+    def reset(self):
+        self._now   = _timer()
+        self._accum = 0
+
+    def update(self):
+        self._count += 1
+
+        new_now = _timer()
+
+        self._accum += new_now - self._now
+        self._now = new_now
+
+        if self._accum >= self._interval:
+            fps = self._count / self._accum
+            self._accum = 0
+            self._count = 0
+
+            print("FPS: %.0f" % (fps))
+            
+
+
  
 
 def draw_rgb_triangle(x, y, scale, angle):

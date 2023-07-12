@@ -1,5 +1,5 @@
 import PyTrivialOpenGL as togl
-from PyTrivialOpenGL._C_GL import *
+from PyTrivialOpenGL.GL import *
 
 import math
 
