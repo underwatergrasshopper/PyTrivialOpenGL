@@ -592,10 +592,9 @@ class Window:
             TypeError
                 When pos type is not Point.
             ValueError
-                When either x, y, pos.x, pos.y is not in range <-2^31, 2^31-1>.
+                When either x, y, pos.x, pos.y is not in range of <-2^31, 2^31-1>.
             RuntimeError
                 When called from do_on_create.
-
         """
         if self._is_during_do_on_create:
             raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
@@ -633,18 +632,28 @@ class Window:
 
     def move_by(self, offset_x = None, offset_y = None, offset = None):
         """
-        Moves window by offset
+        Moves window by offset.
+
         Calling convention:
             move_by(10, 30)                                     - Moves by (10, 30). 
             move_by(offset_x = 10)                              - Moves by 10 only on X axis.
             move_by(offset_y = 10)                              - Moves by 10 only on Y axis.
             move_by(offset = Point(10, 30))                     - Moves by (10, 30). 
+
         offset_x    : int | None
             Offset in screen coordinate system at X axis.
         offset_y    : int | None
             Offset in screen coordinate system at Y axis.
         offset      : Point | None
             Offset in screen coordinate system.
+
+        Exceptions:
+            TypeError
+                When offset type is not Point or None.
+            ValueError
+                When either offset_x, offset_y, offset.x, offset.y is not in range of <-2^31, 2^31-1>.
+            RuntimeError
+                When called from do_on_create.
         """
         if self._is_during_do_on_create:
             raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
@@ -677,7 +686,8 @@ class Window:
 
     def resize(self, width = None, height = None, size = None, is_draw_area = False):
         """
-        Resizes window.
+        Changes size of window.
+
         Calling convention:
             resize(100, 300)                                    - Changes both width and height of window.
             resize(width = 100)                                 - Changes only width of window.
@@ -685,6 +695,7 @@ class Window:
             resize(100, 300, is_draw_area = True)               - Changes both width and height of window's draw area.
             resize(size = Size(100, 300))                       - Changes both width and height of window.
             resize(size = Size(100, 300), is_draw_area = True)  - Changes both width and height of window's draw area.
+
         width           : int | None
             New width in screen coordinate system.
         height          : int | None
@@ -694,6 +705,14 @@ class Window:
         is_draw_area    : bool
             If True, then draw area of window is resized.
             (default) If False, then window is resized.
+
+        Exceptions:
+            TypeError
+                When size type is not Size or None.
+            ValueError
+                When either width, height, size.width, size.height is not in range of <0, 2^31-1>.
+            RuntimeError
+                When called from do_on_create.
         """
         if self._is_during_do_on_create:
             raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
@@ -731,7 +750,8 @@ class Window:
 
     def reshape(self, x = None, y = None, width = None, height = None, area = None, is_draw_area = False):
         """
-        Changes area of the window.
+        Changes position and size of window.
+
         Calling convention:
             reshape(10, 20, 100, 300)                           - Reshapes area of window.
             reshape(x = 10)                                     - Changes only x of window.
@@ -741,6 +761,7 @@ class Window:
             reshape(10, 20, 100, 300, is_draw_area = True)      - Reshapes area of window. Coordinates corresponds to draw area.
             reshape(area = Area(100, 300))                      - Reshapes area of window.
             reshape(area = Area(100, 300), is_draw_area = True) - Reshapes area of window. Coordinates corresponds to draw area.
+
         x               : int | None
             New position in screen coordinate system in X axis.
         y               : int | None
@@ -754,6 +775,15 @@ class Window:
         is_draw_area    : bool
             If True, then draw area of window is reshaped.
             (default) If False, then window is reshaped.
+
+        Exceptions:
+            TypeError
+                When area type is not Area or None.
+            ValueError
+                When either x, y, area.x, area.y is not in range of <-2^31, 2^31-1>.
+                When either width, height, area.width, area.height is not in range of <0, 2^31-1>.
+            RuntimeError
+                When called from do_on_create.
         """
         if self._is_during_do_on_create:
             raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
@@ -805,6 +835,40 @@ class Window:
         self._set_area(area, _WindowAreaPartId.ALL, is_draw_area)
 
     def center(self, width = None, height = None, size = None, is_draw_area_size = False):
+        """
+        Centers window in middle of work area (desktop area excluding task bar).
+
+        Calling convention:
+            center(400, 300)                            - Changes window size to (400, 300) and centers window.
+            center(size = Size(400, 300))               - Changes window size to (400, 300) and centers window.
+            center(width = 400)                         - Changes only window width to 400 and centers window.
+            center(height = 300)                        - Changes only window height to 300 and centers window.
+            center(400, 300, is_draw_area_size = True)  - Changes draw area size to (400, 300) and centers window.
+
+        width               : int | None
+            New width of window when 'is_draw_area_size' is False.
+            New width of draw area when 'is_draw_area_size' is True.
+
+        height              : int | None
+            New height of window when 'is_draw_area_size' is False.
+            New height of draw area when 'is_draw_area_size' is True.
+
+        size                : Size | None
+            New size of window when 'is_draw_area_size' is False.
+            New size of draw area when 'is_draw_area_size' is True.
+
+        is_draw_area_size   : bool
+
+        Draw area is place in window when OpenGL draws in.
+
+        Exceptions:
+            TypeError
+                When size type is not Size or None.
+            ValueError
+                When either width, height, size.width, size.height is not in range of <0, 2^31-1>.
+            RuntimeError
+                When called from do_on_create.
+        """
         if self._is_during_do_on_create:
             raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
 

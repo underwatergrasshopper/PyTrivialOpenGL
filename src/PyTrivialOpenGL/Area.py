@@ -82,7 +82,6 @@ class Area:
     def __str__(self):
         return "%d %d %d %d" % (self.x, self.y, self.width, self.height)
 
-
     ### logic ###
 
     def __eq__(self, other): # ==
