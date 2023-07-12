@@ -333,6 +333,7 @@ class Window:
                 When any value of area is not int type.
                 When type of area is unexpected.
                 When type of opengl_version is unexpected.
+                When any of do_on_... parameter is not callable.
             RunTimeError
                 When this method is called while window already running.
         """
@@ -342,7 +343,7 @@ class Window:
 
         self._is_running = True
 
-        self._window_name = window_name
+        self._window_name = str(window_name)
 
         if isinstance(area, tuple):
             if len(area) == 4:
@@ -368,7 +369,12 @@ class Window:
         else:
             raise TypeError("Wrong type of parameter 'area'.")
 
-        self._style = style
+        self._style = int(style)
+
+        if not isinstance(state_id, WindowStateId):
+            raise TypeError("Wrong type of parameter 'state_id'.")
+
+        is_hidden = bool(is_hidden)
 
         if opengl_version is None:
             self._opengl_version = OpenGL_Version(0, 0)
@@ -382,11 +388,35 @@ class Window:
         else:
             TypeError("Wrong type of parameter 'opengl_version'. Should be 'Tuple[int, int]' or 'OpenGL_Version'.")
 
-        self._icon_file_name            = icon_file_name
-        self._timer_time_interval       = timer_time_interval
-        self._is_auto_sleep_blocked     = is_auto_sleep_blocked
+        self._icon_file_name            = str(icon_file_name)
+        self._timer_time_interval       = int(timer_time_interval)
+        self._is_auto_sleep_blocked     = bool(is_auto_sleep_blocked)
 
         ### callbacks ###
+
+        def is_wrong(callback):
+            return (callback is not None) and (not callable(callback))
+
+        if is_wrong(do_on_create):              raise TypeError("Parameter 'do_on_create' is not callable.")
+        if is_wrong(do_on_close):               raise TypeError("Parameter 'do_on_close' is not callable.")
+        if is_wrong(do_on_destroy):             raise TypeError("Parameter 'do_on_destroy' is not callable.")
+
+        if is_wrong(draw):                      raise TypeError("Parameter 'draw' is not callable.")
+
+        if is_wrong(do_on_key):                 raise TypeError("Parameter 'do_on_key' is not callable.")
+        if is_wrong(do_on_text):                raise TypeError("Parameter 'do_on_text' is not callable.")
+
+        if is_wrong(do_on_mouse_wheel_roll):    raise TypeError("Parameter 'do_on_mouse_wheel_roll' is not callable.")
+        if is_wrong(do_on_mouse_move):          raise TypeError("Parameter 'do_on_mouse_move' is not callable.")
+
+        if is_wrong(do_on_resize):              raise TypeError("Parameter 'do_on_resize' is not callable.")
+
+        if is_wrong(do_on_state_change):        raise TypeError("Parameter 'do_on_state_change' is not callable.")
+        if is_wrong(do_on_show):                raise TypeError("Parameter 'do_on_show' is not callable.")
+        if is_wrong(do_on_hide):                raise TypeError("Parameter 'do_on_hide' is not callable.")
+        if is_wrong(do_on_foreground):          raise TypeError("Parameter 'do_on_foreground' is not callable.")
+
+        if is_wrong(do_on_time):                raise TypeError("Parameter 'do_on_time' is not callable.")
 
         self._do_on_create              = do_on_create
         self._do_on_close               = do_on_close
