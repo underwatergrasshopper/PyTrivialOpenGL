@@ -118,7 +118,11 @@ def draw_rgb_triangle(x, y, scale, angle):
 
     glColor3f(1, 0, 0)
     angle = 0
+
+    #glEdgeFlagv([GL_TRUE])
     glVertex2f(math.sin(angle), math.cos(angle))
+    #glVertex2dv([math.sin(angle), math.cos(angle), 5])
+    #glVertex2sv([math.sin(angle), math.cos(angle)])
 
     glColor3f(0, 1, 0)
     angle += math.pi * 2 / 3
