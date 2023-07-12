@@ -108,10 +108,6 @@ class FPS_Counter:
 
             print("FPS: %.0f" % (fps))
             
-
-
- 
-
 def draw_rgb_triangle(x, y, scale, angle):
     glPushMatrix()
     glTranslatef(x, y, 0)
