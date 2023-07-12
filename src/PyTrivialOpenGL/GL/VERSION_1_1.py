@@ -645,7 +645,7 @@ def glGetIntegerv(pname, n):
     """
     pname   : int
     n       : int
-        Number of integers.
+        Number of integers to get.
     Returns (List[int]).
     """
     params = (_C_GL_1_1.GLint * n)()
