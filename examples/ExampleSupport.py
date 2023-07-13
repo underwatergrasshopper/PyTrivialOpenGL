@@ -107,10 +107,7 @@ class FPS_Counter:
             self._count = 0
 
             print("FPS: %.0f" % (fps))
-
-
-import PyTrivialOpenGL._C_GL as _C_GL
-            
+     
 def draw_rgb_triangle(x, y, scale, angle):
     glPushMatrix()
     glTranslatef(x, y, 0)

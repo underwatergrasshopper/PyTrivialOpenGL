@@ -39,6 +39,7 @@
     <Compile Include="examples\ActionChain.py" />
     <Compile Include="examples\all_examples.py" />
     <Compile Include="examples\AnimatedTriangle.py" />
+    <Compile Include="examples\example_draw_array.py" />
     <Compile Include="examples\mouse_and_keyboard_debug.py" />
     <Compile Include="examples\ExampleManager.py" />
     <Compile Include="examples\ExampleSupport.py" />

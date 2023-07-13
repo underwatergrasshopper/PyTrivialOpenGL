@@ -3,11 +3,57 @@ import ctypes as _ctypes
 from .._C_GL.VERSION_1_1.Constants import *
 from .._C_GL import VERSION_1_1 as _C_GL_1_1
 
-def _list_to_c_array(l_type, l, min_len, c_type):
-    c_array_len             = max(min_len, len(l))
-    num_of_elements_to_take = min(min_len, len(l))
+### inner support ###
+
+def _list_part_to_c_array(l_type, l, up_to_len, c_type):
+    c_array_len             = max(up_to_len, len(l))
+    num_of_elements_to_take = min(up_to_len, len(l))
 
     return (c_type * c_array_len)(*(l_type(l[ix]) for ix in range(num_of_elements_to_take)))
+
+def _list_to_c_array(l_type, l, min_len, c_type):
+    return (c_type * max(min_len, len(l)))(*(l_type(e) for e in l))
+
+def _gl_type_id_to_c_type(type_):
+    if type_ == GL_BYTE:                return _C_GL_1_1.GLbyte
+    elif type_ == GL_UNSIGNED_BYTE:     return _C_GL_1_1.GLubyte
+    elif type_ == GL_SHORT:             return _C_GL_1_1.GLshort
+    elif type_ == GL_UNSIGNED_SHORT:    return _C_GL_1_1.GLushort
+    elif type_ == GL_INT:               return _C_GL_1_1.GLint
+    elif type_ == GL_UNSIGNED_INT:      return _C_GL_1_1.GLuint
+    elif type_ == GL_FLOAT:             return _C_GL_1_1.GLfloat
+    elif type_ == GL_DOUBLE:            return _C_GL_1_1.GLdouble
+    elif type_ == GL_2_BYTES:           return _C_GL_1_1.GLbyte
+    elif type_ == GL_3_BYTES:           return _C_GL_1_1.GLbyte
+    elif type_ == GL_4_BYTES:           return _C_GL_1_1.GLbyte
+    else:
+        raise ValueError("Unexpected 'type_' value.")
+
+def _gl_type_id_to_py_type(type_):
+    if type_ == GL_BYTE:                return int
+    elif type_ == GL_UNSIGNED_BYTE:     return int
+    elif type_ == GL_SHORT:             return int
+    elif type_ == GL_UNSIGNED_SHORT:    return int
+    elif type_ == GL_INT:               return int
+    elif type_ == GL_UNSIGNED_INT:      return int
+    elif type_ == GL_FLOAT:             return float
+    elif type_ == GL_DOUBLE:            return float
+    elif type_ == GL_2_BYTES:           return int   
+    elif type_ == GL_3_BYTES:           return int   
+    elif type_ == GL_4_BYTES:           return int   
+    else:
+        raise ValueError("Unexpected 'type_' value.")
+
+class _Cache:
+    def __init__(self):
+        self.c_vertex_array_pointer     = None
+        self.c_normal_array_pointer     = None
+        self.c_color_array_pointer      = None
+        self.c_index_array_pointer      = None
+        self.c_edge_flag_array_pointer  = None
+        self.c_tex_coord_array_pointer  = None
+
+_cache = _Cache()
 
 ### Command Execution ###
 
@@ -16,7 +62,6 @@ def glGetError():
     Returns (int).
     """
     int(_C_GL_1_1.glGetError())
-
 
 ### Vertex Specification ###
 
@@ -44,7 +89,7 @@ def glEdgeFlagv(flag):
     """
     flag             : List[int]
     """
-    c_flag = _list_to_c_array(int, flag, 1, _C_GL_1_1.GLboolean)
+    c_flag = _list_part_to_c_array(int, flag, 1, _C_GL_1_1.GLboolean)
     _C_GL_1_1.glEdgeFlagv(c_flag)
 
 # Vertex Specification
@@ -60,7 +105,7 @@ def glVertex2dv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
+    c_v = _list_part_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glVertex2dv(c_v)
 
 def glVertex2f(x, y):
@@ -74,7 +119,7 @@ def glVertex2fv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
+    c_v = _list_part_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glVertex2fv(c_v)
 
 def glVertex2i(x, y):
@@ -88,7 +133,7 @@ def glVertex2iv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 2, _C_GL_1_1.GLint)
+    c_v = _list_part_to_c_array(int, v, 2, _C_GL_1_1.GLint)
     _C_GL_1_1.glVertex2iv(c_v)
 
 def glVertex2s(x, y):
@@ -102,7 +147,7 @@ def glVertex2sv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
+    c_v = _list_part_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
     _C_GL_1_1.glVertex2sv(c_v)
 
 def glVertex3d(x, y, z):
@@ -117,7 +162,7 @@ def glVertex3dv(v):
     """
     v                : List[double]
     """
-    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    c_v = _list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glVertex3dv(c_v)
 
 def glVertex3f(x, y, z):
@@ -132,7 +177,7 @@ def glVertex3fv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    c_v = _list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glVertex3fv(c_v)
 
 def glVertex3i(x, y, z):
@@ -147,7 +192,7 @@ def glVertex3iv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glVertex3iv(c_v)
 
 def glVertex3s(x, y, z):
@@ -162,7 +207,7 @@ def glVertex3sv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glVertex3sv(c_v)
 
 def glVertex4d(x, y, z, w):
@@ -178,7 +223,7 @@ def glVertex4dv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    c_v = _list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glVertex4dv(c_v)
 
 def glVertex4f(x, y, z, w):
@@ -194,7 +239,7 @@ def glVertex4fv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    c_v = _list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glVertex4fv(c_v)
 
 def glVertex4i(x, y, z, w):
@@ -210,7 +255,7 @@ def glVertex4iv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    c_v = _list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
     _C_GL_1_1.glVertex4iv(c_v)
 
 def glVertex4s(x, y, z, w):
@@ -226,7 +271,7 @@ def glVertex4sv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    c_v = _list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
     _C_GL_1_1.glVertex4sv(c_v)
 
 
@@ -240,7 +285,7 @@ def glTexCoord1dv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 1, _C_GL_1_1.GLdouble)
+    c_v = _list_part_to_c_array(float, v, 1, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexCoord1dv(c_v)
 
 def glTexCoord1f(s):
@@ -253,7 +298,7 @@ def glTexCoord1fv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 1, _C_GL_1_1.GLfloat)
+    c_v = _list_part_to_c_array(float, v, 1, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexCoord1fv(c_v)
 
 def glTexCoord1i(s):
@@ -266,7 +311,7 @@ def glTexCoord1iv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 1, _C_GL_1_1.GLint)
+    c_v = _list_part_to_c_array(int, v, 1, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexCoord1iv(c_v)
 
 def glTexCoord1s(s):
@@ -279,7 +324,7 @@ def glTexCoord1sv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 1, _C_GL_1_1.GLshort)
+    c_v = _list_part_to_c_array(int, v, 1, _C_GL_1_1.GLshort)
     _C_GL_1_1.glTexCoord1sv(c_v)
 
 def glTexCoord2d(s, t):
@@ -293,7 +338,7 @@ def glTexCoord2dv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
+    c_v = _list_part_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexCoord2dv(c_v)
 
 def glTexCoord2f(s, t):
@@ -307,7 +352,7 @@ def glTexCoord2fv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
+    c_v = _list_part_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexCoord2fv(c_v)
 
 def glTexCoord2i(s, t):
@@ -321,7 +366,7 @@ def glTexCoord2iv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 2, _C_GL_1_1.GLint)
+    c_v = _list_part_to_c_array(int, v, 2, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexCoord2iv(c_v)
 
 def glTexCoord2s(s, t):
@@ -335,7 +380,7 @@ def glTexCoord2sv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
+    c_v = _list_part_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
     _C_GL_1_1.glTexCoord2sv(c_v)
 
 def glTexCoord3d(s, t, r):
@@ -350,7 +395,7 @@ def glTexCoord3dv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    c_v = _list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexCoord3dv(c_v)
 
 def glTexCoord3f(s, t, r):
@@ -365,7 +410,7 @@ def glTexCoord3fv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    c_v = _list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexCoord3fv(c_v)
 
 def glTexCoord3i(s, t, r):
@@ -380,7 +425,7 @@ def glTexCoord3iv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexCoord3iv(c_v)
 
 def glTexCoord3s(s, t, r):
@@ -395,7 +440,7 @@ def glTexCoord3sv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glTexCoord3sv(c_v)
 
 def glTexCoord4d(s, t, r, q):
@@ -411,7 +456,7 @@ def glTexCoord4dv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    c_v = _list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexCoord4dv(c_v)
 
 def glTexCoord4f(s, t, r, q):
@@ -427,7 +472,7 @@ def glTexCoord4fv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    c_v = _list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexCoord4fv(c_v)
 
 def glTexCoord4i(s, t, r, q):
@@ -443,7 +488,7 @@ def glTexCoord4iv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    c_v = _list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexCoord4iv(c_v)
 
 def glTexCoord4s(s, t, r, q):
@@ -459,7 +504,7 @@ def glTexCoord4sv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    c_v = _list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
     _C_GL_1_1.glTexCoord4sv(c_v)
 
 
@@ -475,7 +520,7 @@ def glNormal3bv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLbyte)
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLbyte)
     _C_GL_1_1.glNormal3bv(c_v)
 
 def glNormal3d(nx, ny, nz):
@@ -490,7 +535,7 @@ def glNormal3dv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    c_v = _list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glNormal3dv(c_v)
 
 def glNormal3f(nx, ny, nz):
@@ -505,7 +550,7 @@ def glNormal3fv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    c_v = _list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glNormal3fv(c_v)
 
 def glNormal3i(nx, ny, nz):
@@ -520,7 +565,7 @@ def glNormal3iv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glNormal3iv(c_v)
 
 def glNormal3s(nx, ny, nz):
@@ -535,7 +580,7 @@ def glNormal3sv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glNormal3sv(c_v)
 
 
@@ -552,7 +597,7 @@ def glColor3bv(v):
     v                : List[int] | bytes
         Value range <-128, 127>.
     """
-    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLbyte)
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLbyte)
     _C_GL_1_1.glColor3bv(c_v)
 
 def glColor3d(red, green, blue):
@@ -567,7 +612,7 @@ def glColor3dv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    c_v = _list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glColor3dv(c_v)
 
 def glColor3f(red, green, blue):
@@ -582,7 +627,7 @@ def glColor3fv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    c_v = _list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glColor3fv(c_v)
 
 def glColor3i(red, green, blue):
@@ -597,7 +642,7 @@ def glColor3iv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glColor3iv(c_v)
 
 def glColor3s(red, green, blue):
@@ -612,7 +657,7 @@ def glColor3sv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glColor3sv(c_v)
 
 def glColor3ub(red, green, blue):
@@ -628,7 +673,7 @@ def glColor3ubv(v):
     v                : List[int] | bytes
         Value range <0, 255>.
     """
-    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLubyte)
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLubyte)
     _C_GL_1_1.glColor3ubv(c_v)
 
 def glColor3ui(red, green, blue):
@@ -643,7 +688,7 @@ def glColor3uiv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLuint)
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLuint)
     _C_GL_1_1.glColor3uiv(c_v)
 
 def glColor3us(red, green, blue):
@@ -658,7 +703,7 @@ def glColor3usv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLushort)
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLushort)
     _C_GL_1_1.glColor3usv(c_v)
 
 def glColor4b(red, green, blue, alpha):
@@ -675,7 +720,7 @@ def glColor4bv(v):
     v                : List[int] | bytes
         Value range <-128, 127>.
     """
-    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLbyte)
+    c_v = _list_part_to_c_array(int, v, 4, _C_GL_1_1.GLbyte)
     _C_GL_1_1.glColor4bv(c_v)
 
 def glColor4d(red, green, blue, alpha):
@@ -691,7 +736,7 @@ def glColor4dv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    c_v = _list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glColor4dv(c_v)
 
 def glColor4f(red, green, blue, alpha):
@@ -707,7 +752,7 @@ def glColor4fv(v):
     """
     v                : List[float]
     """
-    c_v = _list_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    c_v = _list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glColor4fv(c_v)
 
 def glColor4i(red, green, blue, alpha):
@@ -723,7 +768,7 @@ def glColor4iv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    c_v = _list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
     _C_GL_1_1.glColor4iv(c_v)
 
 def glColor4s(red, green, blue, alpha):
@@ -739,7 +784,7 @@ def glColor4sv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    c_v = _list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
     _C_GL_1_1.glColor4sv(c_v)
 
 def glColor4ub(red, green, blue, alpha):
@@ -756,7 +801,7 @@ def glColor4ubv(v):
     v                : List[int] | bytes
         Value range <0, 255>
     """
-    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLubyte)
+    c_v = _list_part_to_c_array(int, v, 4, _C_GL_1_1.GLubyte)
     _C_GL_1_1.glColor4ubv(c_v)
 
 def glColor4ui(red, green, blue, alpha):
@@ -772,7 +817,7 @@ def glColor4uiv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLuint)
+    c_v = _list_part_to_c_array(int, v, 4, _C_GL_1_1.GLuint)
     _C_GL_1_1.glColor4uiv(c_v)
 
 def glColor4us(red, green, blue, alpha):
@@ -788,7 +833,7 @@ def glColor4usv(v):
     """
     v                : List[int]
     """
-    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLushort)
+    c_v = _list_part_to_c_array(int, v, 4, _C_GL_1_1.GLushort)
     _C_GL_1_1.glColor4usv(c_v)
 
 
@@ -802,8 +847,8 @@ def glIndexdv(c):
     """
     c                : List[float]
     """
-    c_v = _list_to_c_array(float, c, 1, _C_GL_1_1.GLdouble)
-    _C_GL_1_1.glIndexdv(c_v)
+    c_c = _list_part_to_c_array(float, c, 1, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glIndexdv(c_c)
 
 def glIndexf(c):
     """
@@ -815,8 +860,8 @@ def glIndexfv(c):
     """
     c                : List[float]
     """
-    c_v = _list_to_c_array(float, c, 1, _C_GL_1_1.GLfloat)
-    _C_GL_1_1.glIndexfv(c_v)
+    c_c = _list_part_to_c_array(float, c, 1, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glIndexfv(c_c)
 
 def glIndexi(c):
     """
@@ -828,8 +873,8 @@ def glIndexiv(c):
     """
     c                : List[int]
     """
-    c_v = _list_to_c_array(int, c, 1, _C_GL_1_1.GLint)
-    _C_GL_1_1.glIndexiv(c_v)
+    c_c = _list_part_to_c_array(int, c, 1, _C_GL_1_1.GLint)
+    _C_GL_1_1.glIndexiv(c_c)
 
 def glIndexs(c):
     """
@@ -841,8 +886,8 @@ def glIndexsv(c):
     """
     c                : List[int]
     """
-    c_v = _list_to_c_array(int, c, 1, _C_GL_1_1.GLshort)
-    _C_GL_1_1.glIndexsv(c_v)
+    c_c = _list_part_to_c_array(int, c, 1, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glIndexsv(c_c)
 
 def glIndexub(c):
     """
@@ -854,61 +899,82 @@ def glIndexubv(c):
     """
     c                : List[int] | bytes
     """
-    c_v = _list_to_c_array(int, c, 1, _C_GL_1_1.GLubyte)
-    _C_GL_1_1.glIndexubv(c_v)
+    c_c = _list_part_to_c_array(int, c, 1, _C_GL_1_1.GLubyte)
+    _C_GL_1_1.glIndexubv(c_c)
 
 
 ### Vertex Arrays ###
 
-#def glVertexPointer(size, type_, stride, pointer):
-#    """
-#    size             : int
-#    type_            : int
-#    stride           : int
-#    pointer          : ???
-#    """
-#    _C_GL_1_1.glVertexPointer(int(size), int(type_), int(stride), ???(pointer))
+def glVertexPointer(size, type_, stride, pointer):
+    """
+    size             : int
+    type_            : int
+    stride           : int
+    pointer          : List[int | float]
+    """
+    py_type = _gl_type_id_to_py_type(type_)
+    c_type  = _gl_type_id_to_c_type(type_)
 
-#def glNormalPointer(type_, stride, pointer):
-#    """
-#    type_            : int
-#    stride           : int
-#    pointer          : ???
-#    """
-#    _C_GL_1_1.glNormalPointer(int(type_), int(stride), ???(pointer))
+    _cache.c_vertex_array_pointer = _list_to_c_array(py_type, pointer, 1, c_type)
+    _C_GL_1_1.glVertexPointer(int(size), int(type_), int(stride), _cache.c_vertex_array_pointer)
 
-#def glColorPointer(size, type_, stride, pointer):
-#    """
-#    size             : int
-#    type_            : int
-#    stride           : int
-#    pointer          : ???
-#    """
-#    _C_GL_1_1.glColorPointer(int(size), int(type_), int(stride), ???(pointer))
+def glNormalPointer(type_, stride, pointer):
+    """
+    type_            : int
+    stride           : int
+    pointer          : List[int | float]
+    """
+    py_type = _gl_type_id_to_py_type(type_)
+    c_type  = _gl_type_id_to_c_type(type_)
 
-#def glIndexPointer(type_, stride, pointer):
-#    """
-#    type_            : int
-#    stride           : int
-#    pointer          : ???
-#    """
-#    _C_GL_1_1.glIndexPointer(int(type_), int(stride), ???(pointer))
+    _cache.c_normal_array_pointer = _list_to_c_array(py_type, pointer, 1, c_type)
+    _C_GL_1_1.glNormalPointer(int(type_), int(stride), _cache.c_normal_array_pointer)
 
-#def glEdgeFlagPointer(stride, pointer):
-#    """
-#    stride           : int
-#    pointer          : ???
-#    """
-#    _C_GL_1_1.glEdgeFlagPointer(int(stride), ???(pointer))
+def glColorPointer(size, type_, stride, pointer):
+    """
+    size             : int
+    type_            : int
+    stride           : int
+    pointer          : List[int | float]
+    """
+    py_type = _gl_type_id_to_py_type(type_)
+    c_type  = _gl_type_id_to_c_type(type_)
 
-#def glTexCoordPointer(size, type_, stride, pointer):
-#    """
-#    size             : int
-#    type_            : int
-#    stride           : int
-#    pointer          : ???
-#    """
-#    _C_GL_1_1.glTexCoordPointer(int(size), int(type_), int(stride), ???(pointer))
+    _cache.c_color_array_pointer = _list_to_c_array(py_type, pointer, 1, c_type)
+    _C_GL_1_1.glColorPointer(int(size), int(type_), int(stride), _cache.c_color_array_pointer)
+
+def glIndexPointer(type_, stride, pointer):
+    """
+    type_            : int
+    stride           : int
+    pointer          : List[int | float]
+    """
+    py_type = _gl_type_id_to_py_type(type_)
+    c_type  = _gl_type_id_to_c_type(type_)
+
+    _cache.c_index_array_pointer = _list_to_c_array(py_type, pointer, 1, c_type)
+    _C_GL_1_1.glIndexPointer(int(type_), int(stride), _cache.c_index_array_pointer)
+
+def glEdgeFlagPointer(stride, pointer):
+    """
+    stride           : int
+    pointer          : List[int]
+    """
+    _cache.c_edge_flag_array_pointer = _list_to_c_array(int, pointer, 1, _C_GL_1_1.GLboolean)
+    _C_GL_1_1.glEdgeFlagPointer(int(stride), _cache.c_edge_flag_array_pointer)
+
+def glTexCoordPointer(size, type_, stride, pointer):
+    """
+    size             : int
+    type_            : int
+    stride           : int
+    pointer          : List[int | float]
+    """
+    py_type = _gl_type_id_to_py_type(type_)
+    c_type  = _gl_type_id_to_c_type(type_)
+
+    _cache.c_tex_coord_array_pointer = _list_to_c_array(py_type, pointer, 1, c_type)
+    _C_GL_1_1.glTexCoordPointer(int(size), int(type_), int(stride), _cache.c_tex_coord_array_pointer)
 
 def glEnableClientState(array):
     """
@@ -928,8 +994,8 @@ def glArrayElement(i):
     """
     _C_GL_1_1.glArrayElement(int(i))
 
-
 # Drawing Commands
+
 def glDrawArrays(mode, first, count):
     """
     mode             : int

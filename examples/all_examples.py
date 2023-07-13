@@ -4,6 +4,7 @@ import area_and_state_debug
 import mouse_and_keyboard_debug
 import simple_triangle
 import window_area
+import example_draw_array
 
 example_manager = ExampleManager()
 
@@ -56,6 +57,7 @@ example_manager.add_example(
 )
 example_manager.add_example("simple_triangle", simple_triangle.run)
 example_manager.add_example("window_area", window_area.run)
+example_manager.add_example("draw_array", example_draw_array.run)
 
 def run():
     example_manager.set_default("area_and_state_debug")
