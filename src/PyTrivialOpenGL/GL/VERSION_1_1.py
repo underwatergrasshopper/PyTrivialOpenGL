@@ -4,7 +4,10 @@ from .._C_GL.VERSION_1_1.Constants import *
 from .._C_GL import VERSION_1_1 as _C_GL_1_1
 
 def _list_to_c_array(l_type, l, min_len, c_type):
-    return (c_type * max(min_len, len(l)))(*(l_type(e) for e in l))
+    c_array_len             = max(min_len, len(l))
+    num_of_elements_to_take = min(min_len, len(l))
+
+    return (c_type * c_array_len)(*(l_type(l[ix]) for ix in range(num_of_elements_to_take)))
 
 ### Command Execution ###
 
@@ -795,11 +798,12 @@ def glIndexd(c):
     """
     _C_GL_1_1.glIndexd(float(c))
 
-#def glIndexdv(c):
-#    """
-#    c                : ???
-#    """
-#    _C_GL_1_1.glIndexdv(???(c))
+def glIndexdv(c):
+    """
+    c                : List[float]
+    """
+    c_v = _list_to_c_array(float, c, 1, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glIndexdv(c_v)
 
 def glIndexf(c):
     """
@@ -807,11 +811,12 @@ def glIndexf(c):
     """
     _C_GL_1_1.glIndexf(float(c))
 
-#def glIndexfv(c):
-#    """
-#    c                : ???
-#    """
-#    _C_GL_1_1.glIndexfv(???(c))
+def glIndexfv(c):
+    """
+    c                : List[float]
+    """
+    c_v = _list_to_c_array(float, c, 1, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glIndexfv(c_v)
 
 def glIndexi(c):
     """
@@ -819,11 +824,12 @@ def glIndexi(c):
     """
     _C_GL_1_1.glIndexi(int(c))
 
-#def glIndexiv(c):
-#    """
-#    c                : ???
-#    """
-#    _C_GL_1_1.glIndexiv(???(c))
+def glIndexiv(c):
+    """
+    c                : List[int]
+    """
+    c_v = _list_to_c_array(int, c, 1, _C_GL_1_1.GLint)
+    _C_GL_1_1.glIndexiv(c_v)
 
 def glIndexs(c):
     """
@@ -831,11 +837,12 @@ def glIndexs(c):
     """
     _C_GL_1_1.glIndexs(int(c))
 
-#def glIndexsv(c):
-#    """
-#    c                : ???
-#    """
-#    _C_GL_1_1.glIndexsv(???(c))
+def glIndexsv(c):
+    """
+    c                : List[int]
+    """
+    c_v = _list_to_c_array(int, c, 1, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glIndexsv(c_v)
 
 def glIndexub(c):
     """
@@ -843,11 +850,12 @@ def glIndexub(c):
     """
     _C_GL_1_1.glIndexub(int(c))
 
-#def glIndexubv(c):
-#    """
-#    c                : ???
-#    """
-#    _C_GL_1_1.glIndexubv(???(c))
+def glIndexubv(c):
+    """
+    c                : List[int] | bytes
+    """
+    c_v = _list_to_c_array(int, c, 1, _C_GL_1_1.GLubyte)
+    _C_GL_1_1.glIndexubv(c_v)
 
 
 ### Vertex Arrays ###

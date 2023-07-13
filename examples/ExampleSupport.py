@@ -107,6 +107,9 @@ class FPS_Counter:
             self._count = 0
 
             print("FPS: %.0f" % (fps))
+
+
+import PyTrivialOpenGL._C_GL as _C_GL
             
 def draw_rgb_triangle(x, y, scale, angle):
     glPushMatrix()
@@ -123,6 +126,10 @@ def draw_rgb_triangle(x, y, scale, angle):
     #glColor3ubv(b"\xFF\x00\x00")
     #glColor4ubv([255, 0, 0, 63])
     #glColor4ubv(b"\xFF\x00\x00\x3F")
+
+    #glIndexiv([1])
+    #glIndexfv([1.5]) # blends
+    #glIndexubv(b"\x05")
 
     angle = 0
     glVertex2f(math.sin(angle), math.cos(angle))
