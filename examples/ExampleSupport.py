@@ -117,20 +117,41 @@ def draw_rgb_triangle(x, y, scale, angle):
     glBegin(GL_TRIANGLES)
 
     glColor3f(1, 0, 0)
+
+    #glColor3bv([127, 0, 0])
+    #glColor3ubv([255, 0, 0])
+    #glColor3ubv(b"\xFF\x00\x00")
+    #glColor4ubv([255, 0, 0, 63])
+    #glColor4ubv(b"\xFF\x00\x00\x3F")
+
     angle = 0
+    glVertex2f(math.sin(angle), math.cos(angle))
 
     #glEdgeFlagv([GL_TRUE])
-    glVertex2f(math.sin(angle), math.cos(angle))
-    #glVertex2dv([math.sin(angle), math.cos(angle), 5])
+    #glVertex2fv([math.sin(angle), math.cos(angle)])
+    #glVertex2dv([math.sin(angle), math.cos(angle)])
     #glVertex2sv([math.sin(angle), math.cos(angle)])
+    #glVertex2iv([math.sin(angle), math.cos(angle)])
+
+    #glVertex3fv([math.sin(angle), math.cos(angle), 0])
+    #glVertex3dv([math.sin(angle), math.cos(angle), 0])
+    #glVertex3sv([math.sin(angle), math.cos(angle), 0])
+    #glVertex3iv([math.sin(angle), math.cos(angle), 0])
+
+    #glVertex4fv([math.sin(angle), math.cos(angle), 0, 1])
+    #glVertex4dv([math.sin(angle), math.cos(angle), 0, 1])
+    #glVertex4sv([math.sin(angle), math.cos(angle), 0, 1])
+    #glVertex4iv([math.sin(angle), math.cos(angle), 0, 1])
 
     glColor3f(0, 1, 0)
     angle += math.pi * 2 / 3
     glVertex2f(math.sin(angle), math.cos(angle))
+    #glVertex2dv([math.sin(angle), math.cos(angle)])
             
     glColor3f(0, 0, 1)
     angle += math.pi * 2 / 3
     glVertex2f(math.sin(angle), math.cos(angle))
+    #glVertex2dv([math.sin(angle), math.cos(angle)])
 
     glEnd()
 

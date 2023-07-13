@@ -3,6 +3,9 @@ import ctypes as _ctypes
 from .._C_GL.VERSION_1_1.Constants import *
 from .._C_GL import VERSION_1_1 as _C_GL_1_1
 
+def _list_to_c_array(l_type, l, min_len, c_type):
+    return (c_type * max(min_len, len(l)))(*(l_type(e) for e in l))
+
 ### Command Execution ###
 
 def glGetError():
@@ -38,8 +41,8 @@ def glEdgeFlagv(flag):
     """
     flag             : List[int]
     """
-    flag = (_C_GL_1_1.GLboolean * 1)(int(flag[0]))
-    _C_GL_1_1.glEdgeFlagv(flag)
+    c_flag = _list_to_c_array(int, flag, 1, _C_GL_1_1.GLboolean)
+    _C_GL_1_1.glEdgeFlagv(c_flag)
 
 # Vertex Specification
 
@@ -54,11 +57,8 @@ def glVertex2dv(v):
     """
     v                : List[float]
     """
-    # Note: Alternative, but too much convoluted.
-    #v = (_C_GL_1_1.GLdouble * max(2, len(v)))(*(float(e) for e in v))
-
-    v = (_C_GL_1_1.GLdouble * 2)(float(v[0]), float(v[1]))
-    _C_GL_1_1.glVertex2dv(v)
+    c_v = _list_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glVertex2dv(c_v)
 
 def glVertex2f(x, y):
     """
@@ -71,8 +71,8 @@ def glVertex2fv(v):
     """
     v                : List[float]
     """
-    v = (_C_GL_1_1.GLdouble * 2)(float(v[0]), float(v[1]))
-    _C_GL_1_1.glVertex2fv(v)
+    c_v = _list_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glVertex2fv(c_v)
 
 def glVertex2i(x, y):
     """
@@ -85,8 +85,8 @@ def glVertex2iv(v):
     """
     v                : List[int]
     """
-    v = (_C_GL_1_1.GLint * 2)(int(v[0]), int(v[1]))
-    _C_GL_1_1.glVertex2iv(v)
+    c_v = _list_to_c_array(int, v, 2, _C_GL_1_1.GLint)
+    _C_GL_1_1.glVertex2iv(c_v)
 
 def glVertex2s(x, y):
     """
@@ -99,8 +99,8 @@ def glVertex2sv(v):
     """
     v                : List[int]
     """
-    v = (_C_GL_1_1.GLshort * 2)(int(v[0]), int(v[1]))
-    _C_GL_1_1.glVertex2sv(v)
+    c_v = _list_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glVertex2sv(c_v)
 
 def glVertex3d(x, y, z):
     """
@@ -110,11 +110,12 @@ def glVertex3d(x, y, z):
     """
     _C_GL_1_1.glVertex3d(float(x), float(y), float(z))
 
-#def glVertex3dv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glVertex3dv(???(v))
+def glVertex3dv(v):
+    """
+    v                : List[double]
+    """
+    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glVertex3dv(c_v)
 
 def glVertex3f(x, y, z):
     """
@@ -124,11 +125,12 @@ def glVertex3f(x, y, z):
     """
     _C_GL_1_1.glVertex3f(float(x), float(y), float(z))
 
-#def glVertex3fv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glVertex3fv(???(v))
+def glVertex3fv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glVertex3fv(c_v)
 
 def glVertex3i(x, y, z):
     """
@@ -138,11 +140,12 @@ def glVertex3i(x, y, z):
     """
     _C_GL_1_1.glVertex3i(int(x), int(y), int(z))
 
-#def glVertex3iv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glVertex3iv(???(v))
+def glVertex3iv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    _C_GL_1_1.glVertex3iv(c_v)
 
 def glVertex3s(x, y, z):
     """
@@ -152,11 +155,12 @@ def glVertex3s(x, y, z):
     """
     _C_GL_1_1.glVertex3s(int(x), int(y), int(z))
 
-#def glVertex3sv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glVertex3sv(???(v))
+def glVertex3sv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glVertex3sv(c_v)
 
 def glVertex4d(x, y, z, w):
     """
@@ -167,11 +171,12 @@ def glVertex4d(x, y, z, w):
     """
     _C_GL_1_1.glVertex4d(float(x), float(y), float(z), float(w))
 
-#def glVertex4dv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glVertex4dv(???(v))
+def glVertex4dv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glVertex4dv(c_v)
 
 def glVertex4f(x, y, z, w):
     """
@@ -182,11 +187,12 @@ def glVertex4f(x, y, z, w):
     """
     _C_GL_1_1.glVertex4f(float(x), float(y), float(z), float(w))
 
-#def glVertex4fv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glVertex4fv(???(v))
+def glVertex4fv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glVertex4fv(c_v)
 
 def glVertex4i(x, y, z, w):
     """
@@ -197,11 +203,12 @@ def glVertex4i(x, y, z, w):
     """
     _C_GL_1_1.glVertex4i(int(x), int(y), int(z), int(w))
 
-#def glVertex4iv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glVertex4iv(???(v))
+def glVertex4iv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    _C_GL_1_1.glVertex4iv(c_v)
 
 def glVertex4s(x, y, z, w):
     """
@@ -212,11 +219,12 @@ def glVertex4s(x, y, z, w):
     """
     _C_GL_1_1.glVertex4s(int(x), int(y), int(z), int(w))
 
-#def glVertex4sv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glVertex4sv(???(v))
+def glVertex4sv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glVertex4sv(c_v)
 
 
 def glTexCoord1d(s):
@@ -225,11 +233,12 @@ def glTexCoord1d(s):
     """
     _C_GL_1_1.glTexCoord1d(float(s))
 
-#def glTexCoord1dv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord1dv(???(v))
+def glTexCoord1dv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 1, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glTexCoord1dv(c_v)
 
 def glTexCoord1f(s):
     """
@@ -237,11 +246,12 @@ def glTexCoord1f(s):
     """
     _C_GL_1_1.glTexCoord1f(float(s))
 
-#def glTexCoord1fv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord1fv(???(v))
+def glTexCoord1fv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 1, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glTexCoord1fv(c_v)
 
 def glTexCoord1i(s):
     """
@@ -249,11 +259,12 @@ def glTexCoord1i(s):
     """
     _C_GL_1_1.glTexCoord1i(int(s))
 
-#def glTexCoord1iv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord1iv(???(v))
+def glTexCoord1iv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 1, _C_GL_1_1.GLint)
+    _C_GL_1_1.glTexCoord1iv(c_v)
 
 def glTexCoord1s(s):
     """
@@ -261,11 +272,12 @@ def glTexCoord1s(s):
     """
     _C_GL_1_1.glTexCoord1s(int(s))
 
-#def glTexCoord1sv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord1sv(???(v))
+def glTexCoord1sv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 1, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glTexCoord1sv(c_v)
 
 def glTexCoord2d(s, t):
     """
@@ -274,11 +286,12 @@ def glTexCoord2d(s, t):
     """
     _C_GL_1_1.glTexCoord2d(float(s), float(t))
 
-#def glTexCoord2dv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord2dv(???(v))
+def glTexCoord2dv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glTexCoord2dv(c_v)
 
 def glTexCoord2f(s, t):
     """
@@ -287,11 +300,12 @@ def glTexCoord2f(s, t):
     """
     _C_GL_1_1.glTexCoord2f(float(s), float(t))
 
-#def glTexCoord2fv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord2fv(???(v))
+def glTexCoord2fv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glTexCoord2fv(c_v)
 
 def glTexCoord2i(s, t):
     """
@@ -300,11 +314,12 @@ def glTexCoord2i(s, t):
     """
     _C_GL_1_1.glTexCoord2i(int(s), int(t))
 
-#def glTexCoord2iv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord2iv(???(v))
+def glTexCoord2iv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 2, _C_GL_1_1.GLint)
+    _C_GL_1_1.glTexCoord2iv(c_v)
 
 def glTexCoord2s(s, t):
     """
@@ -313,11 +328,12 @@ def glTexCoord2s(s, t):
     """
     _C_GL_1_1.glTexCoord2s(int(s), int(t))
 
-#def glTexCoord2sv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord2sv(???(v))
+def glTexCoord2sv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glTexCoord2sv(c_v)
 
 def glTexCoord3d(s, t, r):
     """
@@ -327,11 +343,12 @@ def glTexCoord3d(s, t, r):
     """
     _C_GL_1_1.glTexCoord3d(float(s), float(t), float(r))
 
-#def glTexCoord3dv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord3dv(???(v))
+def glTexCoord3dv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glTexCoord3dv(c_v)
 
 def glTexCoord3f(s, t, r):
     """
@@ -341,11 +358,12 @@ def glTexCoord3f(s, t, r):
     """
     _C_GL_1_1.glTexCoord3f(float(s), float(t), float(r))
 
-#def glTexCoord3fv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord3fv(???(v))
+def glTexCoord3fv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glTexCoord3fv(c_v)
 
 def glTexCoord3i(s, t, r):
     """
@@ -355,11 +373,12 @@ def glTexCoord3i(s, t, r):
     """
     _C_GL_1_1.glTexCoord3i(int(s), int(t), int(r))
 
-#def glTexCoord3iv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord3iv(???(v))
+def glTexCoord3iv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    _C_GL_1_1.glTexCoord3iv(c_v)
 
 def glTexCoord3s(s, t, r):
     """
@@ -369,11 +388,12 @@ def glTexCoord3s(s, t, r):
     """
     _C_GL_1_1.glTexCoord3s(int(s), int(t), int(r))
 
-#def glTexCoord3sv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord3sv(???(v))
+def glTexCoord3sv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glTexCoord3sv(c_v)
 
 def glTexCoord4d(s, t, r, q):
     """
@@ -384,11 +404,12 @@ def glTexCoord4d(s, t, r, q):
     """
     _C_GL_1_1.glTexCoord4d(float(s), float(t), float(r), float(q))
 
-#def glTexCoord4dv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord4dv(???(v))
+def glTexCoord4dv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glTexCoord4dv(c_v)
 
 def glTexCoord4f(s, t, r, q):
     """
@@ -399,11 +420,12 @@ def glTexCoord4f(s, t, r, q):
     """
     _C_GL_1_1.glTexCoord4f(float(s), float(t), float(r), float(q))
 
-#def glTexCoord4fv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord4fv(???(v))
+def glTexCoord4fv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glTexCoord4fv(c_v)
 
 def glTexCoord4i(s, t, r, q):
     """
@@ -414,11 +436,12 @@ def glTexCoord4i(s, t, r, q):
     """
     _C_GL_1_1.glTexCoord4i(int(s), int(t), int(r), int(q))
 
-#def glTexCoord4iv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord4iv(???(v))
+def glTexCoord4iv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    _C_GL_1_1.glTexCoord4iv(c_v)
 
 def glTexCoord4s(s, t, r, q):
     """
@@ -429,11 +452,12 @@ def glTexCoord4s(s, t, r, q):
     """
     _C_GL_1_1.glTexCoord4s(int(s), int(t), int(r), int(q))
 
-#def glTexCoord4sv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glTexCoord4sv(???(v))
+def glTexCoord4sv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glTexCoord4sv(c_v)
 
 
 def glNormal3b(nx, ny, nz):
@@ -444,11 +468,12 @@ def glNormal3b(nx, ny, nz):
     """
     _C_GL_1_1.glNormal3b(int(nx), int(ny), int(nz))
 
-#def glNormal3bv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glNormal3bv(???(v))
+def glNormal3bv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLbyte)
+    _C_GL_1_1.glNormal3bv(c_v)
 
 def glNormal3d(nx, ny, nz):
     """
@@ -458,11 +483,12 @@ def glNormal3d(nx, ny, nz):
     """
     _C_GL_1_1.glNormal3d(float(nx), float(ny), float(nz))
 
-#def glNormal3dv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glNormal3dv(???(v))
+def glNormal3dv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glNormal3dv(c_v)
 
 def glNormal3f(nx, ny, nz):
     """
@@ -472,11 +498,12 @@ def glNormal3f(nx, ny, nz):
     """
     _C_GL_1_1.glNormal3f(float(nx), float(ny), float(nz))
 
-#def glNormal3fv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glNormal3fv(???(v))
+def glNormal3fv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glNormal3fv(c_v)
 
 def glNormal3i(nx, ny, nz):
     """
@@ -486,11 +513,12 @@ def glNormal3i(nx, ny, nz):
     """
     _C_GL_1_1.glNormal3i(int(nx), int(ny), int(nz))
 
-#def glNormal3iv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glNormal3iv(???(v))
+def glNormal3iv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    _C_GL_1_1.glNormal3iv(c_v)
 
 def glNormal3s(nx, ny, nz):
     """
@@ -500,11 +528,12 @@ def glNormal3s(nx, ny, nz):
     """
     _C_GL_1_1.glNormal3s(int(nx), int(ny), int(nz))
 
-#def glNormal3sv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glNormal3sv(???(v))
+def glNormal3sv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glNormal3sv(c_v)
 
 
 def glColor3b(red, green, blue):
@@ -515,11 +544,13 @@ def glColor3b(red, green, blue):
     """
     _C_GL_1_1.glColor3b(int(red), int(green), int(blue))
 
-#def glColor3bv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor3bv(???(v))
+def glColor3bv(v):
+    """
+    v                : List[int] | bytes
+        Value range <-128, 127>.
+    """
+    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLbyte)
+    _C_GL_1_1.glColor3bv(c_v)
 
 def glColor3d(red, green, blue):
     """
@@ -529,11 +560,12 @@ def glColor3d(red, green, blue):
     """
     _C_GL_1_1.glColor3d(float(red), float(green), float(blue))
 
-#def glColor3dv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor3dv(???(v))
+def glColor3dv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glColor3dv(c_v)
 
 def glColor3f(red, green, blue):
     """
@@ -543,11 +575,12 @@ def glColor3f(red, green, blue):
     """
     _C_GL_1_1.glColor3f(float(red), float(green), float(blue))
 
-#def glColor3fv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor3fv(???(v))
+def glColor3fv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glColor3fv(c_v)
 
 def glColor3i(red, green, blue):
     """
@@ -557,11 +590,12 @@ def glColor3i(red, green, blue):
     """
     _C_GL_1_1.glColor3i(int(red), int(green), int(blue))
 
-#def glColor3iv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor3iv(???(v))
+def glColor3iv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    _C_GL_1_1.glColor3iv(c_v)
 
 def glColor3s(red, green, blue):
     """
@@ -571,11 +605,12 @@ def glColor3s(red, green, blue):
     """
     _C_GL_1_1.glColor3s(int(red), int(green), int(blue))
 
-#def glColor3sv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor3sv(???(v))
+def glColor3sv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glColor3sv(c_v)
 
 def glColor3ub(red, green, blue):
     """
@@ -585,11 +620,13 @@ def glColor3ub(red, green, blue):
     """
     _C_GL_1_1.glColor3ub(int(red), int(green), int(blue))
 
-#def glColor3ubv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor3ubv(???(v))
+def glColor3ubv(v):
+    """
+    v                : List[int] | bytes
+        Value range <0, 255>.
+    """
+    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLubyte)
+    _C_GL_1_1.glColor3ubv(c_v)
 
 def glColor3ui(red, green, blue):
     """
@@ -599,11 +636,12 @@ def glColor3ui(red, green, blue):
     """
     _C_GL_1_1.glColor3ui(int(red), int(green), int(blue))
 
-#def glColor3uiv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor3uiv(???(v))
+def glColor3uiv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLuint)
+    _C_GL_1_1.glColor3uiv(c_v)
 
 def glColor3us(red, green, blue):
     """
@@ -613,11 +651,12 @@ def glColor3us(red, green, blue):
     """
     _C_GL_1_1.glColor3us(int(red), int(green), int(blue))
 
-#def glColor3usv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor3usv(???(v))
+def glColor3usv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 3, _C_GL_1_1.GLushort)
+    _C_GL_1_1.glColor3usv(c_v)
 
 def glColor4b(red, green, blue, alpha):
     """
@@ -628,11 +667,13 @@ def glColor4b(red, green, blue, alpha):
     """
     _C_GL_1_1.glColor4b(int(red), int(green), int(blue), int(alpha))
 
-#def glColor4bv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor4bv(???(v))
+def glColor4bv(v):
+    """
+    v                : List[int] | bytes
+        Value range <-128, 127>.
+    """
+    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLbyte)
+    _C_GL_1_1.glColor4bv(c_v)
 
 def glColor4d(red, green, blue, alpha):
     """
@@ -643,11 +684,12 @@ def glColor4d(red, green, blue, alpha):
     """
     _C_GL_1_1.glColor4d(float(red), float(green), float(blue), float(alpha))
 
-#def glColor4dv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor4dv(???(v))
+def glColor4dv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glColor4dv(c_v)
 
 def glColor4f(red, green, blue, alpha):
     """
@@ -658,11 +700,12 @@ def glColor4f(red, green, blue, alpha):
     """
     _C_GL_1_1.glColor4f(float(red), float(green), float(blue), float(alpha))
 
-#def glColor4fv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor4fv(???(v))
+def glColor4fv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glColor4fv(c_v)
 
 def glColor4i(red, green, blue, alpha):
     """
@@ -673,11 +716,12 @@ def glColor4i(red, green, blue, alpha):
     """
     _C_GL_1_1.glColor4i(int(red), int(green), int(blue), int(alpha))
 
-#def glColor4iv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor4iv(???(v))
+def glColor4iv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    _C_GL_1_1.glColor4iv(c_v)
 
 def glColor4s(red, green, blue, alpha):
     """
@@ -688,11 +732,12 @@ def glColor4s(red, green, blue, alpha):
     """
     _C_GL_1_1.glColor4s(int(red), int(green), int(blue), int(alpha))
 
-#def glColor4sv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor4sv(???(v))
+def glColor4sv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glColor4sv(c_v)
 
 def glColor4ub(red, green, blue, alpha):
     """
@@ -703,11 +748,13 @@ def glColor4ub(red, green, blue, alpha):
     """
     _C_GL_1_1.glColor4ub(int(red), int(green), int(blue), int(alpha))
 
-#def glColor4ubv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor4ubv(???(v))
+def glColor4ubv(v):
+    """
+    v                : List[int] | bytes
+        Value range <0, 255>
+    """
+    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLubyte)
+    _C_GL_1_1.glColor4ubv(c_v)
 
 def glColor4ui(red, green, blue, alpha):
     """
@@ -718,11 +765,12 @@ def glColor4ui(red, green, blue, alpha):
     """
     _C_GL_1_1.glColor4ui(int(red), int(green), int(blue), int(alpha))
 
-#def glColor4uiv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor4uiv(???(v))
+def glColor4uiv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLuint)
+    _C_GL_1_1.glColor4uiv(c_v)
 
 def glColor4us(red, green, blue, alpha):
     """
@@ -733,11 +781,12 @@ def glColor4us(red, green, blue, alpha):
     """
     _C_GL_1_1.glColor4us(int(red), int(green), int(blue), int(alpha))
 
-#def glColor4usv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glColor4usv(???(v))
+def glColor4usv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_to_c_array(int, v, 4, _C_GL_1_1.GLushort)
+    _C_GL_1_1.glColor4usv(c_v)
 
 
 def glIndexd(c):
@@ -2271,9 +2320,10 @@ def glAccum(op, value):
 #    u2               : float
 #    stride           : int
 #    order            : int
-#    points           : ???
+#    points           : List[float]
 #    """
-#    _C_GL_1_1.glMap1d(int(target), float(u1), float(u2), int(stride), int(order), ???(points))
+#    c_points = (_C_GL_1_1.GLdouble * max(int(stride) * int(order), len(points)))(*(float(point) for point in points))
+#    _C_GL_1_1.glMap1d(int(target), float(u1), float(u2), int(stride), int(order), c_points)
 
 #def glMap1f(target, u1, u2, stride, order, points):
 #    """

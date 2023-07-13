@@ -117,6 +117,11 @@ def do_on_destroy():
     print("Bye. Bye.")
 
 def draw():
+    glPushAttrib(GL_COLOR_BUFFER_BIT)
+
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
     glClear(GL_COLOR_BUFFER_BIT)
 
     glMatrixMode(GL_MODELVIEW)
@@ -125,6 +130,8 @@ def draw():
     _data.animated_triangle.draw()
 
     if "show_fps" in _data.options: _data.fps_counter.update()
+
+    glPopAttrib()
 
 def do_on_key(key_id, is_down, extra):
     if False:
