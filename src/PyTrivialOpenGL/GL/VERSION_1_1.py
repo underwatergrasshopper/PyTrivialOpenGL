@@ -1004,14 +1004,18 @@ def glDrawArrays(mode, first, count):
     """
     _C_GL_1_1.glDrawArrays(int(mode), int(first), int(count))
 
-#def glDrawElements(mode, count, type_, indices):
-#    """
-#    mode             : int
-#    count            : int
-#    type_            : int
-#    indices          : ???
-#    """
-#    _C_GL_1_1.glDrawElements(int(mode), int(count), int(type_), ???(indices))
+def glDrawElements(mode, count, type_, indices):
+    """
+    mode             : int
+    count            : int
+    type_            : int
+    indices          : List[int | float]
+    """
+    py_type = _gl_type_id_to_py_type(type_)
+    c_type  = _gl_type_id_to_c_type(type_)
+
+    c_indices = _list_to_c_array(py_type, indices, int(count), c_type)
+    _C_GL_1_1.glDrawElements(int(mode), int(count), int(type_), c_indices)
 
 #def glInterleavedArrays(format_, stride, pointer):
 #    """
