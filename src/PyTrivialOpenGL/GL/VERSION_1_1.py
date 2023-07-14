@@ -1017,6 +1017,7 @@ def glDrawElements(mode, count, type_, indices):
     c_indices = _list_to_c_array(py_type, indices, int(count), c_type)
     _C_GL_1_1.glDrawElements(int(mode), int(count), int(type_), c_indices)
 
+# ToDo: Implement.
 #def glInterleavedArrays(format_, stride, pointer):
 #    """
 #    format_          : int
@@ -1039,12 +1040,14 @@ def glRectd(x1, y1, x2, y2):
     """
     _C_GL_1_1.glRectd(float(x1), float(y1), float(x2), float(y2))
 
-#def glRectdv(v1, v2):
-#    """
-#    v1               : ???
-#    v2               : ???
-#    """
-#    _C_GL_1_1.glRectdv(???(v1), ???(v2))
+def glRectdv(v1, v2):
+    """
+    v1               : List[float]
+    v2               : List[float]
+    """
+    c_v1 = _list_part_to_c_array(float, v1, 2, _C_GL_1_1.GLdouble)
+    c_v2 = _list_part_to_c_array(float, v2, 2, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glRectdv(c_v1, c_v2)
 
 def glRectf(x1, y1, x2, y2):
     """
@@ -1055,12 +1058,14 @@ def glRectf(x1, y1, x2, y2):
     """
     _C_GL_1_1.glRectf(float(x1), float(y1), float(x2), float(y2))
 
-#def glRectfv(v1, v2):
-#    """
-#    v1               : ???
-#    v2               : ???
-#    """
-#    _C_GL_1_1.glRectfv(???(v1), ???(v2))
+def glRectfv(v1, v2):
+    """
+    v1               : List[float]
+    v2               : List[float]
+    """
+    c_v1 = _list_part_to_c_array(float, v1, 2, _C_GL_1_1.GLfloat)
+    c_v2 = _list_part_to_c_array(float, v2, 2, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glRectfv(c_v1, c_v2)
 
 def glRecti(x1, y1, x2, y2):
     """
@@ -1071,12 +1076,14 @@ def glRecti(x1, y1, x2, y2):
     """
     _C_GL_1_1.glRecti(int(x1), int(y1), int(x2), int(y2))
 
-#def glRectiv(v1, v2):
-#    """
-#    v1               : ???
-#    v2               : ???
-#    """
-#    _C_GL_1_1.glRectiv(???(v1), ???(v2))
+def glRectiv(v1, v2):
+    """
+    v1               : List[int]
+    v2               : List[int]
+    """
+    c_v1 = _list_part_to_c_array(int, v1, 2, _C_GL_1_1.GLint)
+    c_v2 = _list_part_to_c_array(int, v2, 2, _C_GL_1_1.GLint)
+    _C_GL_1_1.glRectiv(c_v1, c_v2)
 
 def glRects(x1, y1, x2, y2):
     """
@@ -1087,13 +1094,14 @@ def glRects(x1, y1, x2, y2):
     """
     _C_GL_1_1.glRects(int(x1), int(y1), int(x2), int(y2))
 
-#def glRectsv(v1, v2):
-#    """
-#    v1               : ???
-#    v2               : ???
-#    """
-#    _C_GL_1_1.glRectsv(???(v1), ???(v2))
-
+def glRectsv(v1, v2):
+    """
+    v1               : List[int]
+    v2               : List[int]
+    """
+    c_v1 = _list_part_to_c_array(int, v1, 2, _C_GL_1_1.GLshort)
+    c_v2 = _list_part_to_c_array(int, v2, 2, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glRectsv(c_v1, c_v2)
 
 # Matrices
 

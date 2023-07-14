@@ -16,33 +16,10 @@ def do_on_destroy():
 def draw():
     glClear(GL_COLOR_BUFFER_BIT)
 
-    vertices = [
-        -0.5,      0.5,
-        -0.5,   -0.5,
-        0.5,    -0.5,
-        0.5,      0.5,
-    ]
 
-    colors = [
-        1, 0, 0,
-        0, 1, 0,
-        0, 0, 1,
-        1, 1, 1,
-    ]
+    glColor3f(1, 0, 0)
+    glRectdv([-0.5, -0.5], [0.5, 0.5])
 
-    glEnableClientState(GL_VERTEX_ARRAY)
-    glEnableClientState(GL_COLOR_ARRAY)
-
-    glVertexPointer(2, GL_FLOAT, 0, vertices)
-    glColorPointer(3, GL_FLOAT, 0, colors)
-
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, [
-        0, 1, 2, 
-        0, 2, 3
-    ])
-
-    glDisableClientState(GL_VERTEX_ARRAY)
-    glDisableClientState(GL_COLOR_ARRAY)
 
 def do_on_key(key_id, is_down, extra):
     if not is_down:
@@ -56,7 +33,7 @@ def run(name, options):
     togl.set_log_level(togl.LogLevel.INFO)
 
     return togl.to_window().create_and_run(
-        window_name         = "Draw Elements",
+        window_name         = "Draw Rectangle",
         area                = (800, 400),
         style               = togl.WindowStyleBit.DRAW_AREA_SIZE,
 

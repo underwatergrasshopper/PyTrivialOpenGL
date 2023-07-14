@@ -6,6 +6,7 @@ import simple_triangle
 import window_area
 import example_draw_array
 import example_draw_elements
+import example_draw_rectangle
 
 example_manager = ExampleManager()
 
@@ -60,6 +61,7 @@ example_manager.add_example("simple_triangle", simple_triangle.run)
 example_manager.add_example("window_area", window_area.run)
 example_manager.add_example("draw_array", example_draw_array.run)
 example_manager.add_example("draw_elements", example_draw_elements.run)
+example_manager.add_example("draw_rectangle", example_draw_rectangle.run)
 
 def run():
     example_manager.set_default("area_and_state_debug")
