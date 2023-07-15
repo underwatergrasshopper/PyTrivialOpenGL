@@ -1543,11 +1543,12 @@ def glRasterPos2d(x, y):
     """
     _C_GL_1_1.glRasterPos2d(float(x), float(y))
 
-#def glRasterPos2dv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glRasterPos2dv(???(v))
+def glRasterPos2dv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_part_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glRasterPos2dv(c_v)
 
 def glRasterPos2f(x, y):
     """
@@ -1556,11 +1557,12 @@ def glRasterPos2f(x, y):
     """
     _C_GL_1_1.glRasterPos2f(float(x), float(y))
 
-#def glRasterPos2fv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glRasterPos2fv(???(v))
+def glRasterPos2fv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_part_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glRasterPos2fv(c_v)
 
 def glRasterPos2i(x, y):
     """
@@ -1569,11 +1571,12 @@ def glRasterPos2i(x, y):
     """
     _C_GL_1_1.glRasterPos2i(int(x), int(y))
 
-#def glRasterPos2iv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glRasterPos2iv(???(v))
+def glRasterPos2iv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_part_to_c_array(int, v, 2, _C_GL_1_1.GLint)
+    _C_GL_1_1.glRasterPos2iv(c_v)
 
 def glRasterPos2s(x, y):
     """
@@ -1582,11 +1585,12 @@ def glRasterPos2s(x, y):
     """
     _C_GL_1_1.glRasterPos2s(int(x), int(y))
 
-#def glRasterPos2sv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glRasterPos2sv(???(v))
+def glRasterPos2sv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_part_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glRasterPos2sv(c_v)
 
 def glRasterPos3d(x, y, z):
     """
@@ -1596,11 +1600,12 @@ def glRasterPos3d(x, y, z):
     """
     _C_GL_1_1.glRasterPos3d(float(x), float(y), float(z))
 
-#def glRasterPos3dv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glRasterPos3dv(???(v))
+def glRasterPos3dv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glRasterPos3dv(c_v)
 
 def glRasterPos3f(x, y, z):
     """
@@ -1610,11 +1615,12 @@ def glRasterPos3f(x, y, z):
     """
     _C_GL_1_1.glRasterPos3f(float(x), float(y), float(z))
 
-#def glRasterPos3fv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glRasterPos3fv(???(v))
+def glRasterPos3fv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glRasterPos3fv(c_v)
 
 def glRasterPos3i(x, y, z):
     """
@@ -1624,11 +1630,12 @@ def glRasterPos3i(x, y, z):
     """
     _C_GL_1_1.glRasterPos3i(int(x), int(y), int(z))
 
-#def glRasterPos3iv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glRasterPos3iv(???(v))
+def glRasterPos3iv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    _C_GL_1_1.glRasterPos3iv(c_v)
 
 def glRasterPos3s(x, y, z):
     """
@@ -1638,11 +1645,12 @@ def glRasterPos3s(x, y, z):
     """
     _C_GL_1_1.glRasterPos3s(int(x), int(y), int(z))
 
-#def glRasterPos3sv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glRasterPos3sv(???(v))
+def glRasterPos3sv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glRasterPos3sv(c_v)
 
 def glRasterPos4d(x, y, z, w):
     """
@@ -1653,11 +1661,12 @@ def glRasterPos4d(x, y, z, w):
     """
     _C_GL_1_1.glRasterPos4d(float(x), float(y), float(z), float(w))
 
-#def glRasterPos4dv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glRasterPos4dv(???(v))
+def glRasterPos4dv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glRasterPos4dv(c_v)
 
 def glRasterPos4f(x, y, z, w):
     """
@@ -1668,11 +1677,12 @@ def glRasterPos4f(x, y, z, w):
     """
     _C_GL_1_1.glRasterPos4f(float(x), float(y), float(z), float(w))
 
-#def glRasterPos4fv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glRasterPos4fv(???(v))
+def glRasterPos4fv(v):
+    """
+    v                : List[float]
+    """
+    c_v = _list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glRasterPos4fv(c_v)
 
 def glRasterPos4i(x, y, z, w):
     """
@@ -1683,11 +1693,12 @@ def glRasterPos4i(x, y, z, w):
     """
     _C_GL_1_1.glRasterPos4i(int(x), int(y), int(z), int(w))
 
-#def glRasterPos4iv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glRasterPos4iv(???(v))
+def glRasterPos4iv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    _C_GL_1_1.glRasterPos4iv(c_v)
 
 def glRasterPos4s(x, y, z, w):
     """
@@ -1698,12 +1709,12 @@ def glRasterPos4s(x, y, z, w):
     """
     _C_GL_1_1.glRasterPos4s(int(x), int(y), int(z), int(w))
 
-#def glRasterPos4sv(v):
-#    """
-#    v                : ???
-#    """
-#    _C_GL_1_1.glRasterPos4sv(???(v))
-
+def glRasterPos4sv(v):
+    """
+    v                : List[int]
+    """
+    c_v = _list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    _C_GL_1_1.glRasterPos4sv(c_v)
 
 ### Rasterization ###
 
@@ -1714,7 +1725,6 @@ def glPointSize(size):
     size             : float
     """
     _C_GL_1_1.glPointSize(float(size))
-
 
 # Line Segments
 
@@ -1734,15 +1744,15 @@ def glLineStipple(factor, pattern):
     """
     _C_GL_1_1.glLineStipple(int(factor), int(pattern))
 
-
 # Stipple Query
 
+# ToDo: Implement.
+# 32bit x 32bits, each element of list is one bit (0 or 1).
 #def glGetPolygonStipple(mask):
 #    """
-#    mask             : ???
+#    mask             : List[int]
 #    """
 #    _C_GL_1_1.glGetPolygonStipple(???(mask))
-
 
 # Polygons
 
@@ -1758,15 +1768,14 @@ def glCullFace(mode):
     """
     _C_GL_1_1.glCullFace(int(mode))
 
-
 # Stippling
 
+# ToDo: Implement.
 #def glPolygonStipple(mask):
 #    """
 #    mask             : ???
 #    """
 #    _C_GL_1_1.glPolygonStipple(???(mask))
-
 
 # Polygon Rasterization & Depth Offset
 
@@ -1783,7 +1792,6 @@ def glPolygonOffset(factor, units):
     units            : float
     """
     _C_GL_1_1.glPolygonOffset(float(factor), float(units))
-
 
 # Pixel Rectangles
 
@@ -1818,7 +1826,7 @@ def glPixelTransferi(pname, param):
     """
     _C_GL_1_1.glPixelTransferi(int(pname), int(param))
 
-
+# ToDo: Implement.
 #def glPixelMapfv(map_, mapsize, values):
 #    """
 #    map_             : int
@@ -2819,14 +2827,14 @@ def glEnable(cap):
 
 def glGetIntegerv(pname, n):
     """
-    pname   : int
-    n       : int
+    pname           : int
+    n               : int
         Number of integers to get.
-    Returns (List[int]).
+    ReturnType      : List[int]
     """
-    params = (_C_GL_1_1.GLint * n)()
-    _C_GL_1_1.glGetIntegerv(int(pname), _ctypes.byref(params))
-    return [int(param) for param in params]
+    c_params = _make_c_array(_C_GL_1_1.GLint, n)
+    _C_GL_1_1.glGetIntegerv(int(pname), c_params)
+    return _c_array_to_list(int, c_params)
 
 #def glGetFloatv(pname, params):
 #    """
