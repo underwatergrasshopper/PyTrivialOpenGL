@@ -39,13 +39,16 @@
     <Compile Include="examples\ActionChain.py" />
     <Compile Include="examples\all_examples.py" />
     <Compile Include="examples\AnimatedTriangle.py" />
+    <Compile Include="examples\example_light.py" />
     <Compile Include="examples\example_draw_rectangle.py" />
     <Compile Include="examples\example_draw_elements.py" />
     <Compile Include="examples\example_draw_array.py" />
+    <Compile Include="examples\example_clip_plane.py" />
     <Compile Include="examples\mouse_and_keyboard_debug.py" />
     <Compile Include="examples\ExampleManager.py" />
     <Compile Include="examples\ExampleSupport.py" />
     <Compile Include="examples\area_and_state_debug.py" />
+    <Compile Include="examples\example_matrix.py" />
     <Compile Include="examples\window_area.py" />
     <Compile Include="examples\simple_triangle.py" />
     <Compile Include="setup.py" />

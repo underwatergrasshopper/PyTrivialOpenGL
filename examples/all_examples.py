@@ -7,6 +7,9 @@ import window_area
 import example_draw_array
 import example_draw_elements
 import example_draw_rectangle
+import example_matrix
+import example_clip_plane
+import example_light
 
 example_manager = ExampleManager()
 
@@ -62,6 +65,12 @@ example_manager.add_example("window_area", window_area.run)
 example_manager.add_example("draw_array", example_draw_array.run)
 example_manager.add_example("draw_elements", example_draw_elements.run)
 example_manager.add_example("draw_rectangle", example_draw_rectangle.run)
+example_manager.add_example("matrix", example_matrix.run)
+example_manager.add_example("clip_plane", example_clip_plane.run)
+example_manager.add_example("light", example_light.run)
+
+
+
 
 def run():
     example_manager.set_default("area_and_state_debug")

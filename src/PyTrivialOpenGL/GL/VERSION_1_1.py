@@ -44,6 +44,21 @@ def _gl_type_id_to_py_type(type_):
     else:
         raise ValueError("Unexpected 'type_' value.")
 
+def _cache_make_c_array(c_type, length):
+    _cache.c_array = (c_type * length)()
+    return _cache.c_array
+
+def _cache_c_array_to_list(py_type):
+    c_array = _cache.c_array
+    _cache.c_array = None
+    return [py_type(element) for element in c_array]
+
+def _make_c_array(c_type, length):
+    return (c_type * length)()
+
+def _c_array_to_list(py_type, c_array):
+    return [py_type(element) for element in c_array]
+
 class _Cache:
     def __init__(self):
         self.c_vertex_array_pointer     = None
@@ -52,6 +67,8 @@ class _Cache:
         self.c_index_array_pointer      = None
         self.c_edge_flag_array_pointer  = None
         self.c_tex_coord_array_pointer  = None
+
+        self.c_array                    = None
 
 _cache = _Cache()
 
@@ -1111,29 +1128,33 @@ def glMatrixMode(mode):
     """
     _C_GL_1_1.glMatrixMode(int(mode))
 
-#def glLoadMatrixd(m):
-#    """
-#    m                : ???
-#    """
-#    _C_GL_1_1.glLoadMatrixd(???(m))
+def glLoadMatrixd(m):
+    """
+    m                : ???
+    """
+    c_m = _list_part_to_c_array(float, m, 16, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glLoadMatrixd(c_m)
 
-#def glLoadMatrixf(m):
-#    """
-#    m                : ???
-#    """
-#    _C_GL_1_1.glLoadMatrixf(???(m))
+def glLoadMatrixf(m):
+    """
+    m                : ???
+    """
+    c_m = _list_part_to_c_array(float, m, 16, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glLoadMatrixf(c_m)
 
-#def glMultMatrixd(m):
-#    """
-#    m                : ???
-#    """
-#    _C_GL_1_1.glMultMatrixd(???(m))
+def glMultMatrixd(m):
+    """
+    m                : ???
+    """
+    c_m = _list_part_to_c_array(float, m, 16, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glMultMatrixd(c_m)
 
-#def glMultMatrixf(m):
-#    """
-#    m                : ???
-#    """
-#    _C_GL_1_1.glMultMatrixf(???(m))
+def glMultMatrixf(m):
+    """
+    m                : ???
+    """
+    c_m = _list_part_to_c_array(float, m, 16, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glMultMatrixf(c_m)
 
 def glLoadIdentity():
     _C_GL_1_1.glLoadIdentity()
@@ -1227,6 +1248,7 @@ def glTexGend(coord, pname, param):
     """
     _C_GL_1_1.glTexGend(int(coord), int(pname), float(param))
 
+# ToDo: Implement.
 #def glTexGendv(coord, pname, params):
 #    """
 #    coord            : int
@@ -1291,20 +1313,22 @@ def glViewport(x, y, width, height):
 
 # Clipping
 
-#def glClipPlane(plane, equation):
-#    """
-#    plane            : int
-#    equation         : ???
-#    """
-#    _C_GL_1_1.glClipPlane(int(plane), ???(equation))
+def glClipPlane(plane, equation):
+    """
+    plane            : int
+    equation         : List[float]
+    """
+    c_equation = _list_part_to_c_array(float, equation, 4, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glClipPlane(int(plane), c_equation)
 
-#def glGetClipPlane(plane, equation):
-#    """
-#    plane            : int
-#    equation         : ???
-#    """
-#    _C_GL_1_1.glGetClipPlane(int(plane), ???(equation))
-
+def glGetClipPlane(plane):
+    """
+    plane           : int
+    ReturnType      : List[float]
+    """
+    c_equation = _make_c_array(_C_GL_1_1.GLdouble, 4)
+    _C_GL_1_1.glGetClipPlane(int(plane), c_equation)
+    return _c_array_to_list(float, c_equation)
 
 ### Lighting and Color ###
 
@@ -1318,13 +1342,14 @@ def glMaterialf(face, pname, param):
     """
     _C_GL_1_1.glMaterialf(int(face), int(pname), float(param))
 
-#def glMaterialfv(face, pname, params):
-#    """
-#    face             : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glMaterialfv(int(face), int(pname), ???(params))
+def glMaterialfv(face, pname, params):
+    """
+    face             : int
+    pname            : int
+    params           : List[float]
+    """
+    c_params = _list_to_c_array(float, params, 1, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glMaterialfv(int(face), int(pname), c_params)
 
 def glMateriali(face, pname, param):
     """
@@ -1334,13 +1359,14 @@ def glMateriali(face, pname, param):
     """
     _C_GL_1_1.glMateriali(int(face), int(pname), int(param))
 
-#def glMaterialiv(face, pname, params):
-#    """
-#    face             : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glMaterialiv(int(face), int(pname), ???(params))
+def glMaterialiv(face, pname, params):
+    """
+    face             : int
+    pname            : int
+    params           : List[int]
+    """
+    c_params = _list_to_c_array(int, params, 1, _C_GL_1_1.GLint)
+    _C_GL_1_1.glMaterialiv(int(face), int(pname), c_params)
 
 
 def glLightf(light, pname, param):
@@ -1351,13 +1377,14 @@ def glLightf(light, pname, param):
     """
     _C_GL_1_1.glLightf(int(light), int(pname), float(param))
 
-#def glLightfv(light, pname, params):
-#    """
-#    light            : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glLightfv(int(light), int(pname), ???(params))
+def glLightfv(light, pname, params):
+    """
+    light            : int
+    pname            : int
+    params           : List[float]
+    """
+    c_params = _list_to_c_array(float, params, 1, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glLightfv(int(light), int(pname), c_params)
 
 def glLighti(light, pname, param):
     """
@@ -1367,13 +1394,14 @@ def glLighti(light, pname, param):
     """
     _C_GL_1_1.glLighti(int(light), int(pname), int(param))
 
-#def glLightiv(light, pname, params):
-#    """
-#    light            : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glLightiv(int(light), int(pname), ???(params))
+def glLightiv(light, pname, params):
+    """
+    light            : int
+    pname            : int
+    params           : List[int]
+    """
+    c_params = _list_to_c_array(int, params, 1, _C_GL_1_1.GLint)
+    _C_GL_1_1.glLightiv(int(light), int(pname), c_params)
 
 
 def glLightModelf(pname, param):
@@ -1383,12 +1411,13 @@ def glLightModelf(pname, param):
     """
     _C_GL_1_1.glLightModelf(int(pname), float(param))
 
-#def glLightModelfv(pname, params):
-#    """
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glLightModelfv(int(pname), ???(params))
+def glLightModelfv(pname, params):
+    """
+    pname            : int
+    params           : List[float]
+    """
+    c_params = _list_to_c_array(float, params, 1, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glLightModelfv(int(pname), c_params)
 
 def glLightModeli(pname, param):
     """
@@ -1397,12 +1426,13 @@ def glLightModeli(pname, param):
     """
     _C_GL_1_1.glLightModeli(int(pname), int(param))
 
-#def glLightModeliv(pname, params):
-#    """
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glLightModeliv(int(pname), ???(params))
+def glLightModeliv(pname, params):
+    """
+    pname            : int
+    params           : List[int]
+    """
+    c_params = _list_to_c_array(int, params, 1, _C_GL_1_1.GLint)
+    _C_GL_1_1.glLightModeliv(int(pname), c_params)
 
 
 # ColorMaterial 
@@ -1426,38 +1456,81 @@ def glShadeModel(mode):
 
 # Queries
 
-#def glGetLightfv(light, pname, params):
-#    """
-#    light            : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetLightfv(int(light), int(pname), ???(params))
+def glGetLightfv(light, pname):
+    """
+    light            : int
+    pname            : int
+    ReturnType       : List[float]
+    """
+    if pname in [GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_POSITION]:
+        length = 4
+    elif pname in [GL_SPOT_DIRECTION]:
+        length = 3
+    elif pname in [GL_SPOT_EXPONENT, GL_SPOT_CUTOFF, GL_CONSTANT_ATTENUATION, GL_LINEAR_ATTENUATION, GL_QUADRATIC_ATTENUATION]:
+        length = 1
+    else:
+        ValueError("Unexpected 'pname' value.")
 
-#def glGetLightiv(light, pname, params):
-#    """
-#    light            : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetLightiv(int(light), int(pname), ???(params))
+    c_params = _make_c_array(_C_GL_1_1.GLfloat, length)
+    _C_GL_1_1.glGetLightfv(int(light), int(pname), c_params)
+    return _c_array_to_list(float, c_params)
 
-#def glGetMaterialfv(face, pname, params):
-#    """
-#    face             : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetMaterialfv(int(face), int(pname), ???(params))
+def glGetLightiv(light, pname):
+    """
+    light            : int
+    pname            : int
+    ReturnType       : List[int]
+    """
+    if pname in [GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_POSITION]:
+        length = 4
+    elif pname in [GL_SPOT_DIRECTION]:
+        length = 3
+    elif pname in [GL_SPOT_EXPONENT, GL_SPOT_CUTOFF, GL_CONSTANT_ATTENUATION, GL_LINEAR_ATTENUATION, GL_QUADRATIC_ATTENUATION]:
+        length = 1
+    else:
+        ValueError("Unexpected 'pname' value.")
 
-#def glGetMaterialiv(face, pname, params):
-#    """
-#    face             : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetMaterialiv(int(face), int(pname), ???(params))
+    c_params = _make_c_array(_C_GL_1_1.GLint, length)
+    _C_GL_1_1.glGetLightiv(int(light), int(pname), c_params)
+    return _c_array_to_list(int, c_params)
 
+def glGetMaterialfv(face, pname):
+    """
+    face             : int
+    pname            : int
+    ReturnType       : List[float]
+    """
+    if pname in [GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_EMISSION]:
+        length = 4
+    elif pname in [GL_COLOR_INDEXES]:
+        length = 3
+    elif pname in [GL_SHININESS]:
+        length = 1
+    else:
+        ValueError("Unexpected 'pname' value.")
+
+    c_params = _make_c_array(_C_GL_1_1.GLfloat, length)
+    _C_GL_1_1.glGetMaterialfv(int(face), int(pname), c_params)
+    return _c_array_to_list(float, c_params)
+
+def glGetMaterialiv(face, pname):
+    """
+    face             : int
+    pname            : int
+    ReturnType       : List[int]
+    """
+    if pname in [GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_EMISSION]:
+        length = 4
+    elif pname in [GL_COLOR_INDEXES]:
+        length = 3
+    elif pname in [GL_SHININESS]:
+        length = 1
+    else:
+        ValueError("Unexpected 'pname' value.")
+
+    c_params = _make_c_array(_C_GL_1_1.GLint, length)
+    _C_GL_1_1.glGetMaterialiv(int(face), int(pname), c_params)
+    return _c_array_to_list(int, c_params)
 
 ### Rendering Control and Queries ###
 
