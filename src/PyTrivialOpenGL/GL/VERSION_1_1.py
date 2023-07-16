@@ -79,7 +79,7 @@ def glGetError():
     """
     Returns (int).
     """
-    int(_C_GL_1_1.glGetError())
+    return int(_C_GL_1_1.glGetError())
 
 ### Vertex Specification ###
 
@@ -105,9 +105,9 @@ def glEdgeFlag(flag):
 
 def glEdgeFlagv(flag):
     """
-    flag             : List[int]
+    flag             : List[bool]
     """
-    c_flag = _list_part_to_c_array(int, flag, 1, _C_GL_1_1.GLboolean)
+    c_flag = _list_part_to_c_array(bool, flag, 1, _C_GL_1_1.GLboolean)
     _C_GL_1_1.glEdgeFlagv(c_flag)
 
 # Vertex Specification
@@ -2085,9 +2085,9 @@ def glBindTexture(target, texture):
 #    n                : int
 #    textures         : ???
 #    residences       : ???
-#    Returns (int).
+#    Returns (bool).
 #    """
-#    int(_C_GL_1_1.glAreTexturesResident(int(n), ???(textures), ???(residences)))
+#    return bool(_C_GL_1_1.glAreTexturesResident(int(n), ???(textures), ???(residences)))
 
 #def glPrioritizeTextures(n, textures, priorities):
 #    """
@@ -2226,9 +2226,9 @@ def glTexEnvi(target, pname, param):
 def glIsTexture(texture):
     """
     texture          : int
-    Returns (int).
+    Returns (bool).
     """
-    int(_C_GL_1_1.glIsTexture(int(texture)))
+    return bool(_C_GL_1_1.glIsTexture(int(texture)))
 
 
 ### Color Sum, Fog, and Hints  ###
@@ -2402,18 +2402,18 @@ def glIndexMask(mask):
 
 def glColorMask(red, green, blue, alpha):
     """
-    red              : int
-    green            : int
-    blue             : int
-    alpha            : int
+    red              : bool
+    green            : bool
+    blue             : bool
+    alpha            : bool
     """
-    _C_GL_1_1.glColorMask(int(red), int(green), int(blue), int(alpha))
+    _C_GL_1_1.glColorMask(bool(red), bool(green), bool(blue), bool(alpha))
 
 def glDepthMask(flag):
     """
-    flag             : int
+    flag             : bool
     """
-    _C_GL_1_1.glDepthMask(int(flag))
+    _C_GL_1_1.glDepthMask(bool(flag))
 
 def glStencilMask(mask):
     """
@@ -2710,7 +2710,7 @@ def glRenderMode(mode):
     mode             : int
     Returns (int).
     """
-    int(_C_GL_1_1.glRenderMode(int(mode)))
+    return int(_C_GL_1_1.glRenderMode(int(mode)))
 
 #def glSelectBuffer(size, buffer):
 #    """
@@ -2774,14 +2774,14 @@ def glGenLists(range_):
     range_           : int
     Returns (int).
     """
-    int(_C_GL_1_1.glGenLists(int(range_)))
+    return int(_C_GL_1_1.glGenLists(int(range_)))
 
 def glIsList(list_):
     """
     list_            : int
-    Returns (int).
+    Returns (bool).
     """
-    int(_C_GL_1_1.glIsList(int(list_)))
+    return bool(_C_GL_1_1.glIsList(int(list_)))
 
 def glDeleteLists(list_, range_):
     """
@@ -2881,9 +2881,9 @@ def glGetDoublev(pname):
 def glIsEnabled(cap):
     """
     cap              : int
-    Returns (int).
+    Returns (bool).
     """
-    int(_C_GL_1_1.glIsEnabled(int(cap)))
+    return bool(_C_GL_1_1.glIsEnabled(int(cap)))
 
 
 # Pointer and String Queries 

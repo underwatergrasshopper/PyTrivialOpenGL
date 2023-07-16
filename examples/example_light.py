@@ -174,8 +174,14 @@ def do_on_create():
 
     glPushAttrib(GL_ALL_ATTRIB_BITS)
 
+    print(glIsEnabled(GL_CULL_FACE))
+    print(glIsEnabled(GL_DEPTH_TEST))
+
     glEnable(GL_CULL_FACE)
     glEnable(GL_DEPTH_TEST)
+
+    print(glIsEnabled(GL_CULL_FACE))
+    print(glIsEnabled(GL_DEPTH_TEST))
 
     glEnableClientState(GL_VERTEX_ARRAY)
     glEnableClientState(GL_NORMAL_ARRAY)
