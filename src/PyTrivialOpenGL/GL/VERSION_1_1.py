@@ -2,6 +2,7 @@ import ctypes as _ctypes
 
 from .._C_GL.VERSION_1_1.Constants import *
 from .._C_GL import VERSION_1_1 as _C_GL_1_1
+from ._Support import _get_num_of_get_values
 
 ### inner support ###
 
@@ -2818,37 +2819,64 @@ def glEnable(cap):
 
 # Simple Queries
 
-#def glGetBooleanv(pname, params):
-#    """
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetBooleanv(int(pname), ???(params))
+def glGetBooleanv(pname):
+    """
+    pname            : int
+    params           : List[bool]
+        Equivalent of 'params'.
+    """
+    num = _get_num_of_get_values(pname)
+    if num is None:
+        ValueError("Unexpected value of 'pname'.")
 
-def glGetIntegerv(pname, n):
+    c_params = _make_c_array(_C_GL_1_1.GLboolean, num)
+    _C_GL_1_1.glGetBooleanv(int(pname), c_params)
+    return _c_array_to_list(bool, c_params)
+
+def glGetIntegerv(pname):
     """
     pname           : int
-    n               : int
-        Number of integers to get.
     ReturnType      : List[int]
+        Equivalent of 'params'.
     """
-    c_params = _make_c_array(_C_GL_1_1.GLint, n)
+    num = _get_num_of_get_values(pname)
+    if num is None:
+        ValueError("Unexpected value of 'pname'.")
+
+    c_params = _make_c_array(_C_GL_1_1.GLint, num)
     _C_GL_1_1.glGetIntegerv(int(pname), c_params)
     return _c_array_to_list(int, c_params)
 
-#def glGetFloatv(pname, params):
-#    """
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetFloatv(int(pname), ???(params))
+def glGetFloatv(pname):
+    """
+    pname            : int
+    ReturnType       : List[float]
+        Equivalent of 'params'.
+    """
+    num = _get_num_of_get_values(pname)
+    if num is None:
+        ValueError("Unexpected value of 'pname'.")
 
-#def glGetDoublev(pname, params):
-#    """
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetDoublev(int(pname), ???(params))
+    c_params = _make_c_array(_C_GL_1_1.GLfloat, num)
+    _C_GL_1_1.glGetFloatv(int(pname), c_params)
+    return _c_array_to_list(float, c_params)
+
+
+def glGetDoublev(pname):
+    """
+    pname            : int
+    n                : int
+        Number of floats to get.
+    ReturnType       : List[float]
+        Equivalent of 'params'.
+    """
+    num = _get_num_of_get_values(pname)
+    if num is None:
+        ValueError("Unexpected value of 'pname'.")
+
+    c_params = _make_c_array(_C_GL_1_1.GLdouble, num)
+    _C_GL_1_1.glGetDoublev(int(pname), c_params)
+    return _c_array_to_list(float, c_params)
 
 def glIsEnabled(cap):
     """
@@ -2860,6 +2888,7 @@ def glIsEnabled(cap):
 
 # Pointer and String Queries 
 
+# Note: Get access to C pointer. Should not be implemented.
 #def glGetPointerv(pname, params):
 #    """
 #    pname            : int

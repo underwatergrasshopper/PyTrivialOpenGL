@@ -54,6 +54,7 @@
     <Compile Include="setup.py" />
     <Compile Include="src\PyTrivialOpenGL\Area.py" />
     <Compile Include="src\PyTrivialOpenGL\GL\VERSION_1_1.py" />
+    <Compile Include="src\PyTrivialOpenGL\GL\_Support.py" />
     <Compile Include="src\PyTrivialOpenGL\GL\__init__.py" />
     <Compile Include="src\PyTrivialOpenGL\Key.py" />
     <Compile Include="src\PyTrivialOpenGL\SpecialDebug.py" />

@@ -15,9 +15,6 @@ def do_on_create():
 def do_on_destroy():
     print("Bye. Bye.")
 
-
-
-
 def draw():
     glClear(GL_COLOR_BUFFER_BIT)
 

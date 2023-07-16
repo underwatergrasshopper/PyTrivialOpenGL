@@ -10,6 +10,13 @@ def do_on_create():
 
     glClearColor(0, 0, 0.5, 1)
 
+    print(glGetFloatv(GL_COLOR_CLEAR_VALUE))
+    print(glGetIntegerv(GL_MAX_TEXTURE_SIZE))
+    print(glGetBooleanv(GL_COLOR_WRITEMASK))
+
+    print(glGetBooleanv(GL_COLOR_WRITEMASK) == [GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE])
+    
+
 def do_on_destroy():
     print("Bye. Bye.")
 
