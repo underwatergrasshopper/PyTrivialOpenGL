@@ -11,6 +11,7 @@ import example_matrix
 import example_clip_plane
 import example_light
 import example_draw_pixels
+import example_draw_stipple
 
 example_manager = ExampleManager()
 
@@ -70,6 +71,7 @@ example_manager.add_example("matrix", example_matrix.run)
 example_manager.add_example("clip_plane", example_clip_plane.run)
 example_manager.add_example("light", example_light.run)
 example_manager.add_example("draw_pixels", example_draw_pixels.run)
+example_manager.add_example("draw_stipple", example_draw_stipple.run)
 
 def run():
     example_manager.set_default("area_and_state_debug")
