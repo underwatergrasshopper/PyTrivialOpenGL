@@ -6,7 +6,7 @@ __all__ = [
 ]
 
 def do_on_create():
-    print("X - Exit")
+    print("Escape - Exit")
 
     glClearColor(0, 0, 0.5, 1)
 

@@ -17,7 +17,7 @@ def isclose(l_a, l_b, delta):
 
 
 def do_on_create():
-    print("X - Exit")
+    print("Escape - Exit")
 
     glPushAttrib(GL_ENABLE_BIT)
 
@@ -69,7 +69,7 @@ def draw():
 
 def do_on_key(key_id, is_down, extra):
     if not is_down:
-        if key_id == 'X':
+        if key_id == togl.KeyId.ESCAPE:
             togl.to_window().request_close()
 
 def do_on_resize(width, height):

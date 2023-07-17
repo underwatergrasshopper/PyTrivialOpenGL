@@ -1747,13 +1747,16 @@ def glLineStipple(factor, pattern):
 
 # Stipple Query
 
-# ToDo: Implement.
-# 32bit x 32bits, each element of list is one bit (0 or 1).
-#def glGetPolygonStipple(mask):
-#    """
-#    mask             : List[int]
-#    """
-#    _C_GL_1_1.glGetPolygonStipple(???(mask))
+
+def glGetPolygonStipple():
+    """
+    Returns         : bytes
+        Equivalent of 'mask' parameter.
+    """
+    size = 32 * 32 // 8
+    c_mask = (_C_GL_1_1.GLubyte * size)()
+    _C_GL_1_1.glGetPolygonStipple(c_mask)
+    return bytes(c_mask)
 
 # Polygons
 
@@ -1771,12 +1774,14 @@ def glCullFace(mode):
 
 # Stippling
 
-# ToDo: Implement.
-#def glPolygonStipple(mask):
-#    """
-#    mask             : ???
-#    """
-#    _C_GL_1_1.glPolygonStipple(???(mask))
+
+def glPolygonStipple(mask):
+    """
+    mask             : bytes
+    """
+    size = 32 * 32 // 8
+    c_mask = (_C_GL_1_1.GLubyte * size).from_buffer_copy(mask)
+    _C_GL_1_1.glPolygonStipple(c_mask)
 
 # Polygon Rasterization & Depth Offset
 
@@ -2321,8 +2326,8 @@ def glReadPixels(x, y, width, height, format_, type_):
 
     width       = int(width)
     height      = int(height)
-    pixel_size  = format_count * type_size
-    size        = int(width * height * pixel_size)
+    pixel_size  = int(format_count * type_size)
+    size        = width * height * pixel_size
 
     if size > 0:
         c_pixels = _make_c_array(_C_GL_1_1.GLubyte, size)

@@ -170,7 +170,7 @@ class Data:
 _data = Data()
 
 def do_on_create():
-    print("X - Exit")
+    print("Escape - Exit")
 
     glPushAttrib(GL_ALL_ATTRIB_BITS)
 

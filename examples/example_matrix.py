@@ -8,7 +8,7 @@ __all__ = [
 ]
 
 def do_on_create():
-    print("X - Exit")
+    print("Escape - Exit")
 
     glClearColor(0, 0, 0.5, 1)
 
@@ -60,8 +60,8 @@ def draw():
     glPopMatrix()
 
 def do_on_key(key_id, is_down, extra):
-    if not is_down:
-        if key_id == 'X':
+    if key_id == togl.KeyId.ESCAPE:
+        if not is_down:
             togl.to_window().request_close()
 
 def do_on_resize(width, height):

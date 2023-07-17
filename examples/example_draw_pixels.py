@@ -10,7 +10,7 @@ _WIDTH = 800
 _HEIGHT = 400
 
 def do_on_create():
-    print("X - Exit")
+    print("Escape - Exit")
 
     glPushAttrib(GL_ALL_ATTRIB_BITS)
 
@@ -30,8 +30,6 @@ def do_on_destroy():
 def draw():
     glClear(GL_COLOR_BUFFER_BIT)
 
-    # Byte align: glPixelStorei, GL_UNPACK_ALIGNMENT.
-
     data = b""
     for _ in range(16 * 12):
         data += b"\xFF\x00\x00\x7F"
@@ -45,15 +43,25 @@ def draw():
     assert data_out[0:3] == b"\x7F\x00\x40" # half red and half clear color
 
     data = b""
-    for _ in range(16 * 12):
+    for _ in range(15 * 12):
         data += b"\xFF\x00\x00"
-    for _ in range(16 * 4):
+    for _ in range(15 * 4):
         data += b"\x00\xFF\x00"
 
     glRasterPos2i(16, 0)
-    glDrawPixels(16, 16, GL_RGB, GL_UNSIGNED_BYTE, data)
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1) # when GL_RGB
+    glDrawPixels(15, 16, GL_RGB, GL_UNSIGNED_BYTE, data)
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4) 
 
-    data_out = glReadPixels(16, 0, 16, 16, GL_RGB, GL_UNSIGNED_BYTE)
+    glPixelStorei(GL_PACK_ALIGNMENT, 1) # when GL_RGB
+    data_out = glReadPixels(16, 0, 15, 16, GL_RGB, GL_UNSIGNED_BYTE)
+    glPixelStorei(GL_PACK_ALIGNMENT, 4) 
+
+    # debug
+    #print(data)
+    #print(data_out)
+    #exit(1)
+
     assert data == data_out
 
     data = [
@@ -74,9 +82,9 @@ def draw():
         0, 1, 1,    0, 1, 1,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    
         0, 1, 1,    0, 1, 1,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,    0, 1, 0,      
     ]
+    
     glRasterPos2i(32, 0)
     glDrawPixels(16, 16, GL_RGB, GL_FLOAT, data)
-
 
     data = bytes.fromhex(
         "FFFFFFFF"
