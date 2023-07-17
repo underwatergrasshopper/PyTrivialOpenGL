@@ -1,7 +1,8 @@
-from .Point import Point
-from .Size  import Size
-from .Area  import Area
-from .      import _C_WinApi
+from .Point         import Point
+from .Size          import Size
+from .Area          import Area
+from .              import _C_WinApi
+from .GL._Support   import _get_gl_error_str
 
 import ctypes as _ctypes
 
@@ -118,7 +119,7 @@ def is_defined(target):
     """
     target : str
         OpenGl extension name or OpenGL core version name.
-    Returns (bool) True, when constants and functions for target are defined.
+    Returns (bool) True, when constants and functions for target are defined in C_GL module.
 
     Note: Even if constants and functions are defined, GPU vendor might not provide them.
     """
@@ -126,3 +127,6 @@ def is_defined(target):
         "GL_VERSION_1_0",
         "GL_VERSION_1_1",
     )
+
+def get_gl_error_str(gl_error_code):
+    return _get_gl_error_str(gl_error_code)

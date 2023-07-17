@@ -20,6 +20,17 @@ def _get_num_of_get_values(pname):
 
     return num
 
+def _get_read_pixels_format_count(format_):
+    return _read_pixels_format_count.get(format_, None)
+
+def _get_read_pixels_type_size(type_):
+    return _read_pixels_type_size.get(type_, None)
+
+def _get_gl_error_str(gl_error_code):
+    gl_error_str = _gl_error_code_to_str.get(gl_error_code, None)
+    if gl_error_str is None:
+        return "(%d)" % gl_error_code
+    return gl_error_str
 
 _num_of_get_values = {
     # Note: Commented elements are for OpenGL version above 1.1. 
@@ -511,4 +522,58 @@ _num_of_get_values = {
     # _C_GL.GL_VIEWPORT_SUBPIXEL_BITS : 1,
     _C_GL.GL_ZOOM_X : 1,
     _C_GL.GL_ZOOM_Y : 1,
+}
+
+_read_pixels_format_count = {
+    # Note: Commented elements are from OpenGL above 1.1.
+    _C_GL.GL_COLOR_INDEX          : 1,
+    _C_GL.GL_STENCIL_INDEX        : 1,
+    _C_GL.GL_DEPTH_COMPONENT      : 1,
+    _C_GL.GL_RGB                  : 3,
+    # _C_GL.GL_BGR                  : 3,
+    _C_GL.GL_RGBA                 : 4,
+    # _C_GL.GL_BGRA                 : 4,
+    _C_GL.GL_RED                  : 1,
+    _C_GL.GL_GREEN                : 1,
+    _C_GL.GL_BLUE                 : 1,
+    _C_GL.GL_ALPHA                : 1,
+    _C_GL.GL_LUMINANCE            : 1,
+    _C_GL.GL_LUMINANCE_ALPHA      : 1,
+}
+
+_read_pixels_type_size = {
+    # Note: Commented elements are from OpenGL above 1.1.
+    _C_GL.GL_UNSIGNED_BYTE                : 1,
+    _C_GL.GL_BYTE                         : 1,
+    _C_GL.GL_BITMAP                       : 1 / 8,
+    _C_GL.GL_UNSIGNED_SHORT               : 2,
+    _C_GL.GL_SHORT                        : 2,
+    _C_GL.GL_UNSIGNED_INT                 : 4,
+    _C_GL.GL_INT                          : 4,
+    _C_GL.GL_FLOAT                        : 4,
+    # _C_GL.GL_UNSIGNED_BYTE_3_3_2          : 1,
+    # _C_GL.GL_UNSIGNED_BYTE_2_3_3_REV      : 1,
+    # _C_GL.GL_UNSIGNED_SHORT_5_6_5         : 2,
+    # _C_GL.GL_UNSIGNED_SHORT_5_6_5_REV     : 2,
+    # _C_GL.GL_UNSIGNED_SHORT_4_4_4_4       : 2,
+    # _C_GL.GL_UNSIGNED_SHORT_4_4_4_4_REV   : 2,    
+    # _C_GL.GL_UNSIGNED_SHORT_5_5_5_1       : 2,
+    # _C_GL.GL_UNSIGNED_SHORT_1_5_5_5_REV   : 2,    
+    # _C_GL.GL_UNSIGNED_INT_8_8_8_8         : 4,
+    # _C_GL.GL_UNSIGNED_INT_8_8_8_8_REV     : 4,
+    # _C_GL.GL_UNSIGNED_INT_10_10_10_2      : 4,
+    # _C_GL.GL_UNSIGNED_INT_2_10_10_10_REV  : 4,    
+}
+
+_gl_error_code_to_str = {
+    # Note: Commented elements are from OpenGL above 1.1.
+    _C_GL.GL_NO_ERROR                       : "GL_NO_ERROR",
+    _C_GL.GL_INVALID_ENUM                   : "GL_INVALID_ENUM",
+    _C_GL.GL_INVALID_VALUE                  : "GL_INVALID_VALUE",
+    _C_GL.GL_INVALID_OPERATION              : "GL_INVALID_OPERATION",
+    # _C_GL.GL_INVALID_FRAMEBUFFER_OPERATION  : "GL_INVALID_FRAMEBUFFER_OPERATION",
+    _C_GL.GL_OUT_OF_MEMORY                  : "GL_OUT_OF_MEMORY",
+    _C_GL.GL_STACK_UNDERFLOW                : "GL_STACK_UNDERFLOW",
+    _C_GL.GL_STACK_OVERFLOW                 : "GL_STACK_OVERFLOW",
+    # _C_GL.GL_TABLE_TOO_LARGE                : "GL_TABLE_TOO_LARGE",
 }

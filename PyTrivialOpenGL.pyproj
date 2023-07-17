@@ -39,6 +39,7 @@
     <Compile Include="examples\ActionChain.py" />
     <Compile Include="examples\all_examples.py" />
     <Compile Include="examples\AnimatedTriangle.py" />
+    <Compile Include="examples\example_draw_pixels.py" />
     <Compile Include="examples\example_light.py" />
     <Compile Include="examples\example_draw_rectangle.py" />
     <Compile Include="examples\example_draw_elements.py" />
@@ -53,6 +54,7 @@
     <Compile Include="examples\simple_triangle.py" />
     <Compile Include="setup.py" />
     <Compile Include="src\PyTrivialOpenGL\Area.py" />
+    <Compile Include="src\PyTrivialOpenGL\C_GL.py" />
     <Compile Include="src\PyTrivialOpenGL\GL\VERSION_1_1.py" />
     <Compile Include="src\PyTrivialOpenGL\GL\_Support.py" />
     <Compile Include="src\PyTrivialOpenGL\GL\__init__.py" />

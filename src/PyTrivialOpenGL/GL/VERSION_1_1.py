@@ -2,7 +2,7 @@ import ctypes as _ctypes
 
 from .._C_GL.VERSION_1_1.Constants import *
 from .._C_GL import VERSION_1_1 as _C_GL_1_1
-from ._Support import _get_num_of_get_values
+from ._Support import _get_num_of_get_values, _get_read_pixels_format_count, _get_read_pixels_type_size
 
 ### inner support ###
 
@@ -1470,7 +1470,7 @@ def glGetLightfv(light, pname):
     elif pname in [GL_SPOT_EXPONENT, GL_SPOT_CUTOFF, GL_CONSTANT_ATTENUATION, GL_LINEAR_ATTENUATION, GL_QUADRATIC_ATTENUATION]:
         length = 1
     else:
-        ValueError("Unexpected 'pname' value.")
+        raise ValueError("Unexpected 'pname' value.")
 
     c_params = _make_c_array(_C_GL_1_1.GLfloat, length)
     _C_GL_1_1.glGetLightfv(int(light), int(pname), c_params)
@@ -1489,7 +1489,7 @@ def glGetLightiv(light, pname):
     elif pname in [GL_SPOT_EXPONENT, GL_SPOT_CUTOFF, GL_CONSTANT_ATTENUATION, GL_LINEAR_ATTENUATION, GL_QUADRATIC_ATTENUATION]:
         length = 1
     else:
-        ValueError("Unexpected 'pname' value.")
+        raise ValueError("Unexpected 'pname' value.")
 
     c_params = _make_c_array(_C_GL_1_1.GLint, length)
     _C_GL_1_1.glGetLightiv(int(light), int(pname), c_params)
@@ -1508,7 +1508,7 @@ def glGetMaterialfv(face, pname):
     elif pname in [GL_SHININESS]:
         length = 1
     else:
-        ValueError("Unexpected 'pname' value.")
+        raise ValueError("Unexpected 'pname' value.")
 
     c_params = _make_c_array(_C_GL_1_1.GLfloat, length)
     _C_GL_1_1.glGetMaterialfv(int(face), int(pname), c_params)
@@ -1527,7 +1527,7 @@ def glGetMaterialiv(face, pname):
     elif pname in [GL_SHININESS]:
         length = 1
     else:
-        ValueError("Unexpected 'pname' value.")
+        raise ValueError("Unexpected 'pname' value.")
 
     c_params = _make_c_array(_C_GL_1_1.GLint, length)
     _C_GL_1_1.glGetMaterialiv(int(face), int(pname), c_params)
@@ -1879,15 +1879,28 @@ def glPixelTransferi(pname, param):
 
 # Rasterization of Pixel Rectangles
 
-#def glDrawPixels(width, height, format_, type_, pixels):
-#    """
-#    width            : int
-#    height           : int
-#    format_          : int
-#    type_            : int
-#    pixels           : ???
-#    """
-#    _C_GL_1_1.glDrawPixels(int(width), int(height), int(format_), int(type_), ???(pixels))
+def glDrawPixels(width, height, format_, type_, pixels):
+    """
+    width            : int
+    height           : int
+    format_          : int
+    type_            : int
+    pixels           : bytes
+    pixels           : List[float | int]
+        Acceptable when 'type_' is GL_FLOAT and 'format_' is either GL_RGB or GL_RGBA.
+        Each element of list 'pixels' represents single color channel or alpha channel.
+    """
+    if isinstance(pixels, list):
+        if type_ == GL_FLOAT and format_ in [GL_RGB, GL_RGBA]:
+            pixel_size  = 3 if format_ is GL_RGB else 4
+            size        = int(width) * int(height) * pixel_size
+            c_pixels    = _list_part_to_c_array(float, pixels, size, _C_GL_1_1.GLfloat)
+        else:
+            raise ValueError("Parameter 'pixels' is accepted as list of integers or floats, only when 'type_' is GL_FLOAT and 'format_' is either GL_RGB or GL_RGBA.")
+    else:
+        c_pixels = bytes(pixels)
+
+    _C_GL_1_1.glDrawPixels(int(width), int(height), int(format_), int(type_), c_pixels)
 
 def glPixelZoom(xfactor, yfactor):
     """
@@ -1896,21 +1909,24 @@ def glPixelZoom(xfactor, yfactor):
     """
     _C_GL_1_1.glPixelZoom(float(xfactor), float(yfactor))
 
-
 # Bitmaps
 
-#def glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap):
-#    """
-#    width            : int
-#    height           : int
-#    xorig            : float
-#    yorig            : float
-#    xmove            : float
-#    ymove            : float
-#    bitmap           : ???
-#    """
-#    _C_GL_1_1.glBitmap(int(width), int(height), float(xorig), float(yorig), float(xmove), float(ymove), ???(bitmap))
+def glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap):
+    """
+    width            : int
+    height           : int
+    xorig            : float
+    yorig            : float
+    xmove            : float
+    ymove            : float
+    bitmap           : bytes
+    """
+    width = int(width)
+    hight = int(height)
+    size = width * height // 8
 
+    c_bitmap = (_C_GL_1_1.GLubyte * size).from_buffer_copy(bitmap)
+    _C_GL_1_1.glBitmap(int(width), int(height), float(xorig), float(yorig), float(xmove), float(ymove), c_bitmap)
 
 ### Texturing ###
 
@@ -2278,17 +2294,43 @@ def glHint(target, mode):
 
 # Reading Pixels
 
-#def glReadPixels(x, y, width, height, format_, type_, pixels):
-#    """
-#    x                : int
-#    y                : int
-#    width            : int
-#    height           : int
-#    format_          : int
-#    type_            : int
-#    pixels           : ???
-#    """
-#    _C_GL_1_1.glReadPixels(int(x), int(y), int(width), int(height), int(format_), int(type_), ???(pixels))
+def glReadPixels(x, y, width, height, format_, type_):
+    """
+    x               : int
+    y               : int
+    width           : int
+    height          : int
+    format_         : int
+        Equivalent of 'format' parameter.
+    type_           : int
+        Equivalent of 'type' parameter.
+
+    Returns         : bytes | None
+        Equivalent of 'pixels' parameter.
+        If type of returned object is bytes, then returned object contains pixel data.
+        If type of returned object is None, then computed size of pixels is below one byte (parameter 'width' or 'height' might be zero).
+    """
+
+    format_count = _get_read_pixels_format_count(format_)
+    if format_count is None:
+        raise ValueError("Unexpected value of 'format_' parameter.")
+
+    type_size = _get_read_pixels_type_size(type_)
+    if type_size is None:
+        raise ValueError("Unexpected value of 'type_' parameter.")
+
+    width       = int(width)
+    height      = int(height)
+    pixel_size  = format_count * type_size
+    size        = int(width * height * pixel_size)
+
+    if size > 0:
+        c_pixels = _make_c_array(_C_GL_1_1.GLubyte, size)
+        _C_GL_1_1.glReadPixels(int(x), int(y), width, height, int(format_), int(type_), c_pixels)
+        return bytes(c_pixels)
+    else:
+        _C_GL_1_1.glReadPixels(int(x), int(y), width, height, int(format_), int(type_), None)
+        return None
 
 def glReadBuffer(mode):
     """
@@ -2827,7 +2869,7 @@ def glGetBooleanv(pname):
     """
     num = _get_num_of_get_values(pname)
     if num is None:
-        ValueError("Unexpected value of 'pname'.")
+        raise ValueError("Unexpected value of 'pname'.")
 
     c_params = _make_c_array(_C_GL_1_1.GLboolean, num)
     _C_GL_1_1.glGetBooleanv(int(pname), c_params)
@@ -2841,7 +2883,7 @@ def glGetIntegerv(pname):
     """
     num = _get_num_of_get_values(pname)
     if num is None:
-        ValueError("Unexpected value of 'pname'.")
+        raise ValueError("Unexpected value of 'pname'.")
 
     c_params = _make_c_array(_C_GL_1_1.GLint, num)
     _C_GL_1_1.glGetIntegerv(int(pname), c_params)
@@ -2855,7 +2897,7 @@ def glGetFloatv(pname):
     """
     num = _get_num_of_get_values(pname)
     if num is None:
-        ValueError("Unexpected value of 'pname'.")
+        raise ValueError("Unexpected value of 'pname'.")
 
     c_params = _make_c_array(_C_GL_1_1.GLfloat, num)
     _C_GL_1_1.glGetFloatv(int(pname), c_params)
@@ -2872,7 +2914,7 @@ def glGetDoublev(pname):
     """
     num = _get_num_of_get_values(pname)
     if num is None:
-        ValueError("Unexpected value of 'pname'.")
+        raise ValueError("Unexpected value of 'pname'.")
 
     c_params = _make_c_array(_C_GL_1_1.GLdouble, num)
     _C_GL_1_1.glGetDoublev(int(pname), c_params)
@@ -2888,7 +2930,7 @@ def glIsEnabled(cap):
 
 # Pointer and String Queries 
 
-# Note: Get access to C pointer. Should not be implemented.
+# Note: Gets access to C pointer. Should not be implemented.
 #def glGetPointerv(pname, params):
 #    """
 #    pname            : int
