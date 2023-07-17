@@ -87,48 +87,54 @@ def draw():
     glDrawPixels(16, 16, GL_RGB, GL_FLOAT, data)
 
     data = bytes.fromhex(
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
-        "FFFFFFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
+        "FFFF"
     )
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
     glColor3f(0.5, 0, 1)
     glRasterPos2i(128, 128)
-    glBitmap(32, 16, 0, 0, 0, 0, data)
+    glBitmap(16, 16, 0, 0, 0, 0, data)
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4)
 
     data = bytes.fromhex(
-        "FF000000"
-        "FF000000"
-        "FF000000"
-        "FF000000"
-        "FF000000"
-        "FF000000"
-        "FF000000"
-        "FF000000"
-        "FFFF0000"
-        "FFFF0000"
-        "FF000000"
-        "FF000000"
-        "FF000000"
-        "FF000000"
-        "FFFFF000"
-        "FFFFF000"
+        "FF00"
+        "FF00"
+        "FF00"
+        "FF00"
+        "FF00"
+        "FF00"
+        "FF00"
+        "FF00"
+        "FFF0"
+        "FFF0"
+        "FF00"
+        "FF00"
+        "FF00"
+        "FF00"
+        "FFFF"
+        "FFFF"
     )
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
+
     glColor3f(0, 1, 0)
     glRasterPos2i(128, 128)
-    glBitmap(32, 16, 0, 0, 0, 0, data)
+    glBitmap(16, 16, 0, 0, 0, 0, data)
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4)
 
     error_code = glGetError()
     if error_code != 0:

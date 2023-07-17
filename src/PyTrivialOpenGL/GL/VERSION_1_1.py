@@ -1928,7 +1928,7 @@ def glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap):
     """
     width = int(width)
     hight = int(height)
-    size = width * height // 8
+    size = (width * height) // 8
 
     c_bitmap = (_C_GL_1_1.GLubyte * size).from_buffer_copy(bitmap)
     _C_GL_1_1.glBitmap(int(width), int(height), float(xorig), float(yorig), float(xmove), float(ymove), c_bitmap)
@@ -2802,13 +2802,73 @@ def glCallList(list_):
     """
     _C_GL_1_1.glCallList(int(list_))
 
-#def glCallLists(n, type_, lists):
-#    """
-#    n                : int
-#    type_            : int
-#    lists            : ???
-#    """
-#    _C_GL_1_1.glCallLists(int(n), int(type_), ???(lists))
+
+_call_lists_c_types = {
+    GL_BYTE             : _C_GL_1_1.GLbyte,
+    GL_UNSIGNED_BYTE    : _C_GL_1_1.GLubyte,
+    GL_SHORT            : _C_GL_1_1.GLshort,
+    GL_UNSIGNED_SHORT   : _C_GL_1_1.GLushort,
+    GL_INT              : _C_GL_1_1.GLint,
+    GL_UNSIGNED_INT     : _C_GL_1_1.GLuint,
+    GL_FLOAT            : _C_GL_1_1.GLfloat,
+    GL_2_BYTES          : _C_GL_1_1.GLubyte,
+    GL_3_BYTES          : _C_GL_1_1.GLubyte,
+    GL_4_BYTES          : _C_GL_1_1.GLubyte,
+}
+
+_call_lists_py_types = {
+    GL_BYTE             : int,
+    GL_UNSIGNED_BYTE    : int,
+    GL_SHORT            : int,
+    GL_UNSIGNED_SHORT   : int,
+    GL_INT              : int,
+    GL_UNSIGNED_INT     : int,
+    GL_FLOAT            : float,
+    GL_2_BYTES          : int,
+    GL_3_BYTES          : int,
+    GL_4_BYTES          : int,
+}
+
+def _get_call_lists_c_type(type_):
+    return _call_lists_c_types.get(type_, None)
+
+def _get_call_lists_py_type(type_):
+    return _call_lists_py_types.get(type_, None)
+
+def glCallLists(type_, lists):
+    """
+    type_            : int
+    lists            : List[int | float]
+    lists            : bytes
+        Acceptable when parameter 'type_' is  GL_UNSIGNED_BYTE.
+    lists            : str
+        Acceptable when parameter 'type_' is  GL_UNSIGNED_INT.
+    """
+
+    if isinstance(lists, bytes):
+        if type_ == GL_UNSIGNED_BYTE:
+            n = len(lists)
+            _C_GL_1_1.glCallLists(n, int(type_), lists)
+        else:
+            raise ValueError("Unexpected value of parameter 'type_'. For 'list' being bytes, parameter 'type_' must be GL_UNSIGNED_BYTE.")
+    elif isinstance(lists, str):
+        if type_ == GL_UNSIGNED_INT:
+            n = len(lists)
+            c_lists = (_C_GL_1_1.GLuint * n)(*(ord(c) for c in lists))
+            _C_GL_1_1.glCallLists(n, int(type_), c_lists)
+        else:
+            raise ValueError("Unexpected value of parameter 'type_'. For 'list' parameter being bytes, parameter 'type_' must be GL_UNSIGNED_INT.")
+    else:
+        n = len(lists)
+        if type_ == GL_2_BYTES:     n //= 2
+        elif type_ == GL_3_BYTES:   n //= 3
+        elif type_ == GL_4_BYTES:   n //= 4
+
+        c_type      = _get_call_lists_c_type(type_)
+        py_types    = _get_call_lists_py_type(type_)
+
+        c_lists = _list_part_to_c_array(py_types, lists, len(lists), c_type)
+        _C_GL_1_1.glCallLists(n, int(type_), c_lists)
 
 def glListBase(base):
     """
