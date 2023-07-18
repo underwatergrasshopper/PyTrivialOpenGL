@@ -1,7 +1,7 @@
 from ExampleManager import *
 
-import area_and_state_debug
-import mouse_and_keyboard_debug
+import debug_area_and_state
+import debug_mouse_and_keyboard
 import simple_triangle
 import window_area
 import example_draw_array
@@ -53,13 +53,13 @@ special_debug_options = [
 
 example_manager.add_example(
     "area_and_state_debug", 
-    area_and_state_debug.run, 
+    debug_area_and_state.run, 
     run_options + special_debug_options, 
     ["centered", "draw_area_size"]
 )
 example_manager.add_example(
     "mouse_and_keyboard_debug", 
-    mouse_and_keyboard_debug.run, 
+    debug_mouse_and_keyboard.run, 
     run_options + special_debug_options, 
     ["centered", "draw_area_size"]
 )

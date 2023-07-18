@@ -3,11 +3,11 @@ import enum
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
 
-from ExampleSupport    import *
-from ExampleManager    import *
-from ActionChain       import *
-from AnimatedTriangle  import *
-from examples.ExampleSupport import FPS_Counter
+from ExampleSupport     import *
+from ExampleManager     import *
+from ActionChain        import *
+from AnimatedTriangle   import *
+from ExampleSupport     import FPS_Counter
 
 __all__ = [
     "run"

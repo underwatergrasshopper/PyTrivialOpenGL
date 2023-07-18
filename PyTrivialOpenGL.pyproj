@@ -47,10 +47,10 @@
     <Compile Include="examples\example_draw_elements.py" />
     <Compile Include="examples\example_draw_array.py" />
     <Compile Include="examples\example_clip_plane.py" />
-    <Compile Include="examples\mouse_and_keyboard_debug.py" />
+    <Compile Include="examples\debug_mouse_and_keyboard.py" />
     <Compile Include="examples\ExampleManager.py" />
     <Compile Include="examples\ExampleSupport.py" />
-    <Compile Include="examples\area_and_state_debug.py" />
+    <Compile Include="examples\debug_area_and_state.py" />
     <Compile Include="examples\example_matrix.py" />
     <Compile Include="examples\window_area.py" />
     <Compile Include="examples\simple_triangle.py" />
