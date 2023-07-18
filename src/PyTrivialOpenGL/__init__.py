@@ -7,3 +7,4 @@ from .Utility       import *
 from .SpecialDebug  import *
 from .Key           import *
 from .Window        import *
+from .Exceptions    import *

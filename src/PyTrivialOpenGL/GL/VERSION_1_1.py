@@ -3,6 +3,7 @@ import ctypes as _ctypes
 from .._C_GL.VERSION_1_1.Constants import *
 from .._C_GL import VERSION_1_1 as _C_GL_1_1
 from ._Support import _get_num_of_get_values, _get_read_pixels_format_count, _get_read_pixels_type_size
+from ..Exceptions import CacheMismatch
 
 ### inner support ###
 
@@ -70,6 +71,7 @@ class _Cache:
         self.c_tex_coord_array_pointer  = None
 
         self.c_array                    = None
+
 
 _cache = _Cache()
 
@@ -933,7 +935,7 @@ def glVertexPointer(size, type_, stride, pointer):
     py_type = _gl_type_id_to_py_type(type_)
     c_type  = _gl_type_id_to_c_type(type_)
 
-    _cache.c_vertex_array_pointer = _list_to_c_array(py_type, pointer, 1, c_type)
+    _cache.c_vertex_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
     _C_GL_1_1.glVertexPointer(int(size), int(type_), int(stride), _cache.c_vertex_array_pointer)
 
 def glNormalPointer(type_, stride, pointer):
@@ -945,7 +947,7 @@ def glNormalPointer(type_, stride, pointer):
     py_type = _gl_type_id_to_py_type(type_)
     c_type  = _gl_type_id_to_c_type(type_)
 
-    _cache.c_normal_array_pointer = _list_to_c_array(py_type, pointer, 1, c_type)
+    _cache.c_normal_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
     _C_GL_1_1.glNormalPointer(int(type_), int(stride), _cache.c_normal_array_pointer)
 
 def glColorPointer(size, type_, stride, pointer):
@@ -958,7 +960,7 @@ def glColorPointer(size, type_, stride, pointer):
     py_type = _gl_type_id_to_py_type(type_)
     c_type  = _gl_type_id_to_c_type(type_)
 
-    _cache.c_color_array_pointer = _list_to_c_array(py_type, pointer, 1, c_type)
+    _cache.c_color_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
     _C_GL_1_1.glColorPointer(int(size), int(type_), int(stride), _cache.c_color_array_pointer)
 
 def glIndexPointer(type_, stride, pointer):
@@ -970,7 +972,7 @@ def glIndexPointer(type_, stride, pointer):
     py_type = _gl_type_id_to_py_type(type_)
     c_type  = _gl_type_id_to_c_type(type_)
 
-    _cache.c_index_array_pointer = _list_to_c_array(py_type, pointer, 1, c_type)
+    _cache.c_index_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
     _C_GL_1_1.glIndexPointer(int(type_), int(stride), _cache.c_index_array_pointer)
 
 def glEdgeFlagPointer(stride, pointer):
@@ -978,7 +980,7 @@ def glEdgeFlagPointer(stride, pointer):
     stride           : int
     pointer          : List[int]
     """
-    _cache.c_edge_flag_array_pointer = _list_to_c_array(int, pointer, 1, _C_GL_1_1.GLboolean)
+    _cache.c_edge_flag_array_pointer = _list_to_c_array(int, pointer, 0, _C_GL_1_1.GLboolean)
     _C_GL_1_1.glEdgeFlagPointer(int(stride), _cache.c_edge_flag_array_pointer)
 
 def glTexCoordPointer(size, type_, stride, pointer):
@@ -991,7 +993,7 @@ def glTexCoordPointer(size, type_, stride, pointer):
     py_type = _gl_type_id_to_py_type(type_)
     c_type  = _gl_type_id_to_c_type(type_)
 
-    _cache.c_tex_coord_array_pointer = _list_to_c_array(py_type, pointer, 1, c_type)
+    _cache.c_tex_coord_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
     _C_GL_1_1.glTexCoordPointer(int(size), int(type_), int(stride), _cache.c_tex_coord_array_pointer)
 
 def glEnableClientState(array):
@@ -2851,6 +2853,7 @@ def glCallLists(type_, lists):
             _C_GL_1_1.glCallLists(n, int(type_), lists)
         else:
             raise ValueError("Unexpected value of parameter 'type_'. For 'list' being bytes, parameter 'type_' must be GL_UNSIGNED_BYTE.")
+
     elif isinstance(lists, str):
         if type_ == GL_UNSIGNED_INT:
             n = len(lists)
@@ -2858,6 +2861,7 @@ def glCallLists(type_, lists):
             _C_GL_1_1.glCallLists(n, int(type_), c_lists)
         else:
             raise ValueError("Unexpected value of parameter 'type_'. For 'list' parameter being bytes, parameter 'type_' must be GL_UNSIGNED_INT.")
+
     else:
         n = len(lists)
         if type_ == GL_2_BYTES:     n //= 2
@@ -2992,16 +2996,62 @@ def glIsEnabled(cap):
     """
     return bool(_C_GL_1_1.glIsEnabled(int(cap)))
 
-
 # Pointer and String Queries 
 
-# Note: Gets access to C pointer. Should not be implemented.
-#def glGetPointerv(pname, params):
-#    """
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetPointerv(int(pname), ???(params))
+def glGetPointerv(pname):
+    """
+    pname           : int
+    Returns         : List[int | float]
+        List of all array elements.
+        Equivalent of 'params' from OpenGl function specification.
+    Exceptions
+        CacheMismatch
+            When cashed array mismatch actual array pointer. 
+            To get actual array pointer, use function 'PyTrivialOpenGL.C_GL.glGetPointerv'.
+    """
+
+    if pname in [GL_FEEDBACK_BUFFER_POINTER, GL_SELECTION_BUFFER_POINTER]:
+        raise ValueError("Unsupported value of 'pname'.")
+
+    c_array = {
+        # Note: Commented elements are from OpenGL above 1.1 or unsupported by this package.
+        GL_COLOR_ARRAY_POINTER              : _cache.c_color_array_pointer, 
+        GL_EDGE_FLAG_ARRAY_POINTER          : _cache.c_edge_flag_array_pointer, 
+        # GL_FOG_COORD_ARRAY_POINTER          : _cache.???, 
+        # GL_FEEDBACK_BUFFER_POINTER          : _cache.???, 
+        GL_INDEX_ARRAY_POINTER              : _cache.c_index_array_pointer, 
+        GL_NORMAL_ARRAY_POINTER             : _cache.c_normal_array_pointer, 
+        # GL_SECONDARY_COLOR_ARRAY_POINTER    : _cache.???, 
+        # GL_SELECTION_BUFFER_POINTER         : _cache.???, 
+        GL_TEXTURE_COORD_ARRAY_POINTER      : _cache.c_tex_coord_array_pointer,
+        GL_VERTEX_ARRAY_POINTER             : _cache.c_vertex_array_pointer,
+    }.get(pname, None)
+
+    if pname is None:
+        raise ValueError("Unexpected value of 'pname'.")
+
+    c_params = _ctypes.c_void_p(None)
+    _C_GL_1_1.glGetPointerv(int(pname), _ctypes.byref(c_params))
+
+    if c_array is None:
+        if c_params.value is None or c_params.value == 0:
+            return []
+        else:
+            # This happens when first is called C_GL.gl{...}Pointer (which not cache any arrays) instead of GL.gl{...}Pointer and then this function is called.
+            raise CacheMismatch("Mismatch of cached array (by PyTrivialOpenGL) and actual array pointer. To get actual array pointer, use function 'PyTrivialOpenGL.C_GL.glGetPointerv'.")
+
+    if c_params.value != _ctypes.cast(c_array, _ctypes.c_void_p).value:
+        # This happens when first is called C_GL.gl{...}Pointer (which not cache any arrays) instead of GL.gl{...}Pointer and then this function is called.
+        raise CacheMismatch("Mismatch of cached array (by PyTrivialOpenGL) and actual array pointer. To get actual array pointer, use function 'PyTrivialOpenGL.C_GL.glGetPointerv'.")
+
+    if len(c_array) > 0:
+        if isinstance(c_array[0], float):
+            return [float(e) for e in c_array]
+        elif isinstance(c_array[0], int):
+            return [int(e) for e in c_array]
+        else:
+            raise RuntimeError("Unexpected cached array type.")
+    return []
 
 def glGetString(name):
     """
@@ -3009,7 +3059,6 @@ def glGetString(name):
     Returns (str).
     """
     return _ctypes.cast(_C_GL_1_1.glGetString(int(name)), _ctypes.c_char_p).value.decode()
-
 
 # Saving and Restoring State
 

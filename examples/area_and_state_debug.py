@@ -97,7 +97,11 @@ def set_orthogonal_projection(width, height):
 
 def do_on_create():
     print("do_on_create")
-    print("L - Legend")
+
+    glPushAttrib(GL_ALL_ATTRIB_BITS)
+
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     set_orthogonal_projection(_WIDTH, _HEIGHT)
 
@@ -108,20 +112,20 @@ def do_on_create():
     # Cause exception.
     #togl.to_window().center()
 
+    print("L - Legend")
+
 def do_on_close():
     print("do_on_close")
     return togl.run_question_box("Close", "Are you sure?")
 
 def do_on_destroy():
     print("do_on_destroy")
+
+    glPopAttrib()
+
     print("Bye. Bye.")
 
 def draw():
-    glPushAttrib(GL_COLOR_BUFFER_BIT)
-
-    glEnable(GL_BLEND)
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-
     glClear(GL_COLOR_BUFFER_BIT)
 
     glMatrixMode(GL_MODELVIEW)
@@ -130,8 +134,6 @@ def draw():
     _data.animated_triangle.draw()
 
     if "show_fps" in _data.options: _data.fps_counter.update()
-
-    glPopAttrib()
 
 def do_on_key(key_id, is_down, extra):
     if False:

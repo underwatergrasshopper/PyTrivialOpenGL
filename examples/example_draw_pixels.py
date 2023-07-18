@@ -10,8 +10,6 @@ _WIDTH = 800
 _HEIGHT = 400
 
 def do_on_create():
-    print("Escape - Exit")
-
     glPushAttrib(GL_ALL_ATTRIB_BITS)
 
     glEnable(GL_BLEND)
@@ -21,8 +19,9 @@ def do_on_create():
 
     glClearColor(0, 0, 0.5, 1)
 
+    print("Escape - Exit")
+
 def do_on_destroy():
-    
     glPopAttrib()
 
     print("Bye. Bye.")

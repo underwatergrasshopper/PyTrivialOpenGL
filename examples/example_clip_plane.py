@@ -15,11 +15,8 @@ def isclose(l_a, l_b, delta):
             return False
     return True
 
-
 def do_on_create():
-    print("Escape - Exit")
-
-    glPushAttrib(GL_ENABLE_BIT)
+    glPushAttrib(GL_ALL_ATTRIB_BITS)
 
     glEnable(GL_CLIP_PLANE0)
     glEnable(GL_CLIP_PLANE1)
@@ -42,6 +39,8 @@ def do_on_create():
     assert isclose(glGetClipPlane(GL_CLIP_PLANE3), [0, -1, 0, 0.7], 0.001)
 
     glClearColor(0, 0, 0.5, 1)
+
+    print("Escape - Exit")
 
 def do_on_destroy():
     glPopAttrib()

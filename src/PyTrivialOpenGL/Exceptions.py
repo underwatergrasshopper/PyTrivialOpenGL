@@ -1,0 +1,2 @@
+class CacheMismatch(Exception):
+    pass

@@ -170,8 +170,6 @@ class Data:
 _data = Data()
 
 def do_on_create():
-    print("Escape - Exit")
-
     glPushAttrib(GL_ALL_ATTRIB_BITS)
 
     print(glIsEnabled(GL_CULL_FACE))
@@ -217,6 +215,8 @@ def do_on_create():
     print(glGetLightfv(GL_LIGHT0, GL_AMBIENT))
     print(glGetLightfv(GL_LIGHT0, GL_DIFFUSE))
     print(glGetLightfv(GL_LIGHT0, GL_SPECULAR))
+
+    print("Escape - Exit")
 
 def do_on_destroy():
     glPopAttrib()

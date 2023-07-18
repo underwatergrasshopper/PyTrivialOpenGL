@@ -6,11 +6,18 @@ __all__ = [
 ]
 
 def do_on_create():
-    print("Escape - Exit")
+    glPushAttrib(GL_ALL_ATTRIB_BITS)
+
+    print(glGetPointerv(GL_VERTEX_ARRAY_POINTER))   # initially should by []
+    print(glGetPointerv(GL_COLOR_ARRAY_POINTER))    # initially should by []
 
     glClearColor(0, 0, 0.5, 1)
 
+    print("Escape - Exit")
+
 def do_on_destroy():
+    glPopAttrib()
+
     print("Bye. Bye.")
 
 def draw():
@@ -35,6 +42,9 @@ def draw():
 
     glVertexPointer(2, GL_FLOAT, 0, vertices)
     glColorPointer(3, GL_FLOAT, 0, colors)
+
+    assert glGetPointerv(GL_VERTEX_ARRAY_POINTER)   == vertices
+    assert glGetPointerv(GL_COLOR_ARRAY_POINTER)    == colors
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, [
         0, 1, 2, 

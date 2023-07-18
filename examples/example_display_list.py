@@ -17,8 +17,6 @@ class _Data:
 _data = _Data()
 
 def do_on_create():
-    print("Escape - Exit")
-
     glPushAttrib(GL_ALL_ATTRIB_BITS)
 
     glOrtho(0, _WIDTH, 0, _HEIGHT, 1, -1)
@@ -129,8 +127,9 @@ def do_on_create():
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4)
     glEndList()
 
+    print("Escape - Exit")
+
 def do_on_destroy():
-    
     glPopAttrib()
 
     print("Bye. Bye.")

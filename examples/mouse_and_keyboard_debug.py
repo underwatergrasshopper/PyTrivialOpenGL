@@ -59,6 +59,8 @@ def set_orthogonal_projection(width, height):
     glPopAttrib()
 
 def do_on_create():
+    glPushAttrib(GL_ALL_ATTRIB_BITS)
+
     display_legend()
 
     set_orthogonal_projection(_WIDTH, _HEIGHT)
@@ -72,6 +74,8 @@ def do_on_close():
     return togl.run_question_box("Close", "Are you sure?")
 
 def do_on_destroy():
+    glPopAttrib()
+
     print("Bye. Bye.")
 
 def draw():

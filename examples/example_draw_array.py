@@ -6,7 +6,7 @@ __all__ = [
 ]
 
 def do_on_create():
-    print("Escape - Exit")
+    glPushAttrib(GL_ALL_ATTRIB_BITS)
 
     glClearColor(0, 0, 0.5, 1)
 
@@ -15,9 +15,13 @@ def do_on_create():
     print(glGetBooleanv(GL_COLOR_WRITEMASK))
 
     print(glGetBooleanv(GL_COLOR_WRITEMASK) == [GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE])
+
+    print("Escape - Exit")
     
 
 def do_on_destroy():
+    glPopAttrib()
+
     print("Bye. Bye.")
 
 def draw():
