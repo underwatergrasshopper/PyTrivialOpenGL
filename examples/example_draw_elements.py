@@ -8,8 +8,8 @@ __all__ = [
 def do_on_create():
     glPushAttrib(GL_ALL_ATTRIB_BITS)
 
-    print(glGetPointerv(GL_VERTEX_ARRAY_POINTER))   # initially should by []
-    print(glGetPointerv(GL_COLOR_ARRAY_POINTER))    # initially should by []
+    print("Initial Vertex Array:", glGetPointerv(GL_VERTEX_ARRAY_POINTER)) 
+    print("Initial Color Array:", glGetPointerv(GL_COLOR_ARRAY_POINTER))
 
     glClearColor(0, 0, 0.5, 1)
 
@@ -43,6 +43,7 @@ def draw():
     glVertexPointer(2, GL_FLOAT, 0, vertices)
     glColorPointer(3, GL_FLOAT, 0, colors)
 
+    # test
     assert glGetPointerv(GL_VERTEX_ARRAY_POINTER)   == vertices
     assert glGetPointerv(GL_COLOR_ARRAY_POINTER)    == colors
 
