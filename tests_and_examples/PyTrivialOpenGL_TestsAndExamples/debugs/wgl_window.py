@@ -186,7 +186,7 @@ def run(name, options):
 
                 # ---
 
-                print("X - Close (no prompt)")
+                print("Escape - Close (no prompt)")
 
                 return 0
     
@@ -222,7 +222,7 @@ def run(name, options):
                 return 0
 
             if msg == WM_KEYUP:
-                if wParam == ord("X"):
+                if wParam == VK_ESCAPE:
                     DestroyWindow(hWnd)
                 return 0
 

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>55e85929-b5f6-427a-b4ea-c1be3f4cc622</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>tests_and_examples\run_all_non_unit_tests.py</StartupFile>
+    <StartupFile>tests_and_examples\run_debugs.py</StartupFile>
     <SearchPath>src</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -39,6 +39,10 @@
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\wgl_window.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\winapi_window.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\winapi.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\utility\ExampleRunner.py" />
+    <Compile Include="tests_and_examples\run_manual_tests.py" />
+    <Compile Include="tests_and_examples\run_debugs.py" />
+    <Compile Include="tests_and_examples\run_examples.py" />
     <Compile Include="tests_and_examples\run_example_namanger_debug.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\utility\ActionChain.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\utility\AnimatedTriangle.py" />

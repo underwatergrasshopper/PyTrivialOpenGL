@@ -44,7 +44,7 @@ def run(name, options):
                 wm_paint_count = 0
     
         if msg == WM_CREATE:
-            print("X - Close (no prompt)")
+            print("Escape - Close (no prompt)")
             print("0 - Test _WindowAreaCorrector (simulates maximize)")
             print("Hold LMB + RMB - Display Mouse Position")
             return 0
@@ -82,7 +82,7 @@ def run(name, options):
             #print_bin_32(lParam)
             #print(_VirtualKeyData(lParam))
 
-            if wParam == ord("X"):
+            if wParam == VK_ESCAPE:
                 DestroyWindow(hWnd)
             elif wParam == ord("0"):
                 # _WindowAreaCorrector test
