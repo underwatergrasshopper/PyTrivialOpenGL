@@ -3,11 +3,11 @@ import enum
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
 
-from ExampleSupport    import *
-from ExampleManager    import *
-from ActionChain       import *
-from AnimatedTriangle  import *
-from examples.ExampleSupport import FPS_Counter
+from ..utility.ExampleSupport   import *
+from ..utility.ExampleManager   import *
+from ..utility.ActionChain      import *
+from ..utility.AnimatedTriangle import *
+from ..utility.ExampleSupport   import FPS_Counter
 
 __all__ = [
     "run"
@@ -363,7 +363,7 @@ def run(name, options):
         opengl_version          = (3, 3) if "opengl_3_3" in options else None,
 
         timer_time_interval     = 20,
-        icon_file_name          = "tests\\assets\\icon.ico" if "no_icon" not in options else "",
+        icon_file_name          = get_path_to_assets() + "\\icon.ico" if "no_icon" not in options else "",
 
         do_on_create            = do_on_create,
         do_on_close             = do_on_close if "ask_on_close" in options else None,

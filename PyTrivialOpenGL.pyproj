@@ -4,8 +4,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>55e85929-b5f6-427a-b4ea-c1be3f4cc622</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>examples\all_examples.py</StartupFile>
-    <SearchPath>src;tests;examples</SearchPath>
+    <StartupFile>tests_and_examples\run_all_non_unit_tests.py</StartupFile>
+    <SearchPath>src</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>PyTrivialOpenGL</Name>
@@ -34,26 +34,31 @@
     <Content Include="pyproject.toml" />
     <Content Include="README.md" />
     <Content Include="tests\assets\icon.ico" />
+    <Content Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\assets\icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="examples\ActionChain.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\wgl_window.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\winapi_window.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\winapi.py" />
+    <Compile Include="tests_and_examples\run_example_namanger_debug.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\utility\ActionChain.py" />
     <Compile Include="examples\all_examples.py" />
-    <Compile Include="examples\AnimatedTriangle.py" />
-    <Compile Include="examples\example_display_list.py" />
-    <Compile Include="examples\example_draw_stipple.py" />
-    <Compile Include="examples\example_draw_pixels.py" />
-    <Compile Include="examples\example_light.py" />
-    <Compile Include="examples\example_draw_rectangle.py" />
-    <Compile Include="examples\example_draw_elements.py" />
-    <Compile Include="examples\example_draw_array.py" />
-    <Compile Include="examples\example_clip_plane.py" />
-    <Compile Include="examples\debug_mouse_and_keyboard.py" />
-    <Compile Include="examples\ExampleManager.py" />
-    <Compile Include="examples\ExampleSupport.py" />
-    <Compile Include="examples\debug_area_and_state.py" />
-    <Compile Include="examples\example_matrix.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\utility\AnimatedTriangle.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\display_list.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\draw_stipple.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\draw_pixels.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\light.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\draw_rectangle.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\draw_elements.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\draw_array.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\clip_plane.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\mouse_and_keyboard.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\utility\ExampleManager.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\utility\ExampleSupport.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\area_and_state.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\matrix.py" />
     <Compile Include="examples\window_area.py" />
-    <Compile Include="examples\simple_triangle.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\examples\simple_triangle.py" />
     <Compile Include="setup.py" />
     <Compile Include="src\PyTrivialOpenGL\Area.py" />
     <Compile Include="src\PyTrivialOpenGL\C_GL.py" />
@@ -94,9 +99,29 @@
     <Compile Include="tests\unittests\test_size.py" />
     <Compile Include="tests\unittests\test_window.py" />
     <Compile Include="tests\_c_winapi_test.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\__init__.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\examples\__init__.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\__init__.py" />
+    <Compile Include="tests_and_examples\run_all_non_unit_tests.py" />
+    <Compile Include="tests_and_examples\run_unit_tests.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\unit_tests\test_area.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\unit_tests\test_basics.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\unit_tests\test_color.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\unit_tests\test_key.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\unit_tests\test_log.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\unit_tests\test_logger.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\unit_tests\test_point.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\unit_tests\test_size.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\unit_tests\test_window.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\unit_tests\__init__.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\__init__.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\utility\__init__.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="examples\" />
+    <Folder Include="tests_and_examples\" />
+    <Folder Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\" />
     <Folder Include="src\" />
     <Folder Include="src\PyTrivialOpenGL\" />
     <Folder Include="src\PyTrivialOpenGL\GL\" />
@@ -105,6 +130,13 @@
     <Folder Include="tests\" />
     <Folder Include="tests\assets\" />
     <Folder Include="tests\unittests\" />
+    <Folder Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\examples\" />
+    <Folder Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\" />
+    <Folder Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\assets\" />
+    <Folder Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\utility\" />
+    <Folder Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\" />
+    <Folder Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\" />
+    <Folder Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\unit_tests\" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.9-32" />

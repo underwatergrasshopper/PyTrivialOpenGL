@@ -3,11 +3,11 @@ import enum
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
 
-from ExampleSupport     import *
-from ExampleManager     import *
-from ActionChain        import *
-from AnimatedTriangle   import *
-from ExampleSupport     import FPS_Counter
+from ..utility.ExampleSupport   import *
+from ..utility.ExampleManager   import *
+from ..utility.ActionChain      import *
+from ..utility.AnimatedTriangle import *
+from ..utility.ExampleSupport   import FPS_Counter
 
 __all__ = [
     "run"
@@ -169,16 +169,16 @@ def run(name, options):
     else:                                       state_id = togl.WindowStateId.NORMAL
 
     return togl.to_window().create_and_run(
-        window_name         = "Mouse and Keyboard (debug)",
-        area                = (0, 0, _WIDTH, _HEIGHT) if "alt_center" not in options else (_WIDTH, _HEIGHT),
-        style               = style,
-        state_id            = state_id,
-        is_hidden           = True if "hidden" in options else False,
+        window_name             = "Mouse and Keyboard (debug)",
+        area                    = (0, 0, _WIDTH, _HEIGHT) if "alt_center" not in options else (_WIDTH, _HEIGHT),
+        style                   = style,
+        state_id                = state_id,
+        is_hidden               = True if "hidden" in options else False,
 
-        opengl_version      = (3, 3) if "opengl_3_3" in options else None,
+        opengl_version          = (3, 3) if "opengl_3_3" in options else None,
 
-        timer_time_interval = 20,
-        icon_file_name      = "tests\\assets\\icon.ico" if "no_icon" not in options else "",
+        timer_time_interval     = 20,
+        icon_file_name          = get_path_to_assets() + "\\icon.ico" if "no_icon" not in options else "",
 
         do_on_create            = do_on_create,
         do_on_close             = do_on_close if "ask_on_close" in options else None,

@@ -1,6 +1,7 @@
 import ctypes
 import math
 import copy
+import os
 from timeit import default_timer as _timer
 
 import PyTrivialOpenGL as togl
@@ -9,6 +10,7 @@ from PyTrivialOpenGL.GL import *
 __all__ = [
     "EXIT_SUCCESS",
     "EXIT_FAILURE",
+    "get_path_to_assets",
     "print_rect",
     "rect_to_area",
     "display_info",
@@ -18,6 +20,9 @@ __all__ = [
 
 EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
+
+def get_path_to_assets():
+    return os.path.dirname(os.path.dirname(__file__)) + "\\assets"
 
 def print_rect(r):
     print("%d %d %d %d" % (r.left, r.top, r.right, r.bottom))
