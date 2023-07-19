@@ -66,27 +66,35 @@ class ExampleManager:
     def _display_examples(self):
         max_len = max(len(example_name) for example_name in self.examples.keys())
         max_len += 2 # offset for ', '
-        max_num_of_columns = max(1, _os.get_terminal_size().columns // max_len)
+        offset = 4 + 1 # 'tab' + '\n'
+        max_num_of_columns = max(1, (_os.get_terminal_size().columns - offset) // max_len)
+
+        if len(self.examples) > 0:
+            print("    ", end = "")
 
         count = 0
         for example_name in self.examples.keys():
             print("%-*s" % (max_len, example_name + ", "), end = "")
             count +=1
-            if count % max_num_of_columns == 0:
-                print("")
+            if count % max_num_of_columns == 0 and count != len(self.examples):
+                print("\n    ", end = "")
         print("")
 
     def _display_possible_options(self, example):
         max_len = max(len(option) for option in example.possible_options) if len(example.possible_options) > 0 else 0
         max_len += 2 # offset for ', '
-        max_num_of_columns = max(1, _os.get_terminal_size().columns // max_len)
+        offset = 4 + 1 # 'tab' + '\n'
+        max_num_of_columns = max(1, (_os.get_terminal_size().columns - offset) // max_len)
+        
+        if len(self.examples) > 0:
+            print("    ", end = "")
 
         count = 0
         for option in example.possible_options:
             print("%-*s" % (max_len, option + ", "), end = "")
             count +=1
-            if count % max_num_of_columns == 0:
-                print("")
+            if count % max_num_of_columns == 0 and count != len(example.possible_options):
+                print("\n    ", end = "")
         print("")
 
     def run_examples(self):
@@ -96,8 +104,9 @@ class ExampleManager:
             self._display_examples()
             print("")
 
+            print("(type example name)")
             print("(e=Exit, d=%s)" % self.default_example_name)
-            example_name = input("select example: ")
+            example_name = input("Select: ")
             print("")
 
             if example_name == "e":
@@ -112,8 +121,9 @@ class ExampleManager:
                 self._display_possible_options(example)
                 print("")
 
+                print("(type one or multiple options names)")
                 print("(e=Exit, d=%s)" % example.def_opt_to_str())
-                raw_options = input("select options: ")
+                raw_options = input("Select: ")
                 print("")
 
                 raw_options = _re.split(r"[\t\n ]+", raw_options)
