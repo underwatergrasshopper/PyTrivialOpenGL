@@ -12,12 +12,14 @@ class Example:
         name                : str
         function            : Callable[[str, set[str]], int]
             Called as function(name, options).
+
         possible_options    : set[str]
-        possible_options    : set[str]
+        default_options     : set[str]
         """
         self.name               = name
         self.function           = function
-        self.possible_options   = possible_options
+        self.option_names       = possible_options if possible_options else []
+        self.possible_options   = set(possible_options) if possible_options else set()
         self.default_options    = default_options
 
     def def_opt_to_str(self):
@@ -34,6 +36,7 @@ class ExampleManager:
     default_example_name    : str
     """
     def __init__(self):
+        self.example_names          = []
         self.examples               = {}
         self.default_example_name   = ""
 
@@ -50,38 +53,34 @@ class ExampleManager:
         possible_options    : set[str]
         possible_options    : set[str]
         """
-        
-        if possible_options == None:
-            possible_options = set()
-        else:
-            possible_options = set(possible_options)
 
         if default_options == None:
             default_options = set()
         else:
             default_options = set(default_options)
 
+        self.example_names.append(name)
         self.examples[name] = Example(name, function, possible_options, default_options)
 
     def _display_examples(self):
-        max_len = max(len(example_name) for example_name in self.examples.keys())
+        max_len = max(len(example_name) for example_name in self.example_names)
         max_len += 2 # offset for ', '
         offset = 4 + 1 # 'tab' + '\n'
         max_num_of_columns = max(1, (_os.get_terminal_size().columns - offset) // max_len)
 
-        if len(self.examples) > 0:
+        if len(self.example_names) > 0:
             print("    ", end = "")
 
         count = 0
-        for example_name in self.examples.keys():
+        for example_name in self.example_names:
             print("%-*s" % (max_len, example_name + ", "), end = "")
             count +=1
-            if count % max_num_of_columns == 0 and count != len(self.examples):
+            if count % max_num_of_columns == 0 and count != len(self.example_names):
                 print("\n    ", end = "")
         print("")
 
     def _display_possible_options(self, example):
-        max_len = max(len(option) for option in example.possible_options) if len(example.possible_options) > 0 else 0
+        max_len = max(len(option) for option in example.option_names) if len(example.option_names) > 0 else 0
         max_len += 2 # offset for ', '
         offset = 4 + 1 # 'tab' + '\n'
         max_num_of_columns = max(1, (_os.get_terminal_size().columns - offset) // max_len)
@@ -90,10 +89,10 @@ class ExampleManager:
             print("    ", end = "")
 
         count = 0
-        for option in example.possible_options:
+        for option in example.option_names:
             print("%-*s" % (max_len, option + ", "), end = "")
             count +=1
-            if count % max_num_of_columns == 0 and count != len(example.possible_options):
+            if count % max_num_of_columns == 0 and count != len(example.option_names):
                 print("\n    ", end = "")
         print("")
 

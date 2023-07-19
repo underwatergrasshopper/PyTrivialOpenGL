@@ -19,7 +19,6 @@ class ExampleCategoryBit:
 class ExampleRunner:
     def __init__(self):
         self._run_options = [        
-            "disable_auto_sleep",
             "no_resize",
             "no_maximize",
             "centered",
@@ -32,7 +31,8 @@ class ExampleRunner:
             "maximized",
             "minimized",
             "windowed_full_screened",
-
+            
+            "disable_auto_sleep",
             "hidden",
 
             "opengl_3_3",
