@@ -39,6 +39,7 @@
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\wgl_window.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\winapi_window.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\winapi.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\draw_texture.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\utility\ExampleRunner.py" />
     <Compile Include="tests_and_examples\run_manual_tests.py" />
     <Compile Include="tests_and_examples\run_debugs.py" />

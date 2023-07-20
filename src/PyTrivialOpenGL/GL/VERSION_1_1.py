@@ -1327,7 +1327,8 @@ def glClipPlane(plane, equation):
 def glGetClipPlane(plane):
     """
     plane           : int
-    ReturnType      : List[float]
+    Returns         : List[float]
+        Corresponds to 'equation' parameter from OpenGL function specification.
     """
     c_equation = _make_c_array(_C_GL_1_1.GLdouble, 4)
     _C_GL_1_1.glGetClipPlane(int(plane), c_equation)
@@ -1948,23 +1949,23 @@ def glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap):
 #    border           : int
 #    format_          : int
 #    type_            : int
-#    pixels           : ???
+#    pixels           : bytes
 #    """
-#    _C_GL_1_1.glTexImage1D(int(target), int(level), int(internalformat), int(width), int(border), int(format_), int(type_), ???(pixels))
+#    _C_GL_1_1.glTexImage1D(int(target), int(level), int(internalformat), int(width), int(border), int(format_), int(type_), bytes(pixels))
 
-#def glTexImage2D(target, level, internalformat, width, height, border, format_, type_, pixels):
-#    """
-#    target           : int
-#    level            : int
-#    internalformat   : int
-#    width            : int
-#    height           : int
-#    border           : int
-#    format_          : int
-#    type_            : int
-#    pixels           : ???
-#    """
-#    _C_GL_1_1.glTexImage2D(int(target), int(level), int(internalformat), int(width), int(height), int(border), int(format_), int(type_), ???(pixels))
+def glTexImage2D(target, level, internalformat, width, height, border, format_, type_, pixels):
+    """
+    target           : int
+    level            : int
+    internalformat   : int
+    width            : int
+    height           : int
+    border           : int
+    format_          : int
+    type_            : int
+    pixels           : bytes
+    """
+    _C_GL_1_1.glTexImage2D(int(target), int(level), int(internalformat), int(width), int(height), int(border), int(format_), int(type_), bytes(pixels))
 
 
 # Alt. Texture Image Specification Commands 
@@ -2089,19 +2090,24 @@ def glBindTexture(target, texture):
     """
     _C_GL_1_1.glBindTexture(int(target), int(texture))
 
-#def glDeleteTextures(n, textures):
-#    """
-#    n                : int
-#    textures         : ???
-#    """
-#    _C_GL_1_1.glDeleteTextures(int(n), ???(textures))
+def glDeleteTextures(textures):
+    """
+    textures         : List[int]
+    """
+    n = len(textures)
+    c_textures = _list_to_c_array(int, textures, n, _C_GL_1_1.GLuint)
+    _C_GL_1_1.glDeleteTextures(n, c_textures)
 
-#def glGenTextures(n, textures):
-#    """
-#    n                : int
-#    textures         : ???
-#    """
-#    _C_GL_1_1.glGenTextures(int(n), ???(textures))
+def glGenTextures(n):
+    """
+    n               : int
+    Returns         : List[int]
+        Refers to 'textures' parameter from OpenGL function specification. 
+    """
+    n = int(n)
+    c_textures = _make_c_array(_C_GL_1_1.GLuint, n)
+    _C_GL_1_1.glGenTextures(n, c_textures)
+    return _c_array_to_list(int, c_textures)
 
 #def glAreTexturesResident(n, textures, residences):
 #    """
@@ -2248,8 +2254,8 @@ def glTexEnvi(target, pname, param):
 
 def glIsTexture(texture):
     """
-    texture          : int
-    Returns (bool).
+    texture         : int
+    Returns         : bool
     """
     return bool(_C_GL_1_1.glIsTexture(int(texture)))
 

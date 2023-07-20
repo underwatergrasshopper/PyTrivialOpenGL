@@ -8,4 +8,5 @@ from . import (
     draw_stipple,
     light,
     matrix,
+    draw_texture,
 )

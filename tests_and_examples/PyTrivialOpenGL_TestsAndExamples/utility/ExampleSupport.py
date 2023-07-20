@@ -10,6 +10,7 @@ from PyTrivialOpenGL.GL import *
 __all__ = [
     "EXIT_SUCCESS",
     "EXIT_FAILURE",
+    "check_gl_error",
     "get_path_to_assets",
     "print_rect",
     "rect_to_area",
@@ -20,6 +21,12 @@ __all__ = [
 
 EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
+
+def check_gl_error():
+    error_code = glGetError()
+    if error_code != 0:
+        print("gl error code: %s." % togl.get_gl_error_str(error_code))
+        exit(EXIT_FAILURE)
 
 def get_path_to_assets():
     return os.path.dirname(os.path.dirname(__file__)) + "\\assets"
