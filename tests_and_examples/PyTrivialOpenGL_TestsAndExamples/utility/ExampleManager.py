@@ -1,5 +1,6 @@
 import re as _re
 import os as _os
+import pathlib as _pathlib 
 
 __all__ = [
     "Example",
@@ -39,6 +40,8 @@ class ExampleManager:
         self.example_names          = []
         self.examples               = {}
         self.default_example_name   = ""
+
+        self.set_log_path_root()
 
     def set_default(self, default_example_name):
         """
@@ -96,6 +99,25 @@ class ExampleManager:
                 print("\n    ", end = "")
         print("")
 
+    def set_log_path_root(self, log_path_root = ".\\"):
+        self._log_path_root = log_path_root
+        self._log_path = self._log_path_root + "log\\ExampleManager"
+
+    def _log_text(self, text, file_name):
+        _pathlib.Path(self._log_path).mkdir(parents = True, exist_ok = True)
+        with open(self._log_path + "\\" + file_name, "w") as file:
+            file.write(text)
+
+    def _load_text(self, file_name):
+        _pathlib.Path(self._log_path).mkdir(parents = True, exist_ok = True)
+
+        file_name = self._log_path + "\\" + file_name
+
+        if _os.path.isfile(file_name):
+            with open(file_name, "r") as file:
+                return file.read().strip()
+        return ""
+
     def run_examples(self):
         while True:
             print("--- Example Manager ---")
@@ -103,8 +125,13 @@ class ExampleManager:
             self._display_examples()
             print("")
 
+            last_example_name = self._load_text("last_example_name.txt")
+
             print("(type example name)")
-            print("(e=Exit, d=%s)" % self.default_example_name)
+            if last_example_name != "":
+                print("(e=Exit, d=%s, l=%s)" % (self.default_example_name, last_example_name))
+            else:
+                print("(e=Exit, d=%s)" % self.default_example_name)
             example_name = input("Select: ")
             print("")
 
@@ -114,14 +141,28 @@ class ExampleManager:
             elif example_name == "d":
                 example_name = self.default_example_name
 
+            elif example_name == "l":
+                example_name = last_example_name
+
             example = self.examples.get(example_name, None)
             if example:
+                if example.name != last_example_name:
+                    self._log_text(example.name, "last_example_name.txt")
+
                 print("Options:")
                 self._display_possible_options(example)
                 print("")
 
+                last_option_names = self._load_text("last_option_names.txt")
+
                 print("(type one or multiple options names)")
-                print("(e=Exit, d=%s)" % example.def_opt_to_str())
+                if last_option_names != "":
+                    print("(e=Exit, d=%s, l=%s)" % (example.def_opt_to_str(), last_option_names))
+                else:
+                    print("(e=Exit, d=%s)" % example.def_opt_to_str())
+
+                last_option_names = set(last_option_names.split(" "))
+
                 raw_options = input("Select: ")
                 print("")
 
@@ -135,17 +176,24 @@ class ExampleManager:
                 elif raw_options == ["d"]:
                     options = example.default_options
 
+                elif raw_options == ["l"]:
+                    options = last_option_names
+
                 elif raw_options != [""]:
                     options = set(raw_options)
 
                 is_valid_option = True
                 for option in options:
+                    if options != last_option_names:
+                        self._log_text(" ".join(options), "last_option_names.txt")
+
                     if option not in example.possible_options:
                         is_valid_option = False
                         print("Error: Option '%s' does not exist." % option)
                         break
 
                 if is_valid_option:
+
                     result = example.function(example_name, options)
                     print("")
                     print("Example ended with result code: %d." % result)
