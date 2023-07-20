@@ -116,7 +116,7 @@ class ExampleManager:
         if _os.path.isfile(file_name):
             with open(file_name, "r") as file:
                 return file.read().strip()
-        return ""
+        return None
 
     def run_examples(self):
         while True:
@@ -128,7 +128,7 @@ class ExampleManager:
             last_example_name = self._load_text("last_example_name.txt")
 
             print("(type example name)")
-            if last_example_name != "":
+            if last_example_name is not None:
                 print("(e=Exit, d=%s, l=%s)" % (self.default_example_name, last_example_name))
             else:
                 print("(e=Exit, d=%s)" % self.default_example_name)
@@ -141,7 +141,7 @@ class ExampleManager:
             elif example_name == "d":
                 example_name = self.default_example_name
 
-            elif example_name == "l":
+            elif example_name == "l" and last_example_name is not None:
                 example_name = last_example_name
 
             example = self.examples.get(example_name, None)
@@ -156,12 +156,11 @@ class ExampleManager:
                 last_option_names = self._load_text("last_option_names.txt")
 
                 print("(type one or multiple options names)")
-                if last_option_names != "":
+                if last_option_names is not None:
                     print("(e=Exit, d=%s, l=%s)" % (example.def_opt_to_str(), last_option_names))
+                    last_option_names = set(last_option_names.split(" ")) if last_option_names != "" else set()
                 else:
                     print("(e=Exit, d=%s)" % example.def_opt_to_str())
-
-                last_option_names = set(last_option_names.split(" "))
 
                 raw_options = input("Select: ")
                 print("")
@@ -176,23 +175,22 @@ class ExampleManager:
                 elif raw_options == ["d"]:
                     options = example.default_options
 
-                elif raw_options == ["l"]:
+                elif raw_options == ["l"] and last_option_names is not None:
                     options = last_option_names
 
                 elif raw_options != [""]:
                     options = set(raw_options)
 
+
                 is_valid_option = True
                 for option in options:
-                    if options != last_option_names:
-                        self._log_text(" ".join(options), "last_option_names.txt")
-
                     if option not in example.possible_options:
                         is_valid_option = False
                         print("Error: Option '%s' does not exist." % option)
                         break
 
                 if is_valid_option:
+                    self._log_text(" ".join(options), "last_option_names.txt")
 
                     result = example.function(example_name, options)
                     print("")
