@@ -1964,8 +1964,21 @@ def glTexImage2D(target, level, internalformat, width, height, border, format_, 
     format_          : int
     type_            : int
     pixels           : bytes
+    pixels           : Lists[float | int]
+        Acceptable, when parameter 'type_' is GL_FLOAT and parameter 'format_' is either GL_RGB or GL_RGBA.
+        All elements of list are converted to floats.
     """
-    _C_GL_1_1.glTexImage2D(int(target), int(level), int(internalformat), int(width), int(height), int(border), int(format_), int(type_), bytes(pixels))
+    if isinstance(pixels, list):
+        if type_ != GL_FLOAT:
+            raise ValueError("Unexpected value of parameter 'type_'. For parameter 'pixels' being list of ints or floats, parameter 'type_' must be GL_FLOAT.")
+        if format_ not in [GL_RGB, GL_RGBA]:
+            raise ValueError("Unexpected value of parameter 'format_'. For parameter 'lists' being list of ints or floats, parameter 'type_' must be either GL_RGB or GL_RGBA.")
+        else:
+            c_pixels = _list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
+    else:
+        c_pixels = bytes(pixels)
+
+    _C_GL_1_1.glTexImage2D(int(target), int(level), int(internalformat), int(width), int(height), int(border), int(format_), int(type_), c_pixels)
 
 
 # Alt. Texture Image Specification Commands 
@@ -2858,7 +2871,7 @@ def glCallLists(type_, lists):
             n = len(lists)
             _C_GL_1_1.glCallLists(n, int(type_), lists)
         else:
-            raise ValueError("Unexpected value of parameter 'type_'. For 'list' being bytes, parameter 'type_' must be GL_UNSIGNED_BYTE.")
+            raise ValueError("Unexpected value of parameter 'type_'. For parameter 'lists' being bytes, parameter 'type_' must be GL_UNSIGNED_BYTE.")
 
     elif isinstance(lists, str):
         if type_ == GL_UNSIGNED_INT:
@@ -2866,7 +2879,7 @@ def glCallLists(type_, lists):
             c_lists = (_C_GL_1_1.GLuint * n)(*(ord(c) for c in lists))
             _C_GL_1_1.glCallLists(n, int(type_), c_lists)
         else:
-            raise ValueError("Unexpected value of parameter 'type_'. For 'list' parameter being bytes, parameter 'type_' must be GL_UNSIGNED_INT.")
+            raise ValueError("Unexpected value of parameter 'type_'. For parameter 'lists' being list of integers or floats, parameter 'type_' must be GL_UNSIGNED_INT.")
 
     else:
         n = len(lists)

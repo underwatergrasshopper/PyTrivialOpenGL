@@ -12,6 +12,7 @@ __all__ = [
 class _Data:
     def __init__(self):
         self.tex_obj = None
+        self.options = set()
 
 _data = _Data()
 
@@ -36,25 +37,38 @@ def do_on_create():
     check_gl_error()
     assert glIsTexture(_data.tex_obj)
 
-    pixels = bytes.fromhex(
-        "FF0000FF 00FF00FF 0000FFFF"
-        "FFFFFFFF 000000FF FFFFFF7F"
-    )
-    print("pixel data:", pixels)
+    if "float" in _data.options:
+        pixels = [
+            1, 0, 0, 1,   0, 1, 0, 1,   0, 0, 1, 1,
+            1, 1, 1, 1,   0, 0, 0, 1,   1, 1, 1, 0.5,
+        ]
+        print("pixel data:", pixels)
 
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 4)
-    check_gl_error()
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 4)
+        check_gl_error()
 
-    # equivalent 1
-    #c_pixels = (C_GL.GLubyte * len(pixels)).from_buffer_copy(pixels)
-    #c_pixels = ctypes.cast(c_pixels, ctypes.c_void_p)
-    #C_GL.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, c_pixels)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_FLOAT, pixels)
+        check_gl_error()
+    else:
+        pixels = bytes.fromhex(
+            "FF0000FF 00FF00FF 0000FFFF"
+            "FFFFFFFF 000000FF FFFFFF7F"
+        )
+        print("pixel data:", pixels)
 
-    # equivalent 2
-    #C_GL.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 4)
+        check_gl_error()
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
-    check_gl_error()
+        # equivalent 1
+        #c_pixels = (C_GL.GLubyte * len(pixels)).from_buffer_copy(pixels)
+        #c_pixels = ctypes.cast(c_pixels, ctypes.c_void_p)
+        #C_GL.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, c_pixels)
+
+        # equivalent 2
+        #C_GL.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
+        check_gl_error()
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
     check_gl_error()
@@ -108,10 +122,12 @@ def do_on_resize(width, height):
     glViewport(0, 0, width, height)
 
 def run(name, options):
+    _data.options = options
+
     togl.set_log_level(togl.LogLevel.INFO)
 
     return togl.to_window().create_and_run(
-        window_name         = "Draw Texture",
+        window_name         = "Draw Texture (%s)" % (" ".join(options)) if len(options) > 0 else "Draw Texture",
         area                = (800, 400),
         style               = togl.WindowStyleBit.DRAW_AREA_SIZE,
 
