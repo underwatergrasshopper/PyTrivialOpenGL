@@ -27,13 +27,20 @@ def do_on_create():
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glEnable(GL_TEXTURE_2D)
+    if "1d" in _data.options:
+        glEnable(GL_TEXTURE_1D)
+    else:
+        glEnable(GL_TEXTURE_2D)
 
     _data.tex_obj = glGenTextures(1)[0]
     check_gl_error()
     print("tex_obj:", _data.tex_obj)
     
-    glBindTexture(GL_TEXTURE_2D, _data.tex_obj)
+    if "1d" in _data.options:
+        glBindTexture(GL_TEXTURE_1D, _data.tex_obj)
+    else:
+        glBindTexture(GL_TEXTURE_2D, _data.tex_obj)
+
     check_gl_error()
     assert glIsTexture(_data.tex_obj)
 
@@ -47,7 +54,10 @@ def do_on_create():
         glPixelStorei(GL_UNPACK_ALIGNMENT, 4)
         check_gl_error()
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_FLOAT, pixels)
+        if "1d" in _data.options:
+            glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 6, 0, GL_RGBA, GL_FLOAT, pixels)
+        else:
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_FLOAT, pixels)
         check_gl_error()
     else:
         pixels = bytes.fromhex(
@@ -67,19 +77,35 @@ def do_on_create():
         # equivalent 2
         #C_GL.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
+        if "1d" in _data.options:
+            glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
+        else:
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
+
         check_gl_error()
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-    check_gl_error()
+    if "1d" in _data.options:
+        glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+        check_gl_error()
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-    check_gl_error()
+        glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+        check_gl_error()
+    else:
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+        check_gl_error()
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+        check_gl_error()
+
 
     print("Escape - Exit")
 
 def do_on_destroy():
-    glBindTexture(GL_TEXTURE_2D, 0)
+    if "1d" in _data.options:
+        glBindTexture(GL_TEXTURE_1D, 0)
+    else:
+        glBindTexture(GL_TEXTURE_2D, 0)
+
     check_gl_error()
     assert glIsTexture(_data.tex_obj)
     

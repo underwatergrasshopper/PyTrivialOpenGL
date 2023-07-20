@@ -16,6 +16,8 @@ __all__ = [
     "get_screen_size",
     "get_cursor_pos_in_screen",
     "run_question_box",
+    "is_defined",
+    "get_gl_error_str",
 ]
 
 ################################################################################

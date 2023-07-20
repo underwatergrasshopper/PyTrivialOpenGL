@@ -1940,18 +1940,30 @@ def glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap):
 
 # Texture Image Specification
 
-#def glTexImage1D(target, level, internalformat, width, border, format_, type_, pixels):
-#    """
-#    target           : int
-#    level            : int
-#    internalformat   : int
-#    width            : int
-#    border           : int
-#    format_          : int
-#    type_            : int
-#    pixels           : bytes
-#    """
-#    _C_GL_1_1.glTexImage1D(int(target), int(level), int(internalformat), int(width), int(border), int(format_), int(type_), bytes(pixels))
+def glTexImage1D(target, level, internalformat, width, border, format_, type_, pixels):
+    """
+    target           : int
+    level            : int
+    internalformat   : int
+    width            : int
+    border           : int
+    format_          : int
+    type_            : int
+    pixels           : Lists[float | int]
+        Acceptable, when parameter 'type_' is GL_FLOAT and parameter 'format_' is either GL_RGB or GL_RGBA.
+        All elements of list are converted to floats
+    """
+    if isinstance(pixels, list):
+        if type_ != GL_FLOAT:
+            raise ValueError("Unexpected value of parameter 'type_'. For parameter 'pixels' being list of ints or floats, parameter 'type_' must be GL_FLOAT.")
+        if format_ not in [GL_RGB, GL_RGBA]:
+            raise ValueError("Unexpected value of parameter 'format_'. For parameter 'lists' being list of ints or floats, parameter 'type_' must be either GL_RGB or GL_RGBA.")
+        else:
+            c_pixels = _list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
+    else:
+        c_pixels = bytes(pixels)
+
+    _C_GL_1_1.glTexImage1D(int(target), int(level), int(internalformat), int(width), int(border), int(format_), int(type_), c_pixels)
 
 def glTexImage2D(target, level, internalformat, width, height, border, format_, type_, pixels):
     """
