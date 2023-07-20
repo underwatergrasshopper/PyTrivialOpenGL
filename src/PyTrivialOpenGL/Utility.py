@@ -16,7 +16,8 @@ __all__ = [
     "get_screen_size",
     "get_cursor_pos_in_screen",
     "run_question_box",
-    "is_defined",
+    "is_defined_in_gl",
+    "is_defined_in_c_gl",
     "get_gl_error_str",
 ]
 
@@ -117,11 +118,26 @@ def run_question_box(title = None, message = None):
 
 ################################################################################
 
-def is_defined(target):
+def is_defined_in_gl(target):
     """
-    target : str
+    target  : str
         OpenGl extension name or OpenGL core version name.
-    Returns (bool) True, when constants and functions for target are defined in C_GL module.
+    Returns : bool
+        True, when constants and functions for target are defined in GL module.
+
+    Note: Even if constants and functions are defined, GPU vendor might not provide them.
+    """
+    return target in set(
+        "GL_VERSION_1_0",
+        "GL_VERSION_1_1",
+    )
+
+def is_defined_in_c_gl(target):
+    """
+    target  : str
+        OpenGl extension name or OpenGL core version name.
+    Returns : bool
+        True, when constants and functions for target are defined in C_GL module.
 
     Note: Even if constants and functions are defined, GPU vendor might not provide them.
     """

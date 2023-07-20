@@ -2,7 +2,7 @@ import ctypes as _ctypes
 
 from .._C_GL.VERSION_1_1.Constants import *
 from .._C_GL import VERSION_1_1 as _C_GL_1_1
-from ._Support import _get_num_of_get_values, _get_read_pixels_format_count, _get_read_pixels_type_size
+from ._Support import _get_num_of_get_values, _get_read_pixels_format_count, _get_read_pixels_type_size, _get_tex_parameter_length
 from ..Exceptions import CacheMismatch
 
 ### inner support ###
@@ -2081,13 +2081,21 @@ def glTexParameterf(target, pname, param):
     """
     _C_GL_1_1.glTexParameterf(int(target), int(pname), float(param))
 
-#def glTexParameterfv(target, pname, params):
-#    """
-#    target           : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glTexParameterfv(int(target), int(pname), ???(params))
+def glTexParameterfv(target, pname, params):
+    """
+    target           : int
+    pname            : int
+    params           : List[int | float]
+        Values will be casted to float.
+    """
+    length = _get_tex_parameter_length(pname)
+    if length is None:
+        raise ValueError("Unexpected value of parameter 'pname'.")
+    elif length > len(params):
+        raise ValueError("To small length of parameter 'params'.")
+    
+    c_params = _list_to_c_array(float, params, length, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glTexParameterfv(int(target), int(pname), c_params)
 
 def glTexParameteri(target, pname, param):
     """
@@ -2097,14 +2105,21 @@ def glTexParameteri(target, pname, param):
     """
     _C_GL_1_1.glTexParameteri(int(target), int(pname), int(param))
 
-#def glTexParameteriv(target, pname, params):
-#    """
-#    target           : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glTexParameteriv(int(target), int(pname), ???(params))
-
+def glTexParameteriv(target, pname, params):
+    """
+    target           : int
+    pname            : int
+    params           : List[int | float]
+        Values will be casted to int.
+    """    
+    length = _get_tex_parameter_length(pname)
+    if length is None:
+        raise ValueError("Unexpected value of parameter 'pname'.")
+    elif length > len(params):
+        raise ValueError("To small length of parameter 'params'.")
+    
+    c_params = _list_to_c_array(int, params, length, _C_GL_1_1.GLint)
+    _C_GL_1_1.glTexParameteriv(int(target), int(pname), c_params)
 
 # Texture Objects
 
@@ -2134,22 +2149,42 @@ def glGenTextures(n):
     _C_GL_1_1.glGenTextures(n, c_textures)
     return _c_array_to_list(int, c_textures)
 
-#def glAreTexturesResident(n, textures, residences):
-#    """
-#    n                : int
-#    textures         : ???
-#    residences       : ???
-#    Returns (bool).
-#    """
-#    return bool(_C_GL_1_1.glAreTexturesResident(int(n), ???(textures), ???(residences)))
+def glAreTexturesResident(textures, residences = None):
+    """
+    textures        : List[int]
+    residences      : List[bool] | None
+    Returns         : bool
+        True
+            All textures are resident, and parameter 'residences' is untouched.
+        False
+            Not all textures are resident, and when parameter 'residences' is list,
+            then it is set with residence information of each texture provided in parameter 'texture'.
 
-#def glPrioritizeTextures(n, textures, priorities):
-#    """
-#    n                : int
-#    textures         : ???
-#    priorities       : ???
-#    """
-#    _C_GL_1_1.glPrioritizeTextures(int(n), ???(textures), ???(priorities))
+    Note: glAreTexturesResident is deprecated. Information provided by this function might not be correct.
+    """
+    n = len(textures)
+
+    c_textures      = _list_to_c_array(int, textures, n, _C_GL_1_1.GLuint)
+    c_residences    = _make_c_array(_C_GL_1_1.GLboolean, n)
+
+    is_all_resident = bool(_C_GL_1_1.glAreTexturesResident(n, c_textures, c_residences))
+    if not is_all_resident and residences is not None:
+        residences.clear()
+        residences.extend(_c_array_to_list(bool, c_residences))
+
+    return is_all_resident
+
+def glPrioritizeTextures(textures, priorities):
+    """
+    textures         : List[int]
+    priorities       : List[float]
+    """
+    n = len(textures)
+
+    c_textures      = _list_to_c_array(int, textures, n, _C_GL_1_1.GLuint)
+    c_priorities    = _list_to_c_array(float, priorities, n, _C_GL_1_1.GLclampf)
+
+    _C_GL_1_1.glPrioritizeTextures(n, c_textures, c_priorities)
 
 
 # Texture Environments & Texture Functions 
@@ -2230,21 +2265,35 @@ def glTexEnvi(target, pname, param):
 #    _C_GL_1_1.glGetTexGeniv(int(coord), int(pname), ???(params))
 
 
-#def glGetTexParameterfv(target, pname, params):
-#    """
-#    target           : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetTexParameterfv(int(target), int(pname), ???(params))
+def glGetTexParameterfv(target, pname):
+    """
+    target          : int
+    pname           : int
+    Returns         : List[float]
+        Equivalent of parameter 'params' from OpenGL functions specification.
+    """
+    length = _get_tex_parameter_length(pname)
+    if length is None:
+        raise ValueError("Unexpected value of parameter 'pname'.")
+    
+    c_params = _make_c_array(_C_GL_1_1.GLfloat, length)
+    _C_GL_1_1.glGetTexParameterfv(int(target), int(pname), c_params)
+    return _c_array_to_list(float, c_params)
 
-#def glGetTexParameteriv(target, pname, params):
-#    """
-#    target           : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetTexParameteriv(int(target), int(pname), ???(params))
+def glGetTexParameteriv(target, pname):
+    """
+    target          : int
+    pname           : int
+    Returns         : List[int]
+        Equivalent of parameter 'params' from OpenGL functions specification.
+    """
+    length = _get_tex_parameter_length(pname)
+    if length is None:
+        raise ValueError("Unexpected value of parameter 'pname'.")
+    
+    c_params = _make_c_array(_C_GL_1_1.GLint, length)
+    _C_GL_1_1.glGetTexParameteriv(int(target), int(pname), c_params)
+    return _c_array_to_list(int, c_params)
 
 #def glGetTexLevelParameterfv(target, level, pname, params):
 #    """

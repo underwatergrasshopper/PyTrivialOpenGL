@@ -32,6 +32,37 @@ def _get_gl_error_str(gl_error_code):
         return "(%d)" % gl_error_code
     return gl_error_str
 
+def _get_tex_parameter_length(pname):
+    return _tex_parameter_lengths.get(pname, None)
+
+_tex_parameter_lengths = {
+    # Commented elements are from OpenGL above version 1.1.
+
+    # _C_GL.GL_DEPTH_STENCIL_TEXTURE_MODE : 1,
+    # _C_GL.GL_TEXTURE_BASE_LEVEL : 1,
+    _C_GL.GL_TEXTURE_BORDER_COLOR : 4,
+    # _C_GL.GL_TEXTURE_COMPARE_FUNC : 1,
+    # _C_GL.GL_TEXTURE_COMPARE_MODE : 1,
+    # _C_GL.GL_TEXTURE_LOD_BIAS : 1,
+    _C_GL.GL_TEXTURE_MIN_FILTER : 1,
+    _C_GL.GL_TEXTURE_MAG_FILTER : 1,
+    # _C_GL.GL_TEXTURE_MIN_LOD : 1,
+    # _C_GL.GL_TEXTURE_MAX_LOD : 1,
+    # _C_GL.GL_TEXTURE_MAX_LEVEL : 1,
+    # _C_GL.GL_TEXTURE_SWIZZLE_R : 1,
+    # _C_GL.GL_TEXTURE_SWIZZLE_G : 1,
+    # _C_GL.GL_TEXTURE_SWIZZLE_B : 1,
+    # _C_GL.GL_TEXTURE_SWIZZLE_A : 1,
+    # _C_GL.GL_TEXTURE_SWIZZLE_RGBA : 4,
+    _C_GL.GL_TEXTURE_WRAP_S : 1,
+    _C_GL.GL_TEXTURE_WRAP_T : 1,
+    # _C_GL.GL_TEXTURE_WRAP_R : 1,
+    _C_GL.GL_TEXTURE_PRIORITY : 1,
+    # _C_GL.GL_DEPTH_TEXTURE_MODE : 1,
+    # _C_GL.GL_GENERATE_MIPMAP : 1,
+    _C_GL.GL_TEXTURE_RESIDENT : 1,
+}
+
 _num_of_get_values = {
     # Note: Commented elements are for OpenGL version above 1.1. 
 

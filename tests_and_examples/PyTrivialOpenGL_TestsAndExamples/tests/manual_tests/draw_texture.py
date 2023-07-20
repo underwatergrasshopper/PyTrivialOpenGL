@@ -2,6 +2,7 @@ import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
 from PyTrivialOpenGL import C_GL
 import ctypes
+import math
 
 from ...utility.ExampleSupport import check_gl_error
 
@@ -12,6 +13,7 @@ __all__ = [
 class _Data:
     def __init__(self):
         self.tex_obj = None
+        self.other_tex_objs = []
         self.options = set()
 
 _data = _Data()
@@ -35,6 +37,8 @@ def do_on_create():
     _data.tex_obj = glGenTextures(1)[0]
     check_gl_error()
     print("tex_obj:", _data.tex_obj)
+
+    _data.other_tex_objs = glGenTextures(3)
     
     if "1d" in _data.options:
         glBindTexture(GL_TEXTURE_1D, _data.tex_obj)
@@ -91,12 +95,45 @@ def do_on_create():
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
         check_gl_error()
     else:
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+        glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, [GL_NEAREST])
         check_gl_error()
+        assert glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER) == [GL_NEAREST]
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+        glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, [GL_NEAREST])
         check_gl_error()
+        assert glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER) == [GL_NEAREST]
 
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP)
+
+        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, [1, 0, 0, 1])
+        check_gl_error()
+        assert glGetTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR) == [1, 0, 0, 1]
+
+        # glAreTexturesResident is deprecated. Information provided by this function might not be correct.
+        # From observation, it seams, that if any texture from 'textures' parameter is not resident, 
+        # then all items of 'residents' parameter are set to False, event if any texture is resident.
+
+        residences = []
+        print("glAreTexturesResident: %s" % glAreTexturesResident([_data.tex_obj], residences))
+        print("residences: %s" % residences)
+
+        print("glAreTexturesResident: %s" % glAreTexturesResident([_data.tex_obj]))
+
+        residences = []
+        print("glAreTexturesResident: %s" % glAreTexturesResident([_data.other_tex_objs[0]], residences))
+        print("residences: %s" % residences)
+
+        residences = []
+        print("glAreTexturesResident: %s" % glAreTexturesResident(_data.other_tex_objs, residences))
+        print("residences: %s" % residences)
+
+        print("Texture Priority: %s" % glGetTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_PRIORITY))
+        glPrioritizeTextures([_data.tex_obj],[0.5])
+        assert math.isclose(glGetTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_PRIORITY)[0], 0.5, rel_tol = 0.0001)
+
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_PRIORITY, 0.7)
+        assert math.isclose(glGetTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_PRIORITY)[0], 0.7, rel_tol = 0.0001)
 
     print("Escape - Exit")
 
@@ -112,6 +149,9 @@ def do_on_destroy():
     glDeleteTextures([_data.tex_obj])
     check_gl_error()
     assert not glIsTexture(_data.tex_obj)
+
+    glDeleteTextures(_data.other_tex_objs)
+    
 
     glPopAttrib()
 
