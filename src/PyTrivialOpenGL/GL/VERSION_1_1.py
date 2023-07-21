@@ -11,6 +11,8 @@ from ._Support import (
     _get_tex_type_mul_div_size,
     _get_tex_level_parameter_number,
     _get_acceptable_tex_target_ids,
+    _get_call_lists_c_type,
+    _get_call_lists_py_type,
 )
 from ..Exceptions import CacheMismatch
 
@@ -3076,39 +3078,6 @@ def glCallList(list_):
     list_            : int
     """
     _C_GL_1_1.glCallList(int(list_))
-
-
-_call_lists_c_types = {
-    GL_BYTE             : _C_GL_1_1.GLbyte,
-    GL_UNSIGNED_BYTE    : _C_GL_1_1.GLubyte,
-    GL_SHORT            : _C_GL_1_1.GLshort,
-    GL_UNSIGNED_SHORT   : _C_GL_1_1.GLushort,
-    GL_INT              : _C_GL_1_1.GLint,
-    GL_UNSIGNED_INT     : _C_GL_1_1.GLuint,
-    GL_FLOAT            : _C_GL_1_1.GLfloat,
-    GL_2_BYTES          : _C_GL_1_1.GLubyte,
-    GL_3_BYTES          : _C_GL_1_1.GLubyte,
-    GL_4_BYTES          : _C_GL_1_1.GLubyte,
-}
-
-_call_lists_py_types = {
-    GL_BYTE             : int,
-    GL_UNSIGNED_BYTE    : int,
-    GL_SHORT            : int,
-    GL_UNSIGNED_SHORT   : int,
-    GL_INT              : int,
-    GL_UNSIGNED_INT     : int,
-    GL_FLOAT            : float,
-    GL_2_BYTES          : int,
-    GL_3_BYTES          : int,
-    GL_4_BYTES          : int,
-}
-
-def _get_call_lists_c_type(type_):
-    return _call_lists_c_types.get(type_, None)
-
-def _get_call_lists_py_type(type_):
-    return _call_lists_py_types.get(type_, None)
 
 def glCallLists(type_, lists):
     """

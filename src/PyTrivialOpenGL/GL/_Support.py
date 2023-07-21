@@ -47,6 +47,38 @@ def _get_tex_level_parameter_number(pname):
 def _get_acceptable_tex_target_ids():
     return _acceptable_tex_target_ids
 
+def _get_call_lists_c_type(type_):
+    return _call_lists_c_types.get(type_, None)
+
+def _get_call_lists_py_type(type_):
+    return _call_lists_py_types.get(type_, None)
+
+_call_lists_py_types = {
+    _C_GL.GL_BYTE             : int,
+    _C_GL.GL_UNSIGNED_BYTE    : int,
+    _C_GL.GL_SHORT            : int,
+    _C_GL.GL_UNSIGNED_SHORT   : int,
+    _C_GL.GL_INT              : int,
+    _C_GL.GL_UNSIGNED_INT     : int,
+    _C_GL.GL_FLOAT            : float,
+    _C_GL.GL_2_BYTES          : int,
+    _C_GL.GL_3_BYTES          : int,
+    _C_GL.GL_4_BYTES          : int,
+}
+
+_call_lists_c_types = {
+    _C_GL.GL_BYTE             : _C_GL.GLbyte,
+    _C_GL.GL_UNSIGNED_BYTE    : _C_GL.GLubyte,
+    _C_GL.GL_SHORT            : _C_GL.GLshort,
+    _C_GL.GL_UNSIGNED_SHORT   : _C_GL.GLushort,
+    _C_GL.GL_INT              : _C_GL.GLint,
+    _C_GL.GL_UNSIGNED_INT     : _C_GL.GLuint,
+    _C_GL.GL_FLOAT            : _C_GL.GLfloat,
+    _C_GL.GL_2_BYTES          : _C_GL.GLubyte,
+    _C_GL.GL_3_BYTES          : _C_GL.GLubyte,
+    _C_GL.GL_4_BYTES          : _C_GL.GLubyte,
+}
+
 _acceptable_tex_target_ids = set([
     # Note: Commented items are from OpenGL above version 1.1.
 
