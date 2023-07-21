@@ -10,6 +10,16 @@ __all__ = [
     "run"
 ]
 
+def is_close(l_a, l_b, delta):
+    if (len(l_a) != len(l_b)):
+        return False
+
+    for ix in range(len(l_a)):
+        if not math.isclose(l_a[ix], l_b[ix], rel_tol = delta):
+            return False
+
+    return True
+
 class _Data:
     def __init__(self):
         self.tex_obj = None
@@ -62,6 +72,9 @@ def do_on_create():
             glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 6, 0, GL_RGBA, GL_FLOAT, pixels)
         else:
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_FLOAT, pixels)
+
+            print(glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT))
+            assert is_close(glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT), pixels, 0.01)
         check_gl_error()
     else:
         pixels = bytes.fromhex(
@@ -83,8 +96,19 @@ def do_on_create():
 
         if "1d" in _data.options:
             glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
+
+            assert glGetTexLevelParameteriv(GL_TEXTURE_1D, 0, GL_TEXTURE_WIDTH)[0] == 6
+            assert glGetTexLevelParameteriv(GL_TEXTURE_1D, 0, GL_TEXTURE_HEIGHT)[0] == 1
+
+            assert glGetTexImage(GL_TEXTURE_1D, 0, GL_RGBA, GL_UNSIGNED_BYTE) == pixels
+
         else:
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
+
+            assert glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH)[0] == 3
+            assert glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT)[0] == 2
+
+            assert glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE) == pixels
 
         check_gl_error()
 

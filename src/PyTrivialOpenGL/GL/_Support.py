@@ -41,8 +41,63 @@ def _get_tex_format_element_number(format_):
 def _get_tex_type_mul_div_size(type_):
     return _texture_type_mul_div_sizes.get(type_, None)
 
+def _get_tex_level_parameter_number(pname):
+    return _tex_level_parameter_numbers.get(pname, None)
+
+def _get_acceptable_tex_target_ids():
+    return _acceptable_tex_target_ids
+
+_acceptable_tex_target_ids = set([
+    # Note: Commented items are from OpenGL above version 1.1.
+
+    _C_GL.GL_TEXTURE_1D, 
+    _C_GL.GL_TEXTURE_2D, 
+    # _C_GL.GL_TEXTURE_3D, 
+    # _C_GL.GL_TEXTURE_1D_ARRAY, 
+    # _C_GL.GL_TEXTURE_2D_ARRAY, 
+    # _C_GL.GL_TEXTURE_RECTANGLE, 
+    _C_GL.GL_PROXY_TEXTURE_1D, 
+    _C_GL.GL_PROXY_TEXTURE_2D, 
+    # _C_GL.GL_PROXY_TEXTURE_3D, 
+    # _C_GL.GL_TEXTURE_CUBE_MAP_POSITIVE_X, 
+    # _C_GL.GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 
+    # _C_GL.GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 
+    # _C_GL.GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 
+    # _C_GL.GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 
+    # _C_GL.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 
+    # _C_GL.GL_TEXTURE_CUBE_MAP_ARRAY,
+    # _C_GL.GL_PROXY_TEXTURE_CUBE_MAP,
+])
+
+_tex_level_parameter_numbers = {
+    # Note: Commented items are from OpenGL above version 1.1.
+
+    _C_GL.GL_TEXTURE_WIDTH                  : 1,
+    _C_GL.GL_TEXTURE_HEIGHT                 : 1,
+    # _C_GL.GL_TEXTURE_DEPTH                  : 1,
+    # _C_GL.GL_TEXTURE_INTERNAL_FORMAT        : 1,
+    _C_GL.GL_TEXTURE_BORDER                 : 1,
+    # _C_GL.GL_TEXTURE_RED_TYPE               : 1, 
+    # _C_GL.GL_TEXTURE_GREEN_TYPE             : 1, 
+    # _C_GL.GL_TEXTURE_BLUE_TYPE              : 1, 
+    # _C_GL.GL_TEXTURE_ALPHA_TYPE             : 1, 
+    # _C_GL.GL_TEXTURE_DEPTH_TYPE             : 1,
+    _C_GL.GL_TEXTURE_RED_SIZE               : 1,
+    _C_GL.GL_TEXTURE_GREEN_SIZE             : 1,
+    _C_GL.GL_TEXTURE_BLUE_SIZE              : 1,
+    _C_GL.GL_TEXTURE_ALPHA_SIZE             : 1,
+    _C_GL.GL_TEXTURE_LUMINANCE_SIZE         : 1,
+    _C_GL.GL_TEXTURE_INTENSITY_SIZE         : 1,
+    # _C_GL.GL_TEXTURE_DEPTH_SIZE             : 1,
+    # _C_GL.GL_TEXTURE_COMPRESSED             : 1,
+    # _C_GL.GL_TEXTURE_COMPRESSED_IMAGE_SIZE  : 1,
+    # _C_GL.GL_TEXTURE_BUFFER_OFFSET          : 1,
+    # _C_GL.GL_TEXTURE_BUFFER_SIZE            : 1,
+}
+
 _texture_format_element_numbers = {
-    # Commented items are (most likely) from OpenGL above version 1.1.
+    # Note: Commented items are from OpenGL above version 1.1.
+
     _C_GL.GL_COLOR_INDEX      : 1,
     _C_GL.GL_STENCIL_INDEX    : 1,
     _C_GL.GL_DEPTH_COMPONENT  : 1,
@@ -69,7 +124,8 @@ _texture_format_element_numbers = {
 }
 
 _texture_type_mul_div_sizes = {
-    # Commented items are (most likely) from OpenGL above version 1.1.
+    # Note: Commented items are from OpenGL above version 1.1.
+
     _C_GL.GL_UNSIGNED_BYTE                   : (1, 1), 
     _C_GL.GL_BYTE                            : (1, 1),
     _C_GL.GL_UNSIGNED_SHORT                  : (2, 1),
@@ -97,7 +153,7 @@ _texture_type_mul_div_sizes = {
 }
 
 _tex_parameter_lengths = {
-    # Commented elements are from OpenGL above version 1.1.
+    # Note: Commented items are from OpenGL above version 1.1.
 
     # _C_GL.GL_DEPTH_STENCIL_TEXTURE_MODE : 1,
     # _C_GL.GL_TEXTURE_BASE_LEVEL : 1,
@@ -125,7 +181,7 @@ _tex_parameter_lengths = {
 }
 
 _num_of_get_values = {
-    # Note: Commented elements are for OpenGL version above 1.1. 
+    # Note: Commented items are from OpenGL above version 1.1.
 
     _C_GL.GL_ACCUM_ALPHA_BITS : 1,
     _C_GL.GL_ACCUM_BLUE_BITS : 1,
@@ -617,7 +673,8 @@ _num_of_get_values = {
 }
 
 _read_pixels_format_count = {
-    # Note: Commented elements are from OpenGL above 1.1.
+    # Note: Commented items are from OpenGL above version 1.1.
+
     _C_GL.GL_COLOR_INDEX          : 1,
     _C_GL.GL_STENCIL_INDEX        : 1,
     _C_GL.GL_DEPTH_COMPONENT      : 1,
@@ -634,7 +691,8 @@ _read_pixels_format_count = {
 }
 
 _read_pixels_type_size = {
-    # Note: Commented elements are from OpenGL above 1.1.
+    # Note: Commented items are from OpenGL above version 1.1.
+
     _C_GL.GL_UNSIGNED_BYTE                : 1,
     _C_GL.GL_BYTE                         : 1,
     _C_GL.GL_BITMAP                       : 1 / 8,
@@ -658,7 +716,8 @@ _read_pixels_type_size = {
 }
 
 _gl_error_code_to_str = {
-    # Note: Commented elements are from OpenGL above 1.1.
+    # Note: Commented items are from OpenGL above version 1.1.
+
     _C_GL.GL_NO_ERROR                       : "GL_NO_ERROR",
     _C_GL.GL_INVALID_ENUM                   : "GL_INVALID_ENUM",
     _C_GL.GL_INVALID_VALUE                  : "GL_INVALID_VALUE",

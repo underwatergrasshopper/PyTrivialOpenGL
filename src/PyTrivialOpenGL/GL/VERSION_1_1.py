@@ -9,16 +9,17 @@ from ._Support import (
     _get_tex_parameter_length,
     _get_tex_format_element_number,
     _get_tex_type_mul_div_size,
+    _get_tex_level_parameter_number,
+    _get_acceptable_tex_target_ids,
 )
 from ..Exceptions import CacheMismatch
 
 ### inner support ###
 
-def _list_part_to_c_array(l_type, l, up_to_len, c_type):
-    c_array_len             = max(up_to_len, len(l))
-    num_of_elements_to_take = min(up_to_len, len(l))
+def _list_part_to_c_array(l_type, l, exact_len, c_type):
+    num_of_elements_to_take = min(exact_len, len(l))
 
-    return (c_type * c_array_len)(*(l_type(l[ix]) for ix in range(num_of_elements_to_take)))
+    return (c_type * exact_len)(*(l_type(l[ix]) for ix in range(num_of_elements_to_take)))
 
 def _list_to_c_array(l_type, l, min_len, c_type):
     return (c_type * max(min_len, len(l)))(*(l_type(e) for e in l))
@@ -2363,36 +2364,83 @@ def glGetTexParameteriv(target, pname):
     _C_GL_1_1.glGetTexParameteriv(int(target), int(pname), c_params)
     return _c_array_to_list(int, c_params)
 
-#def glGetTexLevelParameterfv(target, level, pname, params):
-#    """
-#    target           : int
-#    level            : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetTexLevelParameterfv(int(target), int(level), int(pname), ???(params))
+def glGetTexLevelParameterfv(target, level, pname):
+    """
+    target           : int
+    level            : int
+    pname            : int
+    Returns          : List[float]
+        Corresponds to 'params' parameter from OpenGL functions specification.
+    """
+    n = _get_tex_level_parameter_number(pname)
+    c_params = _make_c_array(_C_GL_1_1.GLfloat, n)
+    _C_GL_1_1.glGetTexLevelParameterfv(int(target), int(level), int(pname), c_params)
+    return _c_array_to_list(float, c_params)
 
-#def glGetTexLevelParameteriv(target, level, pname, params):
-#    """
-#    target           : int
-#    level            : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetTexLevelParameteriv(int(target), int(level), int(pname), ???(params))
+def glGetTexLevelParameteriv(target, level, pname):
+    """
+    target           : int
+    level            : int
+    pname            : int
+    Returns          : List[int]
+        Corresponds to 'params' parameter from OpenGL functions specification.
+    """
+    n = _get_tex_level_parameter_number(pname)
+    c_params = _make_c_array(_C_GL_1_1.GLint, n)
+    _C_GL_1_1.glGetTexLevelParameteriv(int(target), int(level), int(pname), c_params)
+    return _c_array_to_list(int, c_params)
 
 
 # Texture Queries
 
-#def glGetTexImage(target, level, format_, type_, pixels):
-#    """
-#    target           : int
-#    level            : int
-#    format_          : int
-#    type_            : int
-#    pixels           : ???
-#    """
-#    _C_GL_1_1.glGetTexImage(int(target), int(level), int(format_), int(type_), ???(pixels))
+def glGetTexImage(target, level, format_, type_):
+    """
+    target           : int
+    level            : int
+    format_          : int
+    type_            : int
+    Returns          : bytes
+        Corresponds to 'pixels' parameter from OpenGL functions specification.
+    """
+    target = int(target)
+    if target not in _get_acceptable_tex_target_ids():
+        raise ValueError("Unexpected value of 'target' parameter")
+
+    width   = glGetTexLevelParameteriv(target, level, GL_TEXTURE_WIDTH)[0]
+    height  = glGetTexLevelParameteriv(target, level, GL_TEXTURE_HEIGHT)[0]
+    # depth # for OpengGL 2.1+ for sure
+
+    format_ = int(format_)
+    type_   = int(type_)
+
+    n = _get_tex_format_element_number(format_)
+    if n is None:
+        raise ValueError("Unexpected value of 'format_' parameter.")
+
+    md = _get_tex_type_mul_div_size(type_)
+    if md is None:
+        raise ValueError("Unexpected value of 'type_' parameter.")
+
+    m, d = md
+
+    if type_ == GL_FLOAT:
+        num_of_elements = _get_tex_format_element_number(format_)
+
+        length = width * height * num_of_elements
+        c_pixels = _make_c_array(_C_GL_1_1.GLfloat, length)
+
+        _C_GL_1_1.glGetTexImage(int(target), int(level), format_, type_, _ctypes.cast(c_pixels, _ctypes.c_void_p))
+
+        return _c_array_to_list(float, c_pixels)
+    else:
+        single_item_size = (n * m // d)             # in bytes
+        size = width * height * single_item_size    # in bytes
+        c_pixels = _make_c_array(_C_GL_1_1.GLubyte, size)
+
+        _C_GL_1_1.glGetTexImage(int(target), int(level), format_, type_, _ctypes.cast(c_pixels, _ctypes.c_void_p))
+
+        return bytes(c_pixels)
+
 
 def glIsTexture(texture):
     """
