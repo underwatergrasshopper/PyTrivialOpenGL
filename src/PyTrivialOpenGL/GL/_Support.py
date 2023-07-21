@@ -35,6 +35,67 @@ def _get_gl_error_str(gl_error_code):
 def _get_tex_parameter_length(pname):
     return _tex_parameter_lengths.get(pname, None)
 
+def _get_tex_format_element_number(format_):
+    return _texture_format_element_numbers.get(format_, None)
+
+def _get_tex_type_mul_div_size(type_):
+    return _texture_type_mul_div_sizes.get(type_, None)
+
+_texture_format_element_numbers = {
+    # Commented items are (most likely) from OpenGL above version 1.1.
+    _C_GL.GL_COLOR_INDEX      : 1,
+    _C_GL.GL_STENCIL_INDEX    : 1,
+    _C_GL.GL_DEPTH_COMPONENT  : 1,
+    # _C_GL.GL_DEPTH_STENCIL    : 2,
+    _C_GL.GL_RED              : 1,
+    _C_GL.GL_GREEN            : 1,
+    _C_GL.GL_BLUE             : 1,
+    _C_GL.GL_ALPHA            : 1,
+    # _C_GL.GL_RG               : 2,
+    _C_GL.GL_RGB              : 3,
+    _C_GL.GL_RGBA             : 4,
+    # _C_GL.GL_BGR              : 3,
+    # _C_GL.GL_BGRA             : 4,
+    # _C_GL.GL_RED_INTEGER      : 1,
+    # _C_GL.GL_GREEN_INTEGER    : 1,
+    # _C_GL.GL_BLUE_INTEGER     : 1,
+    # _C_GL.GL_RG_INTEGER       : 2,
+    # _C_GL.GL_RGB_INTEGER      : 3,
+    # _C_GL.GL_RGBA_INTEGER     : 4,
+    # _C_GL.GL_BGR_INTEGER      : 3,
+    # _C_GL.GL_BGRA_INTEGER     : 4,
+    _C_GL.GL_LUMINANCE        : 1,
+    _C_GL.GL_LUMINANCE_ALPHA  : 2,
+}
+
+_texture_type_mul_div_sizes = {
+    # Commented items are (most likely) from OpenGL above version 1.1.
+    _C_GL.GL_UNSIGNED_BYTE                   : (1, 1), 
+    _C_GL.GL_BYTE                            : (1, 1),
+    _C_GL.GL_UNSIGNED_SHORT                  : (2, 1),
+    _C_GL.GL_SHORT                           : (2, 1),
+    _C_GL.GL_UNSIGNED_INT                    : (4, 1),
+    _C_GL.GL_INT                             : (4, 1),
+    # _C_GL.GL_HALF_FLOAT                      : (2, 1),
+    _C_GL.GL_FLOAT                           : (4, 1),
+    # _C_GL.GL_UNSIGNED_BYTE_3_3_2             : (1, 3),        # GL_RGB, GL_BGR
+    # _C_GL.GL_UNSIGNED_BYTE_2_3_3_REV         : (1, 3),        # GL_RGB, GL_BGR
+    # _C_GL.GL_UNSIGNED_SHORT_5_6_5            : (2, 3),        # GL_RGB, GL_BGR
+    # _C_GL.GL_UNSIGNED_SHORT_5_6_5_REV        : (2, 3),        # GL_RGB, GL_BGR
+    # _C_GL.GL_UNSIGNED_SHORT_4_4_4_4          : (2, 4),        # GL_RGBA, GL_ABGR
+    # _C_GL.GL_UNSIGNED_SHORT_4_4_4_4_REV      : (2, 4),        # GL_RGBA, GL_ABGR
+    # _C_GL.GL_UNSIGNED_SHORT_5_5_5_1          : (2, 4),        # GL_RGBA, GL_ABGR
+    # _C_GL.GL_UNSIGNED_SHORT_1_5_5_5_REV      : (2, 4),        # GL_RGBA, GL_ABGR
+    # _C_GL.GL_UNSIGNED_INT_8_8_8_8            : (4, 4),        # GL_RGBA, GL_ABGR
+    # _C_GL.GL_UNSIGNED_INT_8_8_8_8_REV        : (4, 4),        # GL_RGBA, GL_ABGR
+    # _C_GL.GL_UNSIGNED_INT_10_10_10_2         : (4, 4),        # GL_RGBA, GL_ABGR
+    # _C_GL.GL_UNSIGNED_INT_2_10_10_10_REV     : (4, 4),        # GL_RGBA, GL_ABGR
+    # _C_GL.GL_UNSIGNED_INT_24_8               : (4, 2),        # GL_DEPTH_STENCIL (?)
+    # _C_GL.GL_UNSIGNED_INT_10F_11F_11F_REV    : (4, 3),        # GL_RGB, GL_BGR
+    # _C_GL.GL_UNSIGNED_INT_5_9_9_9_REV        : (4, 4),        # GL_RGBA, GL_ABGR
+    # _C_GL.GL_FLOAT_32_UNSIGNED_INT_24_8_REV  : (4, 3),        # (?)
+}
+
 _tex_parameter_lengths = {
     # Commented elements are from OpenGL above version 1.1.
 
