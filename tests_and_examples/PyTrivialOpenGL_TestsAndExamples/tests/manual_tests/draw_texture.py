@@ -70,11 +70,20 @@ def do_on_create():
 
         if "1d" in _data.options:
             glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 6, 0, GL_RGBA, GL_FLOAT, pixels)
+
+            if "sub" in _data.options:
+                glTexSubImage1D(GL_TEXTURE_1D, 0, 1, 2, GL_RGBA, GL_FLOAT, [1, 1, 0, 0.5,   1, 0, 1, 0.5])
         else:
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_FLOAT, pixels)
 
             print(glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT))
             assert is_close(glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT), pixels, 0.01)
+
+            if "sub" in _data.options:
+                # debug
+                #glTexSubImage2D(GL_TEXTURE_2D, 0, 1, 0, 1, 2, GL_RGBA, GL_UNSIGNED_BYTE, b"\xFF\xFF\x00\x7F\xFF\x00\xFF\x7F")
+                glTexSubImage2D(GL_TEXTURE_2D, 0, 1, 0, 1, 2, GL_RGBA, GL_FLOAT, [1, 1, 0, 0.5,   1, 0, 1, 0.5])
+
         check_gl_error()
     else:
         pixels = bytes.fromhex(
@@ -102,6 +111,9 @@ def do_on_create():
 
             assert glGetTexImage(GL_TEXTURE_1D, 0, GL_RGBA, GL_UNSIGNED_BYTE) == pixels
 
+            if "sub" in _data.options:
+                glTexSubImage1D(GL_TEXTURE_1D, 0, 1, 2, GL_RGBA, GL_UNSIGNED_BYTE, b"\xFF\xFF\x00\x7F\xFF\x00\xFF\x7F")
+
         else:
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
 
@@ -109,6 +121,10 @@ def do_on_create():
             assert glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT)[0] == 2
 
             assert glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE) == pixels
+
+            if "sub" in _data.options:
+                glTexSubImage2D(GL_TEXTURE_2D, 0, 1, 0, 1, 2, GL_RGBA, GL_UNSIGNED_BYTE, b"\xFF\xFF\x00\x7F\xFF\x00\xFF\x7F")
+
 
         check_gl_error()
 

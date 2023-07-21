@@ -93,7 +93,7 @@ class ExampleRunner:
             example_manager.add_example("draw_pixels",      manual_tests.draw_pixels.run)
             example_manager.add_example("draw_stipple",     manual_tests.draw_stipple.run)
             example_manager.add_example("display_list",     manual_tests.display_list.run)
-            example_manager.add_example("draw_texture",     manual_tests.draw_texture.run,      ["float", "1d"])
+            example_manager.add_example("draw_texture",     manual_tests.draw_texture.run,      ["float", "1d", "sub"])
 
         if default_example_name is None:
             if category & ExampleCategoryBit.MANUAL_TESTS:

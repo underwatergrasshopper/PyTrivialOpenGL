@@ -2014,7 +2014,6 @@ def glTexImage2D(target, level, internalformat, width, height, border, format_, 
         Acceptable, when parameter 'type_' is GL_FLOAT and parameter 'format_' is either GL_RGB or GL_RGBA.
         All items are converted to floats.
     """
-
     n = _get_tex_format_element_number(format_)
     if n is None:
         raise ValueError("Unexpected value of 'format_' parameter")
@@ -2054,7 +2053,6 @@ def glTexImage2D(target, level, internalformat, width, height, border, format_, 
 
         c_pixels = pixels
 
-
     _C_GL_1_1.glTexImage2D(int(target), int(level), int(internalformat), width, height, int(border), int(format_), int(type_), c_pixels)
 
 
@@ -2085,31 +2083,110 @@ def glCopyTexImage2D(target, level, internalFormat, x, y, width, height, border)
     """
     _C_GL_1_1.glCopyTexImage2D(int(target), int(level), int(internalFormat), int(x), int(y), int(width), int(height), int(border))
 
-#def glTexSubImage1D(target, level, xoffset, width, format_, type_, pixels):
-#    """
-#    target           : int
-#    level            : int
-#    xoffset          : int
-#    width            : int
-#    format_          : int
-#    type_            : int
-#    pixels           : ???
-#    """
-#    _C_GL_1_1.glTexSubImage1D(int(target), int(level), int(xoffset), int(width), int(format_), int(type_), ???(pixels))
+def glTexSubImage1D(target, level, xoffset, width, format_, type_, pixels):
+    """
+    target           : int
+    level            : int
+    xoffset          : int
+    width            : int
+    format_          : int
+    type_            : int
+    pixels           : Lists[float | int]
+        Acceptable, when parameter 'type_' is GL_FLOAT and parameter 'format_' is either GL_RGB or GL_RGBA.
+        All elements of list are converted to floats
+    """
+    n = _get_tex_format_element_number(format_)
+    if n is None:
+        raise ValueError("Unexpected value of 'format_' parameter")
 
-#def glTexSubImage2D(target, level, xoffset, yoffset, width, height, format_, type_, pixels):
-#    """
-#    target           : int
-#    level            : int
-#    xoffset          : int
-#    yoffset          : int
-#    width            : int
-#    height           : int
-#    format_          : int
-#    type_            : int
-#    pixels           : ???
-#    """
-#    _C_GL_1_1.glTexSubImage2D(int(target), int(level), int(xoffset), int(yoffset), int(width), int(height), int(format_), int(type_), ???(pixels))
+    md = _get_tex_type_mul_div_size(type_)
+    if md is None:
+        raise ValueError("Unexpected value of 'type_' parameter")
+
+    m, d = md
+
+    expected_size = int(width)      # in pixels
+    single_item_size = (n * m // d) # in bytes
+
+    if isinstance(pixels, list):
+        if type_ != GL_FLOAT:
+            raise ValueError("Unexpected value of parameter 'type_'. For parameter 'pixels' being list of ints or floats, parameter 'type_' must be GL_FLOAT.")
+        if format_ not in [GL_RGB, GL_RGBA]:
+            raise ValueError("Unexpected value of parameter 'format_'. For parameter 'lists' being list of ints or floats, parameter 'type_' must be either GL_RGB or GL_RGBA.")
+        else:
+            # adjusted by size of single precision float
+            size = len(pixels) * 4 // single_item_size  # in pixels
+
+            if expected_size != size: 
+                raise ValueError("Unexpected size of 'pixels' parameter")
+
+            c_pixels = _list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
+    else:
+        pixels = bytes(pixels)
+
+        size = len(pixels) // single_item_size
+
+        if expected_size != size:
+            raise ValueError("Unexpected size of 'pixels' parameter. Should be %d pixels. It's %d pixels." % (expected_size, size))
+
+        c_pixels = pixels
+
+    _C_GL_1_1.glTexSubImage1D(int(target), int(level), int(xoffset), int(width), int(format_), int(type_), c_pixels)
+
+def glTexSubImage2D(target, level, xoffset, yoffset, width, height, format_, type_, pixels):
+    """
+    target           : int
+    level            : int
+    xoffset          : int
+    yoffset          : int
+    width            : int
+    height           : int
+    format_          : int
+    type_            : int
+    pixels           : Lists[float | Any]
+        Acceptable, when parameter 'type_' is GL_FLOAT and parameter 'format_' is either GL_RGB or GL_RGBA.
+        All items are converted to floats.
+    """
+    n = _get_tex_format_element_number(format_)
+    if n is None:
+        raise ValueError("Unexpected value of 'format_' parameter")
+
+    md = _get_tex_type_mul_div_size(type_)
+    if md is None:
+        raise ValueError("Unexpected value of 'type_' parameter")
+
+    m, d = md
+
+    width = int(width)
+    height = int(height)
+
+    expected_size = width * height  # in pixels
+    single_item_size = (n * m // d) # in bytes
+
+    if isinstance(pixels, list):
+        if type_ != GL_FLOAT:
+            raise ValueError("Unexpected value of 'type_' parameter. For 'pixels' parameter being list of ints or floats, 'type_' parameter must be GL_FLOAT.")
+        if format_ not in [GL_RGB, GL_RGBA]:
+            raise ValueError("Unexpected value of 'format_' parameter. For 'lists' parameter being list of ints or floats, 'type_' parameter must be either GL_RGB or GL_RGBA.")
+        else:
+            # adjusted by size of single precision float
+            size = len(pixels) * 4 // single_item_size # in pixels
+
+            if expected_size != size: 
+                raise ValueError("Unexpected size of 'pixels' parameter")
+
+            c_pixels = _list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
+    else:
+        pixels = bytes(pixels)
+
+        size = len(pixels) // single_item_size
+
+        if expected_size != size:
+            raise ValueError("Unexpected size of 'pixels' parameter. Should be %d pixels. It's %d pixels." % (expected_size, size))
+
+        c_pixels = pixels
+
+    _C_GL_1_1.glTexSubImage2D(int(target), int(level), int(xoffset), int(yoffset), int(width), int(height), int(format_), int(type_), c_pixels)
 
 def glCopyTexSubImage1D(target, level, xoffset, x, y, width):
     """
