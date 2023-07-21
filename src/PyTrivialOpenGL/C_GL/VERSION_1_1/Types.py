@@ -1,6 +1,4 @@
 """
-This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL package.
-
 Contains all types of OpenGL 1.1.
 """
 import ctypes as _ctypes

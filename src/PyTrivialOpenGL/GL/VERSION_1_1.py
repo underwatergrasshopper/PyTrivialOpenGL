@@ -1,7 +1,7 @@
 import ctypes as _ctypes
 
-from .._C_GL.VERSION_1_1.Constants import *
-from .._C_GL import VERSION_1_1 as _C_GL_1_1
+from ..C_GL.VERSION_1_1.Constants import *
+from ..C_GL import VERSION_1_1 as _C_GL_1_1
 from ._Support import _get_num_of_get_values, _get_read_pixels_format_count, _get_read_pixels_type_size, _get_tex_parameter_length
 from ..Exceptions import CacheMismatch
 

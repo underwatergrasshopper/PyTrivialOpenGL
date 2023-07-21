@@ -8,7 +8,7 @@ from copy import deepcopy as _deepcopy
 
 from . import _C_WinApi
 from . import _C_WGL
-from . import _C_GL
+from . import C_GL          as _C_GL
 from . import Key
 
 from ._SingletonGuardian    import _SingletonGuardian

@@ -63,7 +63,6 @@
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\examples\simple_triangle.py" />
     <Compile Include="setup.py" />
     <Compile Include="src\PyTrivialOpenGL\Area.py" />
-    <Compile Include="src\PyTrivialOpenGL\C_GL.py" />
     <Compile Include="src\PyTrivialOpenGL\Exceptions.py" />
     <Compile Include="src\PyTrivialOpenGL\GL\VERSION_1_1.py" />
     <Compile Include="src\PyTrivialOpenGL\GL\_Support.py" />
@@ -78,11 +77,11 @@
     <Compile Include="src\PyTrivialOpenGL\Logger.py" />
     <Compile Include="src\PyTrivialOpenGL\Point.py" />
     <Compile Include="src\PyTrivialOpenGL\Size.py" />
-    <Compile Include="src\PyTrivialOpenGL\_C_GL\VERSION_1_1\Constants.py" />
-    <Compile Include="src\PyTrivialOpenGL\_C_GL\VERSION_1_1\Functions.py" />
-    <Compile Include="src\PyTrivialOpenGL\_C_GL\VERSION_1_1\Types.py" />
-    <Compile Include="src\PyTrivialOpenGL\_C_GL\VERSION_1_1\__init__.py" />
-    <Compile Include="src\PyTrivialOpenGL\_C_GL\__init__.py" />
+    <Compile Include="src\PyTrivialOpenGL\C_GL\VERSION_1_1\Constants.py" />
+    <Compile Include="src\PyTrivialOpenGL\C_GL\VERSION_1_1\Functions.py" />
+    <Compile Include="src\PyTrivialOpenGL\C_GL\VERSION_1_1\Types.py" />
+    <Compile Include="src\PyTrivialOpenGL\C_GL\VERSION_1_1\__init__.py" />
+    <Compile Include="src\PyTrivialOpenGL\C_GL\__init__.py" />
     <Compile Include="src\PyTrivialOpenGL\_C_WGL.py" />
     <Compile Include="src\PyTrivialOpenGL\_C_WinApi.py" />
     <Compile Include="src\PyTrivialOpenGL\_Debug.py" />
@@ -114,8 +113,8 @@
     <Folder Include="src\" />
     <Folder Include="src\PyTrivialOpenGL\" />
     <Folder Include="src\PyTrivialOpenGL\GL\" />
-    <Folder Include="src\PyTrivialOpenGL\_C_GL\" />
-    <Folder Include="src\PyTrivialOpenGL\_C_GL\VERSION_1_1\" />
+    <Folder Include="src\PyTrivialOpenGL\C_GL\" />
+    <Folder Include="src\PyTrivialOpenGL\C_GL\VERSION_1_1\" />
     <Folder Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\examples\" />
     <Folder Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\" />
     <Folder Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\assets\" />

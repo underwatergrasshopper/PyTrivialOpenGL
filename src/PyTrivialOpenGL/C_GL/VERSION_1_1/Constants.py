@@ -1,10 +1,8 @@
 """
-This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL package.
-
 Contains all constants of OpenGL 1.1.
 """
-#GL_VERSION_1_0                      = 1     # TODO: PyTrivialOpenGL.GL.is_defined("GL_VERSION_1_0")
-#GL_VERSION_1_1                      = 1     # TODO: PyTrivialOpenGL.GL.is_defined("GL_VERSION_1_1")
+#GL_VERSION_1_0                      = 1     # TODO: PyTrivialOpenGL.is_defined_in_c_gl("GL_VERSION_1_0")
+#GL_VERSION_1_1                      = 1     # TODO: PyTrivialOpenGL.is_defined_in_c_gl("GL_VERSION_1_1")
 # NOTE: Just because a version or an extension is defined in PyTrivialOpenGL package doesn't mean it's supported by a vendor.
 # Use glGetString(GL_VERSION) to get supported version string. 
 # Use glGetIntegerv(GL_MAJOR_VERSION, ...) and glGetIntegerv(GL_MINOR_VERSION, ...) to get supported version (requires at lest OpenGL 3.0).
