@@ -202,6 +202,8 @@ def do_on_create():
     glTexGenfv(GL_S, GL_EYE_PLANE, [1, 0, 0, 0])
 
     # Bug: ctypes.windll.OpenGL32.glTexGeniv generates access violation.
+    #c_params = C_GL.GLint(GL_EYE_LINEAR)
+    #ctypes.windll.OpenGL32.glTexGeniv(GL_S, GL_TEXTURE_GEN_MODE, ctypes.byref(c_params))
 
     print("Escape - Exit")
 
