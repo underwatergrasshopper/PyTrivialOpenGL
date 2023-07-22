@@ -76,8 +76,8 @@ def do_on_create():
         else:
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 2, 0, GL_RGBA, GL_FLOAT, pixels)
 
-            print(glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT))
-            assert is_close(glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT), pixels, 0.01)
+            print(glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, is_return_list = True))
+            assert is_close(glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, is_return_list = True), pixels, 0.01)
 
             if "sub" in _data.options:
                 # debug

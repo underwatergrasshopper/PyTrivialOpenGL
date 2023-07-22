@@ -2469,17 +2469,30 @@ def glGetTexLevelParameteriv(target, level, pname):
     _C_GL_1_1.glGetTexLevelParameteriv(int(target), int(level), int(pname), c_params)
     return _c_array_to_list(int, c_params)
 
-
 # Texture Queries
 
-def glGetTexImage(target, level, format_, type_):
+def glGetTexImage(target, level, format_, type_, is_return_list = False):
     """
     target           : int
     level            : int
     format_          : int
+        Any from expected values: GL_COLOR_INDEX, GL_STENCIL_INDEX, GL_DEPTH_COMPONENT, 
+        GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA, GL_RGB, GL_RGBA, GL_LUMINANCE, GL_LUMINANCE_ALPHA.
     type_            : int
-    Returns          : bytes
+        Any from expected values: GL_UNSIGNED_BYTE, GL_BYTE, GL_UNSIGNED_SHORT, GL_SHORT, 
+        GL_UNSIGNED_INT, GL_INT, GL_FLOAT.
+    is_return_list   : bool
+    Returns          : bytes | List[float]
+        list of floats, when 'is_return_list' is True and 'type_' is GL_FLOAT and 'format_' is either GL_RGB or GL_RGBA.
+        bytes, when 'is_return_list' is False.
+
         Corresponds to 'pixels' parameter from OpenGL functions specification.
+
+    Exceptions
+        ValueError 
+            When any parameter have unexpected value.
+        ValueError 
+            When 'is_return_list' is True and 'type_' is not GL_FLOAT or 'format_' is neither GL_RGB or GL_RGBA
     """
     target = int(target)
     if target not in _get_acceptable_tex_target_ids():
@@ -2502,15 +2515,18 @@ def glGetTexImage(target, level, format_, type_):
 
     m, d = md
 
-    if type_ == GL_FLOAT:
-        num_of_elements = _get_tex_format_element_number(format_)
+    if is_return_list:
+        if type_ == GL_FLOAT and format_ in [GL_RGB, GL_RGBA]:
+            num_of_elements = _get_tex_format_element_number(format_)
 
-        length = width * height * num_of_elements
-        c_pixels = _make_c_array(_C_GL_1_1.GLfloat, length)
+            length = width * height * num_of_elements
+            c_pixels = _make_c_array(_C_GL_1_1.GLfloat, length)
 
-        _C_GL_1_1.glGetTexImage(int(target), int(level), format_, type_, _ctypes.cast(c_pixels, _ctypes.c_void_p))
+            _C_GL_1_1.glGetTexImage(int(target), int(level), format_, type_, _ctypes.cast(c_pixels, _ctypes.c_void_p))
 
-        return _c_array_to_list(float, c_pixels)
+            return _c_array_to_list(float, c_pixels)
+        else:
+            raise ValueError("Unexpected value of 'type_' and/or 'format_' parameters when 'is_return_list' parameter is True.")
     else:
         single_item_size = (n * m // d)             # in bytes
         size = width * height * single_item_size    # in bytes
