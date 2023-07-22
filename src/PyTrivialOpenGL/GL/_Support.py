@@ -56,6 +56,15 @@ def _get_call_lists_py_type(type_):
 def _get_tex_env_params_length(pname):
     return _tex_env_params_lengths.get(pname, None)
 
+def _get_tex_gen_params_length(pname):
+    return _tex_gen_params_lengths.get(pname, None)
+
+_tex_gen_params_lengths = {
+    _C_GL.GL_TEXTURE_GEN_MODE : 1,
+    _C_GL.GL_OBJECT_PLANE     : 4,
+    _C_GL.GL_EYE_PLANE        : 4,
+}
+
 _tex_env_params_lengths = {
     _C_GL.GL_TEXTURE_ENV_MODE     : 1,
     _C_GL.GL_TEXTURE_ENV_COLOR    : 4,   

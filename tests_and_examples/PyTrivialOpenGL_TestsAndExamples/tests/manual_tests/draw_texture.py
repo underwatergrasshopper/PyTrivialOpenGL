@@ -188,7 +188,21 @@ def do_on_create():
     assert is_close(glGetTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR), [0.5, 0.1, 1.0, 0.7], 0.01)
     glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, [0, 0, 0, 0])
     assert glGetTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR) == [0.0, 0.0, 0.0, 0.0]
+
+    print("GL_TEXTURE_GEN_MODE:", glGetTexGeniv(GL_S, GL_TEXTURE_GEN_MODE))
+    assert glGetTexGeniv(GL_S, GL_TEXTURE_GEN_MODE) == [GL_EYE_LINEAR]
+    glTexGenfv(GL_S, GL_TEXTURE_GEN_MODE, [GL_OBJECT_LINEAR])
+    assert glGetTexGeniv(GL_S, GL_TEXTURE_GEN_MODE) == [GL_OBJECT_LINEAR]
+    glTexGenfv(GL_S, GL_TEXTURE_GEN_MODE, [GL_EYE_LINEAR])
     
+    print("GL_EYE_PLANE:", glGetTexGenfv(GL_S, GL_EYE_PLANE))
+    assert glGetTexGenfv(GL_S, GL_EYE_PLANE) == [1, 0, 0, 0]
+    glTexGenfv(GL_S, GL_EYE_PLANE, [1, 1, 0, 0])
+    assert glGetTexGenfv(GL_S, GL_EYE_PLANE) == [1, 1, 0, 0]
+    glTexGenfv(GL_S, GL_EYE_PLANE, [1, 0, 0, 0])
+
+    # Bug: ctypes.windll.OpenGL32.glTexGeniv generates access violation.
+
     print("Escape - Exit")
 
 def do_on_destroy():

@@ -14,6 +14,7 @@ from ._Support import (
     _get_call_lists_c_type,
     _get_call_lists_py_type,
     _get_tex_env_params_length,
+    _get_tex_gen_params_length,
 )
 from ..Exceptions import CacheMismatch
 
@@ -1262,14 +1263,21 @@ def glTexGend(coord, pname, param):
     """
     _C_GL_1_1.glTexGend(int(coord), int(pname), float(param))
 
-# ToDo: Implement.
-#def glTexGendv(coord, pname, params):
-#    """
-#    coord            : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glTexGendv(int(coord), int(pname), ???(params))
+
+def glTexGendv(coord, pname, params):
+    """
+    coord            : int
+    pname            : int
+    params           : List[float] | Iterable[SupportsFloat]
+        Parameter is converted to list.
+        All items of list are converted to float.
+    """    
+    params = list(params)
+    n = _get_tex_gen_params_length(pname)
+    if n is None:
+        raise ValueError("Unexpected value of 'pname' parameter.")
+    c_params = _list_part_to_c_array(float, params, n, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glTexGendv(int(coord), int(pname), c_params)
 
 def glTexGenf(coord, pname, param):
     """
@@ -1279,13 +1287,20 @@ def glTexGenf(coord, pname, param):
     """
     _C_GL_1_1.glTexGenf(int(coord), int(pname), float(param))
 
-#def glTexGenfv(coord, pname, params):
-#    """
-#    coord            : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glTexGenfv(int(coord), int(pname), ???(params))
+def glTexGenfv(coord, pname, params):
+    """
+    coord            : int
+    pname            : int
+    params           : List[float] | Iterable[SupportsFloat]
+        Parameter is converted to list.
+        All items of list are converted to float.
+    """    
+    params = list(params)
+    n = _get_tex_gen_params_length(pname)
+    if n is None:
+        raise ValueError("Unexpected value of 'pname' parameter.")
+    c_params = _list_part_to_c_array(float, params, n, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glTexGenfv(int(coord), int(pname), c_params)
 
 def glTexGeni(coord, pname, param):
     """
@@ -1295,14 +1310,20 @@ def glTexGeni(coord, pname, param):
     """
     _C_GL_1_1.glTexGeni(int(coord), int(pname), int(param))
 
-#def glTexGeniv(coord, pname, params):
-#    """
-#    coord            : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glTexGeniv(int(coord), int(pname), ???(params))
-
+def glTexGeniv(coord, pname, params):
+    """
+    coord            : int
+    pname            : int
+    params           : List[int] | Iterable[SupportsInt]
+        Parameter is converted to list.
+        All items of list are converted to int.
+    """    
+    params = list(params)
+    n = _get_tex_gen_params_length(pname)
+    if n is None:
+        raise ValueError("Unexpected value of 'pname' parameter.")
+    c_params = _list_part_to_c_array(int, params, n, _C_GL_1_1.GLint)
+    _C_GL_1_1.glTexGeniv(int(coord), int(pname), c_params)
 
 ### Viewport and Clipping ###
 
@@ -2413,30 +2434,47 @@ def glGetTexEnviv(target, pname):
     _C_GL_1_1.glGetTexEnviv(int(target), int(pname), c_params)
     return _c_array_to_list(int, c_params)
 
-#def glGetTexGendv(coord, pname, params):
-#    """
-#    coord            : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetTexGendv(int(coord), int(pname), ???(params))
+def glGetTexGendv(coord, pname):
+    """
+    coord           : int
+    pname           : int
+    Returns         : List[float]
+        Corresponds to 'params' parameter from OpenGL function specification. 
+    """
+    n = _get_tex_gen_params_length(pname)
+    if n is None:
+        raise ValueError("Unexpected value of 'pname' parameter.")
+    c_params = _make_c_array(_C_GL_1_1.GLdouble, n)
+    _C_GL_1_1.glGetTexGendv(int(coord), int(pname), c_params)
+    return _c_array_to_list(float, c_params)
 
-#def glGetTexGenfv(coord, pname, params):
-#    """
-#    coord            : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetTexGenfv(int(coord), int(pname), ???(params))
+def glGetTexGenfv(coord, pname):
+    """
+    coord           : int
+    pname           : int
+    Returns         : List[float]
+        Corresponds to 'params' parameter from OpenGL function specification. 
+    """
+    n = _get_tex_gen_params_length(pname)
+    if n is None:
+        raise ValueError("Unexpected value of 'pname' parameter.")
+    c_params = _make_c_array(_C_GL_1_1.GLfloat, n)
+    _C_GL_1_1.glGetTexGenfv(int(coord), int(pname), c_params)
+    return _c_array_to_list(float, c_params)
 
-#def glGetTexGeniv(coord, pname, params):
-#    """
-#    coord            : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetTexGeniv(int(coord), int(pname), ???(params))
-
+def glGetTexGeniv(coord, pname):
+    """
+    coord            : int
+    pname            : int
+    Returns         : List[int]
+        Corresponds to 'params' parameter from OpenGL function specification. 
+    """
+    n = _get_tex_gen_params_length(pname)
+    if n is None:
+        raise ValueError("Unexpected value of 'pname' parameter.")
+    c_params = _make_c_array(_C_GL_1_1.GLint, n)
+    _C_GL_1_1.glGetTexGeniv(int(coord), int(pname), c_params)
+    return _c_array_to_list(int, c_params)
 
 def glGetTexParameterfv(target, pname):
     """
