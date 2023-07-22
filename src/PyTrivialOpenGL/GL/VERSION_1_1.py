@@ -13,6 +13,7 @@ from ._Support import (
     _get_acceptable_tex_target_ids,
     _get_call_lists_c_type,
     _get_call_lists_py_type,
+    _get_tex_env_params_length,
 )
 from ..Exceptions import CacheMismatch
 
@@ -2345,13 +2346,19 @@ def glTexEnvf(target, pname, param):
     """
     _C_GL_1_1.glTexEnvf(int(target), int(pname), float(param))
 
-#def glTexEnvfv(target, pname, params):
-#    """
-#    target           : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glTexEnvfv(int(target), int(pname), ???(params))
+def glTexEnvfv(target, pname, params):
+    """
+    target           : int
+    pname            : int
+    params           : List[float] | Iterable[SupportsFloat]
+    """
+    params = list(params)
+    n = _get_tex_env_params_length(pname)
+    if n is None:
+        raise ValueError("Unexpected value of 'pname' parameter.")
+    c_params = _list_part_to_c_array(float, params, n, _C_GL_1_1.GLfloat)
+
+    _C_GL_1_1.glTexEnvfv(int(target), int(pname), c_params)
 
 def glTexEnvi(target, pname, param):
     """
@@ -2361,32 +2368,50 @@ def glTexEnvi(target, pname, param):
     """
     _C_GL_1_1.glTexEnvi(int(target), int(pname), int(param))
 
-#def glTexEnviv(target, pname, params):
-#    """
-#    target           : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glTexEnviv(int(target), int(pname), ???(params))
+def glTexEnviv(target, pname, params):
+    """
+    target           : int
+    pname            : int
+    params           : List[int] | Iterable[SupportsInt]
+    """
+    params = list(params)
+    n = _get_tex_env_params_length(pname)
+    if n is None:
+        raise ValueError("Unexpected value of 'pname' parameter.")
+    c_params = _list_part_to_c_array(int, params, n, _C_GL_1_1.GLint)
+
+    _C_GL_1_1.glTexEnviv(int(target), int(pname), c_params)
 
 
 # Enumerated Queries
 
-#def glGetTexEnvfv(target, pname, params):
-#    """
-#    target           : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetTexEnvfv(int(target), int(pname), ???(params))
+def glGetTexEnvfv(target, pname):
+    """
+    target          : int | SupportsInt
+    pname           : int | SupportsInt
+    Returns         : List[float]
+        Corresponds to 'params' parameter from OpenGL function specification.
+    """
+    n = _get_tex_env_params_length(pname)
+    if n is None:
+        raise ValueError("Unexpected value of 'pname' parameter.")
+    c_params = _make_c_array(_C_GL_1_1.GLfloat, n)
+    _C_GL_1_1.glGetTexEnvfv(int(target), int(pname), c_params)
+    return _c_array_to_list(float, c_params)
 
-#def glGetTexEnviv(target, pname, params):
-#    """
-#    target           : int
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glGetTexEnviv(int(target), int(pname), ???(params))
+def glGetTexEnviv(target, pname):
+    """
+    target          : int | SupportsInt
+    pname           : int | SupportsInt
+    Returns         : List[int]
+        Corresponds to 'params' parameter from OpenGL function specification. 
+    """
+    n = _get_tex_env_params_length(pname)
+    if n is None:
+        raise ValueError("Unexpected value of 'pname' parameter.")
+    c_params = _make_c_array(_C_GL_1_1.GLint, n)
+    _C_GL_1_1.glGetTexEnviv(int(target), int(pname), c_params)
+    return _c_array_to_list(int, c_params)
 
 #def glGetTexGendv(coord, pname, params):
 #    """

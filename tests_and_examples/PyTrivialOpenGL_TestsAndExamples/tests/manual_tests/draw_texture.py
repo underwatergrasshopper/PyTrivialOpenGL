@@ -175,6 +175,20 @@ def do_on_create():
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_PRIORITY, 0.7)
         assert math.isclose(glGetTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_PRIORITY)[0], 0.7, rel_tol = 0.0001)
 
+
+    print("GL_TEXTURE_ENV_MODE:", glGetTexEnviv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE))
+    assert glGetTexEnviv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE) == [GL_MODULATE]
+    glTexEnviv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, [GL_ADD])
+    assert glGetTexEnviv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE) == [GL_ADD]
+    glTexEnviv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, [GL_MODULATE])
+
+    print("GL_TEXTURE_ENV_COLOR:", glGetTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR))
+    assert glGetTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR) == [0.0, 0.0, 0.0, 0.0]
+    glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, [0.5, 0.1, 1.0, 0.7])
+    assert is_close(glGetTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR), [0.5, 0.1, 1.0, 0.7], 0.01)
+    glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, [0, 0, 0, 0])
+    assert glGetTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR) == [0.0, 0.0, 0.0, 0.0]
+    
     print("Escape - Exit")
 
 def do_on_destroy():

@@ -53,6 +53,32 @@ def _get_call_lists_c_type(type_):
 def _get_call_lists_py_type(type_):
     return _call_lists_py_types.get(type_, None)
 
+def _get_tex_env_params_length(pname):
+    return _tex_env_params_lengths.get(pname, None)
+
+_tex_env_params_lengths = {
+    _C_GL.GL_TEXTURE_ENV_MODE     : 1,
+    _C_GL.GL_TEXTURE_ENV_COLOR    : 4,   
+    # _C_GL.GL_COMBINE_RGB          : 1,
+    # _C_GL.GL_COMBINE_ALPHA        : 1,
+    # _C_GL.GL_SRC0_RGB             : 1,
+    # _C_GL.GL_SRC1_RGB             : 1,
+    # _C_GL.GL_SRC2_RGB             : 1,
+    # _C_GL.GL_SRC0_ALPHA           : 1,
+    # _C_GL.GL_SRC1_ALPHA           : 1,
+    # _C_GL.GL_SRC2_ALPHA           : 1,
+    # _C_GL.GL_OPERAND0_RGB         : 1,
+    # _C_GL.GL_OPERAND1_RGB         : 1,
+    # _C_GL.GL_OPERAND2_RGB         : 1,
+    # _C_GL.GL_OPERAND0_ALPHA       : 1,
+    # _C_GL.GL_OPERAND1_ALPHA       : 1,
+    # _C_GL.GL_OPERAND2_ALPHA       : 1,
+    # _C_GL.GL_RGB_SCALE            : 1,
+    _C_GL.GL_ALPHA_SCALE          : 1,
+    # _C_GL.GL_COORD_REPLACE_OES    : 1,   # bool only, glGetTexEnv{...} only
+}
+
+
 _call_lists_py_types = {
     _C_GL.GL_BYTE             : int,
     _C_GL.GL_UNSIGNED_BYTE    : int,
