@@ -2492,7 +2492,7 @@ def glGetTexImage(target, level, format_, type_, is_return_list = False):
         ValueError 
             When any parameter have unexpected value.
         ValueError 
-            When 'is_return_list' is True and 'type_' is not GL_FLOAT or 'format_' is neither GL_RGB or GL_RGBA
+            When 'is_return_list' is True and 'type_' is not GL_FLOAT or 'format_' is neither GL_RGB nor GL_RGBA.
     """
     target = int(target)
     if target not in _get_acceptable_tex_target_ids():
