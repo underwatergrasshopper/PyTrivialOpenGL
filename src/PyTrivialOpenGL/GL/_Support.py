@@ -7,19 +7,6 @@ import ctypes as _ctypes
 
 __all__ = []
 
-def _get_num_of_get_values(pname):
-    """
-    ReturnType : int
-    """
-    num = _num_of_get_values.get(pname, None)
-
-    if isinstance(num, tuple):
-        c_num = _C_GL.GLint()
-        _C_GL.glGetIntegerv(num[0], _ctypes.byref(c_num))
-        return int(c_num.value)
-
-    return num
-
 def _get_read_pixels_format_count(format_):
     return _read_pixels_format_count.get(format_, None)
 
@@ -32,30 +19,6 @@ def _get_gl_error_str(gl_error_code):
         return "(%d)" % gl_error_code
     return gl_error_str
 
-def _get_tex_parameter_length(pname):
-    return _tex_parameter_lengths.get(pname, None)
-
-def _get_tex_format_element_number(format_):
-    return _texture_format_element_numbers.get(format_, None)
-
-def _get_tex_type_mul_div_size(type_):
-    return _texture_type_mul_div_sizes.get(type_, None)
-
-def _get_tex_level_parameter_number(pname):
-    return _tex_level_parameter_numbers.get(pname, None)
-
-def _get_acceptable_tex_target_ids():
-    return _acceptable_tex_target_ids
-
-def _get_call_lists_c_type(type_):
-    return _call_lists_c_types.get(type_, None)
-
-def _get_call_lists_py_type(type_):
-    return _call_lists_py_types.get(type_, None)
-
-def _get_tex_env_params_length(pname):
-    return _tex_env_params_lengths.get(pname, None)
-
 def _get_tex_gen_params_length(pname):
     return _tex_gen_params_lengths.get(pname, None)
 
@@ -64,6 +27,9 @@ _tex_gen_params_lengths = {
     _C_GL.GL_OBJECT_PLANE     : 4,
     _C_GL.GL_EYE_PLANE        : 4,
 }
+
+def _get_tex_env_params_length(pname):
+    return _tex_env_params_lengths.get(pname, None)
 
 _tex_env_params_lengths = {
     _C_GL.GL_TEXTURE_ENV_MODE     : 1,
@@ -87,6 +53,8 @@ _tex_env_params_lengths = {
     # _C_GL.GL_COORD_REPLACE_OES    : 1,   # bool only, glGetTexEnv{...} only
 }
 
+def _get_call_lists_py_type(type_):
+    return _call_lists_py_types.get(type_, None)
 
 _call_lists_py_types = {
     _C_GL.GL_BYTE             : int,
@@ -101,6 +69,9 @@ _call_lists_py_types = {
     _C_GL.GL_4_BYTES          : int,
 }
 
+def _get_call_lists_c_type(type_):
+    return _call_lists_c_types.get(type_, None)
+
 _call_lists_c_types = {
     _C_GL.GL_BYTE             : _C_GL.GLbyte,
     _C_GL.GL_UNSIGNED_BYTE    : _C_GL.GLubyte,
@@ -113,6 +84,9 @@ _call_lists_c_types = {
     _C_GL.GL_3_BYTES          : _C_GL.GLubyte,
     _C_GL.GL_4_BYTES          : _C_GL.GLubyte,
 }
+
+def _get_acceptable_tex_target_ids():
+    return _acceptable_tex_target_ids
 
 _acceptable_tex_target_ids = set([
     # Note: Commented items are from OpenGL above version 1.1.
@@ -135,6 +109,9 @@ _acceptable_tex_target_ids = set([
     # _C_GL.GL_TEXTURE_CUBE_MAP_ARRAY,
     # _C_GL.GL_PROXY_TEXTURE_CUBE_MAP,
 ])
+
+def _get_tex_level_parameter_number(pname):
+    return _tex_level_parameter_numbers.get(pname, None)
 
 _tex_level_parameter_numbers = {
     # Note: Commented items are from OpenGL above version 1.1.
@@ -161,6 +138,10 @@ _tex_level_parameter_numbers = {
     # _C_GL.GL_TEXTURE_BUFFER_OFFSET          : 1,
     # _C_GL.GL_TEXTURE_BUFFER_SIZE            : 1,
 }
+
+def _get_tex_format_element_number(format_):
+    return _texture_format_element_numbers.get(format_, None)
+
 
 _texture_format_element_numbers = {
     # Note: Commented items are from OpenGL above version 1.1.
@@ -189,6 +170,9 @@ _texture_format_element_numbers = {
     _C_GL.GL_LUMINANCE        : 1,
     _C_GL.GL_LUMINANCE_ALPHA  : 2,
 }
+
+def _get_tex_type_mul_div_size(type_):
+    return _texture_type_mul_div_sizes.get(type_, None)
 
 _texture_type_mul_div_sizes = {
     # Note: Commented items are from OpenGL above version 1.1.
@@ -219,6 +203,10 @@ _texture_type_mul_div_sizes = {
     # _C_GL.GL_FLOAT_32_UNSIGNED_INT_24_8_REV  : (4, 3),        # (?)
 }
 
+def _get_tex_parameter_length(pname):
+    return _tex_parameter_lengths.get(pname, None)
+
+
 _tex_parameter_lengths = {
     # Note: Commented items are from OpenGL above version 1.1.
 
@@ -246,6 +234,19 @@ _tex_parameter_lengths = {
     # _C_GL.GL_GENERATE_MIPMAP : 1,
     _C_GL.GL_TEXTURE_RESIDENT : 1,
 }
+
+def _get_num_of_get_values(pname):
+    """
+    ReturnType : int
+    """
+    num = _num_of_get_values.get(pname, None)
+
+    if isinstance(num, tuple):
+        c_num = _C_GL.GLint()
+        _C_GL.glGetIntegerv(num[0], _ctypes.byref(c_num))
+        return int(c_num.value)
+
+    return num
 
 _num_of_get_values = {
     # Note: Commented items are from OpenGL above version 1.1.
