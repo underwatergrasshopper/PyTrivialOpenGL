@@ -84,7 +84,7 @@ class ExampleRunner:
             )
 
         if category & ExampleCategoryBit.MANUAL_TESTS:
-            example_manager.add_example("draw_array",       manual_tests.draw_array.run)
+            example_manager.add_example("draw_array",       manual_tests.draw_array.run,        ["inter", "stride"])
             example_manager.add_example("draw_elements",    manual_tests.draw_elements.run)
             example_manager.add_example("draw_rectangle",   manual_tests.draw_rectangle.run)
             example_manager.add_example("matrix",           manual_tests.matrix.run)

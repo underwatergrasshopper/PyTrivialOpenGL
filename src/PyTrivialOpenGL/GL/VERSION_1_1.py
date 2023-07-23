@@ -75,14 +75,15 @@ def _c_array_to_list(py_type, c_array):
 
 class _Cache:
     def __init__(self):
-        self.c_vertex_array_pointer     = None
-        self.c_normal_array_pointer     = None
-        self.c_color_array_pointer      = None
-        self.c_index_array_pointer      = None
-        self.c_edge_flag_array_pointer  = None
-        self.c_tex_coord_array_pointer  = None
+        self.c_vertex_array_pointer         = None
+        self.c_normal_array_pointer         = None
+        self.c_color_array_pointer          = None
+        self.c_index_array_pointer          = None
+        self.c_edge_flag_array_pointer      = None
+        self.c_tex_coord_array_pointer      = None
+        self.c_interleaved_array_pointer    = None
 
-        self.c_array                    = None
+        self.c_array                        = None
 
 
 _cache = _Cache()
@@ -942,71 +943,142 @@ def glVertexPointer(size, type_, stride, pointer):
     size             : int
     type_            : int
     stride           : int
-    pointer          : List[int | float]
+    pointer          : bytes | List[int | float] | Iterable[SupportsInt | SupportsFloat]
     """
-    py_type = _gl_type_id_to_py_type(type_)
-    c_type  = _gl_type_id_to_c_type(type_)
+    type_   = int(type_)
+    stride  = int(stride)
 
-    _cache.c_vertex_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
-    _C_GL_1_1.glVertexPointer(int(size), int(type_), int(stride), _cache.c_vertex_array_pointer)
+    if isinstance(pointer, bytes):
+        _cache.c_vertex_array_pointer = pointer
+    else:
+        pointer = list(pointer)
+
+        if stride != 0:
+            raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
+
+        py_type = _gl_type_id_to_py_type(type_)
+        c_type  = _gl_type_id_to_c_type(type_)
+
+        _cache.c_vertex_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
+
+    _C_GL_1_1.glVertexPointer(int(size), type_, stride, _cache.c_vertex_array_pointer)
 
 def glNormalPointer(type_, stride, pointer):
     """
     type_            : int
     stride           : int
-    pointer          : List[int | float]
+    pointer          : List[int | float] | Iterable[SupportsInt | SupportsFloat]
     """
-    py_type = _gl_type_id_to_py_type(type_)
-    c_type  = _gl_type_id_to_c_type(type_)
+    type_   = int(type_)
+    stride  = int(stride)
 
-    _cache.c_normal_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
-    _C_GL_1_1.glNormalPointer(int(type_), int(stride), _cache.c_normal_array_pointer)
+    if isinstance(pointer, bytes):
+        _cache.c_normal_array_pointer = pointer
+    else:
+        pointer = list(pointer)
+
+        if stride != 0:
+            raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
+
+        py_type = _gl_type_id_to_py_type(type_)
+        c_type  = _gl_type_id_to_c_type(type_)
+
+        _cache.c_normal_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
+
+    _C_GL_1_1.glNormalPointer(type_, stride, _cache.c_normal_array_pointer)
 
 def glColorPointer(size, type_, stride, pointer):
     """
     size             : int
     type_            : int
     stride           : int
-    pointer          : List[int | float]
+    pointer          : List[int | float] | Iterable[SupportsInt | SupportsFloat]
     """
-    py_type = _gl_type_id_to_py_type(type_)
-    c_type  = _gl_type_id_to_c_type(type_)
+    type_   = int(type_)
+    stride  = int(stride)
 
-    _cache.c_color_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
-    _C_GL_1_1.glColorPointer(int(size), int(type_), int(stride), _cache.c_color_array_pointer)
+    if isinstance(pointer, bytes):
+        _cache.c_color_array_pointer = pointer
+    else:
+        pointer = list(pointer)
+
+        if stride != 0:
+            raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
+
+        py_type = _gl_type_id_to_py_type(type_)
+        c_type  = _gl_type_id_to_c_type(type_)
+
+        _cache.c_color_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
+
+    _C_GL_1_1.glColorPointer(int(size), type_, stride, _cache.c_color_array_pointer)
 
 def glIndexPointer(type_, stride, pointer):
     """
     type_            : int
     stride           : int
-    pointer          : List[int | float]
+    pointer          : List[int | float] | Iterable[SupportsInt | SupportsFloat]
     """
-    py_type = _gl_type_id_to_py_type(type_)
-    c_type  = _gl_type_id_to_c_type(type_)
+    type_   = int(type_)
+    stride  = int(stride)
 
-    _cache.c_index_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
-    _C_GL_1_1.glIndexPointer(int(type_), int(stride), _cache.c_index_array_pointer)
+    if isinstance(pointer, bytes):
+        _cache.c_index_array_pointer = pointer
+    else:
+        pointer = list(pointer)
+
+        if stride != 0:
+            raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
+
+        py_type = _gl_type_id_to_py_type(type_)
+        c_type  = _gl_type_id_to_c_type(type_)
+
+        _cache.c_index_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
+
+    _C_GL_1_1.glIndexPointer(type_, stride, _cache.c_index_array_pointer)
 
 def glEdgeFlagPointer(stride, pointer):
     """
     stride           : int
-    pointer          : List[int]
+    pointer          : List[int] | Iterable[SupportsInt]
     """
-    _cache.c_edge_flag_array_pointer = _list_to_c_array(int, pointer, 0, _C_GL_1_1.GLboolean)
-    _C_GL_1_1.glEdgeFlagPointer(int(stride), _cache.c_edge_flag_array_pointer)
+    stride  = int(stride)
+
+    if isinstance(pointer, bytes):
+        _cache.c_edge_flag_array_pointer = pointer
+    else:
+        pointer = list(pointer)
+
+        if stride != 0:
+            raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
+
+        _cache.c_edge_flag_array_pointer = _list_to_c_array(int, pointer, 0, _C_GL_1_1.GLboolean)
+
+    _C_GL_1_1.glEdgeFlagPointer(stride, _cache.c_edge_flag_array_pointer)
 
 def glTexCoordPointer(size, type_, stride, pointer):
     """
     size             : int
     type_            : int
     stride           : int
-    pointer          : List[int | float]
+    pointer          : List[int | float] | Iterable[SupportsInt | SupportsFloat]
     """
-    py_type = _gl_type_id_to_py_type(type_)
-    c_type  = _gl_type_id_to_c_type(type_)
+    type_   = int(type_)
+    stride  = int(stride)
 
-    _cache.c_tex_coord_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
-    _C_GL_1_1.glTexCoordPointer(int(size), int(type_), int(stride), _cache.c_tex_coord_array_pointer)
+    if isinstance(pointer, bytes):
+        _cache.c_tex_coord_array_pointer = pointer
+    else:
+        pointer = list(pointer)
+
+        if stride != 0:
+            raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
+
+        py_type = _gl_type_id_to_py_type(type_)
+        c_type  = _gl_type_id_to_c_type(type_)
+
+        _cache.c_tex_coord_array_pointer = _list_to_c_array(py_type, pointer, 0, c_type)
+
+    _C_GL_1_1.glTexCoordPointer(int(size), type_, stride, _cache.c_tex_coord_array_pointer)
 
 def glEnableClientState(array):
     """
@@ -1049,15 +1121,87 @@ def glDrawElements(mode, count, type_, indices):
     c_indices = _list_to_c_array(py_type, indices, int(count), c_type)
     _C_GL_1_1.glDrawElements(int(mode), int(count), int(type_), c_indices)
 
-# ToDo: Implement.
-#def glInterleavedArrays(format_, stride, pointer):
-#    """
-#    format_          : int
-#    stride           : int
-#    pointer          : ???
-#    """
-#    _C_GL_1_1.glInterleavedArrays(int(format_), int(stride), ???(pointer))
 
+def glInterleavedArrays(format_, stride, pointer):
+    """
+    format_          : int
+    stride           : int
+        Value can't be other than 0, when 'pointer' parameter type is not bytes.
+    pointer          : bytes | List[int | Float] | Iterable[SupportsInt | SupportsFloat]
+        Array of aggregate elements.
+    """
+    format_ = int(format_)
+    stride  = int(stride)
+
+    if isinstance(pointer, bytes):
+        c_pointer = pointer
+    else:
+        pointer = list(pointer) # it's actually not a pointer but a list
+
+        _2F = (2, _C_GL_1_1.GLfloat, float)
+        _3F = (3, _C_GL_1_1.GLfloat, float)
+        _4F = (3, _C_GL_1_1.GLfloat, float)
+        _4UB = (4, _C_GL_1_1.GLubyte, int)
+
+        aggregate_formats = {
+            GL_V2F                  : (_2F,), 
+            GL_V3F                  : (_3F,), 
+            GL_C4UB_V2F             : (_4UB, _2F),
+            GL_C4UB_V3F             : (_4UB, _3F),
+            GL_C3F_V3F              : (_3F, _3F),
+            GL_N3F_V3F              : (_3F, _3F),
+            GL_C4F_N3F_V3F          : (_4F, _3F, _3F),
+            GL_T2F_V3F              : (_2F, _3F),
+            GL_T4F_V4F              : (_4F, _4F),
+            GL_T2F_C4UB_V3F         : (_2F, _4UB, _3F),
+            GL_T2F_C3F_V3F          : (_2F, _3F, _3F),
+            GL_T2F_N3F_V3F          : (_2F, _3F, _3F),
+            GL_T2F_C4F_N3F_V3F      : (_2F, _4F, _3F, _3F),
+            GL_T4F_C4F_N3F_V4F      : (_4F, _4F, _3F, _4F),
+        }
+
+        aggregate_format = aggregate_formats.get(format_, None)
+        if aggregate_format is None:
+            raise ValueError("Unexpected value of 'format_' parameter.")
+
+        aggregae_size = 0
+        aggregae_length = 0
+
+        for length_c_type in aggregate_format:
+            length, c_type, py_type = length_c_type
+
+            aggregae_length += length
+            aggregae_size   += _ctypes.sizeof(c_type) * length
+
+        if stride != 0:
+            raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
+
+        if len(pointer) % aggregae_length != 0:
+            raise ValueError("Wrong length of 'pointer' iterable parameter.")
+
+        c_pointer_size = len(pointer) // aggregae_length * aggregae_size
+
+        c_pointer = _cache_make_c_array(_C_GL_1_1.GLubyte, c_pointer_size)
+
+        index = 0
+        for base_offset in range(0, c_pointer_size, aggregae_size):
+            offset = base_offset
+            for length_c_type in aggregate_format:
+                length, c_type, py_type = length_c_type
+                size = _ctypes.sizeof(c_type)
+
+                for _ in range(length):
+                    value = py_type(pointer[index])
+
+                    c_value_p = _ctypes.cast(_ctypes.addressof(c_pointer) + offset, _ctypes.POINTER(c_type))
+                    c_value_p[0] = value
+
+                    index += 1
+                    offset += size
+
+    _cache.c_interleaved_array_pointer = c_pointer
+
+    _C_GL_1_1.glInterleavedArrays(format_, stride, c_pointer)
 
 ### Rectangles, Matrices, Texture Coordinates ###
 
@@ -3322,9 +3466,9 @@ def glIsEnabled(cap):
 def glGetPointerv(pname):
     """
     pname           : int
-    Returns         : List[int | float]
-        List of all array elements.
-        Equivalent of 'params' from OpenGl function specification.
+    Returns         : bytes | List[int | float]
+        List of all array elements or bytes.
+        Equivalent of 'params' parameter from OpenGl function specification.
     Exceptions
         CacheMismatch
             When cashed array mismatch actual array pointer. 
@@ -3335,7 +3479,8 @@ def glGetPointerv(pname):
         raise ValueError("Unsupported value of 'pname'.")
 
     c_array = {
-        # Note: Commented elements are from OpenGL above 1.1 or unsupported by this package.
+        # Note: Commented elements are (most likely) from OpenGL above 1.1 or unsupported by this package.
+
         GL_COLOR_ARRAY_POINTER              : _cache.c_color_array_pointer, 
         GL_EDGE_FLAG_ARRAY_POINTER          : _cache.c_edge_flag_array_pointer, 
         # GL_FOG_COORD_ARRAY_POINTER          : _cache.???, 
@@ -3347,6 +3492,9 @@ def glGetPointerv(pname):
         GL_TEXTURE_COORD_ARRAY_POINTER      : _cache.c_tex_coord_array_pointer,
         GL_VERTEX_ARRAY_POINTER             : _cache.c_vertex_array_pointer,
     }.get(pname, None)
+
+    if isinstance(c_array, bytes):
+        return c_array
 
     if pname is None:
         raise ValueError("Unexpected value of 'pname'.")
@@ -3360,6 +3508,7 @@ def glGetPointerv(pname):
         else:
             # This happens when first is called C_GL.gl{...}Pointer (which not cache any arrays) instead of GL.gl{...}Pointer and then this function is called.
             raise CacheMismatch("Mismatch of cached array (by PyTrivialOpenGL) and actual array pointer. To get actual array pointer, use function 'PyTrivialOpenGL.C_GL.glGetPointerv'.")
+
 
     if c_params.value != _ctypes.cast(c_array, _ctypes.c_void_p).value:
         # This happens when first is called C_GL.gl{...}Pointer (which not cache any arrays) instead of GL.gl{...}Pointer and then this function is called.
