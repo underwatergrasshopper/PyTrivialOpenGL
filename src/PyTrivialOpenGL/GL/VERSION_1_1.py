@@ -3467,7 +3467,7 @@ def glGetPointerv(pname):
     """
     pname           : int
     Returns         : bytes | List[int | float]
-        List of all array elements or bytes.
+        Bytes or list of all array elements (depends on what was type of object provided to 'pointer' parameter in gl{Vertex|Color|...}Pointer function).
         Equivalent of 'params' parameter from OpenGl function specification.
     Exceptions
         CacheMismatch
