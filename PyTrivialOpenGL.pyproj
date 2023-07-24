@@ -50,7 +50,7 @@
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\display_list.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\draw_stipple.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\draw_pixels.py" />
-    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\light.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\light_and_fog.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\draw_rectangle.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\draw_elements.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\draw_array.py" />

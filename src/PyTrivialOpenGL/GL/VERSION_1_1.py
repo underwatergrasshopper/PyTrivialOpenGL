@@ -15,6 +15,8 @@ from ._Support import (
     _get_call_lists_py_type,
     _get_tex_env_params_length,
     _get_tex_gen_params_length,
+    _get_pixel_map_size_id,
+    _get_fog_params_length,
 )
 from ..Exceptions import CacheMismatch
 
@@ -2078,22 +2080,6 @@ def glPixelMapusv(map_, values):
 
 # Enumerated Queries
 
-_pixel_map_size_ids = {
-    GL_PIXEL_MAP_I_TO_I : GL_PIXEL_MAP_I_TO_I_SIZE,
-    GL_PIXEL_MAP_S_TO_S : GL_PIXEL_MAP_S_TO_S_SIZE,
-    GL_PIXEL_MAP_I_TO_R : GL_PIXEL_MAP_I_TO_R_SIZE,
-    GL_PIXEL_MAP_I_TO_G : GL_PIXEL_MAP_I_TO_G_SIZE,
-    GL_PIXEL_MAP_I_TO_B : GL_PIXEL_MAP_I_TO_B_SIZE,
-    GL_PIXEL_MAP_I_TO_A : GL_PIXEL_MAP_I_TO_A_SIZE,
-    GL_PIXEL_MAP_R_TO_R : GL_PIXEL_MAP_R_TO_R_SIZE,
-    GL_PIXEL_MAP_G_TO_G : GL_PIXEL_MAP_G_TO_G_SIZE,
-    GL_PIXEL_MAP_B_TO_B : GL_PIXEL_MAP_B_TO_B_SIZE,
-    GL_PIXEL_MAP_A_TO_A : GL_PIXEL_MAP_A_TO_A_SIZE,
-}
-
-def _get_pixel_map_size_id(map_id):
-    return _pixel_map_size_ids.get(map_id, None)
-
 def glGetPixelMapfv(map_, is_return_bytes = False):
     """
     map_            : int
@@ -2867,12 +2853,19 @@ def glFogf(pname, param):
     """
     _C_GL_1_1.glFogf(int(pname), float(param))
 
-#def glFogfv(pname, params):
-#    """
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glFogfv(int(pname), ???(params))
+def glFogfv(pname, params):
+    """
+    pname            : int
+    params           : List[float] | Iterable[SupportFloat]
+    """
+    pname = int(pname)
+
+    length = _get_fog_params_length(pname)
+    if length is None:
+        raise ValueError("Unexpected value of 'pname' parameter.")
+
+    c_params = _list_part_to_c_array(float, params, length, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glFogfv(pname, c_params)
 
 def glFogi(pname, param):
     """
@@ -2881,12 +2874,20 @@ def glFogi(pname, param):
     """
     _C_GL_1_1.glFogi(int(pname), int(param))
 
-#def glFogiv(pname, params):
-#    """
-#    pname            : int
-#    params           : ???
-#    """
-#    _C_GL_1_1.glFogiv(int(pname), ???(params))
+def glFogiv(pname, params):
+    """
+    pname            : int
+    params           : List[int] | Iterable[SupportInt]
+    """
+    pname = int(pname)
+
+    length = _get_fog_params_length(pname)
+    if length is None:
+        raise ValueError("Unexpected value of 'pname' parameter.")
+
+    c_params = _list_part_to_c_array(int, params, length, _C_GL_1_1.GLint)
+
+    _C_GL_1_1.glFogiv(pname, c_params)
 
 
 # Hints

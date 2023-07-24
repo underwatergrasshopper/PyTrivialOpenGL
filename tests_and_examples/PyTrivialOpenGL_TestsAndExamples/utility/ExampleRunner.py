@@ -89,7 +89,7 @@ class ExampleRunner:
             example_manager.add_example("draw_rectangle",   manual_tests.draw_rectangle.run)
             example_manager.add_example("matrix",           manual_tests.matrix.run)
             example_manager.add_example("clip_plane",       manual_tests.clip_plane.run)
-            example_manager.add_example("light",            manual_tests.light.run)
+            example_manager.add_example("light_and_fog",    manual_tests.light_and_fog.run)
             example_manager.add_example("draw_pixels",      manual_tests.draw_pixels.run)
             example_manager.add_example("draw_stipple",     manual_tests.draw_stipple.run)
             example_manager.add_example("display_list",     manual_tests.display_list.run)

@@ -6,7 +6,7 @@ from . import (
     draw_pixels,
     draw_rectangle,
     draw_stipple,
-    light,
+    light_and_fog,
     matrix,
     draw_texture,
 )

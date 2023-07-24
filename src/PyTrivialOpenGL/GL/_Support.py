@@ -19,6 +19,37 @@ def _get_gl_error_str(gl_error_code):
         return "(%d)" % gl_error_code
     return gl_error_str
 
+def _get_fog_params_length(pname):
+    return _fog_params_lengths.get(pname, None)
+
+_fog_params_lengths = {
+    # Note: Commented items are from OpenGL above version 1.1.
+
+    _C_GL.GL_FOG_MODE         : 1,
+    _C_GL.GL_FOG_DENSITY      : 1,
+    _C_GL.GL_FOG_START        : 1,
+    _C_GL.GL_FOG_END          : 1,
+    _C_GL.GL_FOG_INDEX        : 1,
+    _C_GL.GL_FOG_COLOR        : 4,
+    # _C_GL.GL_FOG_COORD_SRC    : 1,
+}
+
+def _get_pixel_map_size_id(map_id):
+    return _pixel_map_size_ids.get(map_id, None)
+
+_pixel_map_size_ids = {
+    _C_GL.GL_PIXEL_MAP_I_TO_I : _C_GL.GL_PIXEL_MAP_I_TO_I_SIZE,
+    _C_GL.GL_PIXEL_MAP_S_TO_S : _C_GL.GL_PIXEL_MAP_S_TO_S_SIZE,
+    _C_GL.GL_PIXEL_MAP_I_TO_R : _C_GL.GL_PIXEL_MAP_I_TO_R_SIZE,
+    _C_GL.GL_PIXEL_MAP_I_TO_G : _C_GL.GL_PIXEL_MAP_I_TO_G_SIZE,
+    _C_GL.GL_PIXEL_MAP_I_TO_B : _C_GL.GL_PIXEL_MAP_I_TO_B_SIZE,
+    _C_GL.GL_PIXEL_MAP_I_TO_A : _C_GL.GL_PIXEL_MAP_I_TO_A_SIZE,
+    _C_GL.GL_PIXEL_MAP_R_TO_R : _C_GL.GL_PIXEL_MAP_R_TO_R_SIZE,
+    _C_GL.GL_PIXEL_MAP_G_TO_G : _C_GL.GL_PIXEL_MAP_G_TO_G_SIZE,
+    _C_GL.GL_PIXEL_MAP_B_TO_B : _C_GL.GL_PIXEL_MAP_B_TO_B_SIZE,
+    _C_GL.GL_PIXEL_MAP_A_TO_A : _C_GL.GL_PIXEL_MAP_A_TO_A_SIZE,
+}
+
 def _get_tex_gen_params_length(pname):
     return _tex_gen_params_lengths.get(pname, None)
 

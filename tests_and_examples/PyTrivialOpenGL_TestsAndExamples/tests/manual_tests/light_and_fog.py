@@ -7,6 +7,16 @@ __all__ = [
     "run"
 ]
 
+def is_close(l_a, l_b, delta):
+    if (len(l_a) != len(l_b)):
+        return False
+
+    for ix in range(len(l_a)):
+        if not math.isclose(l_a[ix], l_b[ix], rel_tol = delta):
+            return False
+
+    return True
+
 def draw_triangle():
     glBegin(GL_TRIANGLES)
 
@@ -164,8 +174,8 @@ class Vec3:
 
 class Data:
     def __init__(self):
-        self.pos = Vec3(0, 0, -2)
-        self.angle = 0
+        self.pos = Vec3(0, -2.1, -2.9)
+        self.angle = -30
 
 _data = Data()
 
@@ -189,7 +199,7 @@ def do_on_create():
     glLoadIdentity()
     glFrustum(-1, 1, -1, 1, 0.5, 10)
 
-    glClearColor(0, 0, 0.5, 1)
+    glClearColor(0.2, 0.2, 0.5, 1)
 
     glShadeModel(GL_SMOOTH)
 
@@ -215,6 +225,17 @@ def do_on_create():
     print(glGetLightfv(GL_LIGHT0, GL_AMBIENT))
     print(glGetLightfv(GL_LIGHT0, GL_DIFFUSE))
     print(glGetLightfv(GL_LIGHT0, GL_SPECULAR))
+
+    glEnable(GL_FOG)
+    glFogfv(GL_FOG_COLOR, [0.2, 0.2, 0.5, 1])
+    assert is_close(glGetFloatv(GL_FOG_COLOR), [0.2, 0.2, 0.5, 1], 0.01)
+
+    glFogiv(GL_FOG_DENSITY, [2])
+    assert glGetIntegerv(GL_FOG_DENSITY) == [2]
+
+    glFogfv(GL_FOG_DENSITY, [0.5])
+    assert is_close(glGetFloatv(GL_FOG_DENSITY), [0.5], 0.01)
+
 
     print("Escape - Exit")
 
@@ -242,9 +263,13 @@ def do_on_key(key_id, is_down, extra):
     elif key_id == togl.KeyId.ARROW_LEFT:
         if is_down:
             _data.angle -= 10
+            _data.angle %= 360
+            print(_data.angle)
     elif key_id == togl.KeyId.ARROW_RIGHT:
         if is_down:
             _data.angle += 10
+            _data.angle %= 360
+            print(_data.angle)
     elif key_id == togl.KeyId.ARROW_DOWN:
         if is_down:
             _data.pos.y -= 0.1
@@ -277,7 +302,7 @@ def run(name, options):
     togl.set_log_level(togl.LogLevel.INFO)
 
     return togl.to_window().create_and_run(
-        window_name         = "Light",
+        window_name         = "Light and Fog",
         area                = (800, 400),
         style               = togl.WindowStyleBit.DRAW_AREA_SIZE,
 
