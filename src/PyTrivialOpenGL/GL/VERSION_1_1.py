@@ -2011,55 +2011,159 @@ def glPixelTransferi(pname, param):
     """
     _C_GL_1_1.glPixelTransferi(int(pname), int(param))
 
-# ToDo: Implement.
-#def glPixelMapfv(map_, mapsize, values):
-#    """
-#    map_             : int
-#    mapsize          : int
-#    values           : ???
-#    """
-#    _C_GL_1_1.glPixelMapfv(int(map_), int(mapsize), ???(values))
 
-#def glPixelMapuiv(map_, mapsize, values):
-#    """
-#    map_             : int
-#    mapsize          : int
-#    values           : ???
-#    """
-#    _C_GL_1_1.glPixelMapuiv(int(map_), int(mapsize), ???(values))
+def glPixelMapfv(map_, values):
+    """
+    map_             : int
+    values           : List[float]
+    """
+    map_ = int(map_) 
 
-#def glPixelMapusv(map_, mapsize, values):
-#    """
-#    map_             : int
-#    mapsize          : int
-#    values           : ???
-#    """
-#    _C_GL_1_1.glPixelMapusv(int(map_), int(mapsize), ???(values))
+    if isinstance(values, bytes):
+        num_of_bytes = len(values)
+        mapsize = num_of_bytes // 4 # div by size in bytes of single precision float 
+
+        c_values_buffer = (_C_GL_1_1.GLubyte * num_of_bytes).from_buffer_copy(values)
+        c_values = _ctypes.cast(c_values_buffer, _ctypes.POINTER(_C_GL_1_1.GLfloat))
+    else:
+        values = list(values)
+        mapsize = len(values)
+
+        c_values = _list_to_c_array(float, values, mapsize, _C_GL_1_1.GLfloat)
+
+    _C_GL_1_1.glPixelMapfv(map_, mapsize, c_values)
+
+def glPixelMapuiv(map_, values):
+    """
+    map_             : int
+    values           : List[int]
+    """
+    map_ = int(map_) 
+
+    if isinstance(values, bytes):
+        num_of_bytes = len(values)
+        mapsize = num_of_bytes // 4 # div by size in bytes of single precision float 
+
+        c_values_buffer = (_C_GL_1_1.GLubyte * num_of_bytes).from_buffer_copy(values)
+        c_values = _ctypes.cast(c_values_buffer, _ctypes.POINTER(_C_GL_1_1.GLuint))
+    else:
+        values = list(values)
+        mapsize = len(values)
+
+        c_values = _list_to_c_array(int, values, mapsize, _C_GL_1_1.GLuint)
+
+    _C_GL_1_1.glPixelMapuiv(map_, mapsize, c_values)
+
+def glPixelMapusv(map_, values):
+    """
+    map_             : int
+    values           : List[int]
+    """
+    map_ = int(map_) 
+
+    if isinstance(values, bytes):
+        num_of_bytes = len(values)
+        mapsize = num_of_bytes // 2 # div by size in bytes of single precision float 
+
+        c_values_buffer = (_C_GL_1_1.GLubyte * num_of_bytes).from_buffer_copy(values)
+        c_values = _ctypes.cast(c_values_buffer, _ctypes.POINTER(_C_GL_1_1.GLushort))
+    else:
+        values = list(values)
+        mapsize = len(values)
+
+        c_values = _list_to_c_array(int, values, mapsize, _C_GL_1_1.GLushort)
+
+    _C_GL_1_1.glPixelMapusv(map_, mapsize, c_values)
 
 
 # Enumerated Queries
 
-#def glGetPixelMapfv(map_, values):
-#    """
-#    map_             : int
-#    values           : ???
-#    """
-#    _C_GL_1_1.glGetPixelMapfv(int(map_), ???(values))
+_pixel_map_size_ids = {
+    GL_PIXEL_MAP_I_TO_I : GL_PIXEL_MAP_I_TO_I_SIZE,
+    GL_PIXEL_MAP_S_TO_S : GL_PIXEL_MAP_S_TO_S_SIZE,
+    GL_PIXEL_MAP_I_TO_R : GL_PIXEL_MAP_I_TO_R_SIZE,
+    GL_PIXEL_MAP_I_TO_G : GL_PIXEL_MAP_I_TO_G_SIZE,
+    GL_PIXEL_MAP_I_TO_B : GL_PIXEL_MAP_I_TO_B_SIZE,
+    GL_PIXEL_MAP_I_TO_A : GL_PIXEL_MAP_I_TO_A_SIZE,
+    GL_PIXEL_MAP_R_TO_R : GL_PIXEL_MAP_R_TO_R_SIZE,
+    GL_PIXEL_MAP_G_TO_G : GL_PIXEL_MAP_G_TO_G_SIZE,
+    GL_PIXEL_MAP_B_TO_B : GL_PIXEL_MAP_B_TO_B_SIZE,
+    GL_PIXEL_MAP_A_TO_A : GL_PIXEL_MAP_A_TO_A_SIZE,
+}
 
-#def glGetPixelMapuiv(map_, values):
-#    """
-#    map_             : int
-#    values           : ???
-#    """
-#    _C_GL_1_1.glGetPixelMapuiv(int(map_), ???(values))
+def _get_pixel_map_size_id(map_id):
+    return _pixel_map_size_ids.get(map_id, None)
 
-#def glGetPixelMapusv(map_, values):
-#    """
-#    map_             : int
-#    values           : ???
-#    """
-#    _C_GL_1_1.glGetPixelMapusv(int(map_), ???(values))
+def glGetPixelMapfv(map_, is_return_bytes = False):
+    """
+    map_            : int
+    is_return_bytes : bool 
+    Returns         : bytes | List[float]
+        bytes, when 'is_return_bytes' is True.
+        list of floats, when 'is_return_bytes' is False (default).
 
+        Equivalent of 'data' from OpenGL function specification.
+    """
+    map_ = int(map_)
+    size_id = _get_pixel_map_size_id(map_)
+    if size_id is None:
+        raise ValueError("Unexpected value of 'map_' parameter.")
+    mapsize = glGetIntegerv(size_id)[0]
+    c_data = _make_c_array(_C_GL_1_1.GLfloat, mapsize)
+
+    _C_GL_1_1.glGetPixelMapfv(map_, c_data)
+
+    if is_return_bytes:
+        return bytes(c_data)
+    else:
+        return _c_array_to_list(float, c_data)
+
+def glGetPixelMapuiv(map_, is_return_bytes = False):
+    """
+    map_            : int
+    is_return_bytes : bool 
+    Returns         : bytes | List[int]
+        bytes, when 'is_return_bytes' is True.
+        list of ints, when 'is_return_bytes' is False (default).
+
+        Equivalent of 'data' from OpenGL function specification.
+    """
+    map_ = int(map_)
+    size_id = _get_pixel_map_size_id(map_)
+    if size_id is None:
+        raise ValueError("Unexpected value of 'map_' parameter.")
+    mapsize = glGetIntegerv(size_id)[0]
+    c_data = _make_c_array(_C_GL_1_1.GLuint, mapsize)
+
+    _C_GL_1_1.glGetPixelMapuiv(int(map_), c_data)
+
+    if is_return_bytes:
+        return bytes(c_data)
+    else:
+        return _c_array_to_list(int, c_data)
+
+def glGetPixelMapusv(map_, is_return_bytes = False):
+    """
+    map_            : int
+    Returns         : bytes | List[int]
+        bytes, when 'is_return_bytes' is True.
+        list of ints, when 'is_return_bytes' is False (default).
+
+        Equivalent of 'data' from OpenGL function specification.
+    """
+    map_ = int(map_)
+    size_id = _get_pixel_map_size_id(map_)
+    if size_id is None:
+        raise ValueError("Unexpected value of 'map_' parameter.")
+    mapsize = glGetIntegerv(size_id)[0]
+    c_data = _make_c_array(_C_GL_1_1.GLushort, mapsize)
+
+    _C_GL_1_1.glGetPixelMapusv(int(map_), c_data)
+
+    if is_return_bytes:
+        return bytes(c_data)
+    else:
+        return _c_array_to_list(int, c_data)
 
 # Rasterization of Pixel Rectangles
 

@@ -1,6 +1,8 @@
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
+from PyTrivialOpenGL import C_GL
 from PyTrivialOpenGL.Utility import get_gl_error_str
+import math
 
 __all__ = [
     "run"
@@ -8,6 +10,16 @@ __all__ = [
 
 _WIDTH = 800
 _HEIGHT = 400
+
+def is_close(l_a, l_b, delta):
+    if (len(l_a) != len(l_b)):
+        return False
+
+    for ix in range(len(l_a)):
+        if not math.isclose(l_a[ix], l_b[ix], rel_tol = delta):
+            return False
+
+    return True
 
 def do_on_create():
     glPushAttrib(GL_ALL_ATTRIB_BITS)
@@ -18,6 +30,52 @@ def do_on_create():
     glOrtho(0, _WIDTH, 0, _HEIGHT, 1, -1)
 
     glClearColor(0, 0, 0.5, 1)
+
+    glPixelTransferi(GL_MAP_COLOR, GL_TRUE)
+
+    c_values = (C_GL.GLfloat * 256)(*([0] * 256))
+    C_GL.glPixelMapfv(GL_PIXEL_MAP_R_TO_R, 256, c_values)
+    C_GL.glPixelMapfv(GL_PIXEL_MAP_G_TO_G, 256, c_values)
+    C_GL.glPixelMapfv(GL_PIXEL_MAP_B_TO_B, 256, c_values)
+    print(glGetIntegerv(GL_PIXEL_MAP_R_TO_R_SIZE))
+    print(glGetIntegerv(GL_MAX_PIXEL_MAP_TABLE))
+    
+    glPixelMapfv(GL_PIXEL_MAP_G_TO_G, b"\x00\x00\x00\x00" * 256)
+
+    values = [0.5] * 256
+    glPixelMapfv(GL_PIXEL_MAP_R_TO_R, values)
+    print(len(glGetPixelMapfv(GL_PIXEL_MAP_R_TO_R)), glGetPixelMapfv(GL_PIXEL_MAP_R_TO_R))
+    assert is_close(glGetPixelMapfv(GL_PIXEL_MAP_R_TO_R), values, 0.01)
+
+
+    values = b"\x04\x03\x02\x01" * 256
+    glPixelMapfv(GL_PIXEL_MAP_R_TO_R, values)
+    print(len(glGetPixelMapfv(GL_PIXEL_MAP_R_TO_R, is_return_bytes = True)), glGetPixelMapfv(GL_PIXEL_MAP_R_TO_R, is_return_bytes = True))
+    assert glGetPixelMapfv(GL_PIXEL_MAP_R_TO_R, is_return_bytes = True) == values
+
+    values = [127] * 256
+    glPixelMapusv(GL_PIXEL_MAP_R_TO_R, values)
+    print(len(glGetPixelMapusv(GL_PIXEL_MAP_R_TO_R)), glGetPixelMapusv(GL_PIXEL_MAP_R_TO_R))
+    assert glGetPixelMapusv(GL_PIXEL_MAP_R_TO_R) == values
+
+
+    values = b"\x02\x01" * 256
+    glPixelMapusv(GL_PIXEL_MAP_R_TO_R, values)
+    print(len(glGetPixelMapusv(GL_PIXEL_MAP_R_TO_R, is_return_bytes = True)), glGetPixelMapusv(GL_PIXEL_MAP_R_TO_R, is_return_bytes = True))
+    assert glGetPixelMapusv(GL_PIXEL_MAP_R_TO_R, is_return_bytes = True) == values
+
+    values = [127] * 256
+    glPixelMapuiv(GL_PIXEL_MAP_R_TO_R, values)
+    print(len(glGetPixelMapuiv(GL_PIXEL_MAP_R_TO_R)), glGetPixelMapuiv(GL_PIXEL_MAP_R_TO_R))
+    assert glGetPixelMapuiv(GL_PIXEL_MAP_R_TO_R) == values
+
+
+    values = b"\x04\x03\x02\x01" * 256
+    glPixelMapuiv(GL_PIXEL_MAP_R_TO_R, values)
+    print(len(glGetPixelMapuiv(GL_PIXEL_MAP_R_TO_R, is_return_bytes = True)), glGetPixelMapuiv(GL_PIXEL_MAP_R_TO_R, is_return_bytes = True))
+    assert glGetPixelMapuiv(GL_PIXEL_MAP_R_TO_R, is_return_bytes = True) == values
+
+    
 
     print("Escape - Exit")
 
