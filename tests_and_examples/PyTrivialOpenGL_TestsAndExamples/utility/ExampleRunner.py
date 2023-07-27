@@ -93,7 +93,9 @@ class ExampleRunner:
             example_manager.add_example("draw_pixels",      manual_tests.draw_pixels.run)
             example_manager.add_example("draw_stipple",     manual_tests.draw_stipple.run)
             example_manager.add_example("display_list",     manual_tests.display_list.run)
-            example_manager.add_example("draw_texture",     manual_tests.draw_texture.run,      ["float", "1d", "sub"])
+            example_manager.add_example("draw_texture",     manual_tests.draw_texture.run,      ["float", "1d", "sub"]),
+            example_manager.add_example("bezier_curve",     manual_tests.bezier_curve.run),
+            example_manager.add_example("bezier_surface",   manual_tests.bezier_surface.run),
 
         if default_example_name is None:
             if category & ExampleCategoryBit.MANUAL_TESTS:

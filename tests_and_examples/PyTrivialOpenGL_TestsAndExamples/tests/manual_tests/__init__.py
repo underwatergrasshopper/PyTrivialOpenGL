@@ -9,4 +9,6 @@ from . import (
     light_and_fog,
     matrix,
     draw_texture,
+    bezier_curve,
+    bezier_surface,
 )

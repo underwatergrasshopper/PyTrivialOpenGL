@@ -3133,58 +3133,105 @@ def glAccum(op, value):
 
 # Evaluators
 
-#def glMap1d(target, u1, u2, stride, order, points):
-#    """
-#    target           : int
-#    u1               : float
-#    u2               : float
-#    stride           : int
-#    order            : int
-#    points           : List[float]
-#    """
-#    c_points = (_C_GL_1_1.GLdouble * max(int(stride) * int(order), len(points)))(*(float(point) for point in points))
-#    _C_GL_1_1.glMap1d(int(target), float(u1), float(u2), int(stride), int(order), c_points)
+def glMap1d(target, u1, u2, stride, points):
+    """
+    target           : int
+    u1               : float
+    u2               : float
+    stride           : int
+    points           : List[float]
+        Length of list must be multiply of value from 'stride'.
 
-#def glMap1f(target, u1, u2, stride, order, points):
-#    """
-#    target           : int
-#    u1               : float
-#    u2               : float
-#    stride           : int
-#    order            : int
-#    points           : ???
-#    """
-#    _C_GL_1_1.glMap1f(int(target), float(u1), float(u2), int(stride), int(order), ???(points))
+    Note: Value of 'order' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
+    """
+    stride = int(stride)
+    points = list(points)
 
-#def glMap2d(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points):
-#    """
-#    target           : int
-#    u1               : float
-#    u2               : float
-#    ustride          : int
-#    uorder           : int
-#    v1               : float
-#    v2               : float
-#    vstride          : int
-#    vorder           : int
-#    points           : ???
-#    """
-#    _C_GL_1_1.glMap2d(int(target), float(u1), float(u2), int(ustride), int(uorder), float(v1), float(v2), int(vstride), int(vorder), ???(points))
+    if len(points) % stride != 0:
+        raise ValueError("Number of items in 'points' parameter must be multiply of value from 'stride' parameter.")
 
-#def glMap2f(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points):
-#    """
-#    target           : int
-#    u1               : float
-#    u2               : float
-#    ustride          : int
-#    uorder           : int
-#    v1               : float
-#    v2               : float
-#    vstride          : int
-#    vorder           : int
-#    points           : ???
-#    """
-#    _C_GL_1_1.glMap2f(int(target), float(u1), float(u2), int(ustride), int(uorder), float(v1), float(v2), int(vstride), int(vorder), ???(points))
+    order = len(points) // stride
+    c_points = _list_to_c_array(float, points, len(points), _C_GL_1_1.GLdouble)
+
+    _C_GL_1_1.glMap1d(int(target), float(u1), float(u2), stride, order, c_points)
+
+def glMap1f(target, u1, u2, stride, points):
+    """
+    target           : int
+    u1               : float
+    u2               : float
+    stride           : int
+    points           : List[float]
+        Length of list must be multiply of value from 'stride'.
+
+    Note: Value of 'order' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
+    """
+    stride = int(stride)
+    points = list(points)
+
+    if len(points) % stride != 0:
+        raise ValueError("Number of items in 'points' parameter must be multiply of value from 'stride' parameter.")
+
+    order = len(points) // stride
+    c_points = _list_to_c_array(float, points, len(points), _C_GL_1_1.GLfloat)
+
+    _C_GL_1_1.glMap1f(int(target), float(u1), float(u2), stride, order, c_points)
+
+def glMap2d(target, u1, u2, ustride, v1, v2, vstride, points):
+    """
+    target           : int
+    u1               : float
+    u2               : float
+    ustride          : int
+    v1               : float
+    v2               : float
+    vstride          : int
+    points           : List[float]
+        Length of list must be multiply of value from 'stride'.
+
+    Note: Values of 'uorder' parameter and 'vorder' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
+    """
+    ustride = int(ustride)
+    vstride = int(vstride)
+    points = list(points)
+
+    if len(points) % ustride != 0 and len(points) % vstride != 0:
+        raise ValueError("Number of items in 'points' parameter must be multiply of values from 'ustride' parameter and 'vstride'.")
+
+    vorder = len(points) // vstride
+    uorder = vstride // ustride
+
+    c_points = _list_to_c_array(float, points, len(points), _C_GL_1_1.GLdouble)
+
+    _C_GL_1_1.glMap2d(int(target), float(u1), float(u2), ustride, uorder, float(v1), float(v2), vstride, vorder, c_points)
+
+def glMap2f(target, u1, u2, ustride, v1, v2, vstride, points):
+    """
+    target           : int
+    u1               : float
+    u2               : float
+    ustride          : int
+    v1               : float
+    v2               : float
+    vstride          : int
+    points           : List[float]
+        Length of list must be multiply of value from 'stride'.
+
+    Note: Values of 'uorder' parameter and 'vorder' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
+    """
+    ustride = int(ustride)
+    vstride = int(vstride)
+    points = list(points)
+
+    if len(points) % ustride != 0 and len(points) % vstride != 0:
+        raise ValueError("Number of items in 'points' parameter must be multiply of values from 'ustride' parameter and 'vstride'.")
+
+    vorder = len(points) // vstride
+    uorder = vstride // ustride
+
+    c_points = _list_to_c_array(float, points, len(points), _C_GL_1_1.GLfloat)
+
+    _C_GL_1_1.glMap2f(int(target), float(u1), float(u2), ustride, uorder, float(v1), float(v2), vstride, vorder, c_points)
 
 
 def glEvalCoord1d(u):
@@ -3193,11 +3240,12 @@ def glEvalCoord1d(u):
     """
     _C_GL_1_1.glEvalCoord1d(float(u))
 
-#def glEvalCoord1dv(u):
-#    """
-#    u                : ???
-#    """
-#    _C_GL_1_1.glEvalCoord1dv(???(u))
+def glEvalCoord1dv(u):
+    """
+    u                : List[float]
+    """
+    c_u = _list_part_to_c_array(float, u, 1, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glEvalCoord1dv(c_u)
 
 def glEvalCoord1f(u):
     """
@@ -3205,11 +3253,12 @@ def glEvalCoord1f(u):
     """
     _C_GL_1_1.glEvalCoord1f(float(u))
 
-#def glEvalCoord1fv(u):
-#    """
-#    u                : ???
-#    """
-#    _C_GL_1_1.glEvalCoord1fv(???(u))
+def glEvalCoord1fv(u):
+    """
+    u                : List[float]
+    """
+    c_u = _list_part_to_c_array(float, u, 1, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glEvalCoord1fv(c_u)
 
 def glEvalCoord2d(u, v):
     """
@@ -3218,11 +3267,12 @@ def glEvalCoord2d(u, v):
     """
     _C_GL_1_1.glEvalCoord2d(float(u), float(v))
 
-#def glEvalCoord2dv(u):
-#    """
-#    u                : ???
-#    """
-#    _C_GL_1_1.glEvalCoord2dv(???(u))
+def glEvalCoord2dv(u):
+    """
+    u                : List[float]
+    """
+    c_u = _list_part_to_c_array(float, u, 2, _C_GL_1_1.GLdouble)
+    _C_GL_1_1.glEvalCoord2dv(c_u)
 
 def glEvalCoord2f(u, v):
     """
@@ -3231,12 +3281,12 @@ def glEvalCoord2f(u, v):
     """
     _C_GL_1_1.glEvalCoord2f(float(u), float(v))
 
-#def glEvalCoord2fv(u):
-#    """
-#    u                : ???
-#    """
-#    _C_GL_1_1.glEvalCoord2fv(???(u))
-
+def glEvalCoord2fv(u):
+    """
+    u                : List[float]
+    """
+    c_u = _list_part_to_c_array(float, u, 2, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glEvalCoord2fv(c_u)
 
 def glMapGrid1d(un, u1, u2):
     """
