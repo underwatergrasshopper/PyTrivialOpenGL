@@ -3145,8 +3145,8 @@ def glMap1d(target, u1, u2, points):
     u2               : float
     points           : List[float]
         List (or iterable), which contains control points.
-        Each control point is one or multiple float values (or values convertible to float) in list (or iterable).
-        Number of values in control point per target:
+        Each control point is represented by one or more items in list (or iterable).
+        Number of items in list (or iterable) per control point for target:
                 4 - GL_MAP1_COLOR_4, 
                 1 - GL_MAP1_INDEX, 
                 3 - GL_MAP1_NORMAL, 
@@ -3183,8 +3183,8 @@ def glMap1f(target, u1, u2, points):
     stride           : int
     points           : List[float]
         List (or iterable), which contains control points.
-        Each control point is one or multiple float values (or values convertible to float) in list (or iterable).
-        Number of values in control point per target:
+        Each control point is represented by one or more items in list (or iterable).
+        Number of items in list (or iterable) per control point for target:
                 4 - GL_MAP1_COLOR_4, 
                 1 - GL_MAP1_INDEX, 
                 3 - GL_MAP1_NORMAL, 
@@ -3222,8 +3222,8 @@ def glMap2d(target, u1, u2, v1, v2, vorder, points):
     vorder           : int
     points           : List[float]
         List (or iterable), which contains control points.
-        Each control point is one or multiple float values (or values convertible to float) in list (or iterable).
-        Number of values in control point per target:
+        Each control point is represented by one or more items in list (or iterable).
+        Number of items in list (or iterable) per control point for target:
                 4 - GL_MAP1_COLOR_4, 
                 1 - GL_MAP1_INDEX, 
                 3 - GL_MAP1_NORMAL, 
@@ -3233,7 +3233,6 @@ def glMap2d(target, u1, u2, v1, v2, vorder, points):
                 4 - GL_MAP1_TEXTURE_COORD_4, 
                 3 - GL_MAP1_VERTEX_3, 
                 4 - GL_MAP1_VERTEX_4.
-                
 
     Note: Value of 'uorder' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
     Note: Values of 'ustride' parameter and 'vstride' parameter (from OpenGL function specification) is deduced from 'target' parameter.
@@ -3264,8 +3263,8 @@ def glMap2f(target, u1, u2, v1, v2, vorder, points):
     vorder           : int
     points           : List[float]
         List (or iterable), which contains control points.
-        Each control point is one or multiple float values (or values convertible to float) in list (or iterable).
-        Number of values in control point per target:
+        Each control point is represented by one or more items in list (or iterable).
+        Number of items in list (or iterable) per control point for target:
                 4 - GL_MAP1_COLOR_4, 
                 1 - GL_MAP1_INDEX, 
                 3 - GL_MAP1_NORMAL, 
