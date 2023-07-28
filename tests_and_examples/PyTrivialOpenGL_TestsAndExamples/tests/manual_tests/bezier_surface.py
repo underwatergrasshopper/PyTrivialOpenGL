@@ -77,14 +77,19 @@ def do_on_create():
     ]
 
     glMap2f(GL_MAP2_VERTEX_3, 
-        0, 1, 3, 
-        0, 1, 6,
+        0, 1, 
+        0, 1, 
+        2,
         points
     )
 
     glMapGrid2f(_data.NUM_OF_PARTS, 0.0, 1.0, _data.NUM_OF_PARTS, 0.0, 1.0)
 
     glEnable(GL_MAP2_VERTEX_3)
+
+    assert is_close(glGetMapfv(GL_MAP2_VERTEX_3, GL_COEFF), points, 0.01)
+    assert glGetMapiv(GL_MAP2_VERTEX_3, GL_ORDER) == [2, 2]
+    assert is_close(glGetMapfv(GL_MAP2_VERTEX_3, GL_DOMAIN), [0.0, 1.0, 0.0, 1.0], 0.01)
     
     print("Left/Right Arrow - Rotate Surface")
     print("Escape - Exit")

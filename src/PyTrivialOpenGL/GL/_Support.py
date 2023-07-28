@@ -19,6 +19,54 @@ def _get_gl_error_str(gl_error_code):
         return "(%d)" % gl_error_code
     return gl_error_str
 
+def _get_map_stride(target):
+    return _map_strides.get(target, None)
+
+def _get_map_1d_stride(target):
+    return _map_1d_strides.get(target, None)
+
+def _get_map_2d_stride(target):
+    return _map_2d_strides.get(target, None)
+
+_map_1d_strides = {
+    _C_GL.GL_MAP1_COLOR_4             : 4, 
+    _C_GL.GL_MAP1_INDEX               : 1, 
+    _C_GL.GL_MAP1_NORMAL              : 3, 
+    _C_GL.GL_MAP1_TEXTURE_COORD_1     : 1, 
+    _C_GL.GL_MAP1_TEXTURE_COORD_2     : 2, 
+    _C_GL.GL_MAP1_TEXTURE_COORD_3     : 3, 
+    _C_GL.GL_MAP1_TEXTURE_COORD_4     : 4, 
+    _C_GL.GL_MAP1_VERTEX_3            : 3, 
+    _C_GL.GL_MAP1_VERTEX_4            : 4, 
+}
+
+_map_2d_strides = {
+    _C_GL.GL_MAP2_COLOR_4             : 4,
+    _C_GL.GL_MAP2_INDEX               : 1, 
+    _C_GL.GL_MAP2_NORMAL              : 3, 
+    _C_GL.GL_MAP2_TEXTURE_COORD_1     : 1, 
+    _C_GL.GL_MAP2_TEXTURE_COORD_2     : 2, 
+    _C_GL.GL_MAP2_TEXTURE_COORD_3     : 3, 
+    _C_GL.GL_MAP2_TEXTURE_COORD_4     : 4, 
+    _C_GL.GL_MAP2_VERTEX_3            : 3,
+    _C_GL.GL_MAP2_VERTEX_4            : 4,
+}
+
+_map_strides = _map_1d_strides | _map_2d_strides
+
+def _is_map_1d_target(target):
+    return target in [
+        _C_GL.GL_MAP1_COLOR_4, 
+        _C_GL.GL_MAP1_INDEX, 
+        _C_GL.GL_MAP1_NORMAL, 
+        _C_GL.GL_MAP1_TEXTURE_COORD_1, 
+        _C_GL.GL_MAP1_TEXTURE_COORD_2, 
+        _C_GL.GL_MAP1_TEXTURE_COORD_3, 
+        _C_GL.GL_MAP1_TEXTURE_COORD_4, 
+        _C_GL.GL_MAP1_VERTEX_3, 
+        _C_GL.GL_MAP1_VERTEX_4, 
+    ]
+
 def _get_fog_params_length(pname):
     return _fog_params_lengths.get(pname, None)
 

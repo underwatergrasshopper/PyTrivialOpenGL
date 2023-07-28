@@ -40,8 +40,12 @@ def do_on_create():
         0.5, 0.5, 0.0,
         0.2, 0.1, 0.0,
     ]
-    glMap1f(GL_MAP1_VERTEX_3, 0, 1, 3, points)
+    glMap1f(GL_MAP1_VERTEX_3, 0, 1, points)
     glEnable(GL_MAP1_VERTEX_3)
+
+    assert is_close(glGetMapfv(GL_MAP1_VERTEX_3, GL_COEFF), points, 0.01)
+    assert glGetMapiv(GL_MAP1_VERTEX_3, GL_ORDER) == [4]
+    assert is_close(glGetMapfv(GL_MAP1_VERTEX_3, GL_DOMAIN), [0.0, 1.0], 0.01)
 
     print("Escape - Exit")
     

@@ -17,6 +17,11 @@ from ._Support import (
     _get_tex_gen_params_length,
     _get_pixel_map_size_id,
     _get_fog_params_length,
+    _get_map_stride,
+    _get_map_1d_stride,
+    _get_map_2d_stride,
+    _is_map_1d_target,
+
 )
 from ..Exceptions import CacheMismatch
 
@@ -3133,41 +3138,71 @@ def glAccum(op, value):
 
 # Evaluators
 
-def glMap1d(target, u1, u2, stride, points):
+def glMap1d(target, u1, u2, points):
     """
     target           : int
     u1               : float
     u2               : float
-    stride           : int
     points           : List[float]
-        Length of list must be multiply of value from 'stride'.
+        List (or iterable), which contains control points.
+        Each control point is one or multiple float values (or values convertible to float) in list (or iterable).
+        Number of values in control point per target:
+                4 - GL_MAP1_COLOR_4, 
+                1 - GL_MAP1_INDEX, 
+                3 - GL_MAP1_NORMAL, 
+                1 - GL_MAP1_TEXTURE_COORD_1, 
+                2 - GL_MAP1_TEXTURE_COORD_2, 
+                3 - GL_MAP1_TEXTURE_COORD_3, 
+                4 - GL_MAP1_TEXTURE_COORD_4, 
+                3 - GL_MAP1_VERTEX_3, 
+                4 - GL_MAP1_VERTEX_4.
 
     Note: Value of 'order' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
+    Note: Value of 'stride' parameter (from OpenGL function specification) is deduced from 'target' parameter.
     """
     stride = int(stride)
     points = list(points)
 
+    stride = _get_map_1d_stride(target)
+    if stride is None:
+        raise ValueError("Unexpected value of 'target' parameter.")
+
     if len(points) % stride != 0:
-        raise ValueError("Number of items in 'points' parameter must be multiply of value from 'stride' parameter.")
+        raise ValueError("Number of items in 'points' parameter must be multiply of %s (its stride)." % stride)
 
     order = len(points) // stride
     c_points = _list_to_c_array(float, points, len(points), _C_GL_1_1.GLdouble)
 
     _C_GL_1_1.glMap1d(int(target), float(u1), float(u2), stride, order, c_points)
 
-def glMap1f(target, u1, u2, stride, points):
+def glMap1f(target, u1, u2, points):
     """
     target           : int
     u1               : float
     u2               : float
     stride           : int
     points           : List[float]
-        Length of list must be multiply of value from 'stride'.
+        List (or iterable), which contains control points.
+        Each control point is one or multiple float values (or values convertible to float) in list (or iterable).
+        Number of values in control point per target:
+                4 - GL_MAP1_COLOR_4, 
+                1 - GL_MAP1_INDEX, 
+                3 - GL_MAP1_NORMAL, 
+                1 - GL_MAP1_TEXTURE_COORD_1, 
+                2 - GL_MAP1_TEXTURE_COORD_2, 
+                3 - GL_MAP1_TEXTURE_COORD_3, 
+                4 - GL_MAP1_TEXTURE_COORD_4, 
+                3 - GL_MAP1_VERTEX_3, 
+                4 - GL_MAP1_VERTEX_4.
 
     Note: Value of 'order' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
+    Note: Value of 'stride' parameter (from OpenGL function specification) is deduced from 'target' parameter.
     """
-    stride = int(stride)
     points = list(points)
+
+    stride = _get_map_1d_stride(target)
+    if stride is None:
+        raise ValueError("Unexpected value of 'target' parameter.")
 
     if len(points) % stride != 0:
         raise ValueError("Number of items in 'points' parameter must be multiply of value from 'stride' parameter.")
@@ -3177,57 +3212,85 @@ def glMap1f(target, u1, u2, stride, points):
 
     _C_GL_1_1.glMap1f(int(target), float(u1), float(u2), stride, order, c_points)
 
-def glMap2d(target, u1, u2, ustride, v1, v2, vstride, points):
+def glMap2d(target, u1, u2, v1, v2, vorder, points):
     """
     target           : int
     u1               : float
     u2               : float
-    ustride          : int
     v1               : float
     v2               : float
-    vstride          : int
+    vorder           : int
     points           : List[float]
-        Length of list must be multiply of value from 'stride'.
+        List (or iterable), which contains control points.
+        Each control point is one or multiple float values (or values convertible to float) in list (or iterable).
+        Number of values in control point per target:
+                4 - GL_MAP1_COLOR_4, 
+                1 - GL_MAP1_INDEX, 
+                3 - GL_MAP1_NORMAL, 
+                1 - GL_MAP1_TEXTURE_COORD_1, 
+                2 - GL_MAP1_TEXTURE_COORD_2, 
+                3 - GL_MAP1_TEXTURE_COORD_3, 
+                4 - GL_MAP1_TEXTURE_COORD_4, 
+                3 - GL_MAP1_VERTEX_3, 
+                4 - GL_MAP1_VERTEX_4.
+                
 
-    Note: Values of 'uorder' parameter and 'vorder' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
+    Note: Value of 'uorder' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
+    Note: Values of 'ustride' parameter and 'vstride' parameter (from OpenGL function specification) is deduced from 'target' parameter.
     """
-    ustride = int(ustride)
-    vstride = int(vstride)
     points = list(points)
 
-    if len(points) % ustride != 0 and len(points) % vstride != 0:
-        raise ValueError("Number of items in 'points' parameter must be multiply of values from 'ustride' parameter and 'vstride'.")
+    ustride = _get_map_2d_stride(target)
+    if ustride is None:
+        raise ValueError("Unexpected value of 'target' parameter.")
 
-    vorder = len(points) // vstride
-    uorder = vstride // ustride
+    if len(points) % ustride != 0:
+        raise ValueError("Number of items in 'points' parameter must be multiply of %d." % ustride)
+
+    uorder = len(points) // (ustride * vorder)
+    vstride = ustride * uorder
 
     c_points = _list_to_c_array(float, points, len(points), _C_GL_1_1.GLdouble)
 
     _C_GL_1_1.glMap2d(int(target), float(u1), float(u2), ustride, uorder, float(v1), float(v2), vstride, vorder, c_points)
 
-def glMap2f(target, u1, u2, ustride, v1, v2, vstride, points):
+def glMap2f(target, u1, u2, v1, v2, vorder, points):
     """
     target           : int
     u1               : float
     u2               : float
-    ustride          : int
     v1               : float
     v2               : float
-    vstride          : int
+    vorder           : int
     points           : List[float]
-        Length of list must be multiply of value from 'stride'.
+        List (or iterable), which contains control points.
+        Each control point is one or multiple float values (or values convertible to float) in list (or iterable).
+        Number of values in control point per target:
+                4 - GL_MAP1_COLOR_4, 
+                1 - GL_MAP1_INDEX, 
+                3 - GL_MAP1_NORMAL, 
+                1 - GL_MAP1_TEXTURE_COORD_1, 
+                2 - GL_MAP1_TEXTURE_COORD_2, 
+                3 - GL_MAP1_TEXTURE_COORD_3, 
+                4 - GL_MAP1_TEXTURE_COORD_4, 
+                3 - GL_MAP1_VERTEX_3, 
+                4 - GL_MAP1_VERTEX_4.
+                
 
-    Note: Values of 'uorder' parameter and 'vorder' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
+    Note: Value of 'uorder' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
+    Note: Values of 'ustride' parameter and 'vstride' parameter (from OpenGL function specification) is deduced from 'target' parameter.
     """
-    ustride = int(ustride)
-    vstride = int(vstride)
     points = list(points)
 
-    if len(points) % ustride != 0 and len(points) % vstride != 0:
-        raise ValueError("Number of items in 'points' parameter must be multiply of values from 'ustride' parameter and 'vstride'.")
+    ustride = _get_map_2d_stride(target)
+    if ustride is None:
+        raise ValueError("Unexpected value of 'target' parameter.")
 
-    vorder = len(points) // vstride
-    uorder = vstride // ustride
+    if len(points) % ustride != 0:
+        raise ValueError("Number of items in 'points' parameter must be multiply of %d." % ustride)
+
+    uorder = len(points) // (ustride * vorder)
+    vstride = ustride * uorder
 
     c_points = _list_to_c_array(float, points, len(points), _C_GL_1_1.GLfloat)
 
@@ -3362,30 +3425,131 @@ def glEvalPoint2(i, j):
 
 # Enumerated Query
 
-#def glGetMapdv(target, query, v):
-#    """
-#    target           : int
-#    query            : int
-#    v                : ???
-#    """
-#    _C_GL_1_1.glGetMapdv(int(target), int(query), ???(v))
+def glGetMapdv(target, query):
+    """
+    target          : int 
+    query           : int
+    Returns         : List[float]
+        Corresponds to 'v' parameter from OpenGL function specification.
+    """
+    target = int(target)
+    query = int(query)
 
-#def glGetMapfv(target, query, v):
-#    """
-#    target           : int
-#    query            : int
-#    v                : ???
-#    """
-#    _C_GL_1_1.glGetMapfv(int(target), int(query), ???(v))
+    if query == GL_COEFF:
+        stride = _get_map_stride(target)
+        if stride is None:
+            ValueError("Unexpected value of 'target' parameter.")
 
-#def glGetMapiv(target, query, v):
-#    """
-#    target           : int
-#    query            : int
-#    v                : ???
-#    """
-#    _C_GL_1_1.glGetMapiv(int(target), int(query), ???(v))
+        if _is_map_1d_target(target):
+            c_order = _C_GL_1_1.GLint()
+            _C_GL_1_1.glGetMapiv(target, GL_ORDER, _ctypes.byref(c_order))
+            order = c_order.value
 
+            length = stride * order
+        else:
+            c_order = _make_c_array(_C_GL_1_1.GLint, 2)
+            _C_GL_1_1.glGetMapiv(target, GL_ORDER, c_order)
+            uorder = c_order[0]
+            vorder = c_order[1]
+            
+            length = stride * uorder * vorder
+
+        c_v = _make_c_array(_C_GL_1_1.GLdouble, length)
+
+    elif query == GL_ORDER:
+        length = 1 if _is_map_1d_target(target) else 2
+        c_v = _make_c_array(_C_GL_1_1.GLdouble, length)
+
+    elif query == GL_DOMAIN:
+        length = 2 if _is_map_1d_target(target) else 4
+        c_v = _make_c_array(_C_GL_1_1.GLdouble, length)
+
+    _C_GL_1_1.glGetMapdv(target, query, c_v)
+    return _c_array_to_list(float, c_v)
+
+
+def glGetMapfv(target, query):
+    """
+    target          : int
+    query           : int
+    Returns         : List[float]
+        Corresponds to 'v' parameter from OpenGL function specification.
+    """
+    target = int(target)
+    query = int(query)
+
+    if query == GL_COEFF:
+        stride = _get_map_stride(target)
+        if stride is None:
+            ValueError("Unexpected value of 'target' parameter.")
+
+        if _is_map_1d_target(target):
+            c_order = _C_GL_1_1.GLint()
+            _C_GL_1_1.glGetMapiv(target, GL_ORDER, _ctypes.byref(c_order))
+            order = c_order.value
+            length = stride * order
+        else:
+            c_order = _make_c_array(_C_GL_1_1.GLint, 2)
+            _C_GL_1_1.glGetMapiv(target, GL_ORDER, c_order)
+            uorder = c_order[0]
+            vorder = c_order[1]
+
+            length = stride * uorder * vorder
+
+        c_v = _make_c_array(_C_GL_1_1.GLfloat, length)
+
+    elif query == GL_ORDER:
+        length = 1 if _is_map_1d_target(target) else 2
+        c_v = _make_c_array(_C_GL_1_1.GLfloat, length)
+
+    elif query == GL_DOMAIN:
+        length = 2 if _is_map_1d_target(target) else 4
+        c_v = _make_c_array(_C_GL_1_1.GLfloat, length)
+
+    _C_GL_1_1.glGetMapfv(target, query, c_v)
+    return _c_array_to_list(float, c_v)
+
+def glGetMapiv(target, query):
+    """
+    target          : int
+    query           : int
+    Returns         : List[int]
+        Corresponds to 'v' parameter from OpenGL function specification.
+    """
+    target = int(target)
+    query = int(query)
+
+    if query == GL_COEFF:
+        stride = _get_map_stride(target)
+        if stride is None:
+            ValueError("Unexpected value of 'target' parameter.")
+
+        if _is_map_1d_target(target):
+            c_order = _C_GL_1_1.GLint()
+            _C_GL_1_1.glGetMapiv(target, GL_ORDER, _ctypes.byref(c_order))
+            order = c_order.value
+
+            length = stride * order
+        else:
+            c_order = _make_c_array(_C_GL_1_1.GLint, 2)
+            _C_GL_1_1.glGetMapiv(target, GL_ORDER, c_order)
+            uorder = c_order[0]
+            vorder = c_order[1]
+
+            length = stride * uorder * vorder
+
+        c_v = _make_c_array(_C_GL_1_1.GLint, length)
+
+    elif query == GL_ORDER:
+        length = 1 if _is_map_1d_target(target) else 2
+        c_v = _make_c_array(_C_GL_1_1.GLint, length)
+
+    elif query == GL_DOMAIN:
+        length = 2 if _is_map_1d_target(target) else 4
+        c_v = _make_c_array(_C_GL_1_1.GLint, length)
+
+    _C_GL_1_1.glGetMapiv(target, query, c_v)
+    return _c_array_to_list(int, c_v)
 
 # Selection
 
