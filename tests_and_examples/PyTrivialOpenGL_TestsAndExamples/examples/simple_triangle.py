@@ -42,6 +42,7 @@ def run():
 
     return togl.to_window().create_and_run(
         window_name         = "Simple Triangle",
+        # Sets width and height of windows draw area.
         area                = (800, 400),
         style               = togl.WindowStyleBit.DRAW_AREA_SIZE,
 
