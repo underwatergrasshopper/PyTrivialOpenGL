@@ -33,6 +33,8 @@ from ._Basics import MIN_U16    as _MIN_U16
 
 from ._Debug import _wm_to_str
 
+from .GL import _Support as _gl_support
+
 
 __all__ = [
     "WindowStyleBit",
@@ -1805,6 +1807,8 @@ class Window:
     def _destroy(self):
         if self._do_on_destroy:
             self._do_on_destroy()
+
+        _gl_support.to_cache().clear()
 
         _C_WGL.wglMakeCurrent(_C_WinApi.NULL, _C_WinApi.NULL)
         _C_WGL.wglDeleteContext(self._rendering_context_handle)

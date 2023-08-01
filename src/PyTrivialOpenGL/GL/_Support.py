@@ -5,27 +5,99 @@ Inner support for GL module.
 from .. import C_GL as _C_GL
 import ctypes as _ctypes
 
-__all__ = []
+### Cache ###
 
-def _get_read_pixels_format_count(format_):
+class _Cache:
+    def __init__(self):
+        self.clear()
+
+    def clear(self):
+        self.c_vertex_array_pointer         = None
+        self.c_normal_array_pointer         = None
+        self.c_color_array_pointer          = None
+        self.c_index_array_pointer          = None
+        self.c_edge_flag_array_pointer      = None
+        self.c_tex_coord_array_pointer      = None
+        self.c_interleaved_array_pointer    = None
+
+        self.c_array                        = None
+
+_cache = _Cache()
+
+def to_cache():
+    return _cache
+
+### List <-> C Array ###
+
+def list_part_to_c_array(l_type, l, exact_len, c_type):
+    num_of_elements_to_take = min(exact_len, len(l))
+
+    return (c_type * exact_len)(*(l_type(l[ix]) for ix in range(num_of_elements_to_take)))
+
+def list_to_c_array(l_type, l, min_len, c_type):
+    return (c_type * max(min_len, len(l)))(*(l_type(e) for e in l))
+
+def make_c_array(c_type, length):
+    return (c_type * length)()
+
+def c_array_to_list(py_type, c_array):
+    return [py_type(element) for element in c_array]
+
+### Maps ###
+
+def gl_type_id_to_c_type(type_):
+    return _gl_type_id_to_c_type_map.get(type_, None)
+
+_gl_type_id_to_c_type_map = {
+    _C_GL.GL_BYTE             : _C_GL.GLbyte,
+    _C_GL.GL_UNSIGNED_BYTE    : _C_GL.GLubyte,
+    _C_GL.GL_SHORT            : _C_GL.GLshort,
+    _C_GL.GL_UNSIGNED_SHORT   : _C_GL.GLushort,
+    _C_GL.GL_INT              : _C_GL.GLint,
+    _C_GL.GL_UNSIGNED_INT     : _C_GL.GLuint,
+    _C_GL.GL_FLOAT            : _C_GL.GLfloat,
+    _C_GL.GL_DOUBLE           : _C_GL.GLdouble,
+    _C_GL.GL_2_BYTES          : _C_GL.GLbyte,
+    _C_GL.GL_3_BYTES          : _C_GL.GLbyte,
+    _C_GL.GL_4_BYTES          : _C_GL.GLbyte,
+}
+
+def gl_type_id_to_py_type(type_):
+    return _gl_type_id_to_py_type_map.get(type_, None)
+
+_gl_type_id_to_py_type_map = {
+    _C_GL.GL_BYTE             : int,
+    _C_GL.GL_UNSIGNED_BYTE    : int,
+    _C_GL.GL_SHORT            : int,
+    _C_GL.GL_UNSIGNED_SHORT   : int,
+    _C_GL.GL_INT              : int,
+    _C_GL.GL_UNSIGNED_INT     : int,
+    _C_GL.GL_FLOAT            : float,
+    _C_GL.GL_DOUBLE           : float,
+    _C_GL.GL_2_BYTES          : int, 
+    _C_GL.GL_3_BYTES          : int,  
+    _C_GL.GL_4_BYTES          : int,  
+}
+
+def get_read_pixels_format_count(format_):
     return _read_pixels_format_count.get(format_, None)
 
-def _get_read_pixels_type_size(type_):
+def get_read_pixels_type_size(type_):
     return _read_pixels_type_size.get(type_, None)
 
-def _get_gl_error_str(gl_error_code):
+def get_gl_error_str(gl_error_code):
     gl_error_str = _gl_error_code_to_str.get(gl_error_code, None)
     if gl_error_str is None:
         return "(%d)" % gl_error_code
     return gl_error_str
 
-def _get_map_stride(target):
+def get_map_stride(target):
     return _map_strides.get(target, None)
 
-def _get_map_1d_stride(target):
+def get_map_1d_stride(target):
     return _map_1d_strides.get(target, None)
 
-def _get_map_2d_stride(target):
+def get_map_2d_stride(target):
     return _map_2d_strides.get(target, None)
 
 _map_1d_strides = {
@@ -54,7 +126,7 @@ _map_2d_strides = {
 
 _map_strides = _map_1d_strides | _map_2d_strides
 
-def _is_map_1d_target(target):
+def is_map_1d_target(target):
     return target in [
         _C_GL.GL_MAP1_COLOR_4, 
         _C_GL.GL_MAP1_INDEX, 
@@ -67,7 +139,7 @@ def _is_map_1d_target(target):
         _C_GL.GL_MAP1_VERTEX_4, 
     ]
 
-def _get_fog_params_length(pname):
+def get_fog_params_length(pname):
     return _fog_params_lengths.get(pname, None)
 
 _fog_params_lengths = {
@@ -82,7 +154,7 @@ _fog_params_lengths = {
     # _C_GL.GL_FOG_COORD_SRC    : 1,
 }
 
-def _get_pixel_map_size_id(map_id):
+def get_pixel_map_size_id(map_id):
     return _pixel_map_size_ids.get(map_id, None)
 
 _pixel_map_size_ids = {
@@ -98,7 +170,7 @@ _pixel_map_size_ids = {
     _C_GL.GL_PIXEL_MAP_A_TO_A : _C_GL.GL_PIXEL_MAP_A_TO_A_SIZE,
 }
 
-def _get_tex_gen_params_length(pname):
+def get_tex_gen_params_length(pname):
     return _tex_gen_params_lengths.get(pname, None)
 
 _tex_gen_params_lengths = {
@@ -107,7 +179,7 @@ _tex_gen_params_lengths = {
     _C_GL.GL_EYE_PLANE        : 4,
 }
 
-def _get_tex_env_params_length(pname):
+def get_tex_env_params_length(pname):
     return _tex_env_params_lengths.get(pname, None)
 
 _tex_env_params_lengths = {
@@ -132,7 +204,7 @@ _tex_env_params_lengths = {
     # _C_GL.GL_COORD_REPLACE_OES    : 1,   # bool only, glGetTexEnv{...} only
 }
 
-def _get_call_lists_py_type(type_):
+def get_call_lists_py_type(type_):
     return _call_lists_py_types.get(type_, None)
 
 _call_lists_py_types = {
@@ -148,7 +220,7 @@ _call_lists_py_types = {
     _C_GL.GL_4_BYTES          : int,
 }
 
-def _get_call_lists_c_type(type_):
+def get_call_lists_c_type(type_):
     return _call_lists_c_types.get(type_, None)
 
 _call_lists_c_types = {
@@ -164,7 +236,7 @@ _call_lists_c_types = {
     _C_GL.GL_4_BYTES          : _C_GL.GLubyte,
 }
 
-def _get_acceptable_tex_target_ids():
+def get_acceptable_tex_target_ids():
     return _acceptable_tex_target_ids
 
 _acceptable_tex_target_ids = set([
@@ -189,7 +261,7 @@ _acceptable_tex_target_ids = set([
     # _C_GL.GL_PROXY_TEXTURE_CUBE_MAP,
 ])
 
-def _get_tex_level_parameter_number(pname):
+def get_tex_level_parameter_number(pname):
     return _tex_level_parameter_numbers.get(pname, None)
 
 _tex_level_parameter_numbers = {
@@ -218,7 +290,7 @@ _tex_level_parameter_numbers = {
     # _C_GL.GL_TEXTURE_BUFFER_SIZE            : 1,
 }
 
-def _get_tex_format_element_number(format_):
+def get_tex_format_element_number(format_):
     return _texture_format_element_numbers.get(format_, None)
 
 
@@ -250,7 +322,7 @@ _texture_format_element_numbers = {
     _C_GL.GL_LUMINANCE_ALPHA  : 2,
 }
 
-def _get_tex_type_mul_div_size(type_):
+def get_tex_type_mul_div_size(type_):
     return _texture_type_mul_div_sizes.get(type_, None)
 
 _texture_type_mul_div_sizes = {
@@ -282,7 +354,7 @@ _texture_type_mul_div_sizes = {
     # _C_GL.GL_FLOAT_32_UNSIGNED_INT_24_8_REV  : (4, 3),        # (?)
 }
 
-def _get_tex_parameter_length(pname):
+def get_tex_parameter_length(pname):
     return _tex_parameter_lengths.get(pname, None)
 
 
@@ -314,7 +386,7 @@ _tex_parameter_lengths = {
     _C_GL.GL_TEXTURE_RESIDENT : 1,
 }
 
-def _get_num_of_get_values(pname):
+def get_num_of_get_values(pname):
     """
     ReturnType : int
     """
