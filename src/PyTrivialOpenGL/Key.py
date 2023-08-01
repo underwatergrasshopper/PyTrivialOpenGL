@@ -1,7 +1,7 @@
 import enum     as _enum
 import ctypes   as _ctypes
 
-from . import _C_WinApi
+from ._Private import C_WinApi as _C_WinApi
 
 __all__ = [
     "Key",

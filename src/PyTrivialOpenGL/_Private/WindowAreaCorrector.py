@@ -1,12 +1,12 @@
 import ctypes as _ctypes
-from . import _C_WinApi
-from .Area import Area
-from .Size import Size
-from .Point import Point
+from . import C_WinApi as _C_WinApi
+from ..Area import Area
+from ..Size import Size
+from ..Point import Point
 
 __all__ = []
 
-class _WindowAreaCorrector:
+class WindowAreaCorrector:
     """
     Corrects window coordinates and size to match position and size of visible part of window.
     """

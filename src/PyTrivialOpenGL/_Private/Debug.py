@@ -1,6 +1,6 @@
-from ._C_WinApi import *
+from .C_WinApi import *
 
-def _wm_to_str(window_message):
+def wm_to_str(window_message):
     """
     window_message : int
         Window message id.

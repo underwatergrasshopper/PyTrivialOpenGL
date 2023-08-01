@@ -1,7 +1,7 @@
 from .Point         import Point
 from .Size          import Size
 from .Area          import Area
-from .              import _C_WinApi
+from ._Private      import C_WinApi as _C_WinApi
 from .GL._Private   import Support as _gl_support
 
 import ctypes as _ctypes

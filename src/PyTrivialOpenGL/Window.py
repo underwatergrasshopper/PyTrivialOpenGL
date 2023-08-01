@@ -6,13 +6,13 @@ import re       as _re
 
 from copy import deepcopy as _deepcopy
 
-from . import _C_WinApi
-from . import _C_WGL
+from ._Private import C_WinApi as _C_WinApi
+from ._Private import C_WGL as _C_WGL
 from . import C_GL          as _C_GL
 from . import Key
 
-from ._SingletonGuardian    import _SingletonGuardian
-from ._WindowAreaCorrector  import _WindowAreaCorrector
+from ._Private.SingletonGuardian    import SingletonGuardian as _SingletonGuardian
+from ._Private.WindowAreaCorrector  import WindowAreaCorrector as _WindowAreaCorrector
 from .Point                 import Point
 from .Size                  import Size
 from .Area                  import Area
@@ -22,16 +22,16 @@ from .SpecialDebug          import *
 from .Key                   import *
 from .Key                   import _VirtualKeyData, _vk_code_to_key_id, _vk_code_to_str, _is_mouse_button_down, _get_keyboard_side_id, _get_mouse_key_id, _is_mw_mouse_button, _is_mw_mouse_button_x
 
-from . import _Basics
-from ._Basics import clamp      as _clamp
-from ._Basics import is_i32     as _is_i32
-from ._Basics import is_u16     as _is_u16
-from ._Basics import MIN_I32    as _MIN_I32
-from ._Basics import MAX_I32    as _MAX_I32
-from ._Basics import MAX_U16    as _MAX_U16
-from ._Basics import MIN_U16    as _MIN_U16
+from ._Private import Basics as _Basics
+from ._Private.Basics import clamp      as _clamp
+from ._Private.Basics import is_i32     as _is_i32
+from ._Private.Basics import is_u16     as _is_u16
+from ._Private.Basics import MIN_I32    as _MIN_I32
+from ._Private.Basics import MAX_I32    as _MAX_I32
+from ._Private.Basics import MAX_U16    as _MAX_U16
+from ._Private.Basics import MIN_U16    as _MIN_U16
 
-from ._Debug import _wm_to_str
+from ._Private.Debug import wm_to_str as _wm_to_str
 
 from .GL._Private import Support as _gl_support
 

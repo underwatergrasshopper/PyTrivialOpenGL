@@ -1,4 +1,4 @@
-from ._Basics import clamp
+from ._Private.Basics import clamp as _clamp
 
 __all__ = [
     "Color",
@@ -64,10 +64,10 @@ class ColorB(Color):
         Exceptions:             ValueError - If any value of r, g, b or a variable is out of valid range.
         """
         if is_clamp:
-            self.r = clamp(r, 0, 255)
-            self.g = clamp(g, 0, 255)
-            self.b = clamp(b, 0, 255)
-            self.a = clamp(a, 0, 255)
+            self.r = _clamp(r, 0, 255)
+            self.g = _clamp(g, 0, 255)
+            self.b = _clamp(b, 0, 255)
+            self.a = _clamp(a, 0, 255)
         else:
             self.r = r
             self.g = g
@@ -139,10 +139,10 @@ class ColorF(Color):
         Exceptions:             ValueError - If any value of r, g, b or a variable is out of valid range.
         """
         if is_clamp:
-            self.r = clamp(r, 0.0, 1.0)
-            self.g = clamp(g, 0.0, 1.0)
-            self.b = clamp(b, 0.0, 1.0)
-            self.a = clamp(a, 0.0, 1.0)
+            self.r = _clamp(r, 0.0, 1.0)
+            self.g = _clamp(g, 0.0, 1.0)
+            self.b = _clamp(b, 0.0, 1.0)
+            self.a = _clamp(a, 0.0, 1.0)
         else:
             self.r = r
             self.g = g

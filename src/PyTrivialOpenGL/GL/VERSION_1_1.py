@@ -2,7 +2,7 @@ import ctypes as _ctypes
 
 from ..C_GL.VERSION_1_1.Constants import *
 from ..C_GL import VERSION_1_1 as _C_GL_1_1
-from ._Private import Support as _support
+from ._Private import Support as _Support
 from ..Exceptions import CacheMismatch
 
 ### Command Execution ###
@@ -39,7 +39,7 @@ def glEdgeFlagv(flag):
     """
     flag             : List[bool]
     """
-    c_flag = _support.list_part_to_c_array(bool, flag, 1, _C_GL_1_1.GLboolean)
+    c_flag = _Support.list_part_to_c_array(bool, flag, 1, _C_GL_1_1.GLboolean)
     _C_GL_1_1.glEdgeFlagv(c_flag)
 
 # Vertex Specification
@@ -55,7 +55,7 @@ def glVertex2dv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
+    c_v = _Support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glVertex2dv(c_v)
 
 def glVertex2f(x, y):
@@ -69,7 +69,7 @@ def glVertex2fv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
+    c_v = _Support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glVertex2fv(c_v)
 
 def glVertex2i(x, y):
@@ -83,7 +83,7 @@ def glVertex2iv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLint)
+    c_v = _Support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLint)
     _C_GL_1_1.glVertex2iv(c_v)
 
 def glVertex2s(x, y):
@@ -97,7 +97,7 @@ def glVertex2sv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
+    c_v = _Support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
     _C_GL_1_1.glVertex2sv(c_v)
 
 def glVertex3d(x, y, z):
@@ -112,7 +112,7 @@ def glVertex3dv(v):
     """
     v                : List[double]
     """
-    c_v = _support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glVertex3dv(c_v)
 
 def glVertex3f(x, y, z):
@@ -127,7 +127,7 @@ def glVertex3fv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glVertex3fv(c_v)
 
 def glVertex3i(x, y, z):
@@ -142,7 +142,7 @@ def glVertex3iv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glVertex3iv(c_v)
 
 def glVertex3s(x, y, z):
@@ -157,7 +157,7 @@ def glVertex3sv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glVertex3sv(c_v)
 
 def glVertex4d(x, y, z, w):
@@ -173,7 +173,7 @@ def glVertex4dv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glVertex4dv(c_v)
 
 def glVertex4f(x, y, z, w):
@@ -189,7 +189,7 @@ def glVertex4fv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glVertex4fv(c_v)
 
 def glVertex4i(x, y, z, w):
@@ -205,7 +205,7 @@ def glVertex4iv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
     _C_GL_1_1.glVertex4iv(c_v)
 
 def glVertex4s(x, y, z, w):
@@ -221,7 +221,7 @@ def glVertex4sv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
     _C_GL_1_1.glVertex4sv(c_v)
 
 
@@ -235,7 +235,7 @@ def glTexCoord1dv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 1, _C_GL_1_1.GLdouble)
+    c_v = _Support.list_part_to_c_array(float, v, 1, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexCoord1dv(c_v)
 
 def glTexCoord1f(s):
@@ -248,7 +248,7 @@ def glTexCoord1fv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 1, _C_GL_1_1.GLfloat)
+    c_v = _Support.list_part_to_c_array(float, v, 1, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexCoord1fv(c_v)
 
 def glTexCoord1i(s):
@@ -261,7 +261,7 @@ def glTexCoord1iv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 1, _C_GL_1_1.GLint)
+    c_v = _Support.list_part_to_c_array(int, v, 1, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexCoord1iv(c_v)
 
 def glTexCoord1s(s):
@@ -274,7 +274,7 @@ def glTexCoord1sv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 1, _C_GL_1_1.GLshort)
+    c_v = _Support.list_part_to_c_array(int, v, 1, _C_GL_1_1.GLshort)
     _C_GL_1_1.glTexCoord1sv(c_v)
 
 def glTexCoord2d(s, t):
@@ -288,7 +288,7 @@ def glTexCoord2dv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
+    c_v = _Support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexCoord2dv(c_v)
 
 def glTexCoord2f(s, t):
@@ -302,7 +302,7 @@ def glTexCoord2fv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
+    c_v = _Support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexCoord2fv(c_v)
 
 def glTexCoord2i(s, t):
@@ -316,7 +316,7 @@ def glTexCoord2iv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLint)
+    c_v = _Support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexCoord2iv(c_v)
 
 def glTexCoord2s(s, t):
@@ -330,7 +330,7 @@ def glTexCoord2sv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
+    c_v = _Support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
     _C_GL_1_1.glTexCoord2sv(c_v)
 
 def glTexCoord3d(s, t, r):
@@ -345,7 +345,7 @@ def glTexCoord3dv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexCoord3dv(c_v)
 
 def glTexCoord3f(s, t, r):
@@ -360,7 +360,7 @@ def glTexCoord3fv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexCoord3fv(c_v)
 
 def glTexCoord3i(s, t, r):
@@ -375,7 +375,7 @@ def glTexCoord3iv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexCoord3iv(c_v)
 
 def glTexCoord3s(s, t, r):
@@ -390,7 +390,7 @@ def glTexCoord3sv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glTexCoord3sv(c_v)
 
 def glTexCoord4d(s, t, r, q):
@@ -406,7 +406,7 @@ def glTexCoord4dv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexCoord4dv(c_v)
 
 def glTexCoord4f(s, t, r, q):
@@ -422,7 +422,7 @@ def glTexCoord4fv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexCoord4fv(c_v)
 
 def glTexCoord4i(s, t, r, q):
@@ -438,7 +438,7 @@ def glTexCoord4iv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexCoord4iv(c_v)
 
 def glTexCoord4s(s, t, r, q):
@@ -454,7 +454,7 @@ def glTexCoord4sv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
     _C_GL_1_1.glTexCoord4sv(c_v)
 
 
@@ -470,7 +470,7 @@ def glNormal3bv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLbyte)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLbyte)
     _C_GL_1_1.glNormal3bv(c_v)
 
 def glNormal3d(nx, ny, nz):
@@ -485,7 +485,7 @@ def glNormal3dv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glNormal3dv(c_v)
 
 def glNormal3f(nx, ny, nz):
@@ -500,7 +500,7 @@ def glNormal3fv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glNormal3fv(c_v)
 
 def glNormal3i(nx, ny, nz):
@@ -515,7 +515,7 @@ def glNormal3iv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glNormal3iv(c_v)
 
 def glNormal3s(nx, ny, nz):
@@ -530,7 +530,7 @@ def glNormal3sv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glNormal3sv(c_v)
 
 
@@ -547,7 +547,7 @@ def glColor3bv(v):
     v                : List[int] | bytes
         Value range <-128, 127>.
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLbyte)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLbyte)
     _C_GL_1_1.glColor3bv(c_v)
 
 def glColor3d(red, green, blue):
@@ -562,7 +562,7 @@ def glColor3dv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glColor3dv(c_v)
 
 def glColor3f(red, green, blue):
@@ -577,7 +577,7 @@ def glColor3fv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glColor3fv(c_v)
 
 def glColor3i(red, green, blue):
@@ -592,7 +592,7 @@ def glColor3iv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glColor3iv(c_v)
 
 def glColor3s(red, green, blue):
@@ -607,7 +607,7 @@ def glColor3sv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glColor3sv(c_v)
 
 def glColor3ub(red, green, blue):
@@ -623,7 +623,7 @@ def glColor3ubv(v):
     v                : List[int] | bytes
         Value range <0, 255>.
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLubyte)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLubyte)
     _C_GL_1_1.glColor3ubv(c_v)
 
 def glColor3ui(red, green, blue):
@@ -638,7 +638,7 @@ def glColor3uiv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLuint)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLuint)
     _C_GL_1_1.glColor3uiv(c_v)
 
 def glColor3us(red, green, blue):
@@ -653,7 +653,7 @@ def glColor3usv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLushort)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLushort)
     _C_GL_1_1.glColor3usv(c_v)
 
 def glColor4b(red, green, blue, alpha):
@@ -670,7 +670,7 @@ def glColor4bv(v):
     v                : List[int] | bytes
         Value range <-128, 127>.
     """
-    c_v = _support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLbyte)
+    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLbyte)
     _C_GL_1_1.glColor4bv(c_v)
 
 def glColor4d(red, green, blue, alpha):
@@ -686,7 +686,7 @@ def glColor4dv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glColor4dv(c_v)
 
 def glColor4f(red, green, blue, alpha):
@@ -702,7 +702,7 @@ def glColor4fv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glColor4fv(c_v)
 
 def glColor4i(red, green, blue, alpha):
@@ -718,7 +718,7 @@ def glColor4iv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
     _C_GL_1_1.glColor4iv(c_v)
 
 def glColor4s(red, green, blue, alpha):
@@ -734,7 +734,7 @@ def glColor4sv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
     _C_GL_1_1.glColor4sv(c_v)
 
 def glColor4ub(red, green, blue, alpha):
@@ -751,7 +751,7 @@ def glColor4ubv(v):
     v                : List[int] | bytes
         Value range <0, 255>
     """
-    c_v = _support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLubyte)
+    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLubyte)
     _C_GL_1_1.glColor4ubv(c_v)
 
 def glColor4ui(red, green, blue, alpha):
@@ -767,7 +767,7 @@ def glColor4uiv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLuint)
+    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLuint)
     _C_GL_1_1.glColor4uiv(c_v)
 
 def glColor4us(red, green, blue, alpha):
@@ -783,7 +783,7 @@ def glColor4usv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLushort)
+    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLushort)
     _C_GL_1_1.glColor4usv(c_v)
 
 
@@ -797,7 +797,7 @@ def glIndexdv(c):
     """
     c                : List[float]
     """
-    c_c = _support.list_part_to_c_array(float, c, 1, _C_GL_1_1.GLdouble)
+    c_c = _Support.list_part_to_c_array(float, c, 1, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glIndexdv(c_c)
 
 def glIndexf(c):
@@ -810,7 +810,7 @@ def glIndexfv(c):
     """
     c                : List[float]
     """
-    c_c = _support.list_part_to_c_array(float, c, 1, _C_GL_1_1.GLfloat)
+    c_c = _Support.list_part_to_c_array(float, c, 1, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glIndexfv(c_c)
 
 def glIndexi(c):
@@ -823,7 +823,7 @@ def glIndexiv(c):
     """
     c                : List[int]
     """
-    c_c = _support.list_part_to_c_array(int, c, 1, _C_GL_1_1.GLint)
+    c_c = _Support.list_part_to_c_array(int, c, 1, _C_GL_1_1.GLint)
     _C_GL_1_1.glIndexiv(c_c)
 
 def glIndexs(c):
@@ -836,7 +836,7 @@ def glIndexsv(c):
     """
     c                : List[int]
     """
-    c_c = _support.list_part_to_c_array(int, c, 1, _C_GL_1_1.GLshort)
+    c_c = _Support.list_part_to_c_array(int, c, 1, _C_GL_1_1.GLshort)
     _C_GL_1_1.glIndexsv(c_c)
 
 def glIndexub(c):
@@ -849,7 +849,7 @@ def glIndexubv(c):
     """
     c                : List[int] | bytes
     """
-    c_c = _support.list_part_to_c_array(int, c, 1, _C_GL_1_1.GLubyte)
+    c_c = _Support.list_part_to_c_array(int, c, 1, _C_GL_1_1.GLubyte)
     _C_GL_1_1.glIndexubv(c_c)
 
 
@@ -866,23 +866,23 @@ def glVertexPointer(size, type_, stride, pointer):
     stride  = int(stride)
 
     if isinstance(pointer, bytes):
-        _support.to_cache().c_vertex_array_pointer = pointer
+        _Support.to_cache().c_vertex_array_pointer = pointer
     else:
         pointer = list(pointer)
 
         if stride != 0:
             raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
 
-        py_type = _support.gl_type_id_to_py_type(type_)
+        py_type = _Support.gl_type_id_to_py_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect python type.")
-        c_type  = _support.gl_type_id_to_c_type(type_)
+        c_type  = _Support.gl_type_id_to_c_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect c type.")
 
-        _support.to_cache().c_vertex_array_pointer = _support.list_to_c_array(py_type, pointer, 0, c_type)
+        _Support.to_cache().c_vertex_array_pointer = _Support.list_to_c_array(py_type, pointer, 0, c_type)
 
-    _C_GL_1_1.glVertexPointer(int(size), type_, stride, _support.to_cache().c_vertex_array_pointer)
+    _C_GL_1_1.glVertexPointer(int(size), type_, stride, _Support.to_cache().c_vertex_array_pointer)
 
 def glNormalPointer(type_, stride, pointer):
     """
@@ -894,23 +894,23 @@ def glNormalPointer(type_, stride, pointer):
     stride  = int(stride)
 
     if isinstance(pointer, bytes):
-        _support.to_cache().c_normal_array_pointer = pointer
+        _Support.to_cache().c_normal_array_pointer = pointer
     else:
         pointer = list(pointer)
 
         if stride != 0:
             raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
 
-        py_type = _support.gl_type_id_to_py_type(type_)
+        py_type = _Support.gl_type_id_to_py_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect python type.")
-        c_type  = _support.gl_type_id_to_c_type(type_)
+        c_type  = _Support.gl_type_id_to_c_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect c type.")
 
-        _support.to_cache().c_normal_array_pointer = _support.list_to_c_array(py_type, pointer, 0, c_type)
+        _Support.to_cache().c_normal_array_pointer = _Support.list_to_c_array(py_type, pointer, 0, c_type)
 
-    _C_GL_1_1.glNormalPointer(type_, stride, _support.to_cache().c_normal_array_pointer)
+    _C_GL_1_1.glNormalPointer(type_, stride, _Support.to_cache().c_normal_array_pointer)
 
 def glColorPointer(size, type_, stride, pointer):
     """
@@ -923,23 +923,23 @@ def glColorPointer(size, type_, stride, pointer):
     stride  = int(stride)
 
     if isinstance(pointer, bytes):
-        _support.to_cache().c_color_array_pointer = pointer
+        _Support.to_cache().c_color_array_pointer = pointer
     else:
         pointer = list(pointer)
 
         if stride != 0:
             raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
 
-        py_type = _support.gl_type_id_to_py_type(type_)
+        py_type = _Support.gl_type_id_to_py_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect python type.")
-        c_type  = _support.gl_type_id_to_c_type(type_)
+        c_type  = _Support.gl_type_id_to_c_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect c type.")
 
-        _support.to_cache().c_color_array_pointer = _support.list_to_c_array(py_type, pointer, 0, c_type)
+        _Support.to_cache().c_color_array_pointer = _Support.list_to_c_array(py_type, pointer, 0, c_type)
 
-    _C_GL_1_1.glColorPointer(int(size), type_, stride, _support.to_cache().c_color_array_pointer)
+    _C_GL_1_1.glColorPointer(int(size), type_, stride, _Support.to_cache().c_color_array_pointer)
 
 def glIndexPointer(type_, stride, pointer):
     """
@@ -951,23 +951,23 @@ def glIndexPointer(type_, stride, pointer):
     stride  = int(stride)
 
     if isinstance(pointer, bytes):
-        _support.to_cache().c_index_array_pointer = pointer
+        _Support.to_cache().c_index_array_pointer = pointer
     else:
         pointer = list(pointer)
 
         if stride != 0:
             raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
 
-        py_type = _support.gl_type_id_to_py_type(type_)
+        py_type = _Support.gl_type_id_to_py_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect python type.")
-        c_type  = _support.gl_type_id_to_c_type(type_)
+        c_type  = _Support.gl_type_id_to_c_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect c type.")
 
-        _support.to_cache().c_index_array_pointer = _support.list_to_c_array(py_type, pointer, 0, c_type)
+        _Support.to_cache().c_index_array_pointer = _Support.list_to_c_array(py_type, pointer, 0, c_type)
 
-    _C_GL_1_1.glIndexPointer(type_, stride, _support.to_cache().c_index_array_pointer)
+    _C_GL_1_1.glIndexPointer(type_, stride, _Support.to_cache().c_index_array_pointer)
 
 def glEdgeFlagPointer(stride, pointer):
     """
@@ -977,16 +977,16 @@ def glEdgeFlagPointer(stride, pointer):
     stride  = int(stride)
 
     if isinstance(pointer, bytes):
-        _support.to_cache().c_edge_flag_array_pointer = pointer
+        _Support.to_cache().c_edge_flag_array_pointer = pointer
     else:
         pointer = list(pointer)
 
         if stride != 0:
             raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
 
-        _support.to_cache().c_edge_flag_array_pointer = _support.list_to_c_array(int, pointer, 0, _C_GL_1_1.GLboolean)
+        _Support.to_cache().c_edge_flag_array_pointer = _Support.list_to_c_array(int, pointer, 0, _C_GL_1_1.GLboolean)
 
-    _C_GL_1_1.glEdgeFlagPointer(stride, _support.to_cache().c_edge_flag_array_pointer)
+    _C_GL_1_1.glEdgeFlagPointer(stride, _Support.to_cache().c_edge_flag_array_pointer)
 
 def glTexCoordPointer(size, type_, stride, pointer):
     """
@@ -999,23 +999,23 @@ def glTexCoordPointer(size, type_, stride, pointer):
     stride  = int(stride)
 
     if isinstance(pointer, bytes):
-        _support.to_cache().c_tex_coord_array_pointer = pointer
+        _Support.to_cache().c_tex_coord_array_pointer = pointer
     else:
         pointer = list(pointer)
 
         if stride != 0:
             raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
 
-        py_type = _support.gl_type_id_to_py_type(type_)
+        py_type = _Support.gl_type_id_to_py_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect python type.")
-        c_type  = _support.gl_type_id_to_c_type(type_)
+        c_type  = _Support.gl_type_id_to_c_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect c type.")
 
-        _support.to_cache().c_tex_coord_array_pointer = _support.list_to_c_array(py_type, pointer, 0, c_type)
+        _Support.to_cache().c_tex_coord_array_pointer = _Support.list_to_c_array(py_type, pointer, 0, c_type)
 
-    _C_GL_1_1.glTexCoordPointer(int(size), type_, stride, _support.to_cache().c_tex_coord_array_pointer)
+    _C_GL_1_1.glTexCoordPointer(int(size), type_, stride, _Support.to_cache().c_tex_coord_array_pointer)
 
 def glEnableClientState(array):
     """
@@ -1052,14 +1052,14 @@ def glDrawElements(mode, count, type_, indices):
     type_            : int
     indices          : List[int | float]
     """
-    py_type = _support.gl_type_id_to_py_type(type_)
+    py_type = _Support.gl_type_id_to_py_type(type_)
     if py_type is None:
         raise ValueError("Unexpected value of 'type_' parameter. Can not detect python type.")
-    c_type  = _support.gl_type_id_to_c_type(type_)
+    c_type  = _Support.gl_type_id_to_c_type(type_)
     if py_type is None:
         raise ValueError("Unexpected value of 'type_' parameter. Can not detect c type.")
 
-    c_indices = _support.list_to_c_array(py_type, indices, int(count), c_type)
+    c_indices = _Support.list_to_c_array(py_type, indices, int(count), c_type)
     _C_GL_1_1.glDrawElements(int(mode), int(count), int(type_), c_indices)
 
 
@@ -1122,7 +1122,7 @@ def glInterleavedArrays(format_, stride, pointer):
 
         c_pointer_size = len(pointer) // aggregae_length * aggregae_size
 
-        c_pointer = _support.make_c_array(_C_GL_1_1.GLubyte, c_pointer_size)
+        c_pointer = _Support.make_c_array(_C_GL_1_1.GLubyte, c_pointer_size)
 
         index = 0
         for base_offset in range(0, c_pointer_size, aggregae_size):
@@ -1140,7 +1140,7 @@ def glInterleavedArrays(format_, stride, pointer):
                     index += 1
                     offset += size
 
-    _support.to_cache().c_interleaved_array_pointer = c_pointer
+    _Support.to_cache().c_interleaved_array_pointer = c_pointer
 
     _C_GL_1_1.glInterleavedArrays(format_, stride, c_pointer)
 
@@ -1162,8 +1162,8 @@ def glRectdv(v1, v2):
     v1               : List[float]
     v2               : List[float]
     """
-    c_v1 = _support.list_part_to_c_array(float, v1, 2, _C_GL_1_1.GLdouble)
-    c_v2 = _support.list_part_to_c_array(float, v2, 2, _C_GL_1_1.GLdouble)
+    c_v1 = _Support.list_part_to_c_array(float, v1, 2, _C_GL_1_1.GLdouble)
+    c_v2 = _Support.list_part_to_c_array(float, v2, 2, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glRectdv(c_v1, c_v2)
 
 def glRectf(x1, y1, x2, y2):
@@ -1180,8 +1180,8 @@ def glRectfv(v1, v2):
     v1               : List[float]
     v2               : List[float]
     """
-    c_v1 = _support.list_part_to_c_array(float, v1, 2, _C_GL_1_1.GLfloat)
-    c_v2 = _support.list_part_to_c_array(float, v2, 2, _C_GL_1_1.GLfloat)
+    c_v1 = _Support.list_part_to_c_array(float, v1, 2, _C_GL_1_1.GLfloat)
+    c_v2 = _Support.list_part_to_c_array(float, v2, 2, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glRectfv(c_v1, c_v2)
 
 def glRecti(x1, y1, x2, y2):
@@ -1198,8 +1198,8 @@ def glRectiv(v1, v2):
     v1               : List[int]
     v2               : List[int]
     """
-    c_v1 = _support.list_part_to_c_array(int, v1, 2, _C_GL_1_1.GLint)
-    c_v2 = _support.list_part_to_c_array(int, v2, 2, _C_GL_1_1.GLint)
+    c_v1 = _Support.list_part_to_c_array(int, v1, 2, _C_GL_1_1.GLint)
+    c_v2 = _Support.list_part_to_c_array(int, v2, 2, _C_GL_1_1.GLint)
     _C_GL_1_1.glRectiv(c_v1, c_v2)
 
 def glRects(x1, y1, x2, y2):
@@ -1216,8 +1216,8 @@ def glRectsv(v1, v2):
     v1               : List[int]
     v2               : List[int]
     """
-    c_v1 = _support.list_part_to_c_array(int, v1, 2, _C_GL_1_1.GLshort)
-    c_v2 = _support.list_part_to_c_array(int, v2, 2, _C_GL_1_1.GLshort)
+    c_v1 = _Support.list_part_to_c_array(int, v1, 2, _C_GL_1_1.GLshort)
+    c_v2 = _Support.list_part_to_c_array(int, v2, 2, _C_GL_1_1.GLshort)
     _C_GL_1_1.glRectsv(c_v1, c_v2)
 
 # Matrices
@@ -1232,28 +1232,28 @@ def glLoadMatrixd(m):
     """
     m                : ???
     """
-    c_m = _support.list_part_to_c_array(float, m, 16, _C_GL_1_1.GLdouble)
+    c_m = _Support.list_part_to_c_array(float, m, 16, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glLoadMatrixd(c_m)
 
 def glLoadMatrixf(m):
     """
     m                : ???
     """
-    c_m = _support.list_part_to_c_array(float, m, 16, _C_GL_1_1.GLfloat)
+    c_m = _Support.list_part_to_c_array(float, m, 16, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glLoadMatrixf(c_m)
 
 def glMultMatrixd(m):
     """
     m                : ???
     """
-    c_m = _support.list_part_to_c_array(float, m, 16, _C_GL_1_1.GLdouble)
+    c_m = _Support.list_part_to_c_array(float, m, 16, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glMultMatrixd(c_m)
 
 def glMultMatrixf(m):
     """
     m                : ???
     """
-    c_m = _support.list_part_to_c_array(float, m, 16, _C_GL_1_1.GLfloat)
+    c_m = _Support.list_part_to_c_array(float, m, 16, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glMultMatrixf(c_m)
 
 def glLoadIdentity():
@@ -1358,10 +1358,10 @@ def glTexGendv(coord, pname, params):
         All items of list are converted to float.
     """    
     params = list(params)
-    n = _support.get_tex_gen_params_length(pname)
+    n = _Support.get_tex_gen_params_length(pname)
     if n is None:
         raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _support.list_part_to_c_array(float, params, n, _C_GL_1_1.GLdouble)
+    c_params = _Support.list_part_to_c_array(float, params, n, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexGendv(int(coord), int(pname), c_params)
 
 def glTexGenf(coord, pname, param):
@@ -1381,10 +1381,10 @@ def glTexGenfv(coord, pname, params):
         All items of list are converted to float.
     """    
     params = list(params)
-    n = _support.get_tex_gen_params_length(pname)
+    n = _Support.get_tex_gen_params_length(pname)
     if n is None:
         raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _support.list_part_to_c_array(float, params, n, _C_GL_1_1.GLfloat)
+    c_params = _Support.list_part_to_c_array(float, params, n, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexGenfv(int(coord), int(pname), c_params)
 
 def glTexGeni(coord, pname, param):
@@ -1404,10 +1404,10 @@ def glTexGeniv(coord, pname, params):
         All items of list are converted to int.
     """    
     params = list(params)
-    n = _support.get_tex_gen_params_length(pname)
+    n = _Support.get_tex_gen_params_length(pname)
     if n is None:
         raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _support.list_part_to_c_array(int, params, n, _C_GL_1_1.GLint)
+    c_params = _Support.list_part_to_c_array(int, params, n, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexGeniv(int(coord), int(pname), c_params)
 
 ### Viewport and Clipping ###
@@ -1438,7 +1438,7 @@ def glClipPlane(plane, equation):
     plane            : int
     equation         : List[float]
     """
-    c_equation = _support.list_part_to_c_array(float, equation, 4, _C_GL_1_1.GLdouble)
+    c_equation = _Support.list_part_to_c_array(float, equation, 4, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glClipPlane(int(plane), c_equation)
 
 def glGetClipPlane(plane):
@@ -1447,9 +1447,9 @@ def glGetClipPlane(plane):
     Returns         : List[float]
         Corresponds to 'equation' parameter from OpenGL function specification.
     """
-    c_equation = _support.make_c_array(_C_GL_1_1.GLdouble, 4)
+    c_equation = _Support.make_c_array(_C_GL_1_1.GLdouble, 4)
     _C_GL_1_1.glGetClipPlane(int(plane), c_equation)
-    return _support.c_array_to_list(float, c_equation)
+    return _Support.c_array_to_list(float, c_equation)
 
 ### Lighting and Color ###
 
@@ -1469,7 +1469,7 @@ def glMaterialfv(face, pname, params):
     pname            : int
     params           : List[float]
     """
-    c_params = _support.list_to_c_array(float, params, 1, _C_GL_1_1.GLfloat)
+    c_params = _Support.list_to_c_array(float, params, 1, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glMaterialfv(int(face), int(pname), c_params)
 
 def glMateriali(face, pname, param):
@@ -1486,7 +1486,7 @@ def glMaterialiv(face, pname, params):
     pname            : int
     params           : List[int]
     """
-    c_params = _support.list_to_c_array(int, params, 1, _C_GL_1_1.GLint)
+    c_params = _Support.list_to_c_array(int, params, 1, _C_GL_1_1.GLint)
     _C_GL_1_1.glMaterialiv(int(face), int(pname), c_params)
 
 
@@ -1504,7 +1504,7 @@ def glLightfv(light, pname, params):
     pname            : int
     params           : List[float]
     """
-    c_params = _support.list_to_c_array(float, params, 1, _C_GL_1_1.GLfloat)
+    c_params = _Support.list_to_c_array(float, params, 1, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glLightfv(int(light), int(pname), c_params)
 
 def glLighti(light, pname, param):
@@ -1521,7 +1521,7 @@ def glLightiv(light, pname, params):
     pname            : int
     params           : List[int]
     """
-    c_params = _support.list_to_c_array(int, params, 1, _C_GL_1_1.GLint)
+    c_params = _Support.list_to_c_array(int, params, 1, _C_GL_1_1.GLint)
     _C_GL_1_1.glLightiv(int(light), int(pname), c_params)
 
 
@@ -1537,7 +1537,7 @@ def glLightModelfv(pname, params):
     pname            : int
     params           : List[float]
     """
-    c_params = _support.list_to_c_array(float, params, 1, _C_GL_1_1.GLfloat)
+    c_params = _Support.list_to_c_array(float, params, 1, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glLightModelfv(int(pname), c_params)
 
 def glLightModeli(pname, param):
@@ -1552,7 +1552,7 @@ def glLightModeliv(pname, params):
     pname            : int
     params           : List[int]
     """
-    c_params = _support.list_to_c_array(int, params, 1, _C_GL_1_1.GLint)
+    c_params = _Support.list_to_c_array(int, params, 1, _C_GL_1_1.GLint)
     _C_GL_1_1.glLightModeliv(int(pname), c_params)
 
 
@@ -1592,9 +1592,9 @@ def glGetLightfv(light, pname):
     else:
         raise ValueError("Unexpected 'pname' value.")
 
-    c_params = _support.make_c_array(_C_GL_1_1.GLfloat, length)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, length)
     _C_GL_1_1.glGetLightfv(int(light), int(pname), c_params)
-    return _support.c_array_to_list(float, c_params)
+    return _Support.c_array_to_list(float, c_params)
 
 def glGetLightiv(light, pname):
     """
@@ -1611,9 +1611,9 @@ def glGetLightiv(light, pname):
     else:
         raise ValueError("Unexpected 'pname' value.")
 
-    c_params = _support.make_c_array(_C_GL_1_1.GLint, length)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLint, length)
     _C_GL_1_1.glGetLightiv(int(light), int(pname), c_params)
-    return _support.c_array_to_list(int, c_params)
+    return _Support.c_array_to_list(int, c_params)
 
 def glGetMaterialfv(face, pname):
     """
@@ -1630,9 +1630,9 @@ def glGetMaterialfv(face, pname):
     else:
         raise ValueError("Unexpected 'pname' value.")
 
-    c_params = _support.make_c_array(_C_GL_1_1.GLfloat, length)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, length)
     _C_GL_1_1.glGetMaterialfv(int(face), int(pname), c_params)
-    return _support.c_array_to_list(float, c_params)
+    return _Support.c_array_to_list(float, c_params)
 
 def glGetMaterialiv(face, pname):
     """
@@ -1649,9 +1649,9 @@ def glGetMaterialiv(face, pname):
     else:
         raise ValueError("Unexpected 'pname' value.")
 
-    c_params = _support.make_c_array(_C_GL_1_1.GLint, length)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLint, length)
     _C_GL_1_1.glGetMaterialiv(int(face), int(pname), c_params)
-    return _support.c_array_to_list(int, c_params)
+    return _Support.c_array_to_list(int, c_params)
 
 ### Rendering Control and Queries ###
 
@@ -1668,7 +1668,7 @@ def glRasterPos2dv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
+    c_v = _Support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glRasterPos2dv(c_v)
 
 def glRasterPos2f(x, y):
@@ -1682,7 +1682,7 @@ def glRasterPos2fv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
+    c_v = _Support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glRasterPos2fv(c_v)
 
 def glRasterPos2i(x, y):
@@ -1696,7 +1696,7 @@ def glRasterPos2iv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLint)
+    c_v = _Support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLint)
     _C_GL_1_1.glRasterPos2iv(c_v)
 
 def glRasterPos2s(x, y):
@@ -1710,7 +1710,7 @@ def glRasterPos2sv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
+    c_v = _Support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
     _C_GL_1_1.glRasterPos2sv(c_v)
 
 def glRasterPos3d(x, y, z):
@@ -1725,7 +1725,7 @@ def glRasterPos3dv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glRasterPos3dv(c_v)
 
 def glRasterPos3f(x, y, z):
@@ -1740,7 +1740,7 @@ def glRasterPos3fv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glRasterPos3fv(c_v)
 
 def glRasterPos3i(x, y, z):
@@ -1755,7 +1755,7 @@ def glRasterPos3iv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glRasterPos3iv(c_v)
 
 def glRasterPos3s(x, y, z):
@@ -1770,7 +1770,7 @@ def glRasterPos3sv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glRasterPos3sv(c_v)
 
 def glRasterPos4d(x, y, z, w):
@@ -1786,7 +1786,7 @@ def glRasterPos4dv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glRasterPos4dv(c_v)
 
 def glRasterPos4f(x, y, z, w):
@@ -1802,7 +1802,7 @@ def glRasterPos4fv(v):
     """
     v                : List[float]
     """
-    c_v = _support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glRasterPos4fv(c_v)
 
 def glRasterPos4i(x, y, z, w):
@@ -1818,7 +1818,7 @@ def glRasterPos4iv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
     _C_GL_1_1.glRasterPos4iv(c_v)
 
 def glRasterPos4s(x, y, z, w):
@@ -1834,7 +1834,7 @@ def glRasterPos4sv(v):
     """
     v                : List[int]
     """
-    c_v = _support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
     _C_GL_1_1.glRasterPos4sv(c_v)
 
 ### Rasterization ###
@@ -1970,7 +1970,7 @@ def glPixelMapfv(map_, values):
         values = list(values)
         mapsize = len(values)
 
-        c_values = _support.list_to_c_array(float, values, mapsize, _C_GL_1_1.GLfloat)
+        c_values = _Support.list_to_c_array(float, values, mapsize, _C_GL_1_1.GLfloat)
 
     _C_GL_1_1.glPixelMapfv(map_, mapsize, c_values)
 
@@ -1991,7 +1991,7 @@ def glPixelMapuiv(map_, values):
         values = list(values)
         mapsize = len(values)
 
-        c_values = _support.list_to_c_array(int, values, mapsize, _C_GL_1_1.GLuint)
+        c_values = _Support.list_to_c_array(int, values, mapsize, _C_GL_1_1.GLuint)
 
     _C_GL_1_1.glPixelMapuiv(map_, mapsize, c_values)
 
@@ -2012,7 +2012,7 @@ def glPixelMapusv(map_, values):
         values = list(values)
         mapsize = len(values)
 
-        c_values = _support.list_to_c_array(int, values, mapsize, _C_GL_1_1.GLushort)
+        c_values = _Support.list_to_c_array(int, values, mapsize, _C_GL_1_1.GLushort)
 
     _C_GL_1_1.glPixelMapusv(map_, mapsize, c_values)
 
@@ -2030,18 +2030,18 @@ def glGetPixelMapfv(map_, is_return_bytes = False):
         Equivalent of 'data' from OpenGL function specification.
     """
     map_ = int(map_)
-    size_id = _support.get_pixel_map_size_id(map_)
+    size_id = _Support.get_pixel_map_size_id(map_)
     if size_id is None:
         raise ValueError("Unexpected value of 'map_' parameter.")
     mapsize = glGetIntegerv(size_id)[0]
-    c_data = _support.make_c_array(_C_GL_1_1.GLfloat, mapsize)
+    c_data = _Support.make_c_array(_C_GL_1_1.GLfloat, mapsize)
 
     _C_GL_1_1.glGetPixelMapfv(map_, c_data)
 
     if is_return_bytes:
         return bytes(c_data)
     else:
-        return _support.c_array_to_list(float, c_data)
+        return _Support.c_array_to_list(float, c_data)
 
 def glGetPixelMapuiv(map_, is_return_bytes = False):
     """
@@ -2054,18 +2054,18 @@ def glGetPixelMapuiv(map_, is_return_bytes = False):
         Equivalent of 'data' from OpenGL function specification.
     """
     map_ = int(map_)
-    size_id = _support.get_pixel_map_size_id(map_)
+    size_id = _Support.get_pixel_map_size_id(map_)
     if size_id is None:
         raise ValueError("Unexpected value of 'map_' parameter.")
     mapsize = glGetIntegerv(size_id)[0]
-    c_data = _support.make_c_array(_C_GL_1_1.GLuint, mapsize)
+    c_data = _Support.make_c_array(_C_GL_1_1.GLuint, mapsize)
 
     _C_GL_1_1.glGetPixelMapuiv(int(map_), c_data)
 
     if is_return_bytes:
         return bytes(c_data)
     else:
-        return _support.c_array_to_list(int, c_data)
+        return _Support.c_array_to_list(int, c_data)
 
 def glGetPixelMapusv(map_, is_return_bytes = False):
     """
@@ -2077,18 +2077,18 @@ def glGetPixelMapusv(map_, is_return_bytes = False):
         Equivalent of 'data' from OpenGL function specification.
     """
     map_ = int(map_)
-    size_id = _support.get_pixel_map_size_id(map_)
+    size_id = _Support.get_pixel_map_size_id(map_)
     if size_id is None:
         raise ValueError("Unexpected value of 'map_' parameter.")
     mapsize = glGetIntegerv(size_id)[0]
-    c_data = _support.make_c_array(_C_GL_1_1.GLushort, mapsize)
+    c_data = _Support.make_c_array(_C_GL_1_1.GLushort, mapsize)
 
     _C_GL_1_1.glGetPixelMapusv(int(map_), c_data)
 
     if is_return_bytes:
         return bytes(c_data)
     else:
-        return _support.c_array_to_list(int, c_data)
+        return _Support.c_array_to_list(int, c_data)
 
 # Rasterization of Pixel Rectangles
 
@@ -2107,7 +2107,7 @@ def glDrawPixels(width, height, format_, type_, pixels):
         if type_ == GL_FLOAT and format_ in [GL_RGB, GL_RGBA]:
             pixel_size  = 3 if format_ is GL_RGB else 4
             size        = int(width) * int(height) * pixel_size
-            c_pixels    = _support.list_part_to_c_array(float, pixels, size, _C_GL_1_1.GLfloat)
+            c_pixels    = _Support.list_part_to_c_array(float, pixels, size, _C_GL_1_1.GLfloat)
         else:
             raise ValueError("Parameter 'pixels' is accepted as list of integers or floats, only when 'type_' is GL_FLOAT and 'format_' is either GL_RGB or GL_RGBA.")
     else:
@@ -2158,11 +2158,11 @@ def glTexImage1D(target, level, internalformat, width, border, format_, type_, p
         Acceptable, when parameter 'type_' is GL_FLOAT and parameter 'format_' is either GL_RGB or GL_RGBA.
         All elements of list are converted to floats
     """
-    n = _support.get_tex_format_element_number(format_)
+    n = _Support.get_tex_format_element_number(format_)
     if n is None:
         raise ValueError("Unexpected value of 'format_' parameter")
 
-    md = _support.get_tex_type_mul_div_sizet_number(type_)
+    md = _Support.get_tex_type_mul_div_sizet_number(type_)
     if md is None:
         raise ValueError("Unexpected value of 'type_' parameter")
 
@@ -2183,7 +2183,7 @@ def glTexImage1D(target, level, internalformat, width, border, format_, type_, p
             if expected_size != size: 
                 raise ValueError("Unexpected size of 'pixels' parameter")
 
-            c_pixels = _support.list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
+            c_pixels = _Support.list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
     else:
         pixels = bytes(pixels)
 
@@ -2211,11 +2211,11 @@ def glTexImage2D(target, level, internalformat, width, height, border, format_, 
         Acceptable, when parameter 'type_' is GL_FLOAT and parameter 'format_' is either GL_RGB or GL_RGBA.
         All items are converted to floats.
     """
-    n = _support.get_tex_format_element_number(format_)
+    n = _Support.get_tex_format_element_number(format_)
     if n is None:
         raise ValueError("Unexpected value of 'format_' parameter")
 
-    md = _support.get_tex_type_mul_div_sizet_number(type_)
+    md = _Support.get_tex_type_mul_div_sizet_number(type_)
     if md is None:
         raise ValueError("Unexpected value of 'type_' parameter")
 
@@ -2239,7 +2239,7 @@ def glTexImage2D(target, level, internalformat, width, height, border, format_, 
             if expected_size != size: 
                 raise ValueError("Unexpected size of 'pixels' parameter")
 
-            c_pixels = _support.list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
+            c_pixels = _Support.list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
     else:
         pixels = bytes(pixels)
 
@@ -2292,11 +2292,11 @@ def glTexSubImage1D(target, level, xoffset, width, format_, type_, pixels):
         Acceptable, when parameter 'type_' is GL_FLOAT and parameter 'format_' is either GL_RGB or GL_RGBA.
         All elements of list are converted to floats
     """
-    n = _support.get_tex_format_element_number(format_)
+    n = _Support.get_tex_format_element_number(format_)
     if n is None:
         raise ValueError("Unexpected value of 'format_' parameter")
 
-    md = _support.get_tex_type_mul_div_sizet_number(type_)
+    md = _Support.get_tex_type_mul_div_sizet_number(type_)
     if md is None:
         raise ValueError("Unexpected value of 'type_' parameter")
 
@@ -2317,7 +2317,7 @@ def glTexSubImage1D(target, level, xoffset, width, format_, type_, pixels):
             if expected_size != size: 
                 raise ValueError("Unexpected size of 'pixels' parameter")
 
-            c_pixels = _support.list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
+            c_pixels = _Support.list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
     else:
         pixels = bytes(pixels)
 
@@ -2344,11 +2344,11 @@ def glTexSubImage2D(target, level, xoffset, yoffset, width, height, format_, typ
         Acceptable, when parameter 'type_' is GL_FLOAT and parameter 'format_' is either GL_RGB or GL_RGBA.
         All items are converted to floats.
     """
-    n = _support.get_tex_format_element_number(format_)
+    n = _Support.get_tex_format_element_number(format_)
     if n is None:
         raise ValueError("Unexpected value of 'format_' parameter")
 
-    md = _support.get_tex_type_mul_div_sizet_number(type_)
+    md = _Support.get_tex_type_mul_div_sizet_number(type_)
     if md is None:
         raise ValueError("Unexpected value of 'type_' parameter")
 
@@ -2372,7 +2372,7 @@ def glTexSubImage2D(target, level, xoffset, yoffset, width, height, format_, typ
             if expected_size != size: 
                 raise ValueError("Unexpected size of 'pixels' parameter")
 
-            c_pixels = _support.list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
+            c_pixels = _Support.list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
     else:
         pixels = bytes(pixels)
 
@@ -2427,13 +2427,13 @@ def glTexParameterfv(target, pname, params):
     params           : List[int | float]
         Values will be casted to float.
     """
-    length = _support.get_tex_parameter_length(pname)
+    length = _Support.get_tex_parameter_length(pname)
     if length is None:
         raise ValueError("Unexpected value of parameter 'pname'.")
     elif length > len(params):
         raise ValueError("To small length of parameter 'params'.")
     
-    c_params = _support.list_to_c_array(float, params, length, _C_GL_1_1.GLfloat)
+    c_params = _Support.list_to_c_array(float, params, length, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexParameterfv(int(target), int(pname), c_params)
 
 def glTexParameteri(target, pname, param):
@@ -2451,13 +2451,13 @@ def glTexParameteriv(target, pname, params):
     params           : List[int | float]
         Values will be casted to int.
     """    
-    length = _support.get_tex_parameter_length(pname)
+    length = _Support.get_tex_parameter_length(pname)
     if length is None:
         raise ValueError("Unexpected value of parameter 'pname'.")
     elif length > len(params):
         raise ValueError("To small length of parameter 'params'.")
     
-    c_params = _support.list_to_c_array(int, params, length, _C_GL_1_1.GLint)
+    c_params = _Support.list_to_c_array(int, params, length, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexParameteriv(int(target), int(pname), c_params)
 
 # Texture Objects
@@ -2478,7 +2478,7 @@ def glDeleteTextures(textures):
     textures         : List[int]
     """
     n = len(textures)
-    c_textures = _support.list_to_c_array(int, textures, n, _C_GL_1_1.GLuint)
+    c_textures = _Support.list_to_c_array(int, textures, n, _C_GL_1_1.GLuint)
     _C_GL_1_1.glDeleteTextures(n, c_textures)
 
 def glGenTextures(n):
@@ -2488,9 +2488,9 @@ def glGenTextures(n):
         Refers to 'textures' parameter from OpenGL function specification. 
     """
     n = int(n)
-    c_textures = _support.make_c_array(_C_GL_1_1.GLuint, n)
+    c_textures = _Support.make_c_array(_C_GL_1_1.GLuint, n)
     _C_GL_1_1.glGenTextures(n, c_textures)
-    return _support.c_array_to_list(int, c_textures)
+    return _Support.c_array_to_list(int, c_textures)
 
 def glAreTexturesResident(textures, residences = None):
     """
@@ -2507,13 +2507,13 @@ def glAreTexturesResident(textures, residences = None):
     """
     n = len(textures)
 
-    c_textures      = _support.list_to_c_array(int, textures, n, _C_GL_1_1.GLuint)
-    c_residences    = _support.make_c_array(_C_GL_1_1.GLboolean, n)
+    c_textures      = _Support.list_to_c_array(int, textures, n, _C_GL_1_1.GLuint)
+    c_residences    = _Support.make_c_array(_C_GL_1_1.GLboolean, n)
 
     is_all_resident = bool(_C_GL_1_1.glAreTexturesResident(n, c_textures, c_residences))
     if not is_all_resident and residences is not None:
         residences.clear()
-        residences.extend(_support.c_array_to_list(bool, c_residences))
+        residences.extend(_Support.c_array_to_list(bool, c_residences))
 
     return is_all_resident
 
@@ -2524,8 +2524,8 @@ def glPrioritizeTextures(textures, priorities):
     """
     n = len(textures)
 
-    c_textures      = _support.list_to_c_array(int, textures, n, _C_GL_1_1.GLuint)
-    c_priorities    = _support.list_to_c_array(float, priorities, n, _C_GL_1_1.GLclampf)
+    c_textures      = _Support.list_to_c_array(int, textures, n, _C_GL_1_1.GLuint)
+    c_priorities    = _Support.list_to_c_array(float, priorities, n, _C_GL_1_1.GLclampf)
 
     _C_GL_1_1.glPrioritizeTextures(n, c_textures, c_priorities)
 
@@ -2547,10 +2547,10 @@ def glTexEnvfv(target, pname, params):
     params           : List[float] | Iterable[SupportsFloat]
     """
     params = list(params)
-    n = _support.get_tex_env_params_length(pname)
+    n = _Support.get_tex_env_params_length(pname)
     if n is None:
         raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _support.list_part_to_c_array(float, params, n, _C_GL_1_1.GLfloat)
+    c_params = _Support.list_part_to_c_array(float, params, n, _C_GL_1_1.GLfloat)
 
     _C_GL_1_1.glTexEnvfv(int(target), int(pname), c_params)
 
@@ -2569,10 +2569,10 @@ def glTexEnviv(target, pname, params):
     params           : List[int] | Iterable[SupportsInt]
     """
     params = list(params)
-    n = _support.get_tex_env_params_length(pname)
+    n = _Support.get_tex_env_params_length(pname)
     if n is None:
         raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _support.list_part_to_c_array(int, params, n, _C_GL_1_1.GLint)
+    c_params = _Support.list_part_to_c_array(int, params, n, _C_GL_1_1.GLint)
 
     _C_GL_1_1.glTexEnviv(int(target), int(pname), c_params)
 
@@ -2586,12 +2586,12 @@ def glGetTexEnvfv(target, pname):
     Returns         : List[float]
         Corresponds to 'params' parameter from OpenGL function specification.
     """
-    n = _support.get_tex_env_params_length(pname)
+    n = _Support.get_tex_env_params_length(pname)
     if n is None:
         raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _support.make_c_array(_C_GL_1_1.GLfloat, n)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, n)
     _C_GL_1_1.glGetTexEnvfv(int(target), int(pname), c_params)
-    return _support.c_array_to_list(float, c_params)
+    return _Support.c_array_to_list(float, c_params)
 
 def glGetTexEnviv(target, pname):
     """
@@ -2600,12 +2600,12 @@ def glGetTexEnviv(target, pname):
     Returns         : List[int]
         Corresponds to 'params' parameter from OpenGL function specification. 
     """
-    n = _support.get_tex_env_params_length(pname)
+    n = _Support.get_tex_env_params_length(pname)
     if n is None:
         raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _support.make_c_array(_C_GL_1_1.GLint, n)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLint, n)
     _C_GL_1_1.glGetTexEnviv(int(target), int(pname), c_params)
-    return _support.c_array_to_list(int, c_params)
+    return _Support.c_array_to_list(int, c_params)
 
 def glGetTexGendv(coord, pname):
     """
@@ -2614,12 +2614,12 @@ def glGetTexGendv(coord, pname):
     Returns         : List[float]
         Corresponds to 'params' parameter from OpenGL function specification. 
     """
-    n = _support.get_tex_gen_params_length(pname)
+    n = _Support.get_tex_gen_params_length(pname)
     if n is None:
         raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _support.make_c_array(_C_GL_1_1.GLdouble, n)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLdouble, n)
     _C_GL_1_1.glGetTexGendv(int(coord), int(pname), c_params)
-    return _support.c_array_to_list(float, c_params)
+    return _Support.c_array_to_list(float, c_params)
 
 def glGetTexGenfv(coord, pname):
     """
@@ -2628,12 +2628,12 @@ def glGetTexGenfv(coord, pname):
     Returns         : List[float]
         Corresponds to 'params' parameter from OpenGL function specification. 
     """
-    n = _support.get_tex_gen_params_length(pname)
+    n = _Support.get_tex_gen_params_length(pname)
     if n is None:
         raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _support.make_c_array(_C_GL_1_1.GLfloat, n)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, n)
     _C_GL_1_1.glGetTexGenfv(int(coord), int(pname), c_params)
-    return _support.c_array_to_list(float, c_params)
+    return _Support.c_array_to_list(float, c_params)
 
 def glGetTexGeniv(coord, pname):
     """
@@ -2642,12 +2642,12 @@ def glGetTexGeniv(coord, pname):
     Returns         : List[int]
         Corresponds to 'params' parameter from OpenGL function specification. 
     """
-    n = _support.get_tex_gen_params_length(pname)
+    n = _Support.get_tex_gen_params_length(pname)
     if n is None:
         raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _support.make_c_array(_C_GL_1_1.GLint, n)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLint, n)
     _C_GL_1_1.glGetTexGeniv(int(coord), int(pname), c_params)
-    return _support.c_array_to_list(int, c_params)
+    return _Support.c_array_to_list(int, c_params)
 
 def glGetTexParameterfv(target, pname):
     """
@@ -2656,13 +2656,13 @@ def glGetTexParameterfv(target, pname):
     Returns         : List[float]
         Equivalent of parameter 'params' from OpenGL functions specification.
     """
-    length = _support.get_tex_parameter_length(pname)
+    length = _Support.get_tex_parameter_length(pname)
     if length is None:
         raise ValueError("Unexpected value of parameter 'pname'.")
     
-    c_params = _support.make_c_array(_C_GL_1_1.GLfloat, length)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, length)
     _C_GL_1_1.glGetTexParameterfv(int(target), int(pname), c_params)
-    return _support.c_array_to_list(float, c_params)
+    return _Support.c_array_to_list(float, c_params)
 
 def glGetTexParameteriv(target, pname):
     """
@@ -2671,13 +2671,13 @@ def glGetTexParameteriv(target, pname):
     Returns         : List[int]
         Equivalent of parameter 'params' from OpenGL functions specification.
     """
-    length = _support.get_tex_parameter_length(pname)
+    length = _Support.get_tex_parameter_length(pname)
     if length is None:
         raise ValueError("Unexpected value of parameter 'pname'.")
     
-    c_params = _support.make_c_array(_C_GL_1_1.GLint, length)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLint, length)
     _C_GL_1_1.glGetTexParameteriv(int(target), int(pname), c_params)
-    return _support.c_array_to_list(int, c_params)
+    return _Support.c_array_to_list(int, c_params)
 
 def glGetTexLevelParameterfv(target, level, pname):
     """
@@ -2687,10 +2687,10 @@ def glGetTexLevelParameterfv(target, level, pname):
     Returns          : List[float]
         Corresponds to 'params' parameter from OpenGL functions specification.
     """
-    n = _support.get_tex_level_parameter_number(pname)
-    c_params = _support.make_c_array(_C_GL_1_1.GLfloat, n)
+    n = _Support.get_tex_level_parameter_number(pname)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, n)
     _C_GL_1_1.glGetTexLevelParameterfv(int(target), int(level), int(pname), c_params)
-    return _support.c_array_to_list(float, c_params)
+    return _Support.c_array_to_list(float, c_params)
 
 def glGetTexLevelParameteriv(target, level, pname):
     """
@@ -2700,10 +2700,10 @@ def glGetTexLevelParameteriv(target, level, pname):
     Returns          : List[int]
         Corresponds to 'params' parameter from OpenGL functions specification.
     """
-    n = _support.get_tex_level_parameter_number(pname)
-    c_params = _support.make_c_array(_C_GL_1_1.GLint, n)
+    n = _Support.get_tex_level_parameter_number(pname)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLint, n)
     _C_GL_1_1.glGetTexLevelParameteriv(int(target), int(level), int(pname), c_params)
-    return _support.c_array_to_list(int, c_params)
+    return _Support.c_array_to_list(int, c_params)
 
 # Texture Queries
 
@@ -2731,7 +2731,7 @@ def glGetTexImage(target, level, format_, type_, is_return_list = False):
             When 'is_return_list' is True and 'type_' is not GL_FLOAT or 'format_' is neither GL_RGB nor GL_RGBA.
     """
     target = int(target)
-    if target not in _support.get_acceptable_tex_target_ids():
+    if target not in _Support.get_acceptable_tex_target_ids():
         raise ValueError("Unexpected value of 'target' parameter")
 
     width   = glGetTexLevelParameteriv(target, level, GL_TEXTURE_WIDTH)[0]
@@ -2741,11 +2741,11 @@ def glGetTexImage(target, level, format_, type_, is_return_list = False):
     format_ = int(format_)
     type_   = int(type_)
 
-    n = _support.get_tex_format_element_number(format_)
+    n = _Support.get_tex_format_element_number(format_)
     if n is None:
         raise ValueError("Unexpected value of 'format_' parameter.")
 
-    md = _support.get_tex_type_mul_div_sizet_number(type_)
+    md = _Support.get_tex_type_mul_div_sizet_number(type_)
     if md is None:
         raise ValueError("Unexpected value of 'type_' parameter.")
 
@@ -2753,20 +2753,20 @@ def glGetTexImage(target, level, format_, type_, is_return_list = False):
 
     if is_return_list:
         if type_ == GL_FLOAT and format_ in [GL_RGB, GL_RGBA]:
-            num_of_elements = _support.get_tex_format_element_number(format_)
+            num_of_elements = _Support.get_tex_format_element_number(format_)
 
             length = width * height * num_of_elements
-            c_pixels = _support.make_c_array(_C_GL_1_1.GLfloat, length)
+            c_pixels = _Support.make_c_array(_C_GL_1_1.GLfloat, length)
 
             _C_GL_1_1.glGetTexImage(int(target), int(level), format_, type_, _ctypes.cast(c_pixels, _ctypes.c_void_p))
 
-            return _support.c_array_to_list(float, c_pixels)
+            return _Support.c_array_to_list(float, c_pixels)
         else:
             raise ValueError("Unexpected value of 'type_' and/or 'format_' parameters when 'is_return_list' parameter is True.")
     else:
         single_item_size = (n * m // d)             # in bytes
         size = width * height * single_item_size    # in bytes
-        c_pixels = _support.make_c_array(_C_GL_1_1.GLubyte, size)
+        c_pixels = _Support.make_c_array(_C_GL_1_1.GLubyte, size)
 
         _C_GL_1_1.glGetTexImage(int(target), int(level), format_, type_, _ctypes.cast(c_pixels, _ctypes.c_void_p))
 
@@ -2799,11 +2799,11 @@ def glFogfv(pname, params):
     """
     pname = int(pname)
 
-    length = _support.get_fog_params_length(pname)
+    length = _Support.get_fog_params_length(pname)
     if length is None:
         raise ValueError("Unexpected value of 'pname' parameter.")
 
-    c_params = _support.list_part_to_c_array(float, params, length, _C_GL_1_1.GLfloat)
+    c_params = _Support.list_part_to_c_array(float, params, length, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glFogfv(pname, c_params)
 
 def glFogi(pname, param):
@@ -2820,11 +2820,11 @@ def glFogiv(pname, params):
     """
     pname = int(pname)
 
-    length = _support.get_fog_params_length(pname)
+    length = _Support.get_fog_params_length(pname)
     if length is None:
         raise ValueError("Unexpected value of 'pname' parameter.")
 
-    c_params = _support.list_part_to_c_array(int, params, length, _C_GL_1_1.GLint)
+    c_params = _Support.list_part_to_c_array(int, params, length, _C_GL_1_1.GLint)
 
     _C_GL_1_1.glFogiv(pname, c_params)
 
@@ -2860,11 +2860,11 @@ def glReadPixels(x, y, width, height, format_, type_):
         If type of returned object is None, then computed size of pixels is below one byte (parameter 'width' or 'height' might be zero).
     """
 
-    format_count = _support.get_read_pixels_format_count(format_)
+    format_count = _Support.get_read_pixels_format_count(format_)
     if format_count is None:
         raise ValueError("Unexpected value of 'format_' parameter.")
 
-    type_size = _support.get_read_pixels_type_size(type_)
+    type_size = _Support.get_read_pixels_type_size(type_)
     if type_size is None:
         raise ValueError("Unexpected value of 'type_' parameter.")
 
@@ -2874,7 +2874,7 @@ def glReadPixels(x, y, width, height, format_, type_):
     size        = width * height * pixel_size
 
     if size > 0:
-        c_pixels = _support.make_c_array(_C_GL_1_1.GLubyte, size)
+        c_pixels = _Support.make_c_array(_C_GL_1_1.GLubyte, size)
         _C_GL_1_1.glReadPixels(int(x), int(y), width, height, int(format_), int(type_), c_pixels)
         return bytes(c_pixels)
     else:
@@ -3097,7 +3097,7 @@ def glMap1d(target, u1, u2, points):
     stride = int(stride)
     points = list(points)
 
-    stride = _support.get_map_1d_stride(target)
+    stride = _Support.get_map_1d_stride(target)
     if stride is None:
         raise ValueError("Unexpected value of 'target' parameter.")
 
@@ -3105,7 +3105,7 @@ def glMap1d(target, u1, u2, points):
         raise ValueError("Number of items in 'points' parameter must be multiply of %s (its stride)." % stride)
 
     order = len(points) // stride
-    c_points = _support.list_to_c_array(float, points, len(points), _C_GL_1_1.GLdouble)
+    c_points = _Support.list_to_c_array(float, points, len(points), _C_GL_1_1.GLdouble)
 
     _C_GL_1_1.glMap1d(int(target), float(u1), float(u2), stride, order, c_points)
 
@@ -3134,7 +3134,7 @@ def glMap1f(target, u1, u2, points):
     """
     points = list(points)
 
-    stride = _support.get_map_1d_stride(target)
+    stride = _Support.get_map_1d_stride(target)
     if stride is None:
         raise ValueError("Unexpected value of 'target' parameter.")
 
@@ -3142,7 +3142,7 @@ def glMap1f(target, u1, u2, points):
         raise ValueError("Number of items in 'points' parameter must be multiply of value from 'stride' parameter.")
 
     order = len(points) // stride
-    c_points = _support.list_to_c_array(float, points, len(points), _C_GL_1_1.GLfloat)
+    c_points = _Support.list_to_c_array(float, points, len(points), _C_GL_1_1.GLfloat)
 
     _C_GL_1_1.glMap1f(int(target), float(u1), float(u2), stride, order, c_points)
 
@@ -3173,7 +3173,7 @@ def glMap2d(target, u1, u2, v1, v2, vorder, points):
     """
     points = list(points)
 
-    ustride = _support.get_map_2d_stride(target)
+    ustride = _Support.get_map_2d_stride(target)
     if ustride is None:
         raise ValueError("Unexpected value of 'target' parameter.")
 
@@ -3183,7 +3183,7 @@ def glMap2d(target, u1, u2, v1, v2, vorder, points):
     uorder = len(points) // (ustride * vorder)
     vstride = ustride * uorder
 
-    c_points = _support.list_to_c_array(float, points, len(points), _C_GL_1_1.GLdouble)
+    c_points = _Support.list_to_c_array(float, points, len(points), _C_GL_1_1.GLdouble)
 
     _C_GL_1_1.glMap2d(int(target), float(u1), float(u2), ustride, uorder, float(v1), float(v2), vstride, vorder, c_points)
 
@@ -3215,7 +3215,7 @@ def glMap2f(target, u1, u2, v1, v2, vorder, points):
     """
     points = list(points)
 
-    ustride = _support.get_map_2d_stride(target)
+    ustride = _Support.get_map_2d_stride(target)
     if ustride is None:
         raise ValueError("Unexpected value of 'target' parameter.")
 
@@ -3225,7 +3225,7 @@ def glMap2f(target, u1, u2, v1, v2, vorder, points):
     uorder = len(points) // (ustride * vorder)
     vstride = ustride * uorder
 
-    c_points = _support.list_to_c_array(float, points, len(points), _C_GL_1_1.GLfloat)
+    c_points = _Support.list_to_c_array(float, points, len(points), _C_GL_1_1.GLfloat)
 
     _C_GL_1_1.glMap2f(int(target), float(u1), float(u2), ustride, uorder, float(v1), float(v2), vstride, vorder, c_points)
 
@@ -3240,7 +3240,7 @@ def glEvalCoord1dv(u):
     """
     u                : List[float]
     """
-    c_u = _support.list_part_to_c_array(float, u, 1, _C_GL_1_1.GLdouble)
+    c_u = _Support.list_part_to_c_array(float, u, 1, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glEvalCoord1dv(c_u)
 
 def glEvalCoord1f(u):
@@ -3253,7 +3253,7 @@ def glEvalCoord1fv(u):
     """
     u                : List[float]
     """
-    c_u = _support.list_part_to_c_array(float, u, 1, _C_GL_1_1.GLfloat)
+    c_u = _Support.list_part_to_c_array(float, u, 1, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glEvalCoord1fv(c_u)
 
 def glEvalCoord2d(u, v):
@@ -3267,7 +3267,7 @@ def glEvalCoord2dv(u):
     """
     u                : List[float]
     """
-    c_u = _support.list_part_to_c_array(float, u, 2, _C_GL_1_1.GLdouble)
+    c_u = _Support.list_part_to_c_array(float, u, 2, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glEvalCoord2dv(c_u)
 
 def glEvalCoord2f(u, v):
@@ -3281,7 +3281,7 @@ def glEvalCoord2fv(u):
     """
     u                : List[float]
     """
-    c_u = _support.list_part_to_c_array(float, u, 2, _C_GL_1_1.GLfloat)
+    c_u = _Support.list_part_to_c_array(float, u, 2, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glEvalCoord2fv(c_u)
 
 def glMapGrid1d(un, u1, u2):
@@ -3369,36 +3369,36 @@ def glGetMapdv(target, query):
     query = int(query)
 
     if query == GL_COEFF:
-        stride = _support.get_map_stride(target)
+        stride = _Support.get_map_stride(target)
         if stride is None:
             ValueError("Unexpected value of 'target' parameter.")
 
-        if _support.is_map_1d_target(target):
+        if _Support.is_map_1d_target(target):
             c_order = _C_GL_1_1.GLint()
             _C_GL_1_1.glGetMapiv(target, GL_ORDER, _ctypes.byref(c_order))
             order = c_order.value
 
             length = stride * order
         else:
-            c_order = _support.make_c_array(_C_GL_1_1.GLint, 2)
+            c_order = _Support.make_c_array(_C_GL_1_1.GLint, 2)
             _C_GL_1_1.glGetMapiv(target, GL_ORDER, c_order)
             uorder = c_order[0]
             vorder = c_order[1]
             
             length = stride * uorder * vorder
 
-        c_v = _support.make_c_array(_C_GL_1_1.GLdouble, length)
+        c_v = _Support.make_c_array(_C_GL_1_1.GLdouble, length)
 
     elif query == GL_ORDER:
-        length = 1 if _support.is_map_1d_target(target) else 2
-        c_v = _support.make_c_array(_C_GL_1_1.GLdouble, length)
+        length = 1 if _Support.is_map_1d_target(target) else 2
+        c_v = _Support.make_c_array(_C_GL_1_1.GLdouble, length)
 
     elif query == GL_DOMAIN:
-        length = 2 if _support.is_map_1d_target(target) else 4
-        c_v = _support.make_c_array(_C_GL_1_1.GLdouble, length)
+        length = 2 if _Support.is_map_1d_target(target) else 4
+        c_v = _Support.make_c_array(_C_GL_1_1.GLdouble, length)
 
     _C_GL_1_1.glGetMapdv(target, query, c_v)
-    return _support.c_array_to_list(float, c_v)
+    return _Support.c_array_to_list(float, c_v)
 
 
 def glGetMapfv(target, query):
@@ -3412,35 +3412,35 @@ def glGetMapfv(target, query):
     query = int(query)
 
     if query == GL_COEFF:
-        stride = _support.get_map_stride(target)
+        stride = _Support.get_map_stride(target)
         if stride is None:
             ValueError("Unexpected value of 'target' parameter.")
 
-        if _support.is_map_1d_target(target):
+        if _Support.is_map_1d_target(target):
             c_order = _C_GL_1_1.GLint()
             _C_GL_1_1.glGetMapiv(target, GL_ORDER, _ctypes.byref(c_order))
             order = c_order.value
             length = stride * order
         else:
-            c_order = _support.make_c_array(_C_GL_1_1.GLint, 2)
+            c_order = _Support.make_c_array(_C_GL_1_1.GLint, 2)
             _C_GL_1_1.glGetMapiv(target, GL_ORDER, c_order)
             uorder = c_order[0]
             vorder = c_order[1]
 
             length = stride * uorder * vorder
 
-        c_v = _support.make_c_array(_C_GL_1_1.GLfloat, length)
+        c_v = _Support.make_c_array(_C_GL_1_1.GLfloat, length)
 
     elif query == GL_ORDER:
-        length = 1 if _support.is_map_1d_target(target) else 2
-        c_v = _support.make_c_array(_C_GL_1_1.GLfloat, length)
+        length = 1 if _Support.is_map_1d_target(target) else 2
+        c_v = _Support.make_c_array(_C_GL_1_1.GLfloat, length)
 
     elif query == GL_DOMAIN:
-        length = 2 if _support.is_map_1d_target(target) else 4
-        c_v = _support.make_c_array(_C_GL_1_1.GLfloat, length)
+        length = 2 if _Support.is_map_1d_target(target) else 4
+        c_v = _Support.make_c_array(_C_GL_1_1.GLfloat, length)
 
     _C_GL_1_1.glGetMapfv(target, query, c_v)
-    return _support.c_array_to_list(float, c_v)
+    return _Support.c_array_to_list(float, c_v)
 
 def glGetMapiv(target, query):
     """
@@ -3453,36 +3453,36 @@ def glGetMapiv(target, query):
     query = int(query)
 
     if query == GL_COEFF:
-        stride = _support.get_map_stride(target)
+        stride = _Support.get_map_stride(target)
         if stride is None:
             ValueError("Unexpected value of 'target' parameter.")
 
-        if _support.is_map_1d_target(target):
+        if _Support.is_map_1d_target(target):
             c_order = _C_GL_1_1.GLint()
             _C_GL_1_1.glGetMapiv(target, GL_ORDER, _ctypes.byref(c_order))
             order = c_order.value
 
             length = stride * order
         else:
-            c_order = _support.make_c_array(_C_GL_1_1.GLint, 2)
+            c_order = _Support.make_c_array(_C_GL_1_1.GLint, 2)
             _C_GL_1_1.glGetMapiv(target, GL_ORDER, c_order)
             uorder = c_order[0]
             vorder = c_order[1]
 
             length = stride * uorder * vorder
 
-        c_v = _support.make_c_array(_C_GL_1_1.GLint, length)
+        c_v = _Support.make_c_array(_C_GL_1_1.GLint, length)
 
     elif query == GL_ORDER:
-        length = 1 if _support.is_map_1d_target(target) else 2
-        c_v = _support.make_c_array(_C_GL_1_1.GLint, length)
+        length = 1 if _Support.is_map_1d_target(target) else 2
+        c_v = _Support.make_c_array(_C_GL_1_1.GLint, length)
 
     elif query == GL_DOMAIN:
-        length = 2 if _support.is_map_1d_target(target) else 4
-        c_v = _support.make_c_array(_C_GL_1_1.GLint, length)
+        length = 2 if _Support.is_map_1d_target(target) else 4
+        c_v = _Support.make_c_array(_C_GL_1_1.GLint, length)
 
     _C_GL_1_1.glGetMapiv(target, query, c_v)
-    return _support.c_array_to_list(int, c_v)
+    return _Support.c_array_to_list(int, c_v)
 
 # Selection
 
@@ -3585,10 +3585,10 @@ def glCallLists(type_, lists):
         elif type_ == GL_3_BYTES:   n //= 3
         elif type_ == GL_4_BYTES:   n //= 4
 
-        c_type      = _support.get_call_lists_c_type(type_)
-        py_types    = _support.get_call_lists_py_type(type_)
+        c_type      = _Support.get_call_lists_c_type(type_)
+        py_types    = _Support.get_call_lists_py_type(type_)
 
-        c_lists = _support.list_part_to_c_array(py_types, lists, len(lists), c_type)
+        c_lists = _Support.list_part_to_c_array(py_types, lists, len(lists), c_type)
         _C_GL_1_1.glCallLists(n, int(type_), c_lists)
 
 def glListBase(base):
@@ -3653,13 +3653,13 @@ def glGetBooleanv(pname):
     params           : List[bool]
         Equivalent of 'params'.
     """
-    num = _support.get_num_of_get_values(pname)
+    num = _Support.get_num_of_get_values(pname)
     if num is None:
         raise ValueError("Unexpected value of 'pname'.")
 
-    c_params = _support.make_c_array(_C_GL_1_1.GLboolean, num)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLboolean, num)
     _C_GL_1_1.glGetBooleanv(int(pname), c_params)
-    return _support.c_array_to_list(bool, c_params)
+    return _Support.c_array_to_list(bool, c_params)
 
 def glGetIntegerv(pname):
     """
@@ -3667,13 +3667,13 @@ def glGetIntegerv(pname):
     ReturnType      : List[int]
         Equivalent of 'params'.
     """
-    num = _support.get_num_of_get_values(pname)
+    num = _Support.get_num_of_get_values(pname)
     if num is None:
         raise ValueError("Unexpected value of 'pname'.")
 
-    c_params = _support.make_c_array(_C_GL_1_1.GLint, num)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLint, num)
     _C_GL_1_1.glGetIntegerv(int(pname), c_params)
-    return _support.c_array_to_list(int, c_params)
+    return _Support.c_array_to_list(int, c_params)
 
 def glGetFloatv(pname):
     """
@@ -3681,13 +3681,13 @@ def glGetFloatv(pname):
     ReturnType       : List[float]
         Equivalent of 'params'.
     """
-    num = _support.get_num_of_get_values(pname)
+    num = _Support.get_num_of_get_values(pname)
     if num is None:
         raise ValueError("Unexpected value of 'pname'.")
 
-    c_params = _support.make_c_array(_C_GL_1_1.GLfloat, num)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, num)
     _C_GL_1_1.glGetFloatv(int(pname), c_params)
-    return _support.c_array_to_list(float, c_params)
+    return _Support.c_array_to_list(float, c_params)
 
 
 def glGetDoublev(pname):
@@ -3698,13 +3698,13 @@ def glGetDoublev(pname):
     ReturnType       : List[float]
         Equivalent of 'params'.
     """
-    num = _support.get_num_of_get_values(pname)
+    num = _Support.get_num_of_get_values(pname)
     if num is None:
         raise ValueError("Unexpected value of 'pname'.")
 
-    c_params = _support.make_c_array(_C_GL_1_1.GLdouble, num)
+    c_params = _Support.make_c_array(_C_GL_1_1.GLdouble, num)
     _C_GL_1_1.glGetDoublev(int(pname), c_params)
-    return _support.c_array_to_list(float, c_params)
+    return _Support.c_array_to_list(float, c_params)
 
 def glIsEnabled(cap):
     """
@@ -3733,16 +3733,16 @@ def glGetPointerv(pname):
     c_array = {
         # Note: Commented elements are (most likely) from OpenGL above 1.1 or unsupported by this package.
 
-        GL_COLOR_ARRAY_POINTER              : _support.to_cache().c_color_array_pointer, 
-        GL_EDGE_FLAG_ARRAY_POINTER          : _support.to_cache().c_edge_flag_array_pointer, 
+        GL_COLOR_ARRAY_POINTER              : _Support.to_cache().c_color_array_pointer, 
+        GL_EDGE_FLAG_ARRAY_POINTER          : _Support.to_cache().c_edge_flag_array_pointer, 
         # GL_FOG_COORD_ARRAY_POINTER          : _support.to_cache().???, 
         # GL_FEEDBACK_BUFFER_POINTER          : _support.to_cache().???, 
-        GL_INDEX_ARRAY_POINTER              : _support.to_cache().c_index_array_pointer, 
-        GL_NORMAL_ARRAY_POINTER             : _support.to_cache().c_normal_array_pointer, 
+        GL_INDEX_ARRAY_POINTER              : _Support.to_cache().c_index_array_pointer, 
+        GL_NORMAL_ARRAY_POINTER             : _Support.to_cache().c_normal_array_pointer, 
         # GL_SECONDARY_COLOR_ARRAY_POINTER    : _support.to_cache().???, 
         # GL_SELECTION_BUFFER_POINTER         : _support.to_cache().???, 
-        GL_TEXTURE_COORD_ARRAY_POINTER      : _support.to_cache().c_tex_coord_array_pointer,
-        GL_VERTEX_ARRAY_POINTER             : _support.to_cache().c_vertex_array_pointer,
+        GL_TEXTURE_COORD_ARRAY_POINTER      : _Support.to_cache().c_tex_coord_array_pointer,
+        GL_VERTEX_ARRAY_POINTER             : _Support.to_cache().c_vertex_array_pointer,
     }.get(pname, None)
 
     if isinstance(c_array, bytes):

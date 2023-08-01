@@ -2,7 +2,7 @@
 Provides singleton functionality to class.
 """
 
-class _SingletonGuardian:
+class SingletonGuardian:
     """
     _is_instance_exist : bool
     _target_class_name : str
