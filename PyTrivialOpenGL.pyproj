@@ -36,6 +36,7 @@
     <Content Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\assets\icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\PyTrivialOpenGL\GL\_Private\__init__.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\wgl_window.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\winapi_window.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\winapi.py" />
@@ -67,7 +68,7 @@
     <Compile Include="src\PyTrivialOpenGL\Area.py" />
     <Compile Include="src\PyTrivialOpenGL\Exceptions.py" />
     <Compile Include="src\PyTrivialOpenGL\GL\VERSION_1_1.py" />
-    <Compile Include="src\PyTrivialOpenGL\GL\_Support.py" />
+    <Compile Include="src\PyTrivialOpenGL\GL\_Private\Support.py" />
     <Compile Include="src\PyTrivialOpenGL\GL\__init__.py" />
     <Compile Include="src\PyTrivialOpenGL\Key.py" />
     <Compile Include="src\PyTrivialOpenGL\SpecialDebug.py" />
@@ -110,6 +111,7 @@
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\__init__.py" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="src\PyTrivialOpenGL\GL\_Private\" />
     <Folder Include="tests_and_examples\" />
     <Folder Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\" />
     <Folder Include="src\" />

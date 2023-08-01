@@ -33,7 +33,7 @@ from ._Basics import MIN_U16    as _MIN_U16
 
 from ._Debug import _wm_to_str
 
-from .GL import _Support as _gl_support
+from .GL._Private import Support as _gl_support
 
 
 __all__ = [

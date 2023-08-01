@@ -2,7 +2,7 @@
 Inner support for GL module.
 """
 
-from .. import C_GL as _C_GL
+from ... import C_GL as _C_GL
 import ctypes as _ctypes
 
 ### Cache ###

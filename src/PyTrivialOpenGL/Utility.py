@@ -2,7 +2,7 @@ from .Point         import Point
 from .Size          import Size
 from .Area          import Area
 from .              import _C_WinApi
-from .GL._Support   import get_gl_error_str
+from .GL._Private   import Support as _gl_support
 
 import ctypes as _ctypes
 
@@ -147,4 +147,4 @@ def is_defined_in_c_gl(target):
     )
 
 def get_gl_error_str(gl_error_code):
-    return get_gl_error_str(gl_error_code)
+    return _gl_support.get_gl_error_str(gl_error_code)

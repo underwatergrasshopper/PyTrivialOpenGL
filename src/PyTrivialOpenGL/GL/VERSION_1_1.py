@@ -2,7 +2,7 @@ import ctypes as _ctypes
 
 from ..C_GL.VERSION_1_1.Constants import *
 from ..C_GL import VERSION_1_1 as _C_GL_1_1
-from . import _Support as _support
+from ._Private import Support as _support
 from ..Exceptions import CacheMismatch
 
 ### Command Execution ###

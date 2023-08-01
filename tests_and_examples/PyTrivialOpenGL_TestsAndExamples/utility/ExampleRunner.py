@@ -66,36 +66,36 @@ class ExampleRunner:
            example_manager.add_example("simple_triangle",  lambda name, options: examples.simple_triangle.run())
 
         if category & ExampleCategoryBit.DEBUGS:
-            example_manager.add_example("winapi",           debugs.winapi.run,          ["min_max"])
-            example_manager.add_example("winapi_window",    debugs.winapi_window.run,   ["all_wm"])
-            example_manager.add_example("wgl_window",       debugs.wgl_window.run,      ["list_pixel_formats"])
+            example_manager.add_example("debug.winapi",           debugs.winapi.run,          ["min_max"])
+            example_manager.add_example("debug.winapi_window",    debugs.winapi_window.run,   ["all_wm"])
+            example_manager.add_example("debug.wgl_window",       debugs.wgl_window.run,      ["list_pixel_formats"])
 
             example_manager.add_example(
-                "area_and_state", 
+                "debug.area_and_state", 
                 debugs.area_and_state.run, 
                 self._run_options + self._special_debug_options, 
                 ["centered", "draw_area_size"]
             )
             example_manager.add_example(
-                "mouse_and_keyboard", 
+                "debug.mouse_and_keyboard", 
                 debugs.mouse_and_keyboard.run, 
                 self._run_options + self._special_debug_options, 
                 ["centered", "draw_area_size"]
             )
 
         if category & ExampleCategoryBit.MANUAL_TESTS:
-            example_manager.add_example("draw_array",       manual_tests.draw_array.run,        ["inter", "stride"])
-            example_manager.add_example("draw_elements",    manual_tests.draw_elements.run)
-            example_manager.add_example("draw_rectangle",   manual_tests.draw_rectangle.run)
-            example_manager.add_example("matrix",           manual_tests.matrix.run)
-            example_manager.add_example("clip_plane",       manual_tests.clip_plane.run)
-            example_manager.add_example("light_and_fog",    manual_tests.light_and_fog.run)
-            example_manager.add_example("draw_pixels",      manual_tests.draw_pixels.run)
-            example_manager.add_example("draw_stipple",     manual_tests.draw_stipple.run)
-            example_manager.add_example("display_list",     manual_tests.display_list.run)
-            example_manager.add_example("draw_texture",     manual_tests.draw_texture.run,      ["float", "1d", "sub"]),
-            example_manager.add_example("bezier_curve",     manual_tests.bezier_curve.run),
-            example_manager.add_example("bezier_surface",   manual_tests.bezier_surface.run),
+            example_manager.add_example("mt.draw_array",       manual_tests.draw_array.run,        ["inter", "stride"])
+            example_manager.add_example("mt.draw_elements",    manual_tests.draw_elements.run)
+            example_manager.add_example("mt.draw_rectangle",   manual_tests.draw_rectangle.run)
+            example_manager.add_example("mt.matrix",           manual_tests.matrix.run)
+            example_manager.add_example("mt.clip_plane",       manual_tests.clip_plane.run)
+            example_manager.add_example("mt.light_and_fog",    manual_tests.light_and_fog.run)
+            example_manager.add_example("mt.draw_pixels",      manual_tests.draw_pixels.run)
+            example_manager.add_example("mt.draw_stipple",     manual_tests.draw_stipple.run)
+            example_manager.add_example("mt.display_list",     manual_tests.display_list.run)
+            example_manager.add_example("mt.draw_texture",     manual_tests.draw_texture.run,      ["float", "1d", "sub"]),
+            example_manager.add_example("mt.bezier_curve",     manual_tests.bezier_curve.run),
+            example_manager.add_example("mt.bezier_surface",   manual_tests.bezier_surface.run),
 
         if default_example_name is None:
             if category & ExampleCategoryBit.MANUAL_TESTS:
