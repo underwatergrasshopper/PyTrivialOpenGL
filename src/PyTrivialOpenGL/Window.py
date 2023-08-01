@@ -9,7 +9,6 @@ from copy import deepcopy as _deepcopy
 from ._Private import C_WinApi as _C_WinApi
 from ._Private import C_WGL as _C_WGL
 from . import C_GL          as _C_GL
-from . import Key
 
 from ._Private.SingletonGuardian    import SingletonGuardian as _SingletonGuardian
 from ._Private.WindowAreaCorrector  import WindowAreaCorrector as _WindowAreaCorrector
@@ -20,7 +19,7 @@ from .Utility               import *
 from .Log                   import *
 from .SpecialDebug          import *
 from .Key                   import *
-from .Key                   import _VirtualKeyData, _vk_code_to_key_id, _vk_code_to_str, _is_mouse_button_down, _get_keyboard_side_id, _get_mouse_key_id, _is_mw_mouse_button, _is_mw_mouse_button_x
+from ._Private              import KeySupport as _KeySupport
 
 from ._Private import Basics as _Basics
 from ._Private.Basics import clamp      as _clamp
@@ -1561,10 +1560,10 @@ class Window:
         """
         is_discard = True
 
-        is_down = _is_mouse_button_down(window_message)
+        is_down = _KeySupport.is_mouse_button_down(window_message)
 
         if self._do_on_key:
-            key_id = _get_mouse_key_id(window_message, w_param);
+            key_id = _KeySupport.get_mouse_key_id(window_message, w_param);
 
             extra = KeyExtra(
                 count               = 1,
@@ -1605,8 +1604,8 @@ class Window:
         is_discard = True
 
         if self._do_on_key:
-            vk_data = _VirtualKeyData(l_param)
-            key_id = _vk_code_to_key_id(w_param)
+            vk_data = _KeySupport.VirtualKeyData(l_param)
+            key_id = _KeySupport.vk_code_to_key_id(w_param)
 
             pos = self.get_cursor_pos_in_draw_area()
 
@@ -1614,7 +1613,7 @@ class Window:
                 count               = vk_data.count,
                 x                   = pos.x,
                 y                   = pos.y,
-                keyboard_side_id    = _get_keyboard_side_id(key_id, vk_data),
+                keyboard_side_id    = _KeySupport.get_keyboard_side_id(key_id, vk_data),
             )
 
             if key_id == KeyId.SHIFT:
@@ -1883,12 +1882,12 @@ class Window:
         
             return 0
         
-        elif _is_mw_mouse_button(window_message):
+        elif _KeySupport.is_mw_mouse_button(window_message):
             if is_log_level_at_least(LogLevel.DEBUG):
                 wm_text = _wm_to_str(window_message)
         
                 xb_text = ""
-                if _is_mw_mouse_button_x(window_message):
+                if _KeySupport.is_mw_mouse_button_x(window_message):
                     if      _C_WinApi.HIWORD(w_param).value == _C_WinApi.XBUTTON1: xb_text = " XBUTTON1"
                     elif    _C_WinApi.HIWORD(w_param).value == _C_WinApi.XBUTTON2: xb_text = " XBUTTON2"
         
@@ -1907,8 +1906,8 @@ class Window:
         elif window_message in [_C_WinApi.WM_KEYDOWN, _C_WinApi.WM_KEYUP, _C_WinApi.WM_SYSKEYDOWN, _C_WinApi.WM_SYSKEYUP]:
             if to_special_debug().is_notify_key_message:
                 wm_text = _wm_to_str(window_message)
-                vk_text = _vk_code_to_str(w_param)
-                vk_data = _VirtualKeyData(l_param)
+                vk_text = _KeySupport.vk_code_to_str(w_param)
+                vk_data = _KeySupport.VirtualKeyData(l_param)
         
                 log_debug("%-20s: %-13s %s" % (wm_text, vk_text, vk_data))
         
@@ -1921,7 +1920,7 @@ class Window:
         elif window_message == _C_WinApi.WM_CHAR:
             if to_special_debug().is_notify_character_message:
                 wm_text = "WM_CHAR"
-                vk_data = _VirtualKeyData(l_param)
+                vk_data = _KeySupport.VirtualKeyData(l_param)
                 
                 code = w_param
         

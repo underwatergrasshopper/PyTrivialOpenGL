@@ -4,12 +4,8 @@ from PyTrivialOpenGL._Private.C_WGL import *
 from PyTrivialOpenGL.C_GL import *
 from PyTrivialOpenGL.Utility import *
 from PyTrivialOpenGL.Key import *
-from PyTrivialOpenGL.Key import _vk_code_to_key_id
-from PyTrivialOpenGL.Key import _get_mouse_key_id
-from PyTrivialOpenGL.Key import _is_mouse_button_down
-from PyTrivialOpenGL.Key import _get_keyboard_side_id
-from PyTrivialOpenGL.Key import _vk_code_to_str
-from PyTrivialOpenGL.Key import _VirtualKeyData
+from PyTrivialOpenGL._Private.KeySupport import *
+
 from PyTrivialOpenGL._Private.Debug import wm_to_str as _wm_to_str
 from PyTrivialOpenGL._Private.WindowAreaCorrector import WindowAreaCorrector as _WindowAreaCorrector
 
