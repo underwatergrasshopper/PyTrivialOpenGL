@@ -37,6 +37,14 @@ def list_part_to_c_array(l_type, l, exact_len, c_type):
 def list_to_c_array(l_type, l, min_len, c_type):
     return (c_type * max(min_len, len(l)))(*(l_type(e) for e in l))
 
+def list_part_to_c_array_no_conv(l, exact_len, c_type):
+    num_of_elements_to_take = min(exact_len, len(l))
+
+    return (c_type * exact_len)(*(l[ix] for ix in range(num_of_elements_to_take)))
+
+def list_to_c_array_no_conv(l, min_len, c_type):
+    return (c_type * max(min_len, len(l)))(*(e for e in l))
+
 def make_c_array(c_type, length):
     return (c_type * length)()
 

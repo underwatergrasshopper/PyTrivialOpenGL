@@ -3,6 +3,7 @@ from PyTrivialOpenGL.GL import *
 from PyTrivialOpenGL import C_GL
 import ctypes
 import math
+from ...utility.ExampleSupport import FPS_Counter
 
 from ...utility.ExampleSupport import check_gl_error
 
@@ -25,6 +26,7 @@ class _Data:
         self.tex_obj = None
         self.other_tex_objs = []
         self.options = set()
+        self.fps_counter = FPS_Counter()
 
 _data = _Data()
 
@@ -127,6 +129,8 @@ def do_on_create():
 
 
         check_gl_error()
+
+        _data.fps_counter.reset()
 
     if "1d" in _data.options:
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
@@ -241,19 +245,35 @@ def draw():
 
     glBegin(GL_TRIANGLE_FAN)
     
-    glTexCoord2f(0, 0)
-    glVertex2f(-0.5, -0.5)
+    if "vec" in _data.options:
+        glTexCoord2fv([0, 0])
+        glVertex2fv([-0.5, -0.5])
     
-    glTexCoord2f(1, 0)
-    glVertex2f(0.5, -0.5)
+        glTexCoord2fv([1, 0])
+        glVertex2fv([0.5, -0.5])
     
-    glTexCoord2f(1, 1)
-    glVertex2f(0.5, 0.5)
+        glTexCoord2fv([1, 1])
+        glVertex2fv([0.5, 0.5])
     
-    glTexCoord2f(0, 1)
-    glVertex2f(-0.5, 0.5)
+        glTexCoord2fv([0, 1])
+        glVertex2fv([-0.5, 0.5])
+    else:
+        glTexCoord2f(0, 0)
+        glVertex2f(-0.5, -0.5)
+        
+        glTexCoord2f(1, 0)
+        glVertex2f(0.5, -0.5)
+        
+        glTexCoord2f(1, 1)
+        glVertex2f(0.5, 0.5)
+        
+        glTexCoord2f(0, 1)
+        glVertex2f(-0.5, 0.5)
     
     glEnd()
+
+    if "fps" in _data.options:
+        _data.fps_counter.update()
 
 def do_on_key(key_id, is_down, extra):
     if not is_down:

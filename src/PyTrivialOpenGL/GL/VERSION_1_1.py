@@ -3,13 +3,14 @@ import ctypes as _ctypes
 from ..C_GL.VERSION_1_1.Constants import *
 from ..C_GL import VERSION_1_1 as _C_GL_1_1
 from ._Private import Support as _Support
+
 from ..Exceptions import CacheMismatch
 
 ### Command Execution ###
 
 def glGetError():
     """
-    Returns (int).
+    Returns         : int
     """
     return int(_C_GL_1_1.glGetError())
 
@@ -19,580 +20,1441 @@ def glGetError():
 
 def glBegin(mode):
     """
-    mode             : int
+    mode            : int | SupportsInt
     """
-    _C_GL_1_1.glBegin(int(mode))
+    if not isinstance(mode, int): 
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    _C_GL_1_1.glBegin(mode)
 
 def glEnd():
     _C_GL_1_1.glEnd()
-
 
 # Polygon Edges
 
 def glEdgeFlag(flag):
     """
-    flag             : int
+    flag            : bool
     """
-    _C_GL_1_1.glEdgeFlag(int(flag))
+    if not isinstance(flag, bool):
+        try:
+            flag = bool(flag)
+        except Exception as exception:
+            raise ValueError("Value of 'flag' can not be converted to bool.") from exception
+
+    _C_GL_1_1.glEdgeFlag(flag)
 
 def glEdgeFlagv(flag):
     """
-    flag             : List[bool]
+    flag            : List[bool] | Iterable
     """
-    c_flag = _Support.list_part_to_c_array(bool, flag, 1, _C_GL_1_1.GLboolean)
+    if not isinstance(flag, list) or not all(isinstance(item, bool) for item in flag):
+        try:
+            flag = [bool(item) for item in flag]
+        except:
+            raise ValueError("Value of 'flag' can not be converted to list of bools.")
+            
+    c_flag = _Support.list_part_to_c_array_no_conv(flag, 1, _C_GL_1_1.GLboolean)
     _C_GL_1_1.glEdgeFlagv(c_flag)
 
 # Vertex Specification
 
 def glVertex2d(x, y):
     """
-    x                : float
-    y                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
     """
-    _C_GL_1_1.glVertex2d(float(x), float(y))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    _C_GL_1_1.glVertex2d(x, y)
 
 def glVertex2dv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 2, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glVertex2dv(c_v)
 
 def glVertex2f(x, y):
     """
-    x                : float
-    y                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
     """
-    _C_GL_1_1.glVertex2f(float(x), float(y))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    _C_GL_1_1.glVertex2f(x, y)
 
 def glVertex2fv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 2, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glVertex2fv(c_v)
 
 def glVertex2i(x, y):
     """
-    x                : int
-    y                : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
     """
-    _C_GL_1_1.glVertex2i(int(x), int(y))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    _C_GL_1_1.glVertex2i(x, y)
 
 def glVertex2iv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 2, _C_GL_1_1.GLint)
     _C_GL_1_1.glVertex2iv(c_v)
 
 def glVertex2s(x, y):
     """
-    x                : int
-    y                : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
     """
-    _C_GL_1_1.glVertex2s(int(x), int(y))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    _C_GL_1_1.glVertex2s(x, y)
 
 def glVertex2sv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 2, _C_GL_1_1.GLshort)
     _C_GL_1_1.glVertex2sv(c_v)
 
 def glVertex3d(x, y, z):
     """
-    x                : float
-    y                : float
-    z                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
     """
-    _C_GL_1_1.glVertex3d(float(x), float(y), float(z))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    _C_GL_1_1.glVertex3d(x, y, z)
 
 def glVertex3dv(v):
     """
-    v                : List[double]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glVertex3dv(c_v)
 
 def glVertex3f(x, y, z):
     """
-    x                : float
-    y                : float
-    z                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
     """
-    _C_GL_1_1.glVertex3f(float(x), float(y), float(z))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    _C_GL_1_1.glVertex3f(x, y, z)
 
 def glVertex3fv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glVertex3fv(c_v)
 
 def glVertex3i(x, y, z):
     """
-    x                : int
-    y                : int
-    z                : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    z               : int | SupportsInt
     """
-    _C_GL_1_1.glVertex3i(int(x), int(y), int(z))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(z, int):
+        try:
+            z = int(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to int.") from exception
+
+    _C_GL_1_1.glVertex3i(x, y, z)
 
 def glVertex3iv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glVertex3iv(c_v)
 
 def glVertex3s(x, y, z):
     """
-    x                : int
-    y                : int
-    z                : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    z               : int | SupportsInt
     """
-    _C_GL_1_1.glVertex3s(int(x), int(y), int(z))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(z, int):
+        try:
+            z = int(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to int.") from exception
+
+    _C_GL_1_1.glVertex3s(x, y, z)
 
 def glVertex3sv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glVertex3sv(c_v)
 
 def glVertex4d(x, y, z, w):
     """
-    x                : float
-    y                : float
-    z                : float
-    w                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
+    w               : float | SupportsFloat
     """
-    _C_GL_1_1.glVertex4d(float(x), float(y), float(z), float(w))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    if not isinstance(w, float):
+        try:
+            w = float(w)
+        except Exception as exception:
+            raise ValueError("Value of 'w' can not be converted to float.") from exception
+
+    _C_GL_1_1.glVertex4d(x, y, z, w)
 
 def glVertex4dv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glVertex4dv(c_v)
 
 def glVertex4f(x, y, z, w):
     """
-    x                : float
-    y                : float
-    z                : float
-    w                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
+    w               : float | SupportsFloat
     """
-    _C_GL_1_1.glVertex4f(float(x), float(y), float(z), float(w))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    if not isinstance(w, float):
+        try:
+            w = float(w)
+        except Exception as exception:
+            raise ValueError("Value of 'w' can not be converted to float.") from exception
+
+    _C_GL_1_1.glVertex4f(x, y, z, w)
 
 def glVertex4fv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glVertex4fv(c_v)
 
 def glVertex4i(x, y, z, w):
     """
-    x                : int
-    y                : int
-    z                : int
-    w                : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    z               : int | SupportsInt
+    w               : int | SupportsInt
     """
-    _C_GL_1_1.glVertex4i(int(x), int(y), int(z), int(w))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(z, int):
+        try:
+            z = int(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to int.") from exception
+
+    if not isinstance(w, int):
+        try:
+            w = int(w)
+        except Exception as exception:
+            raise ValueError("Value of 'w' can not be converted to int.") from exception
+
+    _C_GL_1_1.glVertex4i(x, y, z, w)
 
 def glVertex4iv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLint)
     _C_GL_1_1.glVertex4iv(c_v)
 
 def glVertex4s(x, y, z, w):
     """
-    x                : int
-    y                : int
-    z                : int
-    w                : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    z               : int | SupportsInt
+    w               : int | SupportsInt
     """
-    _C_GL_1_1.glVertex4s(int(x), int(y), int(z), int(w))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(z, int):
+        try:
+            z = int(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to int.") from exception
+
+    if not isinstance(w, int):
+        try:
+            w = int(w)
+        except Exception as exception:
+            raise ValueError("Value of 'w' can not be converted to int.") from exception
+
+    _C_GL_1_1.glVertex4s(x, y, z, w)
 
 def glVertex4sv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLshort)
     _C_GL_1_1.glVertex4sv(c_v)
 
 
 def glTexCoord1d(s):
     """
-    s                : float
+    s               : float | SupportsFloat
     """
-    _C_GL_1_1.glTexCoord1d(float(s))
+    if not isinstance(s, float):
+        try:
+            s = float(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTexCoord1d(s)
 
 def glTexCoord1dv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 1, _C_GL_1_1.GLdouble)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 1, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexCoord1dv(c_v)
 
 def glTexCoord1f(s):
     """
-    s                : float
+    s               : float | SupportsFloat
     """
-    _C_GL_1_1.glTexCoord1f(float(s))
+    if not isinstance(s, float):
+        try:
+            s = float(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTexCoord1f(s)
 
 def glTexCoord1fv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 1, _C_GL_1_1.GLfloat)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 1, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexCoord1fv(c_v)
 
 def glTexCoord1i(s):
     """
-    s                : int
+    s               : int | SupportsInt
     """
-    _C_GL_1_1.glTexCoord1i(int(s))
+    if not isinstance(s, int):
+        try:
+            s = int(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to int.") from exception
+
+    _C_GL_1_1.glTexCoord1i(s)
 
 def glTexCoord1iv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 1, _C_GL_1_1.GLint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 1, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexCoord1iv(c_v)
 
 def glTexCoord1s(s):
     """
-    s                : int
+    s               : int | SupportsInt
     """
-    _C_GL_1_1.glTexCoord1s(int(s))
+    if not isinstance(s, int):
+        try:
+            s = int(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to int.") from exception
+
+    _C_GL_1_1.glTexCoord1s(s)
 
 def glTexCoord1sv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 1, _C_GL_1_1.GLshort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 1, _C_GL_1_1.GLshort)
     _C_GL_1_1.glTexCoord1sv(c_v)
 
 def glTexCoord2d(s, t):
     """
-    s                : float
-    t                : float
+    s               : float | SupportsFloat
+    t               : float | SupportsFloat
     """
-    _C_GL_1_1.glTexCoord2d(float(s), float(t))
+    if not isinstance(s, float):
+        try:
+            s = float(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to float.") from exception
+
+    if not isinstance(t, float):
+        try:
+            t = float(t)
+        except Exception as exception:
+            raise ValueError("Value of 't' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTexCoord2d(s, t)
 
 def glTexCoord2dv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 2, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexCoord2dv(c_v)
 
 def glTexCoord2f(s, t):
     """
-    s                : float
-    t                : float
+    s               : float | SupportsFloat
+    t               : float | SupportsFloat
     """
-    _C_GL_1_1.glTexCoord2f(float(s), float(t))
+    if not isinstance(s, float):
+        try:
+            s = float(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to float.") from exception
+
+    if not isinstance(t, float):
+        try:
+            t = float(t)
+        except Exception as exception:
+            raise ValueError("Value of 't' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTexCoord2f(s, t)
 
 def glTexCoord2fv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 2, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexCoord2fv(c_v)
 
 def glTexCoord2i(s, t):
     """
-    s                : int
-    t                : int
+    s               : int | SupportsInt
+    t               : int | SupportsInt
     """
-    _C_GL_1_1.glTexCoord2i(int(s), int(t))
+    if not isinstance(s, int):
+        try:
+            s = int(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to int.") from exception
+
+    if not isinstance(t, int):
+        try:
+            t = int(t)
+        except Exception as exception:
+            raise ValueError("Value of 't' can not be converted to int.") from exception
+
+    _C_GL_1_1.glTexCoord2i(s, t)
 
 def glTexCoord2iv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+    
+    c_v = _Support.list_part_to_c_array_no_conv(v, 2, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexCoord2iv(c_v)
 
 def glTexCoord2s(s, t):
     """
-    s                : int
-    t                : int
+    s               : int | SupportsInt
+    t               : int | SupportsInt
     """
-    _C_GL_1_1.glTexCoord2s(int(s), int(t))
+    if not isinstance(s, int):
+        try:
+            s = int(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to int.") from exception
+
+    if not isinstance(t, int):
+        try:
+            t = int(t)
+        except Exception as exception:
+            raise ValueError("Value of 't' can not be converted to int.") from exception
+
+    _C_GL_1_1.glTexCoord2s(s, t)
 
 def glTexCoord2sv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 2, _C_GL_1_1.GLshort)
     _C_GL_1_1.glTexCoord2sv(c_v)
 
 def glTexCoord3d(s, t, r):
     """
-    s                : float
-    t                : float
-    r                : float
+    s               : float | SupportsFloat
+    t               : float | SupportsFloat
+    r               : float | SupportsFloat
     """
-    _C_GL_1_1.glTexCoord3d(float(s), float(t), float(r))
+    if not isinstance(s, float):
+        try:
+            s = float(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to float.") from exception
+
+    if not isinstance(t, float):
+        try:
+            t = float(t)
+        except Exception as exception:
+            raise ValueError("Value of 't' can not be converted to float.") from exception
+
+    if not isinstance(r, float):
+        try:
+            r = float(r)
+        except Exception as exception:
+            raise ValueError("Value of 'r' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTexCoord3d(s, t, r)
 
 def glTexCoord3dv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexCoord3dv(c_v)
 
 def glTexCoord3f(s, t, r):
     """
-    s                : float
-    t                : float
-    r                : float
+    s               : float | SupportsFloat
+    t               : float | SupportsFloat
+    r               : float | SupportsFloat
     """
-    _C_GL_1_1.glTexCoord3f(float(s), float(t), float(r))
+    if not isinstance(s, float):
+        try:
+            s = float(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to float.") from exception
+
+    if not isinstance(t, float):
+        try:
+            t = float(t)
+        except Exception as exception:
+            raise ValueError("Value of 't' can not be converted to float.") from exception
+
+    if not isinstance(r, float):
+        try:
+            r = float(r)
+        except Exception as exception:
+            raise ValueError("Value of 'r' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTexCoord3f(s, t, r)
 
 def glTexCoord3fv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexCoord3fv(c_v)
 
 def glTexCoord3i(s, t, r):
     """
-    s                : int
-    t                : int
-    r                : int
+    s               : int | SupportsInt
+    t               : int | SupportsInt
+    r               : int | SupportsInt
     """
-    _C_GL_1_1.glTexCoord3i(int(s), int(t), int(r))
+    if not isinstance(s, int):
+        try:
+            s = int(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to int.") from exception
+
+    if not isinstance(t, int):
+        try:
+            t = int(t)
+        except Exception as exception:
+            raise ValueError("Value of 't' can not be converted to int.") from exception
+
+    if not isinstance(r, int):
+        try:
+            r = int(r)
+        except Exception as exception:
+            raise ValueError("Value of 'r' can not be converted to int.") from exception
+
+    _C_GL_1_1.glTexCoord3i(s, t, r)
 
 def glTexCoord3iv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexCoord3iv(c_v)
 
 def glTexCoord3s(s, t, r):
     """
-    s                : int
-    t                : int
-    r                : int
+    s               : int | SupportsInt
+    t               : int | SupportsInt
+    r               : int | SupportsInt
     """
-    _C_GL_1_1.glTexCoord3s(int(s), int(t), int(r))
+    if not isinstance(s, int):
+        try:
+            s = int(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to int.") from exception
+
+    if not isinstance(t, int):
+        try:
+            t = int(t)
+        except Exception as exception:
+            raise ValueError("Value of 't' can not be converted to int.") from exception
+
+    if not isinstance(r, int):
+        try:
+            r = int(r)
+        except Exception as exception:
+            raise ValueError("Value of 'r' can not be converted to int.") from exception
+
+    _C_GL_1_1.glTexCoord3s(s, t, r)
 
 def glTexCoord3sv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glTexCoord3sv(c_v)
 
 def glTexCoord4d(s, t, r, q):
     """
-    s                : float
-    t                : float
-    r                : float
-    q                : float
+    s               : float | SupportsFloat
+    t               : float | SupportsFloat
+    r               : float | SupportsFloat
+    q               : float | SupportsFloat
     """
-    _C_GL_1_1.glTexCoord4d(float(s), float(t), float(r), float(q))
+    if not isinstance(s, float):
+        try:
+            s = float(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to float.") from exception
+
+    if not isinstance(t, float):
+        try:
+            t = float(t)
+        except Exception as exception:
+            raise ValueError("Value of 't' can not be converted to float.") from exception
+
+    if not isinstance(r, float):
+        try:
+            r = float(r)
+        except Exception as exception:
+            raise ValueError("Value of 'r' can not be converted to float.") from exception
+
+    if not isinstance(q, float):
+        try:
+            q = float(q)
+        except Exception as exception:
+            raise ValueError("Value of 'q' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTexCoord4d(s, t, r, q)
 
 def glTexCoord4dv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexCoord4dv(c_v)
 
 def glTexCoord4f(s, t, r, q):
     """
-    s                : float
-    t                : float
-    r                : float
-    q                : float
+    s               : float | SupportsFloat
+    t               : float | SupportsFloat
+    r               : float | SupportsFloat
+    q               : float | SupportsFloat
     """
-    _C_GL_1_1.glTexCoord4f(float(s), float(t), float(r), float(q))
+    if not isinstance(s, float):
+        try:
+            s = float(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to float.") from exception
+
+    if not isinstance(t, float):
+        try:
+            t = float(t)
+        except Exception as exception:
+            raise ValueError("Value of 't' can not be converted to float.") from exception
+
+    if not isinstance(r, float):
+        try:
+            r = float(r)
+        except Exception as exception:
+            raise ValueError("Value of 'r' can not be converted to float.") from exception
+
+    if not isinstance(q, float):
+        try:
+            q = float(q)
+        except Exception as exception:
+            raise ValueError("Value of 'q' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTexCoord4f(s, t, r, q)
 
 def glTexCoord4fv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexCoord4fv(c_v)
 
 def glTexCoord4i(s, t, r, q):
     """
-    s                : int
-    t                : int
-    r                : int
-    q                : int
+    s               : int | SupportsInt
+    t               : int | SupportsInt
+    r               : int | SupportsInt
+    q               : int | SupportsInt
     """
-    _C_GL_1_1.glTexCoord4i(int(s), int(t), int(r), int(q))
+    if not isinstance(s, int):
+        try:
+            s = int(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to int.") from exception
+
+    if not isinstance(t, int):
+        try:
+            t = int(t)
+        except Exception as exception:
+            raise ValueError("Value of 't' can not be converted to int.") from exception
+
+    if not isinstance(r, int):
+        try:
+            r = int(r)
+        except Exception as exception:
+            raise ValueError("Value of 'r' can not be converted to int.") from exception
+
+    if not isinstance(q, int):
+        try:
+            q = int(q)
+        except Exception as exception:
+            raise ValueError("Value of 'q' can not be converted to int.") from exception
+
+    _C_GL_1_1.glTexCoord4i(s, t, r, q)
 
 def glTexCoord4iv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexCoord4iv(c_v)
 
 def glTexCoord4s(s, t, r, q):
     """
-    s                : int
-    t                : int
-    r                : int
-    q                : int
+    s               : int | SupportsInt
+    t               : int | SupportsInt
+    r               : int | SupportsInt
+    q               : int | SupportsInt
     """
-    _C_GL_1_1.glTexCoord4s(int(s), int(t), int(r), int(q))
+    if not isinstance(s, int):
+        try:
+            s = int(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to int.") from exception
+
+    if not isinstance(t, int):
+        try:
+            t = int(t)
+        except Exception as exception:
+            raise ValueError("Value of 't' can not be converted to int.") from exception
+
+    if not isinstance(r, int):
+        try:
+            r = int(r)
+        except Exception as exception:
+            raise ValueError("Value of 'r' can not be converted to int.") from exception
+
+    if not isinstance(q, int):
+        try:
+            q = int(q)
+        except Exception as exception:
+            raise ValueError("Value of 'q' can not be converted to int.") from exception
+
+    _C_GL_1_1.glTexCoord4s(s, t, r, q)
 
 def glTexCoord4sv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLshort)
     _C_GL_1_1.glTexCoord4sv(c_v)
 
 
 def glNormal3b(nx, ny, nz):
     """
-    nx               : int
-    ny               : int
-    nz               : int
+    nx              : int | SupportsInt
+    ny              : int | SupportsInt
+    nz              : int | SupportsInt
     """
-    _C_GL_1_1.glNormal3b(int(nx), int(ny), int(nz))
+    if not isinstance(nx, int):
+        try:
+            nx = int(nx)
+        except Exception as exception:
+            raise ValueError("Value of 'nx' can not be converted to int.") from exception
+
+    if not isinstance(ny, int):
+        try:
+            ny = int(ny)
+        except Exception as exception:
+            raise ValueError("Value of 'ny' can not be converted to int.") from exception
+
+    if not isinstance(nz, int):
+        try:
+            nz = int(nz)
+        except Exception as exception:
+            raise ValueError("Value of 'nz' can not be converted to int.") from exception
+
+    _C_GL_1_1.glNormal3b(nx, ny, nz)
 
 def glNormal3bv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLbyte)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLbyte)
     _C_GL_1_1.glNormal3bv(c_v)
 
 def glNormal3d(nx, ny, nz):
     """
-    nx               : float
-    ny               : float
-    nz               : float
+    nx              : float | SupportsFloat
+    ny              : float | SupportsFloat
+    nz              : float | SupportsFloat
     """
-    _C_GL_1_1.glNormal3d(float(nx), float(ny), float(nz))
+    if not isinstance(nx, float):
+        try:
+            nx = float(nx)
+        except Exception as exception:
+            raise ValueError("Value of 'nx' can not be converted to float.") from exception
+
+    if not isinstance(ny, float):
+        try:
+            ny = float(ny)
+        except Exception as exception:
+            raise ValueError("Value of 'ny' can not be converted to float.") from exception
+
+    if not isinstance(nz, float):
+        try:
+            nz = float(nz)
+        except Exception as exception:
+            raise ValueError("Value of 'nz' can not be converted to float.") from exception
+
+    _C_GL_1_1.glNormal3d(nx, ny, nz)
 
 def glNormal3dv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glNormal3dv(c_v)
 
 def glNormal3f(nx, ny, nz):
     """
-    nx               : float
-    ny               : float
-    nz               : float
+    nx              : float | SupportsFloat
+    ny              : float | SupportsFloat
+    nz              : float | SupportsFloat
     """
-    _C_GL_1_1.glNormal3f(float(nx), float(ny), float(nz))
+    if not isinstance(nx, float):
+        try:
+            nx = float(nx)
+        except Exception as exception:
+            raise ValueError("Value of 'nx' can not be converted to float.") from exception
+
+    if not isinstance(ny, float):
+        try:
+            ny = float(ny)
+        except Exception as exception:
+            raise ValueError("Value of 'ny' can not be converted to float.") from exception
+
+    if not isinstance(nz, float):
+        try:
+            nz = float(nz)
+        except Exception as exception:
+            raise ValueError("Value of 'nz' can not be converted to float.") from exception
+
+    _C_GL_1_1.glNormal3f(nx, ny, nz)
 
 def glNormal3fv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glNormal3fv(c_v)
 
 def glNormal3i(nx, ny, nz):
     """
-    nx               : int
-    ny               : int
-    nz               : int
+    nx              : int | SupportsInt
+    ny              : int | SupportsInt
+    nz              : int | SupportsInt
     """
-    _C_GL_1_1.glNormal3i(int(nx), int(ny), int(nz))
+    if not isinstance(nx, int):
+        try:
+            nx = int(nx)
+        except Exception as exception:
+            raise ValueError("Value of 'nx' can not be converted to int.") from exception
+
+    if not isinstance(ny, int):
+        try:
+            ny = int(ny)
+        except Exception as exception:
+            raise ValueError("Value of 'ny' can not be converted to int.") from exception
+
+    if not isinstance(nz, int):
+        try:
+            nz = int(nz)
+        except Exception as exception:
+            raise ValueError("Value of 'nz' can not be converted to int.") from exception
+
+    _C_GL_1_1.glNormal3i(nx, ny, nz)
 
 def glNormal3iv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glNormal3iv(c_v)
 
 def glNormal3s(nx, ny, nz):
     """
-    nx               : int
-    ny               : int
-    nz               : int
+    nx              : int | SupportsInt
+    ny              : int | SupportsInt
+    nz              : int | SupportsInt
     """
-    _C_GL_1_1.glNormal3s(int(nx), int(ny), int(nz))
+    if not isinstance(nx, int):
+        try:
+            nx = int(nx)
+        except Exception as exception:
+            raise ValueError("Value of 'nx' can not be converted to int.") from exception
+
+    if not isinstance(ny, int):
+        try:
+            ny = int(ny)
+        except Exception as exception:
+            raise ValueError("Value of 'ny' can not be converted to int.") from exception
+
+    if not isinstance(nz, int):
+        try:
+            nz = int(nz)
+        except Exception as exception:
+            raise ValueError("Value of 'nz' can not be converted to int.") from exception
+
+    _C_GL_1_1.glNormal3s(nx, ny, nz)
 
 def glNormal3sv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glNormal3sv(c_v)
 
 
 def glColor3b(red, green, blue):
     """
-    red              : int
-    green            : int
-    blue             : int
+    red             : int | SupportsInt
+    green           : int | SupportsInt
+    blue            : int | SupportsInt
     """
-    _C_GL_1_1.glColor3b(int(red), int(green), int(blue))
+    if not isinstance(red, int):
+        try:
+            red = int(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to int.") from exception
+
+    if not isinstance(green, int):
+        try:
+            green = int(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to int.") from exception
+
+    if not isinstance(blue, int):
+        try:
+            blue = int(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to int.") from exception
+
+    _C_GL_1_1.glColor3b(red, green, blue)
 
 def glColor3bv(v):
     """
-    v                : List[int] | bytes
+    v               : List[int] | Iterable[SupportsInt]
         Value range <-128, 127>.
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLbyte)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLbyte)
     _C_GL_1_1.glColor3bv(c_v)
 
 def glColor3d(red, green, blue):
     """
-    red              : float
-    green            : float
-    blue             : float
+    red             : float | SupportsFloat
+    green           : float | SupportsFloat
+    blue            : float | SupportsFloat
     """
-    _C_GL_1_1.glColor3d(float(red), float(green), float(blue))
+    if not isinstance(red, float):
+        try:
+            red = float(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to float.") from exception
+
+    if not isinstance(green, float):
+        try:
+            green = float(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to float.") from exception
+
+    if not isinstance(blue, float):
+        try:
+            blue = float(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to float.") from exception
+
+    _C_GL_1_1.glColor3d(red, green, blue)
 
 def glColor3dv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glColor3dv(c_v)
 
 def glColor3f(red, green, blue):
     """
-    red              : float
-    green            : float
-    blue             : float
+    red             : float | SupportsFloat
+    green           : float | SupportsFloat
+    blue            : float | SupportsFloat
     """
-    _C_GL_1_1.glColor3f(float(red), float(green), float(blue))
+    if not isinstance(red, float):
+        try:
+            red = float(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to float.") from exception
+
+    if not isinstance(green, float):
+        try:
+            green = float(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to float.") from exception
+
+    if not isinstance(blue, float):
+        try:
+            blue = float(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to float.") from exception
+
+    _C_GL_1_1.glColor3f(red, green, blue)
 
 def glColor3fv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glColor3fv(c_v)
 
 def glColor3i(red, green, blue):
     """
-    red              : int
-    green            : int
-    blue             : int
+    red             : int | SupportsInt
+    green           : int | SupportsInt
+    blue            : int | SupportsInt
     """
-    _C_GL_1_1.glColor3i(int(red), int(green), int(blue))
+    if not isinstance(red, int):
+        try:
+            red = int(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to int.") from exception
+
+    if not isinstance(green, int):
+        try:
+            green = int(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to int.") from exception
+
+    if not isinstance(blue, int):
+        try:
+            blue = int(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to int.") from exception
+
+    _C_GL_1_1.glColor3i(red, green, blue)
 
 def glColor3iv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glColor3iv(c_v)
 
 def glColor3s(red, green, blue):
@@ -601,255 +1463,648 @@ def glColor3s(red, green, blue):
     green            : int
     blue             : int
     """
-    _C_GL_1_1.glColor3s(int(red), int(green), int(blue))
+    if not isinstance(red, int):
+        try:
+            red = int(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to int.") from exception
+
+    if not isinstance(green, int):
+        try:
+            green = int(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to int.") from exception
+
+    if not isinstance(blue, int):
+        try:
+            blue = int(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to int.") from exception
+
+    _C_GL_1_1.glColor3s(red, green, blue)
 
 def glColor3sv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glColor3sv(c_v)
 
 def glColor3ub(red, green, blue):
     """
-    red              : int
-    green            : int
-    blue             : int
+    red             : int | SupportsInt
+    green           : int | SupportsInt
+    blue            : int | SupportsInt
     """
-    _C_GL_1_1.glColor3ub(int(red), int(green), int(blue))
+    if not isinstance(red, int):
+        try:
+            red = int(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to int.") from exception
+
+    if not isinstance(green, int):
+        try:
+            green = int(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to int.") from exception
+
+    if not isinstance(blue, int):
+        try:
+            blue = int(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to int.") from exception
+
+    _C_GL_1_1.glColor3ub(red, green, blue)
 
 def glColor3ubv(v):
     """
-    v                : List[int] | bytes
-        Value range <0, 255>.
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLubyte)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLubyte)
     _C_GL_1_1.glColor3ubv(c_v)
 
 def glColor3ui(red, green, blue):
     """
-    red              : int
-    green            : int
-    blue             : int
+    red             : int | SupportsInt
+    green           : int | SupportsInt
+    blue            : int | SupportsInt
     """
-    _C_GL_1_1.glColor3ui(int(red), int(green), int(blue))
+    if not isinstance(red, int):
+        try:
+            red = int(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to int.") from exception
+
+    if not isinstance(green, int):
+        try:
+            green = int(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to int.") from exception
+
+    if not isinstance(blue, int):
+        try:
+            blue = int(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to int.") from exception
+
+    _C_GL_1_1.glColor3ui(red, green, blue)
 
 def glColor3uiv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLuint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLuint)
     _C_GL_1_1.glColor3uiv(c_v)
 
 def glColor3us(red, green, blue):
     """
-    red              : int
-    green            : int
-    blue             : int
+    red             : int | SupportsInt
+    green           : int | SupportsInt
+    blue            : int | SupportsInt
     """
-    _C_GL_1_1.glColor3us(int(red), int(green), int(blue))
+    if not isinstance(red, int):
+        try:
+            red = int(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to int.") from exception
+
+    if not isinstance(green, int):
+        try:
+            green = int(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to int.") from exception
+
+    if not isinstance(blue, int):
+        try:
+            blue = int(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to int.") from exception
+
+    _C_GL_1_1.glColor3us(red, green, blue)
 
 def glColor3usv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLushort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLushort)
     _C_GL_1_1.glColor3usv(c_v)
 
 def glColor4b(red, green, blue, alpha):
     """
-    red              : int
-    green            : int
-    blue             : int
-    alpha            : int
+    red             : int | SupportsInt
+    green           : int | SupportsInt
+    blue            : int | SupportsInt
+    alpha           : int | SupportsInt
     """
-    _C_GL_1_1.glColor4b(int(red), int(green), int(blue), int(alpha))
+    if not isinstance(red, int):
+        try:
+            red = int(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to int.") from exception
+
+    if not isinstance(green, int):
+        try:
+            green = int(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to int.") from exception
+
+    if not isinstance(blue, int):
+        try:
+            blue = int(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to int.") from exception
+
+    if not isinstance(alpha, int):
+        try:
+            alpha = int(alpha)
+        except Exception as exception:
+            raise ValueError("Value of 'alpha' can not be converted to int.") from exception
+
+    _C_GL_1_1.glColor4b(red, green, blue, alpha)
 
 def glColor4bv(v):
     """
-    v                : List[int] | bytes
-        Value range <-128, 127>.
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLbyte)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLbyte)
     _C_GL_1_1.glColor4bv(c_v)
 
 def glColor4d(red, green, blue, alpha):
     """
-    red              : float
-    green            : float
-    blue             : float
-    alpha            : float
+    red             : float | SupportsFloat
+    green           : float | SupportsFloat
+    blue            : float | SupportsFloat
+    alpha           : float | SupportsFloat
     """
-    _C_GL_1_1.glColor4d(float(red), float(green), float(blue), float(alpha))
+    if not isinstance(red, float):
+        try:
+            red = float(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to float.") from exception
+
+    if not isinstance(green, float):
+        try:
+            green = float(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to float.") from exception
+
+    if not isinstance(blue, float):
+        try:
+            blue = float(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to float.") from exception
+
+    if not isinstance(alpha, float):
+        try:
+            alpha = float(alpha)
+        except Exception as exception:
+            raise ValueError("Value of 'alpha' can not be converted to float.") from exception
+
+    _C_GL_1_1.glColor4d(red, green, blue, alpha)
 
 def glColor4dv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glColor4dv(c_v)
 
 def glColor4f(red, green, blue, alpha):
     """
-    red              : float
-    green            : float
-    blue             : float
-    alpha            : float
+    red             : float | SupportsFloat
+    green           : float | SupportsFloat
+    blue            : float | SupportsFloat
+    alpha           : float | SupportsFloat
     """
-    _C_GL_1_1.glColor4f(float(red), float(green), float(blue), float(alpha))
+    if not isinstance(red, float):
+        try:
+            red = float(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to float.") from exception
+
+    if not isinstance(green, float):
+        try:
+            green = float(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to float.") from exception
+
+    if not isinstance(blue, float):
+        try:
+            blue = float(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to float.") from exception
+
+    if not isinstance(alpha, float):
+        try:
+            alpha = float(alpha)
+        except Exception as exception:
+            raise ValueError("Value of 'alpha' can not be converted to float.") from exception
+
+    _C_GL_1_1.glColor4f(red, green, blue, alpha)
 
 def glColor4fv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+            
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glColor4fv(c_v)
 
 def glColor4i(red, green, blue, alpha):
     """
-    red              : int
-    green            : int
-    blue             : int
-    alpha            : int
+    red             : int | SupportsInt
+    green           : int | SupportsInt
+    blue            : int | SupportsInt
+    alpha           : int | SupportsInt
     """
-    _C_GL_1_1.glColor4i(int(red), int(green), int(blue), int(alpha))
+    if not isinstance(red, int):
+        try:
+            red = int(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to int.") from exception
+
+    if not isinstance(green, int):
+        try:
+            green = int(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to int.") from exception
+
+    if not isinstance(blue, int):
+        try:
+            blue = int(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to int.") from exception
+
+    if not isinstance(alpha, int):
+        try:
+            alpha = int(alpha)
+        except Exception as exception:
+            raise ValueError("Value of 'alpha' can not be converted to int.") from exception
+
+    _C_GL_1_1.glColor4i(red, green, blue, alpha)
 
 def glColor4iv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLint)
     _C_GL_1_1.glColor4iv(c_v)
 
 def glColor4s(red, green, blue, alpha):
     """
-    red              : int
-    green            : int
-    blue             : int
-    alpha            : int
+    red             : int | SupportsInt
+    green           : int | SupportsInt
+    blue            : int | SupportsInt
+    alpha           : int | SupportsInt
     """
-    _C_GL_1_1.glColor4s(int(red), int(green), int(blue), int(alpha))
+    if not isinstance(red, int):
+        try:
+            red = int(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to int.") from exception
+
+    if not isinstance(green, int):
+        try:
+            green = int(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to int.") from exception
+
+    if not isinstance(blue, int):
+        try:
+            blue = int(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to int.") from exception
+
+    if not isinstance(alpha, int):
+        try:
+            alpha = int(alpha)
+        except Exception as exception:
+            raise ValueError("Value of 'alpha' can not be converted to int.") from exception
+
+    _C_GL_1_1.glColor4s(red, green, blue, alpha)
 
 def glColor4sv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLshort)
     _C_GL_1_1.glColor4sv(c_v)
 
 def glColor4ub(red, green, blue, alpha):
     """
-    red              : int
-    green            : int
-    blue             : int
-    alpha            : int
+    red             : int | SupportsInt
+    green           : int | SupportsInt
+    blue            : int | SupportsInt
+    alpha           : int | SupportsInt
     """
-    _C_GL_1_1.glColor4ub(int(red), int(green), int(blue), int(alpha))
+    if not isinstance(red, int):
+        try:
+            red = int(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to int.") from exception
+
+    if not isinstance(green, int):
+        try:
+            green = int(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to int.") from exception
+
+    if not isinstance(blue, int):
+        try:
+            blue = int(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to int.") from exception
+
+    if not isinstance(alpha, int):
+        try:
+            alpha = int(alpha)
+        except Exception as exception:
+            raise ValueError("Value of 'alpha' can not be converted to int.") from exception
+
+    _C_GL_1_1.glColor4ub(red, green, blue, alpha)
 
 def glColor4ubv(v):
     """
-    v                : List[int] | bytes
-        Value range <0, 255>
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLubyte)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLubyte)
     _C_GL_1_1.glColor4ubv(c_v)
 
 def glColor4ui(red, green, blue, alpha):
     """
-    red              : int
-    green            : int
-    blue             : int
-    alpha            : int
+    red             : int | SupportsInt
+    green           : int | SupportsInt
+    blue            : int | SupportsInt
+    alpha           : int | SupportsInt
     """
-    _C_GL_1_1.glColor4ui(int(red), int(green), int(blue), int(alpha))
+    if not isinstance(red, int):
+        try:
+            red = int(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to int.") from exception
+
+    if not isinstance(green, int):
+        try:
+            green = int(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to int.") from exception
+
+    if not isinstance(blue, int):
+        try:
+            blue = int(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to int.") from exception
+
+    if not isinstance(alpha, int):
+        try:
+            alpha = int(alpha)
+        except Exception as exception:
+            raise ValueError("Value of 'alpha' can not be converted to int.") from exception
+
+    _C_GL_1_1.glColor4ui(red, green, blue, alpha)
 
 def glColor4uiv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLuint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLuint)
     _C_GL_1_1.glColor4uiv(c_v)
 
 def glColor4us(red, green, blue, alpha):
     """
-    red              : int
-    green            : int
-    blue             : int
-    alpha            : int
+    red             : int | SupportsInt
+    green           : int | SupportsInt
+    blue            : int | SupportsInt
+    alpha           : int | SupportsInt
     """
-    _C_GL_1_1.glColor4us(int(red), int(green), int(blue), int(alpha))
+    if not isinstance(red, int):
+        try:
+            red = int(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to int.") from exception
+
+    if not isinstance(green, int):
+        try:
+            green = int(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to int.") from exception
+
+    if not isinstance(blue, int):
+        try:
+            blue = int(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to int.") from exception
+
+    if not isinstance(alpha, int):
+        try:
+            alpha = int(alpha)
+        except Exception as exception:
+            raise ValueError("Value of 'alpha' can not be converted to int.") from exception
+
+    _C_GL_1_1.glColor4us(red, green, blue, alpha)
 
 def glColor4usv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLushort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLushort)
     _C_GL_1_1.glColor4usv(c_v)
 
 
 def glIndexd(c):
     """
-    c                : float
+    c               : float | SupportsFloat
     """
-    _C_GL_1_1.glIndexd(float(c))
+    if not isinstance(c, float):
+        try:
+            c = float(c)
+        except Exception as exception:
+            raise ValueError("Value of 'c' can not be converted to float.") from exception
+
+    _C_GL_1_1.glIndexd(c)
 
 def glIndexdv(c):
     """
-    c                : List[float]
+    c               : List[float] | Iterable[SupportsFloat]
     """
-    c_c = _Support.list_part_to_c_array(float, c, 1, _C_GL_1_1.GLdouble)
+    if not isinstance(c, list) or not all(isinstance(item, float) for item in c):
+        try:
+            c = [float(item) for item in c]
+        except:
+            raise ValueError("Value of 'c' can not be converted to list of floats.")
+
+    c_c = _Support.list_part_to_c_array_no_conv(c, 1, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glIndexdv(c_c)
 
 def glIndexf(c):
     """
-    c                : float
+    c               : float | SupportsFloat
     """
-    _C_GL_1_1.glIndexf(float(c))
+    if not isinstance(c, float):
+        try:
+            c = float(c)
+        except Exception as exception:
+            raise ValueError("Value of 'c' can not be converted to float.") from exception
+
+    _C_GL_1_1.glIndexf(c)
 
 def glIndexfv(c):
     """
-    c                : List[float]
+    c               : List[float] | Iterable[SupportsFloat]
     """
-    c_c = _Support.list_part_to_c_array(float, c, 1, _C_GL_1_1.GLfloat)
+    if not isinstance(c, list) or not all(isinstance(item, float) for item in c):
+        try:
+            c = [float(item) for item in c]
+        except:
+            raise ValueError("Value of 'c' can not be converted to list of floats.")
+
+    c_c = _Support.list_part_to_c_array_no_conv(c, 1, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glIndexfv(c_c)
 
 def glIndexi(c):
     """
-    c                : int
+    c               : int | SupportsInt
     """
-    _C_GL_1_1.glIndexi(int(c))
+    if not isinstance(c, int):
+        try:
+            c = int(c)
+        except Exception as exception:
+            raise ValueError("Value of 'c' can not be converted to int.") from exception
+
+    _C_GL_1_1.glIndexi(c)
 
 def glIndexiv(c):
     """
-    c                : List[int]
+    c               : List[int] | Iterable[SupportsInt]
     """
-    c_c = _Support.list_part_to_c_array(int, c, 1, _C_GL_1_1.GLint)
+    if not isinstance(c, list) or not all(isinstance(item, int) for item in c):
+        try:
+            c = [int(item) for item in c]
+        except:
+            raise ValueError("Value of 'c' can not be converted to list of ints.")
+
+    c_c = _Support.list_part_to_c_array_no_conv(c, 1, _C_GL_1_1.GLint)
     _C_GL_1_1.glIndexiv(c_c)
 
 def glIndexs(c):
     """
-    c                : int
+    c               : int | SupportsInt
     """
-    _C_GL_1_1.glIndexs(int(c))
+    if not isinstance(c, int):
+        try:
+            c = int(c)
+        except Exception as exception:
+            raise ValueError("Value of 'c' can not be converted to int.") from exception
+
+    _C_GL_1_1.glIndexs(c)
 
 def glIndexsv(c):
     """
-    c                : List[int]
+    c               : List[int] | Iterable[SupportsInt]
     """
-    c_c = _Support.list_part_to_c_array(int, c, 1, _C_GL_1_1.GLshort)
+    if not isinstance(c, list) or not all(isinstance(item, int) for item in c):
+        try:
+            c = [int(item) for item in c]
+        except:
+            raise ValueError("Value of 'c' can not be converted to list of ints.")
+
+    c_c = _Support.list_part_to_c_array_no_conv(c, 1, _C_GL_1_1.GLshort)
     _C_GL_1_1.glIndexsv(c_c)
 
 def glIndexub(c):
     """
-    c                : int
+    c               : int | SupportsInt
     """
-    _C_GL_1_1.glIndexub(int(c))
+    if not isinstance(c, int):
+        try:
+            c = int(c)
+        except Exception as exception:
+            raise ValueError("Value of 'c' can not be converted to int.") from exception
+
+    _C_GL_1_1.glIndexub(c)
 
 def glIndexubv(c):
     """
-    c                : List[int] | bytes
+    c               : List[int] | Iterable[SupportsInt]
     """
-    c_c = _Support.list_part_to_c_array(int, c, 1, _C_GL_1_1.GLubyte)
+    if not isinstance(c, list) or not all(isinstance(item, int) for item in c):
+        try:
+            c = [int(item) for item in c]
+        except:
+            raise ValueError("Value of 'c' can not be converted to list of ints.")
+
+    c_c = _Support.list_part_to_c_array_no_conv(c, 1, _C_GL_1_1.GLubyte)
     _C_GL_1_1.glIndexubv(c_c)
 
 
@@ -857,222 +2112,412 @@ def glIndexubv(c):
 
 def glVertexPointer(size, type_, stride, pointer):
     """
-    size             : int
-    type_            : int
-    stride           : int
-    pointer          : bytes | List[int | float] | Iterable[SupportsInt | SupportsFloat]
+    size            : int | SupportsInt
+    type_           : int | SupportsInt
+    stride          : int | SupportsInt
+    pointer         : bytes | List[int | float] | Iterable[SupportsInt | SupportsFloat]
     """
-    type_   = int(type_)
-    stride  = int(stride)
+    if not isinstance(size, int):
+        try:
+            size = int(size)
+        except Exception as exception:
+            raise ValueError("Value of 'size' can not be converted to int.") from exception
+
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+
+    if not isinstance(stride, int):
+        try:
+            stride = int(stride)
+        except Exception as exception:
+            raise ValueError("Value of 'stride' can not be converted to int.") from exception
 
     if isinstance(pointer, bytes):
         _Support.to_cache().c_vertex_array_pointer = pointer
     else:
-        pointer = list(pointer)
-
         if stride != 0:
             raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
 
         py_type = _Support.gl_type_id_to_py_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect python type.")
+            
+        try:
+            pointer = [py_type(item) for item in pointer]
+        except:
+            py_type_str = {
+                int : "int",
+                float : "float",
+            }.get(py_type, "???")
+            
+            raise ValueError("Value of 'pointer' can not be converted to list of %ss." % py_type_str)
+
         c_type  = _Support.gl_type_id_to_c_type(type_)
-        if py_type is None:
+        if c_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect c type.")
 
-        _Support.to_cache().c_vertex_array_pointer = _Support.list_to_c_array(py_type, pointer, 0, c_type)
+        _Support.to_cache().c_vertex_array_pointer = _Support.list_to_c_array_no_conv(pointer, 0, c_type)
 
-    _C_GL_1_1.glVertexPointer(int(size), type_, stride, _Support.to_cache().c_vertex_array_pointer)
+    _C_GL_1_1.glVertexPointer(size, type_, stride, _Support.to_cache().c_vertex_array_pointer)
 
 def glNormalPointer(type_, stride, pointer):
     """
-    type_            : int
-    stride           : int
-    pointer          : List[int | float] | Iterable[SupportsInt | SupportsFloat]
+    type_           : int | SupportsInt
+    stride          : int | SupportsInt
+    pointer         : List[int | float] | Iterable[SupportsInt | SupportsFloat]
     """
-    type_   = int(type_)
-    stride  = int(stride)
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+
+    if not isinstance(stride, int):
+        try:
+            stride = int(stride)
+        except Exception as exception:
+            raise ValueError("Value of 'stride' can not be converted to int.") from exception
 
     if isinstance(pointer, bytes):
         _Support.to_cache().c_normal_array_pointer = pointer
     else:
-        pointer = list(pointer)
-
         if stride != 0:
             raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
 
         py_type = _Support.gl_type_id_to_py_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect python type.")
+            
+        try:
+            pointer = [py_type(item) for item in pointer]
+        except:
+            py_type_str = {
+                int : "int",
+                float : "float",
+            }.get(py_type, "???")
+            
+            raise ValueError("Value of 'pointer' can not be converted to list of %ss." % py_type_str)
+
         c_type  = _Support.gl_type_id_to_c_type(type_)
-        if py_type is None:
+        if c_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect c type.")
 
-        _Support.to_cache().c_normal_array_pointer = _Support.list_to_c_array(py_type, pointer, 0, c_type)
+        _Support.to_cache().c_normal_array_pointer = _Support.list_to_c_array_no_conv(pointer, 0, c_type)
 
     _C_GL_1_1.glNormalPointer(type_, stride, _Support.to_cache().c_normal_array_pointer)
 
 def glColorPointer(size, type_, stride, pointer):
     """
-    size             : int
-    type_            : int
-    stride           : int
-    pointer          : List[int | float] | Iterable[SupportsInt | SupportsFloat]
+    size            : int | SupportsInt
+    type_           : int | SupportsInt
+    stride          : int | SupportsInt
+    pointer         : List[int | float] | Iterable[SupportsInt | SupportsFloat]
     """
-    type_   = int(type_)
-    stride  = int(stride)
+    if not isinstance(size, int):
+        try:
+            size = int(size)
+        except Exception as exception:
+            raise ValueError("Value of 'size' can not be converted to int.") from exception
+
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+
+    if not isinstance(stride, int):
+        try:
+            stride = int(stride)
+        except Exception as exception:
+            raise ValueError("Value of 'stride' can not be converted to int.") from exception
 
     if isinstance(pointer, bytes):
         _Support.to_cache().c_color_array_pointer = pointer
     else:
-        pointer = list(pointer)
-
         if stride != 0:
             raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
 
         py_type = _Support.gl_type_id_to_py_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect python type.")
+        
+        try:
+            pointer = [py_type(item) for item in pointer]
+        except:
+            py_type_str = {
+                int : "int",
+                float : "float",
+            }.get(py_type, "???")
+            
+            raise ValueError("Value of 'pointer' can not be converted to list of %ss." % py_type_str)
+        
         c_type  = _Support.gl_type_id_to_c_type(type_)
-        if py_type is None:
+        if c_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect c type.")
 
-        _Support.to_cache().c_color_array_pointer = _Support.list_to_c_array(py_type, pointer, 0, c_type)
+        _Support.to_cache().c_color_array_pointer = _Support.list_to_c_array_no_conv(pointer, 0, c_type)
 
-    _C_GL_1_1.glColorPointer(int(size), type_, stride, _Support.to_cache().c_color_array_pointer)
+    _C_GL_1_1.glColorPointer(size, type_, stride, _Support.to_cache().c_color_array_pointer)
 
 def glIndexPointer(type_, stride, pointer):
     """
-    type_            : int
-    stride           : int
-    pointer          : List[int | float] | Iterable[SupportsInt | SupportsFloat]
+    type_           : int | SupportsInt
+    stride          : int | SupportsInt
+    pointer         : List[int | float] | Iterable[SupportsInt | SupportsFloat]
     """
-    type_   = int(type_)
-    stride  = int(stride)
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+
+    if not isinstance(stride, int):
+        try:
+            stride = int(stride)
+        except Exception as exception:
+            raise ValueError("Value of 'stride' can not be converted to int.") from exception
 
     if isinstance(pointer, bytes):
         _Support.to_cache().c_index_array_pointer = pointer
     else:
-        pointer = list(pointer)
-
         if stride != 0:
             raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
 
         py_type = _Support.gl_type_id_to_py_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect python type.")
+            
+        try:
+            pointer = [py_type(item) for item in pointer]
+        except:
+            py_type_str = {
+                int : "int",
+                float : "float",
+            }.get(py_type, "???")
+            
+            raise ValueError("Value of 'pointer' can not be converted to list of %ss." % py_type_str)
+            
         c_type  = _Support.gl_type_id_to_c_type(type_)
-        if py_type is None:
+        if c_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect c type.")
 
-        _Support.to_cache().c_index_array_pointer = _Support.list_to_c_array(py_type, pointer, 0, c_type)
+        _Support.to_cache().c_index_array_pointer = _Support.list_to_c_array_no_conv(pointer, 0, c_type)
 
     _C_GL_1_1.glIndexPointer(type_, stride, _Support.to_cache().c_index_array_pointer)
 
 def glEdgeFlagPointer(stride, pointer):
     """
-    stride           : int
-    pointer          : List[int] | Iterable[SupportsInt]
+    stride          : int | SupportsInt
+    pointer         : List[int] | Iterable[SupportsInt]
     """
-    stride  = int(stride)
+    if not isinstance(stride, int):
+        try:
+            stride = int(stride)
+        except Exception as exception:
+            raise ValueError("Value of 'stride' can not be converted to int.") from exception
 
     if isinstance(pointer, bytes):
         _Support.to_cache().c_edge_flag_array_pointer = pointer
     else:
-        pointer = list(pointer)
-
         if stride != 0:
             raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
+            
+        try:
+            pointer = [int(item) for item in pointer]
+        except:
+            raise ValueError("Value of 'pointer' can not be converted to list of ints.")
 
-        _Support.to_cache().c_edge_flag_array_pointer = _Support.list_to_c_array(int, pointer, 0, _C_GL_1_1.GLboolean)
+        _Support.to_cache().c_edge_flag_array_pointer = _Support.list_to_c_array_no_conv(pointer, 0, _C_GL_1_1.GLboolean)
 
     _C_GL_1_1.glEdgeFlagPointer(stride, _Support.to_cache().c_edge_flag_array_pointer)
 
 def glTexCoordPointer(size, type_, stride, pointer):
     """
-    size             : int
-    type_            : int
-    stride           : int
-    pointer          : List[int | float] | Iterable[SupportsInt | SupportsFloat]
+    size            : int | SupportsInt
+    type_           : int | SupportsInt
+    stride          : int | SupportsInt
+    pointer         : List[int | float] | Iterable[SupportsInt | SupportsFloat]
     """
-    type_   = int(type_)
-    stride  = int(stride)
+    if not isinstance(size, int):
+        try:
+            size = int(size)
+        except Exception as exception:
+            raise ValueError("Value of 'size' can not be converted to int.") from exception
+
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+
+    if not isinstance(stride, int):
+        try:
+            stride = int(stride)
+        except Exception as exception:
+            raise ValueError("Value of 'stride' can not be converted to int.") from exception
 
     if isinstance(pointer, bytes):
         _Support.to_cache().c_tex_coord_array_pointer = pointer
     else:
-        pointer = list(pointer)
-
         if stride != 0:
             raise ValueError("Value of 'stride' parameter can't be other than 0, when 'pointer' parameter type is not bytes.")
 
         py_type = _Support.gl_type_id_to_py_type(type_)
         if py_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect python type.")
+            
+        try:
+            pointer = [py_type(item) for item in pointer]
+        except:
+            py_type_str = {
+                int : "int",
+                float : "float",
+            }.get(py_type, "???")
+            
+            raise ValueError("Value of 'pointer' can not be converted to list of %ss." % py_type_str)
+            
         c_type  = _Support.gl_type_id_to_c_type(type_)
-        if py_type is None:
+        if c_type is None:
             raise ValueError("Unexpected value of 'type_' parameter. Can not detect c type.")
 
-        _Support.to_cache().c_tex_coord_array_pointer = _Support.list_to_c_array(py_type, pointer, 0, c_type)
+        _Support.to_cache().c_tex_coord_array_pointer = _Support.list_to_c_array_no_conv(pointer, 0, c_type)
 
-    _C_GL_1_1.glTexCoordPointer(int(size), type_, stride, _Support.to_cache().c_tex_coord_array_pointer)
+    _C_GL_1_1.glTexCoordPointer(size, type_, stride, _Support.to_cache().c_tex_coord_array_pointer)
 
 def glEnableClientState(array):
     """
-    array            : int
+    array           : int | SupportsInt
     """
-    _C_GL_1_1.glEnableClientState(int(array))
+    if not isinstance(array, int):
+        try:
+            array = int(array)
+        except Exception as exception:
+            raise ValueError("Value of 'array' can not be converted to int.") from exception
+
+    _C_GL_1_1.glEnableClientState(array)
 
 def glDisableClientState(array):
     """
-    array            : int
+    array           : int | SupportsInt
     """
-    _C_GL_1_1.glDisableClientState(int(array))
+    if not isinstance(array, int):
+        try:
+            array = int(array)
+        except Exception as exception:
+            raise ValueError("Value of 'array' can not be converted to int.") from exception
+
+    _C_GL_1_1.glDisableClientState(array)
 
 def glArrayElement(i):
     """
-    i                : int
+    i               : int | SupportsInt
     """
-    _C_GL_1_1.glArrayElement(int(i))
+    if not isinstance(i, int):
+        try:
+            i = int(i)
+        except Exception as exception:
+            raise ValueError("Value of 'i' can not be converted to int.") from exception
+
+    _C_GL_1_1.glArrayElement(i)
 
 # Drawing Commands
 
 def glDrawArrays(mode, first, count):
     """
-    mode             : int
-    first            : int
-    count            : int
+    mode            : int | SupportsInt
+    first           : int | SupportsInt
+    count           : int | SupportsInt
     """
-    _C_GL_1_1.glDrawArrays(int(mode), int(first), int(count))
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    if not isinstance(first, int):
+        try:
+            first = int(first)
+        except Exception as exception:
+            raise ValueError("Value of 'first' can not be converted to int.") from exception
+
+    if not isinstance(count, int):
+        try:
+            count = int(count)
+        except Exception as exception:
+            raise ValueError("Value of 'count' can not be converted to int.") from exception
+
+    _C_GL_1_1.glDrawArrays(mode, first, count)
 
 def glDrawElements(mode, count, type_, indices):
     """
-    mode             : int
-    count            : int
-    type_            : int
-    indices          : List[int | float]
+    mode            : int | SupportsInt
+    count           : int | SupportsInt
+    type_           : int | SupportsInt
+    indices         : List[int | float] | Iterable[SupportsInt | SupportsFloat]
     """
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    if not isinstance(count, int):
+        try:
+            count = int(count)
+        except Exception as exception:
+            raise ValueError("Value of 'count' can not be converted to int.") from exception
+
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+
     py_type = _Support.gl_type_id_to_py_type(type_)
     if py_type is None:
         raise ValueError("Unexpected value of 'type_' parameter. Can not detect python type.")
+        
+    try:
+        indices = [py_type(item) for item in indices]
+    except:
+        py_type_str = {
+            int : "int",
+            float : "float",
+        }.get(py_type, "???")
+        
+        raise ValueError("Value of 'indices' can not be converted to list of %ss." % py_type_str)
+        
+        
     c_type  = _Support.gl_type_id_to_c_type(type_)
-    if py_type is None:
+    if c_type is None:
         raise ValueError("Unexpected value of 'type_' parameter. Can not detect c type.")
 
-    c_indices = _Support.list_to_c_array(py_type, indices, int(count), c_type)
-    _C_GL_1_1.glDrawElements(int(mode), int(count), int(type_), c_indices)
+    c_indices = _Support.list_to_c_array_no_conv(indices, count, c_type)
+    _C_GL_1_1.glDrawElements(mode, count, type_, c_indices)
 
 
 def glInterleavedArrays(format_, stride, pointer):
     """
-    format_          : int
-    stride           : int
+    format_         : int | SupportsInt
+    stride          : int | SupportsInt
         Value can't be other than 0, when 'pointer' parameter type is not bytes.
-    pointer          : bytes | List[int | Float] | Iterable[SupportsInt | SupportsFloat]
+    pointer         : bytes | List[int | Float] | Iterable[SupportsInt | SupportsFloat]
         Array of aggregate elements.
     """
-    format_ = int(format_)
-    stride  = int(stride)
+    if not isinstance(format_, int):
+        try:
+            format_ = int(format_)
+        except Exception as exception:
+            raise ValueError("Value of 'format_' can not be converted to int.") from exception
+
+    if not isinstance(stride, int):
+        try:
+            stride = int(stride)
+        except Exception as exception:
+            raise ValueError("Value of 'stride' can not be converted to int.") from exception
 
     if isinstance(pointer, bytes):
         c_pointer = pointer
@@ -1132,8 +2577,16 @@ def glInterleavedArrays(format_, stride, pointer):
                 size = _ctypes.sizeof(c_type)
 
                 for _ in range(length):
-                    value = py_type(pointer[index])
-
+                    try:
+                        value = py_type(pointer[index])
+                    except:
+                        py_type_str = {
+                            int : "int",
+                            float : "float",
+                        }.get(py_type, "???")
+                    
+                        raise ValueError("Value of 'pointer' can not be converted to list of %ss." % py_type_str)
+                    
                     c_value_p = _ctypes.cast(_ctypes.addressof(c_pointer) + offset, _ctypes.POINTER(c_type))
                     c_value_p[0] = value
 
@@ -1150,110 +2603,284 @@ def glInterleavedArrays(format_, stride, pointer):
 
 def glRectd(x1, y1, x2, y2):
     """
-    x1               : float
-    y1               : float
-    x2               : float
-    y2               : float
+    x1              : float | SupportsFloat
+    y1              : float | SupportsFloat
+    x2              : float | SupportsFloat
+    y2              : float | SupportsFloat
     """
-    _C_GL_1_1.glRectd(float(x1), float(y1), float(x2), float(y2))
+    if not isinstance(x1, float):
+        try:
+            x1 = float(x1)
+        except Exception as exception:
+            raise ValueError("Value of 'x1' can not be converted to float.") from exception
+
+    if not isinstance(y1, float):
+        try:
+            y1 = float(y1)
+        except Exception as exception:
+            raise ValueError("Value of 'y1' can not be converted to float.") from exception
+
+    if not isinstance(x2, float):
+        try:
+            x2 = float(x2)
+        except Exception as exception:
+            raise ValueError("Value of 'x2' can not be converted to float.") from exception
+
+    if not isinstance(y2, float):
+        try:
+            y2 = float(y2)
+        except Exception as exception:
+            raise ValueError("Value of 'y2' can not be converted to float.") from exception
+
+    _C_GL_1_1.glRectd(x1, y1, x2, y2)
 
 def glRectdv(v1, v2):
     """
-    v1               : List[float]
-    v2               : List[float]
+    v1              : List[float] | Iterable[SupportsFloat]
+    v2              : List[float] | Iterable[SupportsFloat]
     """
-    c_v1 = _Support.list_part_to_c_array(float, v1, 2, _C_GL_1_1.GLdouble)
-    c_v2 = _Support.list_part_to_c_array(float, v2, 2, _C_GL_1_1.GLdouble)
+    if not isinstance(v1, list) or not all(isinstance(item, float) for item in v1):
+        try:
+            v1 = [float(item) for item in v1]
+        except:
+            raise ValueError("Value of 'v1' can not be converted to list of floats.")
+
+    if not isinstance(v2, list) or not all(isinstance(item, float) for item in v2):
+        try:
+            v2 = [float(item) for item in v2]
+        except:
+            raise ValueError("Value of 'v2' can not be converted to list of floats.")
+            
+    c_v1 = _Support.list_part_to_c_array_no_conv(v1, 2, _C_GL_1_1.GLdouble)
+    c_v2 = _Support.list_part_to_c_array_no_conv(v2, 2, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glRectdv(c_v1, c_v2)
 
 def glRectf(x1, y1, x2, y2):
     """
-    x1               : float
-    y1               : float
-    x2               : float
-    y2               : float
+    x1              : float | SupportsFloat
+    y1              : float | SupportsFloat
+    x2              : float | SupportsFloat
+    y2              : float | SupportsFloat
     """
-    _C_GL_1_1.glRectf(float(x1), float(y1), float(x2), float(y2))
+    if not isinstance(x1, float):
+        try:
+            x1 = float(x1)
+        except Exception as exception:
+            raise ValueError("Value of 'x1' can not be converted to float.") from exception
+
+    if not isinstance(y1, float):
+        try:
+            y1 = float(y1)
+        except Exception as exception:
+            raise ValueError("Value of 'y1' can not be converted to float.") from exception
+
+    if not isinstance(x2, float):
+        try:
+            x2 = float(x2)
+        except Exception as exception:
+            raise ValueError("Value of 'x2' can not be converted to float.") from exception
+
+    if not isinstance(y2, float):
+        try:
+            y2 = float(y2)
+        except Exception as exception:
+            raise ValueError("Value of 'y2' can not be converted to float.") from exception
+
+    _C_GL_1_1.glRectf(x1, y1, x2, y2)
 
 def glRectfv(v1, v2):
     """
-    v1               : List[float]
-    v2               : List[float]
+    v1              : List[float] | Iterable[SupportsFloat]
+    v2              : List[float] | Iterable[SupportsFloat]
     """
-    c_v1 = _Support.list_part_to_c_array(float, v1, 2, _C_GL_1_1.GLfloat)
-    c_v2 = _Support.list_part_to_c_array(float, v2, 2, _C_GL_1_1.GLfloat)
+    if not isinstance(v1, list) or not all(isinstance(item, float) for item in v1):
+        try:
+            v1 = [float(item) for item in v1]
+        except:
+            raise ValueError("Value of 'v1' can not be converted to list of floats.")
+
+    if not isinstance(v2, list) or not all(isinstance(item, float) for item in v2):
+        try:
+            v2 = [float(item) for item in v2]
+        except:
+            raise ValueError("Value of 'v2' can not be converted to list of floats.")
+
+    c_v1 = _Support.list_part_to_c_array_no_conv(v1, 2, _C_GL_1_1.GLfloat)
+    c_v2 = _Support.list_part_to_c_array_no_conv(v2, 2, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glRectfv(c_v1, c_v2)
 
 def glRecti(x1, y1, x2, y2):
     """
-    x1               : int
-    y1               : int
-    x2               : int
-    y2               : int
+    x1              : int | SupportsInt
+    y1              : int | SupportsInt
+    x2              : int | SupportsInt
+    y2              : int | SupportsInt
     """
-    _C_GL_1_1.glRecti(int(x1), int(y1), int(x2), int(y2))
+    if not isinstance(x1, int):
+        try:
+            x1 = int(x1)
+        except Exception as exception:
+            raise ValueError("Value of 'x1' can not be converted to int.") from exception
+
+    if not isinstance(y1, int):
+        try:
+            y1 = int(y1)
+        except Exception as exception:
+            raise ValueError("Value of 'y1' can not be converted to int.") from exception
+
+    if not isinstance(x2, int):
+        try:
+            x2 = int(x2)
+        except Exception as exception:
+            raise ValueError("Value of 'x2' can not be converted to int.") from exception
+
+    if not isinstance(y2, int):
+        try:
+            y2 = int(y2)
+        except Exception as exception:
+            raise ValueError("Value of 'y2' can not be converted to int.") from exception
+
+    _C_GL_1_1.glRecti(x1, y1, x2, y2)
 
 def glRectiv(v1, v2):
     """
-    v1               : List[int]
-    v2               : List[int]
+    v1              : List[int] | Iterable[SupportsInt]
+    v2              : List[int] | Iterable[SupportsInt]
     """
-    c_v1 = _Support.list_part_to_c_array(int, v1, 2, _C_GL_1_1.GLint)
-    c_v2 = _Support.list_part_to_c_array(int, v2, 2, _C_GL_1_1.GLint)
+    if not isinstance(v1, list) or not all(isinstance(item, int) for item in v1):
+        try:
+            v1 = [int(item) for item in v1]
+        except:
+            raise ValueError("Value of 'v1' can not be converted to list of ints.")
+
+    if not isinstance(v2, list) or not all(isinstance(item, int) for item in v2):
+        try:
+            v2 = [int(item) for item in v2]
+        except:
+            raise ValueError("Value of 'v2' can not be converted to list of ints.")
+
+    c_v1 = _Support.list_part_to_c_array_no_conv(v1, 2, _C_GL_1_1.GLint)
+    c_v2 = _Support.list_part_to_c_array_no_conv(v2, 2, _C_GL_1_1.GLint)
     _C_GL_1_1.glRectiv(c_v1, c_v2)
 
 def glRects(x1, y1, x2, y2):
     """
-    x1               : int
-    y1               : int
-    x2               : int
-    y2               : int
+    x1              : int | SupportsInt
+    y1              : int | SupportsInt
+    x2              : int | SupportsInt
+    y2              : int | SupportsInt
     """
-    _C_GL_1_1.glRects(int(x1), int(y1), int(x2), int(y2))
+    if not isinstance(x1, int):
+        try:
+            x1 = int(x1)
+        except Exception as exception:
+            raise ValueError("Value of 'x1' can not be converted to int.") from exception
+
+    if not isinstance(y1, int):
+        try:
+            y1 = int(y1)
+        except Exception as exception:
+            raise ValueError("Value of 'y1' can not be converted to int.") from exception
+
+    if not isinstance(x2, int):
+        try:
+            x2 = int(x2)
+        except Exception as exception:
+            raise ValueError("Value of 'x2' can not be converted to int.") from exception
+
+    if not isinstance(y2, int):
+        try:
+            y2 = int(y2)
+        except Exception as exception:
+            raise ValueError("Value of 'y2' can not be converted to int.") from exception
+
+    _C_GL_1_1.glRects(x1, y1, x2, y2)
 
 def glRectsv(v1, v2):
     """
-    v1               : List[int]
-    v2               : List[int]
+    v1              : List[int] | Iterable[SupportsInt]
+    v2              : List[int] | Iterable[SupportsInt]
     """
-    c_v1 = _Support.list_part_to_c_array(int, v1, 2, _C_GL_1_1.GLshort)
-    c_v2 = _Support.list_part_to_c_array(int, v2, 2, _C_GL_1_1.GLshort)
+    if not isinstance(v1, list) or not all(isinstance(item, int) for item in v1):
+        try:
+            v1 = [int(item) for item in v1]
+        except:
+            raise ValueError("Value of 'v1' can not be converted to list of ints.")
+
+    if not isinstance(v2, list) or not all(isinstance(item, int) for item in v2):
+        try:
+            v2 = [int(item) for item in v2]
+        except:
+            raise ValueError("Value of 'v2' can not be converted to list of ints.")
+            
+    c_v1 = _Support.list_part_to_c_array_no_conv(v1, 2, _C_GL_1_1.GLshort)
+    c_v2 = _Support.list_part_to_c_array_no_conv(v2, 2, _C_GL_1_1.GLshort)
     _C_GL_1_1.glRectsv(c_v1, c_v2)
 
 # Matrices
 
 def glMatrixMode(mode):
     """
-    mode             : int
+    mode            : int | SupportsInt
     """
-    _C_GL_1_1.glMatrixMode(int(mode))
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    _C_GL_1_1.glMatrixMode(mode)
 
 def glLoadMatrixd(m):
     """
-    m                : ???
+    m               : List[float] | Iterable[SupportsFloat]
     """
-    c_m = _Support.list_part_to_c_array(float, m, 16, _C_GL_1_1.GLdouble)
+    if not isinstance(m, list) or not all(isinstance(item, float) for item in m):
+        try:
+            m = [float(item) for item in m]
+        except:
+            raise ValueError("Value of 'm' can not be converted to list of floats.")
+
+    c_m = _Support.list_part_to_c_array_no_conv(m, 16, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glLoadMatrixd(c_m)
 
 def glLoadMatrixf(m):
     """
-    m                : ???
+    m               : List[float] | Iterable[SupportsFloat]
     """
-    c_m = _Support.list_part_to_c_array(float, m, 16, _C_GL_1_1.GLfloat)
+    if not isinstance(m, list) or not all(isinstance(item, float) for item in m):
+        try:
+            m = [float(item) for item in m]
+        except:
+            raise ValueError("Value of 'm' can not be converted to list of floats.")
+
+    c_m = _Support.list_part_to_c_array_no_conv(m, 16, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glLoadMatrixf(c_m)
 
 def glMultMatrixd(m):
     """
-    m                : ???
+    m               : List[float] | Iterable[SupportsFloat]
     """
-    c_m = _Support.list_part_to_c_array(float, m, 16, _C_GL_1_1.GLdouble)
+    if not isinstance(m, list) or not all(isinstance(item, float) for item in m):
+        try:
+            m = [float(item) for item in m]
+        except:
+            raise ValueError("Value of 'm' can not be converted to list of floats.")
+
+    c_m = _Support.list_part_to_c_array_no_conv(m, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glMultMatrixd(c_m)
 
 def glMultMatrixf(m):
     """
-    m                : ???
+    m               : List[float] | Iterable[SupportsFloat]
     """
-    c_m = _Support.list_part_to_c_array(float, m, 16, _C_GL_1_1.GLfloat)
+    if not isinstance(m, list) or not all(isinstance(item, float) for item in m):
+        try:
+            m = [float(item) for item in m]
+        except:
+            raise ValueError("Value of 'm' can not be converted to list of floats.")
+
+    c_m = _Support.list_part_to_c_array_no_conv(m, 16, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glMultMatrixf(c_m)
 
 def glLoadIdentity():
@@ -1261,75 +2888,266 @@ def glLoadIdentity():
 
 def glRotated(angle, x, y, z):
     """
-    angle            : float
-    x                : float
-    y                : float
-    z                : float
+    angle           : float | SupportsFloat
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
     """
-    _C_GL_1_1.glRotated(float(angle), float(x), float(y), float(z))
+    if not isinstance(angle, float):
+        try:
+            angle = float(angle)
+        except Exception as exception:
+            raise ValueError("Value of 'angle' can not be converted to float.") from exception
+
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    _C_GL_1_1.glRotated(angle, x, y, z)
 
 def glRotatef(angle, x, y, z):
     """
-    angle            : float
-    x                : float
-    y                : float
-    z                : float
+    angle           : float | SupportsFloat
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
     """
-    _C_GL_1_1.glRotatef(float(angle), float(x), float(y), float(z))
+    if not isinstance(angle, float):
+        try:
+            angle = float(angle)
+        except Exception as exception:
+            raise ValueError("Value of 'angle' can not be converted to float.") from exception
+
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    _C_GL_1_1.glRotatef(angle, x, y, z)
 
 def glTranslated(x, y, z):
     """
-    x                : float
-    y                : float
-    z                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
     """
-    _C_GL_1_1.glTranslated(float(x), float(y), float(z))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTranslated(x, y, z)
 
 def glTranslatef(x, y, z):
     """
-    x                : float
-    y                : float
-    z                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
     """
-    _C_GL_1_1.glTranslatef(float(x), float(y), float(z))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTranslatef(x, y, z)
 
 def glScaled(x, y, z):
     """
-    x                : float
-    y                : float
-    z                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
     """
-    _C_GL_1_1.glScaled(float(x), float(y), float(z))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    _C_GL_1_1.glScaled(x, y, z)
 
 def glScalef(x, y, z):
     """
-    x                : float
-    y                : float
-    z                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
     """
-    _C_GL_1_1.glScalef(float(x), float(y), float(z))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
 
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    _C_GL_1_1.glScalef(x, y, z)
 def glFrustum(left, right, bottom, top, zNear, zFar):
     """
-    left             : float
-    right            : float
-    bottom           : float
-    top              : float
-    zNear            : float
-    zFar             : float
+    left            : float | SupportsFloat
+    right           : float | SupportsFloat
+    bottom          : float | SupportsFloat
+    top             : float | SupportsFloat
+    zNear           : float | SupportsFloat
+    zFar            : float | SupportsFloat
     """
-    _C_GL_1_1.glFrustum(float(left), float(right), float(bottom), float(top), float(zNear), float(zFar))
+    if not isinstance(left, float):
+        try:
+            left = float(left)
+        except Exception as exception:
+            raise ValueError("Value of 'left' can not be converted to float.") from exception
+
+    if not isinstance(right, float):
+        try:
+            right = float(right)
+        except Exception as exception:
+            raise ValueError("Value of 'right' can not be converted to float.") from exception
+
+    if not isinstance(bottom, float):
+        try:
+            bottom = float(bottom)
+        except Exception as exception:
+            raise ValueError("Value of 'bottom' can not be converted to float.") from exception
+
+    if not isinstance(top, float):
+        try:
+            top = float(top)
+        except Exception as exception:
+            raise ValueError("Value of 'top' can not be converted to float.") from exception
+
+    if not isinstance(zNear, float):
+        try:
+            zNear = float(zNear)
+        except Exception as exception:
+            raise ValueError("Value of 'zNear' can not be converted to float.") from exception
+
+    if not isinstance(zFar, float):
+        try:
+            zFar = float(zFar)
+        except Exception as exception:
+            raise ValueError("Value of 'zFar' can not be converted to float.") from exception
+
+    _C_GL_1_1.glFrustum(left, right, bottom, top, zNear, zFar)
 
 def glOrtho(left, right, bottom, top, zNear, zFar):
     """
-    left             : float
-    right            : float
-    bottom           : float
-    top              : float
-    zNear            : float
-    zFar             : float
+    left            : float | SupportsFloat
+    right           : float | SupportsFloat
+    bottom          : float | SupportsFloat
+    top             : float | SupportsFloat
+    zNear           : float | SupportsFloat
+    zFar            : float | SupportsFloat
     """
-    _C_GL_1_1.glOrtho(float(left), float(right), float(bottom), float(top), float(zNear), float(zFar))
+    if not isinstance(left, float):
+        try:
+            left = float(left)
+        except Exception as exception:
+            raise ValueError("Value of 'left' can not be converted to float.") from exception
+
+    if not isinstance(right, float):
+        try:
+            right = float(right)
+        except Exception as exception:
+            raise ValueError("Value of 'right' can not be converted to float.") from exception
+
+    if not isinstance(bottom, float):
+        try:
+            bottom = float(bottom)
+        except Exception as exception:
+            raise ValueError("Value of 'bottom' can not be converted to float.") from exception
+
+    if not isinstance(top, float):
+        try:
+            top = float(top)
+        except Exception as exception:
+            raise ValueError("Value of 'top' can not be converted to float.") from exception
+
+    if not isinstance(zNear, float):
+        try:
+            zNear = float(zNear)
+        except Exception as exception:
+            raise ValueError("Value of 'zNear' can not be converted to float.") from exception
+
+    if not isinstance(zFar, float):
+        try:
+            zFar = float(zFar)
+        except Exception as exception:
+            raise ValueError("Value of 'zFar' can not be converted to float.") from exception
+
+    _C_GL_1_1.glOrtho(left, right, bottom, top, zNear, zFar)
 
 def glPushMatrix():
     _C_GL_1_1.glPushMatrix()
@@ -2162,7 +3980,7 @@ def glTexImage1D(target, level, internalformat, width, border, format_, type_, p
     if n is None:
         raise ValueError("Unexpected value of 'format_' parameter")
 
-    md = _Support.get_tex_type_mul_div_sizet_number(type_)
+    md = _Support.get_tex_type_mul_div_size(type_)
     if md is None:
         raise ValueError("Unexpected value of 'type_' parameter")
 
@@ -2215,7 +4033,7 @@ def glTexImage2D(target, level, internalformat, width, height, border, format_, 
     if n is None:
         raise ValueError("Unexpected value of 'format_' parameter")
 
-    md = _Support.get_tex_type_mul_div_sizet_number(type_)
+    md = _Support.get_tex_type_mul_div_size(type_)
     if md is None:
         raise ValueError("Unexpected value of 'type_' parameter")
 
@@ -2296,7 +4114,7 @@ def glTexSubImage1D(target, level, xoffset, width, format_, type_, pixels):
     if n is None:
         raise ValueError("Unexpected value of 'format_' parameter")
 
-    md = _Support.get_tex_type_mul_div_sizet_number(type_)
+    md = _Support.get_tex_type_mul_div_size(type_)
     if md is None:
         raise ValueError("Unexpected value of 'type_' parameter")
 
@@ -2348,7 +4166,7 @@ def glTexSubImage2D(target, level, xoffset, yoffset, width, height, format_, typ
     if n is None:
         raise ValueError("Unexpected value of 'format_' parameter")
 
-    md = _Support.get_tex_type_mul_div_sizet_number(type_)
+    md = _Support.get_tex_type_mul_div_size(type_)
     if md is None:
         raise ValueError("Unexpected value of 'type_' parameter")
 
@@ -2745,7 +4563,7 @@ def glGetTexImage(target, level, format_, type_, is_return_list = False):
     if n is None:
         raise ValueError("Unexpected value of 'format_' parameter.")
 
-    md = _Support.get_tex_type_mul_div_sizet_number(type_)
+    md = _Support.get_tex_type_mul_div_size(type_)
     if md is None:
         raise ValueError("Unexpected value of 'type_' parameter.")
 

@@ -93,7 +93,7 @@ class ExampleRunner:
             example_manager.add_example("mt.draw_pixels",      manual_tests.draw_pixels.run)
             example_manager.add_example("mt.draw_stipple",     manual_tests.draw_stipple.run)
             example_manager.add_example("mt.display_list",     manual_tests.display_list.run)
-            example_manager.add_example("mt.draw_texture",     manual_tests.draw_texture.run,      ["float", "1d", "sub"]),
+            example_manager.add_example("mt.draw_texture",     manual_tests.draw_texture.run,      ["float", "1d", "sub", "vec", "fps"]),
             example_manager.add_example("mt.bezier_curve",     manual_tests.bezier_curve.run),
             example_manager.add_example("mt.bezier_surface",   manual_tests.bezier_surface.run),
 
