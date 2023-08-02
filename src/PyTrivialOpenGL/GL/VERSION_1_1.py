@@ -3160,72 +3160,175 @@ def glPopMatrix():
 
 def glTexGend(coord, pname, param):
     """
-    coord            : int
-    pname            : int
-    param            : float
+    coord           : int | SupportsInt
+    pname           : int | SupportsInt
+    param           : float | SupportsFloat
     """
-    _C_GL_1_1.glTexGend(int(coord), int(pname), float(param))
+    if not isinstance(coord, int):
+        try:
+            coord = int(coord)
+        except Exception as exception:
+            raise ValueError("Value of 'coord' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, float):
+        try:
+            param = float(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTexGend(coord, pname, param)
 
 
 def glTexGendv(coord, pname, params):
     """
-    coord            : int
-    pname            : int
-    params           : List[float] | Iterable[SupportsFloat]
-        Parameter is converted to list.
-        All items of list are converted to float.
-    """    
-    params = list(params)
+    coord           : int | SupportsInt
+    pname           : int | SupportsInt
+    params          : List[float] | Iterable[SupportsFloat]
+    """
+    if not isinstance(coord, int):
+        try:
+            coord = int(coord)
+        except Exception as exception:
+            raise ValueError("Value of 'coord' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, float) for item in params):
+        try:
+            params = [float(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of floats.")
+
     n = _Support.get_tex_gen_params_length(pname)
     if n is None:
-        raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _Support.list_part_to_c_array(float, params, n, _C_GL_1_1.GLdouble)
+        raise ValueError("Unexpected value of 'pname'.")
+        
+    c_params = _Support.list_part_to_c_array_no_conv(params, n, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glTexGendv(int(coord), int(pname), c_params)
 
 def glTexGenf(coord, pname, param):
     """
-    coord            : int
-    pname            : int
-    param            : float
+    coord           : int | SupportsInt
+    pname           : int | SupportsInt
+    param           : float | SupportsFloat
     """
-    _C_GL_1_1.glTexGenf(int(coord), int(pname), float(param))
+    if not isinstance(coord, int):
+        try:
+            coord = int(coord)
+        except Exception as exception:
+            raise ValueError("Value of 'coord' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, float):
+        try:
+            param = float(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTexGenf(coord, pname, param)
 
 def glTexGenfv(coord, pname, params):
     """
-    coord            : int
-    pname            : int
-    params           : List[float] | Iterable[SupportsFloat]
-        Parameter is converted to list.
-        All items of list are converted to float.
-    """    
-    params = list(params)
+    coord           : int | SupportsInt
+    pname           : int | SupportsInt
+    params          : List[float] | Iterable[SupportsFloat]
+    """
+    if not isinstance(coord, int):
+        try:
+            coord = int(coord)
+        except Exception as exception:
+            raise ValueError("Value of 'coord' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, float) for item in params):
+        try:
+            params = [float(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of floats.")
+
     n = _Support.get_tex_gen_params_length(pname)
     if n is None:
-        raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _Support.list_part_to_c_array(float, params, n, _C_GL_1_1.GLfloat)
+        raise ValueError("Unexpected value of 'pname'.")
+        
+    c_params = _Support.list_part_to_c_array_no_conv(params, n, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glTexGenfv(int(coord), int(pname), c_params)
 
 def glTexGeni(coord, pname, param):
     """
-    coord            : int
-    pname            : int
-    param            : int
+    coord           : int | SupportsInt
+    pname           : int | SupportsInt
+    param           : int | SupportsInt
     """
-    _C_GL_1_1.glTexGeni(int(coord), int(pname), int(param))
+    if not isinstance(coord, int):
+        try:
+            coord = int(coord)
+        except Exception as exception:
+            raise ValueError("Value of 'coord' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, int):
+        try:
+            param = int(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to int.") from exception
+
+    _C_GL_1_1.glTexGeni(coord, pname, param)
 
 def glTexGeniv(coord, pname, params):
     """
-    coord            : int
-    pname            : int
-    params           : List[int] | Iterable[SupportsInt]
-        Parameter is converted to list.
-        All items of list are converted to int.
-    """    
-    params = list(params)
+    coord           : int | SupportsInt
+    pname           : int | SupportsInt
+    params          : List[int] | Iterable[SupportsInt]
+    """
+    if not isinstance(coord, int):
+        try:
+            coord = int(coord)
+        except Exception as exception:
+            raise ValueError("Value of 'coord' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, int) for item in params):
+        try:
+            params = [int(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of ints.")
+            
+
     n = _Support.get_tex_gen_params_length(pname)
     if n is None:
-        raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _Support.list_part_to_c_array(int, params, n, _C_GL_1_1.GLint)
+        raise ValueError("Unexpected value of 'pname'.")
+        
+    c_params = _Support.list_part_to_c_array_no_conv(params, n, _C_GL_1_1.GLint)
     _C_GL_1_1.glTexGeniv(int(coord), int(pname), c_params)
 
 ### Viewport and Clipping ###
@@ -3234,39 +3337,93 @@ def glTexGeniv(coord, pname, params):
 
 def glDepthRange(zNear, zFar):
     """
-    zNear            : float
-    zFar             : float
+    zNear           : float | SupportsFloat
+    zFar            : float | SupportsFloat
     """
-    _C_GL_1_1.glDepthRange(float(zNear), float(zFar))
+    if not isinstance(zNear, float):
+        try:
+            zNear = float(zNear)
+        except Exception as exception:
+            raise ValueError("Value of 'zNear' can not be converted to float.") from exception
+
+    if not isinstance(zFar, float):
+        try:
+            zFar = float(zFar)
+        except Exception as exception:
+            raise ValueError("Value of 'zFar' can not be converted to float.") from exception
+
+    _C_GL_1_1.glDepthRange(zNear, zFar)
 
 def glViewport(x, y, width, height):
     """
-    x                : int
-    y                : int
-    width            : int
-    height           : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    width           : int | SupportsInt
+    height          : int | SupportsInt
     """
-    _C_GL_1_1.glViewport(int(x), int(y), int(width), int(height))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    if not isinstance(height, int):
+        try:
+            height = int(height)
+        except Exception as exception:
+            raise ValueError("Value of 'height' can not be converted to int.") from exception
+
+    _C_GL_1_1.glViewport(x, y, width, height)
 
 
 # Clipping
 
 def glClipPlane(plane, equation):
     """
-    plane            : int
-    equation         : List[float]
+    plane           : int | SupportsInt
+    equation        : List[float] | Iterable[SupportsFloat]
     """
-    c_equation = _Support.list_part_to_c_array(float, equation, 4, _C_GL_1_1.GLdouble)
+    if not isinstance(plane, int):
+        try:
+            plane = int(plane)
+        except Exception as exception:
+            raise ValueError("Value of 'plane' can not be converted to int.") from exception
+
+    if not isinstance(equation, list) or not all(isinstance(item, float) for item in equation):
+        try:
+            equation = [float(item) for item in equation]
+        except:
+            raise ValueError("Value of 'equation' can not be converted to list of floats.")
+            
+    c_equation = _Support.list_part_to_c_array_no_conv(equation, 4, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glClipPlane(int(plane), c_equation)
 
 def glGetClipPlane(plane):
     """
-    plane           : int
+    plane           : int | SupportsInt
     Returns         : List[float]
         Corresponds to 'equation' parameter from OpenGL function specification.
     """
+    if not isinstance(plane, int):
+        try:
+            plane = int(plane)
+        except Exception as exception:
+            raise ValueError("Value of 'plane' can not be converted to int.") from exception
+
     c_equation = _Support.make_c_array(_C_GL_1_1.GLdouble, 4)
-    _C_GL_1_1.glGetClipPlane(int(plane), c_equation)
+    _C_GL_1_1.glGetClipPlane(plane, c_equation)
     return _Support.c_array_to_list(float, c_equation)
 
 ### Lighting and Color ###
@@ -3275,102 +3432,294 @@ def glGetClipPlane(plane):
 
 def glMaterialf(face, pname, param):
     """
-    face             : int
-    pname            : int
-    param            : float
+    face            : int | SupportsInt
+    pname           : int | SupportsInt
+    param           : float | SupportsFloat
     """
-    _C_GL_1_1.glMaterialf(int(face), int(pname), float(param))
+    if not isinstance(face, int):
+        try:
+            face = int(face)
+        except Exception as exception:
+            raise ValueError("Value of 'face' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, float):
+        try:
+            param = float(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to float.") from exception
+
+    _C_GL_1_1.glMaterialf(face, pname, param)
 
 def glMaterialfv(face, pname, params):
     """
-    face             : int
-    pname            : int
-    params           : List[float]
+    face            : int | SupportsInt
+    pname           : int | SupportsInt
+    params          : List[float] | Iterable[SupportsFloat]
     """
-    c_params = _Support.list_to_c_array(float, params, 1, _C_GL_1_1.GLfloat)
+    if not isinstance(face, int):
+        try:
+            face = int(face)
+        except Exception as exception:
+            raise ValueError("Value of 'face' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, float) for item in params):
+        try:
+            params = [float(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of floats.")
+
+    c_params = _Support.list_to_c_array_no_conv(params, 1, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glMaterialfv(int(face), int(pname), c_params)
 
 def glMateriali(face, pname, param):
     """
-    face             : int
-    pname            : int
-    param            : int
+    face            : int | SupportsInt
+    pname           : int | SupportsInt
+    param           : int | SupportsInt
     """
-    _C_GL_1_1.glMateriali(int(face), int(pname), int(param))
+    if not isinstance(face, int):
+        try:
+            face = int(face)
+        except Exception as exception:
+            raise ValueError("Value of 'face' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, int):
+        try:
+            param = int(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to int.") from exception
+
+    _C_GL_1_1.glMateriali(face, pname, param)
 
 def glMaterialiv(face, pname, params):
     """
-    face             : int
-    pname            : int
-    params           : List[int]
+    face            : int | SupportsInt
+    pname           : int | SupportsInt
+    params          : List[int] | Iterable[SupportsInt]
     """
-    c_params = _Support.list_to_c_array(int, params, 1, _C_GL_1_1.GLint)
+    if not isinstance(face, int):
+        try:
+            face = int(face)
+        except Exception as exception:
+            raise ValueError("Value of 'face' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, int) for item in params):
+        try:
+            params = [int(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of ints.")
+
+    c_params = _Support.list_to_c_array_no_conv(params, 1, _C_GL_1_1.GLint)
     _C_GL_1_1.glMaterialiv(int(face), int(pname), c_params)
 
 
 def glLightf(light, pname, param):
     """
-    light            : int
-    pname            : int
-    param            : float
+    light           : int | SupportsInt
+    pname           : int | SupportsInt
+    param           : float | SupportsFloat
     """
-    _C_GL_1_1.glLightf(int(light), int(pname), float(param))
+    if not isinstance(light, int):
+        try:
+            light = int(light)
+        except Exception as exception:
+            raise ValueError("Value of 'light' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, float):
+        try:
+            param = float(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to float.") from exception
+
+    _C_GL_1_1.glLightf(light, pname, param)
 
 def glLightfv(light, pname, params):
     """
-    light            : int
-    pname            : int
-    params           : List[float]
+    light           : int | SupportsInt
+    pname           : int | SupportsInt
+    params          : List[float] | Iterable[SupportsFloat]
     """
-    c_params = _Support.list_to_c_array(float, params, 1, _C_GL_1_1.GLfloat)
+    if not isinstance(light, int):
+        try:
+            light = int(light)
+        except Exception as exception:
+            raise ValueError("Value of 'light' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, float) for item in params):
+        try:
+            params = [float(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of floats.")
+
+    c_params = _Support.list_to_c_array_no_conv(params, 1, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glLightfv(int(light), int(pname), c_params)
 
 def glLighti(light, pname, param):
     """
-    light            : int
-    pname            : int
-    param            : int
+    light           : int | SupportsInt
+    pname           : int | SupportsInt
+    param           : int | SupportsInt
     """
-    _C_GL_1_1.glLighti(int(light), int(pname), int(param))
+    if not isinstance(light, int):
+        try:
+            light = int(light)
+        except Exception as exception:
+            raise ValueError("Value of 'light' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, int):
+        try:
+            param = int(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to int.") from exception
+
+    _C_GL_1_1.glLighti(light, pname, param)
 
 def glLightiv(light, pname, params):
     """
-    light            : int
-    pname            : int
-    params           : List[int]
+    light           : int | SupportsInt
+    pname           : int | SupportsInt
+    params          : List[int] | Iterable[SupportsInt]
     """
-    c_params = _Support.list_to_c_array(int, params, 1, _C_GL_1_1.GLint)
+    if not isinstance(light, int):
+        try:
+            light = int(light)
+        except Exception as exception:
+            raise ValueError("Value of 'light' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, int) for item in params):
+        try:
+            params = [int(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of ints.")
+
+    c_params = _Support.list_to_c_array_no_conv(params, 1, _C_GL_1_1.GLint)
     _C_GL_1_1.glLightiv(int(light), int(pname), c_params)
 
 
 def glLightModelf(pname, param):
     """
-    pname            : int
-    param            : float
+    pname           : int | SupportsInt
+    param           : float | SupportsFloat
     """
-    _C_GL_1_1.glLightModelf(int(pname), float(param))
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, float):
+        try:
+            param = float(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to float.") from exception
+
+    _C_GL_1_1.glLightModelf(pname, param)
 
 def glLightModelfv(pname, params):
     """
-    pname            : int
-    params           : List[float]
+    pname           : int | SupportsInt
+    params          : List[float] | Iterable[SupportsFloat]
     """
-    c_params = _Support.list_to_c_array(float, params, 1, _C_GL_1_1.GLfloat)
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, float) for item in params):
+        try:
+            params = [float(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of floats.")
+
+    c_params = _Support.list_to_c_array_no_conv(params, 1, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glLightModelfv(int(pname), c_params)
 
 def glLightModeli(pname, param):
     """
-    pname            : int
-    param            : int
+    pname           : int | SupportsInt
+    param           : int | SupportsInt
     """
-    _C_GL_1_1.glLightModeli(int(pname), int(param))
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, int):
+        try:
+            param = int(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to int.") from exception
+
+    _C_GL_1_1.glLightModeli(pname, param)
 
 def glLightModeliv(pname, params):
     """
-    pname            : int
-    params           : List[int]
+    pname           : int | SupportsInt
+    params          : List[int] | Iterable[SupportsInt]
     """
-    c_params = _Support.list_to_c_array(int, params, 1, _C_GL_1_1.GLint)
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, int) for item in params):
+        try:
+            params = [int(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of ints.")
+
+    c_params = _Support.list_to_c_array_no_conv(params, 1, _C_GL_1_1.GLint)
     _C_GL_1_1.glLightModeliv(int(pname), c_params)
 
 
@@ -3378,29 +3727,59 @@ def glLightModeliv(pname, params):
 
 def glColorMaterial(face, mode):
     """
-    face             : int
-    mode             : int
+    face            : int | SupportsInt
+    mode            : int | SupportsInt
     """
-    _C_GL_1_1.glColorMaterial(int(face), int(mode))
+    if not isinstance(face, int):
+        try:
+            face = int(face)
+        except Exception as exception:
+            raise ValueError("Value of 'face' can not be converted to int.") from exception
+
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    _C_GL_1_1.glColorMaterial(face, mode)
 
 
 # Flatshading
 
 def glShadeModel(mode):
     """
-    mode             : int
+    mode            : int | SupportsInt
     """
-    _C_GL_1_1.glShadeModel(int(mode))
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    _C_GL_1_1.glShadeModel(mode)
 
 
 # Queries
 
 def glGetLightfv(light, pname):
     """
-    light            : int
-    pname            : int
-    ReturnType       : List[float]
+    light           : int | SupportsInt
+    pname           : int | SupportsInt
+    Returns         : List[float]
     """
+    if not isinstance(light, int):
+        try:
+            light = int(light)
+        except Exception as exception:
+            raise ValueError("Value of 'light' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+    
     if pname in [GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_POSITION]:
         length = 4
     elif pname in [GL_SPOT_DIRECTION]:
@@ -3408,18 +3787,30 @@ def glGetLightfv(light, pname):
     elif pname in [GL_SPOT_EXPONENT, GL_SPOT_CUTOFF, GL_CONSTANT_ATTENUATION, GL_LINEAR_ATTENUATION, GL_QUADRATIC_ATTENUATION]:
         length = 1
     else:
-        raise ValueError("Unexpected 'pname' value.")
+        raise ValueError("Unexpected value of 'pname'.")
 
     c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, length)
-    _C_GL_1_1.glGetLightfv(int(light), int(pname), c_params)
+    _C_GL_1_1.glGetLightfv(light, pname, c_params)
     return _Support.c_array_to_list(float, c_params)
 
 def glGetLightiv(light, pname):
     """
-    light            : int
-    pname            : int
-    ReturnType       : List[int]
+    light           : int | SupportsInt
+    pname           : int | SupportsInt
+    Returns         : List[int]
     """
+    if not isinstance(light, int):
+        try:
+            light = int(light)
+        except Exception as exception:
+            raise ValueError("Value of 'light' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+    
     if pname in [GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_POSITION]:
         length = 4
     elif pname in [GL_SPOT_DIRECTION]:
@@ -3427,18 +3818,30 @@ def glGetLightiv(light, pname):
     elif pname in [GL_SPOT_EXPONENT, GL_SPOT_CUTOFF, GL_CONSTANT_ATTENUATION, GL_LINEAR_ATTENUATION, GL_QUADRATIC_ATTENUATION]:
         length = 1
     else:
-        raise ValueError("Unexpected 'pname' value.")
+        raise ValueError("Unexpected value of 'pname'.")
 
     c_params = _Support.make_c_array(_C_GL_1_1.GLint, length)
-    _C_GL_1_1.glGetLightiv(int(light), int(pname), c_params)
+    _C_GL_1_1.glGetLightiv(light, pname, c_params)
     return _Support.c_array_to_list(int, c_params)
 
 def glGetMaterialfv(face, pname):
     """
-    face             : int
-    pname            : int
-    ReturnType       : List[float]
+    face            : int | SupportsInt
+    pname           : int | SupportsInt
+    Returns         : List[float]
     """
+    if not isinstance(face, int):
+        try:
+            face = int(face)
+        except Exception as exception:
+            raise ValueError("Value of 'face' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+    
     if pname in [GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_EMISSION]:
         length = 4
     elif pname in [GL_COLOR_INDEXES]:
@@ -3446,18 +3849,30 @@ def glGetMaterialfv(face, pname):
     elif pname in [GL_SHININESS]:
         length = 1
     else:
-        raise ValueError("Unexpected 'pname' value.")
+        raise ValueError("Unexpected value of 'pname'.")
 
     c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, length)
-    _C_GL_1_1.glGetMaterialfv(int(face), int(pname), c_params)
+    _C_GL_1_1.glGetMaterialfv(face, pname, c_params)
     return _Support.c_array_to_list(float, c_params)
 
 def glGetMaterialiv(face, pname):
     """
-    face             : int
-    pname            : int
-    ReturnType       : List[int]
+    face            : int | SupportsInt
+    pname           : int | SupportsInt
+    Returns         : List[int]
     """
+    if not isinstance(face, int):
+        try:
+            face = int(face)
+        except Exception as exception:
+            raise ValueError("Value of 'face' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
     if pname in [GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_EMISSION]:
         length = 4
     elif pname in [GL_COLOR_INDEXES]:
@@ -3465,10 +3880,10 @@ def glGetMaterialiv(face, pname):
     elif pname in [GL_SHININESS]:
         length = 1
     else:
-        raise ValueError("Unexpected 'pname' value.")
+        raise ValueError("Unexpected value of 'pname'.")
 
     c_params = _Support.make_c_array(_C_GL_1_1.GLint, length)
-    _C_GL_1_1.glGetMaterialiv(int(face), int(pname), c_params)
+    _C_GL_1_1.glGetMaterialiv(face, pname, c_params)
     return _Support.c_array_to_list(int, c_params)
 
 ### Rendering Control and Queries ###
@@ -3477,182 +3892,470 @@ def glGetMaterialiv(face, pname):
 
 def glRasterPos2d(x, y):
     """
-    x                : float
-    y                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
     """
-    _C_GL_1_1.glRasterPos2d(float(x), float(y))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    _C_GL_1_1.glRasterPos2d(x, y)
 
 def glRasterPos2dv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLdouble)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 2, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glRasterPos2dv(c_v)
 
 def glRasterPos2f(x, y):
     """
-    x                : float
-    y                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
     """
-    _C_GL_1_1.glRasterPos2f(float(x), float(y))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    _C_GL_1_1.glRasterPos2f(x, y)
 
 def glRasterPos2fv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 2, _C_GL_1_1.GLfloat)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 2, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glRasterPos2fv(c_v)
 
 def glRasterPos2i(x, y):
     """
-    x                : int
-    y                : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
     """
-    _C_GL_1_1.glRasterPos2i(int(x), int(y))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    _C_GL_1_1.glRasterPos2i(x, y)
 
 def glRasterPos2iv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 2, _C_GL_1_1.GLint)
     _C_GL_1_1.glRasterPos2iv(c_v)
 
 def glRasterPos2s(x, y):
     """
-    x                : int
-    y                : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
     """
-    _C_GL_1_1.glRasterPos2s(int(x), int(y))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    _C_GL_1_1.glRasterPos2s(x, y)
 
 def glRasterPos2sv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 2, _C_GL_1_1.GLshort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 2, _C_GL_1_1.GLshort)
     _C_GL_1_1.glRasterPos2sv(c_v)
 
 def glRasterPos3d(x, y, z):
     """
-    x                : float
-    y                : float
-    z                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
     """
-    _C_GL_1_1.glRasterPos3d(float(x), float(y), float(z))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    _C_GL_1_1.glRasterPos3d(x, y, z)
 
 def glRasterPos3dv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLdouble)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glRasterPos3dv(c_v)
 
 def glRasterPos3f(x, y, z):
     """
-    x                : float
-    y                : float
-    z                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
     """
-    _C_GL_1_1.glRasterPos3f(float(x), float(y), float(z))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    _C_GL_1_1.glRasterPos3f(x, y, z)
 
 def glRasterPos3fv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 3, _C_GL_1_1.GLfloat)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glRasterPos3fv(c_v)
 
 def glRasterPos3i(x, y, z):
     """
-    x                : int
-    y                : int
-    z                : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    z               : int | SupportsInt
     """
-    _C_GL_1_1.glRasterPos3i(int(x), int(y), int(z))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(z, int):
+        try:
+            z = int(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to int.") from exception
+
+    _C_GL_1_1.glRasterPos3i(x, y, z)
 
 def glRasterPos3iv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLint)
     _C_GL_1_1.glRasterPos3iv(c_v)
 
 def glRasterPos3s(x, y, z):
     """
-    x                : int
-    y                : int
-    z                : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    z               : int | SupportsInt
     """
-    _C_GL_1_1.glRasterPos3s(int(x), int(y), int(z))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(z, int):
+        try:
+            z = int(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to int.") from exception
+
+    _C_GL_1_1.glRasterPos3s(x, y, z)
 
 def glRasterPos3sv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 3, _C_GL_1_1.GLshort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 3, _C_GL_1_1.GLshort)
     _C_GL_1_1.glRasterPos3sv(c_v)
 
 def glRasterPos4d(x, y, z, w):
     """
-    x                : float
-    y                : float
-    z                : float
-    w                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
+    w               : float | SupportsFloat
     """
-    _C_GL_1_1.glRasterPos4d(float(x), float(y), float(z), float(w))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    if not isinstance(w, float):
+        try:
+            w = float(w)
+        except Exception as exception:
+            raise ValueError("Value of 'w' can not be converted to float.") from exception
+
+    _C_GL_1_1.glRasterPos4d(x, y, z, w)
 
 def glRasterPos4dv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLdouble)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glRasterPos4dv(c_v)
 
 def glRasterPos4f(x, y, z, w):
     """
-    x                : float
-    y                : float
-    z                : float
-    w                : float
+    x               : float | SupportsFloat
+    y               : float | SupportsFloat
+    z               : float | SupportsFloat
+    w               : float | SupportsFloat
     """
-    _C_GL_1_1.glRasterPos4f(float(x), float(y), float(z), float(w))
+    if not isinstance(x, float):
+        try:
+            x = float(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to float.") from exception
+
+    if not isinstance(y, float):
+        try:
+            y = float(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to float.") from exception
+
+    if not isinstance(z, float):
+        try:
+            z = float(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to float.") from exception
+
+    if not isinstance(w, float):
+        try:
+            w = float(w)
+        except Exception as exception:
+            raise ValueError("Value of 'w' can not be converted to float.") from exception
+
+    _C_GL_1_1.glRasterPos4f(x, y, z, w)
 
 def glRasterPos4fv(v):
     """
-    v                : List[float]
+    v               : List[float] | Iterable[SupportsFloat]
     """
-    c_v = _Support.list_part_to_c_array(float, v, 4, _C_GL_1_1.GLfloat)
+    if not isinstance(v, list) or not all(isinstance(item, float) for item in v):
+        try:
+            v = [float(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of floats.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glRasterPos4fv(c_v)
 
 def glRasterPos4i(x, y, z, w):
     """
-    x                : int
-    y                : int
-    z                : int
-    w                : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    z               : int | SupportsInt
+    w               : int | SupportsInt
     """
-    _C_GL_1_1.glRasterPos4i(int(x), int(y), int(z), int(w))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(z, int):
+        try:
+            z = int(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to int.") from exception
+
+    if not isinstance(w, int):
+        try:
+            w = int(w)
+        except Exception as exception:
+            raise ValueError("Value of 'w' can not be converted to int.") from exception
+
+    _C_GL_1_1.glRasterPos4i(x, y, z, w)
 
 def glRasterPos4iv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLint)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLint)
     _C_GL_1_1.glRasterPos4iv(c_v)
 
 def glRasterPos4s(x, y, z, w):
     """
-    x                : int
-    y                : int
-    z                : int
-    w                : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    z               : int | SupportsInt
+    w               : int | SupportsInt
     """
-    _C_GL_1_1.glRasterPos4s(int(x), int(y), int(z), int(w))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(z, int):
+        try:
+            z = int(z)
+        except Exception as exception:
+            raise ValueError("Value of 'z' can not be converted to int.") from exception
+
+    if not isinstance(w, int):
+        try:
+            w = int(w)
+        except Exception as exception:
+            raise ValueError("Value of 'w' can not be converted to int.") from exception
+
+    _C_GL_1_1.glRasterPos4s(x, y, z, w)
 
 def glRasterPos4sv(v):
     """
-    v                : List[int]
+    v               : List[int] | Iterable[SupportsInt]
     """
-    c_v = _Support.list_part_to_c_array(int, v, 4, _C_GL_1_1.GLshort)
+    if not isinstance(v, list) or not all(isinstance(item, int) for item in v):
+        try:
+            v = [int(item) for item in v]
+        except:
+            raise ValueError("Value of 'v' can not be converted to list of ints.")
+
+    c_v = _Support.list_part_to_c_array_no_conv(v, 4, _C_GL_1_1.GLshort)
     _C_GL_1_1.glRasterPos4sv(c_v)
 
 ### Rasterization ###
@@ -3661,27 +4364,51 @@ def glRasterPos4sv(v):
 
 def glPointSize(size):
     """
-    size             : float
+    size            : float | SupportsFloat
     """
-    _C_GL_1_1.glPointSize(float(size))
+    if not isinstance(size, float):
+        try:
+            size = float(size)
+        except Exception as exception:
+            raise ValueError("Value of 'size' can not be converted to float.") from exception
+
+    _C_GL_1_1.glPointSize(size)
 
 # Line Segments
 
 def glLineWidth(width):
     """
-    width            : float
+    width           : float | SupportsFloat
     """
-    _C_GL_1_1.glLineWidth(float(width))
+    if not isinstance(width, float):
+        try:
+            width = float(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to float.") from exception
+
+    _C_GL_1_1.glLineWidth(width)
 
 
 # Other Line Segments Features
 
 def glLineStipple(factor, pattern):
     """
-    factor           : int
-    pattern          : int
+    factor          : int | SupportsInt
+    pattern         : int | SupportsInt
     """
-    _C_GL_1_1.glLineStipple(int(factor), int(pattern))
+    if not isinstance(factor, int):
+        try:
+            factor = int(factor)
+        except Exception as exception:
+            raise ValueError("Value of 'factor' can not be converted to int.") from exception
+
+    if not isinstance(pattern, int):
+        try:
+            pattern = int(pattern)
+        except Exception as exception:
+            raise ValueError("Value of 'pattern' can not be converted to int.") from exception
+
+    _C_GL_1_1.glLineStipple(factor, pattern)
 
 # Stipple Query
 
@@ -3700,15 +4427,27 @@ def glGetPolygonStipple():
 
 def glFrontFace(mode):
     """
-    mode             : int
+    mode            : int | SupportsInt
     """
-    _C_GL_1_1.glFrontFace(int(mode))
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    _C_GL_1_1.glFrontFace(mode)
 
 def glCullFace(mode):
     """
-    mode             : int
+    mode            : int | SupportsInt
     """
-    _C_GL_1_1.glCullFace(int(mode))
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    _C_GL_1_1.glCullFace(mode)
 
 # Stippling
 
@@ -3717,6 +4456,12 @@ def glPolygonStipple(mask):
     """
     mask             : bytes
     """
+    if not isinstance(mask, bytes):
+        try:
+            mask = bytes(mask)
+        except Exception as exception:
+            raise ValueError("Value of 'mask' can not be converted to bytes.") from exception
+            
     size = 32 * 32 // 8
     c_mask = (_C_GL_1_1.GLubyte * size).from_buffer_copy(mask)
     _C_GL_1_1.glPolygonStipple(c_mask)
@@ -3725,58 +4470,136 @@ def glPolygonStipple(mask):
 
 def glPolygonMode(face, mode):
     """
-    face             : int
-    mode             : int
+    face            : int | SupportsInt
+    mode            : int | SupportsInt
     """
-    _C_GL_1_1.glPolygonMode(int(face), int(mode))
+    if not isinstance(face, int):
+        try:
+            face = int(face)
+        except Exception as exception:
+            raise ValueError("Value of 'face' can not be converted to int.") from exception
+
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    _C_GL_1_1.glPolygonMode(face, mode)
 
 def glPolygonOffset(factor, units):
     """
-    factor           : float
-    units            : float
+    factor          : float | SupportsFloat
+    units           : float | SupportsFloat
     """
-    _C_GL_1_1.glPolygonOffset(float(factor), float(units))
+    if not isinstance(factor, float):
+        try:
+            factor = float(factor)
+        except Exception as exception:
+            raise ValueError("Value of 'factor' can not be converted to float.") from exception
+
+    if not isinstance(units, float):
+        try:
+            units = float(units)
+        except Exception as exception:
+            raise ValueError("Value of 'units' can not be converted to float.") from exception
+
+    _C_GL_1_1.glPolygonOffset(factor, units)
 
 # Pixel Rectangles
 
 def glPixelStoref(pname, param):
     """
-    pname            : int
-    param            : float
+    pname           : int | SupportsInt
+    param           : float | SupportsFloat
     """
-    _C_GL_1_1.glPixelStoref(int(pname), float(param))
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, float):
+        try:
+            param = float(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to float.") from exception
+
+    _C_GL_1_1.glPixelStoref(pname, param)
 
 def glPixelStorei(pname, param):
     """
-    pname            : int
-    param            : int
+    pname           : int | SupportsInt
+    param           : int | SupportsInt
     """
-    _C_GL_1_1.glPixelStorei(int(pname), int(param))
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, int):
+        try:
+            param = int(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to int.") from exception
+
+    _C_GL_1_1.glPixelStorei(pname, param)
 
 
 # Pixel Transfer Modes
 
 def glPixelTransferf(pname, param):
     """
-    pname            : int
-    param            : float
+    pname           : int | SupportsInt
+    param           : float | SupportsFloat
     """
-    _C_GL_1_1.glPixelTransferf(int(pname), float(param))
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, float):
+        try:
+            param = float(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to float.") from exception
+
+    _C_GL_1_1.glPixelTransferf(pname, param)
 
 def glPixelTransferi(pname, param):
     """
-    pname            : int
-    param            : int
+    pname           : int | SupportsInt
+    param           : int | SupportsInt
     """
-    _C_GL_1_1.glPixelTransferi(int(pname), int(param))
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, int):
+        try:
+            param = int(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to int.") from exception
+
+    _C_GL_1_1.glPixelTransferi(pname, param)
 
 
 def glPixelMapfv(map_, values):
     """
-    map_             : int
-    values           : List[float]
+    map_            : int | SupportsInt
+    values          : bytes | List[float] | Iterable[SupportsFloat]
+    
+    Note: 'mapsize' is deduced form 'values'.
     """
-    map_ = int(map_) 
+    if not isinstance(map_, int):
+        try:
+            map_ = int(map_)
+        except Exception as exception:
+            raise ValueError("Value of 'map_' can not be converted to int.") from exception
 
     if isinstance(values, bytes):
         num_of_bytes = len(values)
@@ -3785,7 +4608,12 @@ def glPixelMapfv(map_, values):
         c_values_buffer = (_C_GL_1_1.GLubyte * num_of_bytes).from_buffer_copy(values)
         c_values = _ctypes.cast(c_values_buffer, _ctypes.POINTER(_C_GL_1_1.GLfloat))
     else:
-        values = list(values)
+        if not isinstance(values, list) or not all(isinstance(item, float) for item in values):
+            try:
+                values = [float(item) for item in values]
+            except:
+                raise ValueError("Value of 'values' can not be converted to list of floats.")
+
         mapsize = len(values)
 
         c_values = _Support.list_to_c_array(float, values, mapsize, _C_GL_1_1.GLfloat)
@@ -3794,10 +4622,16 @@ def glPixelMapfv(map_, values):
 
 def glPixelMapuiv(map_, values):
     """
-    map_             : int
-    values           : List[int]
+    map_            : int | SupportsInt
+    values          : bytes | List[int] | Iterable[SupportsInt]    
+    
+    Note: 'mapsize' is deduced form 'values'.
     """
-    map_ = int(map_) 
+    if not isinstance(map_, int):
+        try:
+            map_ = int(map_)
+        except Exception as exception:
+            raise ValueError("Value of 'map_' can not be converted to int.") from exception
 
     if isinstance(values, bytes):
         num_of_bytes = len(values)
@@ -3806,7 +4640,12 @@ def glPixelMapuiv(map_, values):
         c_values_buffer = (_C_GL_1_1.GLubyte * num_of_bytes).from_buffer_copy(values)
         c_values = _ctypes.cast(c_values_buffer, _ctypes.POINTER(_C_GL_1_1.GLuint))
     else:
-        values = list(values)
+        if not isinstance(values, list) or not all(isinstance(item, int) for item in values):
+            try:
+                values = [int(item) for item in values]
+            except:
+                raise ValueError("Value of 'values' can not be converted to list of ints.")
+            
         mapsize = len(values)
 
         c_values = _Support.list_to_c_array(int, values, mapsize, _C_GL_1_1.GLuint)
@@ -3815,10 +4654,16 @@ def glPixelMapuiv(map_, values):
 
 def glPixelMapusv(map_, values):
     """
-    map_             : int
-    values           : List[int]
+    map_            : int | SupportsInt
+    values          : List[int] | Iterable[SupportsInt]
+    
+    Note: 'mapsize' is deduced form 'values'.
     """
-    map_ = int(map_) 
+    if not isinstance(map_, int):
+        try:
+            map_ = int(map_)
+        except Exception as exception:
+            raise ValueError("Value of 'map_' can not be converted to int.") from exception
 
     if isinstance(values, bytes):
         num_of_bytes = len(values)
@@ -3827,7 +4672,12 @@ def glPixelMapusv(map_, values):
         c_values_buffer = (_C_GL_1_1.GLubyte * num_of_bytes).from_buffer_copy(values)
         c_values = _ctypes.cast(c_values_buffer, _ctypes.POINTER(_C_GL_1_1.GLushort))
     else:
-        values = list(values)
+        if not isinstance(values, list) or not all(isinstance(item, int) for item in values):
+            try:
+                values = [int(item) for item in values]
+            except:
+                raise ValueError("Value of 'values' can not be converted to list of ints.")
+            
         mapsize = len(values)
 
         c_values = _Support.list_to_c_array(int, values, mapsize, _C_GL_1_1.GLushort)
@@ -3839,7 +4689,7 @@ def glPixelMapusv(map_, values):
 
 def glGetPixelMapfv(map_, is_return_bytes = False):
     """
-    map_            : int
+    map_            : int | SupportsInt
     is_return_bytes : bool 
     Returns         : bytes | List[float]
         bytes, when 'is_return_bytes' is True.
@@ -3847,7 +4697,12 @@ def glGetPixelMapfv(map_, is_return_bytes = False):
 
         Equivalent of 'data' from OpenGL function specification.
     """
-    map_ = int(map_)
+    if not isinstance(map_, int):
+        try:
+            map_ = int(map_)
+        except Exception as exception:
+            raise ValueError("Value of 'map_' can not be converted to int.") from exception
+
     size_id = _Support.get_pixel_map_size_id(map_)
     if size_id is None:
         raise ValueError("Unexpected value of 'map_' parameter.")
@@ -3863,7 +4718,7 @@ def glGetPixelMapfv(map_, is_return_bytes = False):
 
 def glGetPixelMapuiv(map_, is_return_bytes = False):
     """
-    map_            : int
+    map_            : int | SupportsInt
     is_return_bytes : bool 
     Returns         : bytes | List[int]
         bytes, when 'is_return_bytes' is True.
@@ -3871,7 +4726,12 @@ def glGetPixelMapuiv(map_, is_return_bytes = False):
 
         Equivalent of 'data' from OpenGL function specification.
     """
-    map_ = int(map_)
+    if not isinstance(map_, int):
+       try:
+           map_ = int(map_)
+       except Exception as exception:
+           raise ValueError("Value of 'map_' can not be converted to int.") from exception
+
     size_id = _Support.get_pixel_map_size_id(map_)
     if size_id is None:
         raise ValueError("Unexpected value of 'map_' parameter.")
@@ -3887,14 +4747,19 @@ def glGetPixelMapuiv(map_, is_return_bytes = False):
 
 def glGetPixelMapusv(map_, is_return_bytes = False):
     """
-    map_            : int
+    map_            : int | SupportsInt
     Returns         : bytes | List[int]
         bytes, when 'is_return_bytes' is True.
         list of ints, when 'is_return_bytes' is False (default).
 
         Equivalent of 'data' from OpenGL function specification.
     """
-    map_ = int(map_)
+    if not isinstance(map_, int):
+        try:
+            map_ = int(map_)
+        except Exception as exception:
+            raise ValueError("Value of 'map_' can not be converted to int.") from exception
+
     size_id = _Support.get_pixel_map_size_id(map_)
     if size_id is None:
         raise ValueError("Unexpected value of 'map_' parameter.")
@@ -3912,52 +4777,134 @@ def glGetPixelMapusv(map_, is_return_bytes = False):
 
 def glDrawPixels(width, height, format_, type_, pixels):
     """
-    width            : int
-    height           : int
-    format_          : int
-    type_            : int
-    pixels           : bytes
-    pixels           : List[float | int]
+    width           : int | SupportsInt
+    height          : int | SupportsInt
+    format_         : int | SupportsInt
+    type_           : int | SupportsInt
+    pixels          : bytes
+    pixels          : List[float] | Iterable[SupportsFloat]
         Acceptable when 'type_' is GL_FLOAT and 'format_' is either GL_RGB or GL_RGBA.
         Each element of list 'pixels' represents single color channel or alpha channel.
     """
-    if isinstance(pixels, list):
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    if not isinstance(height, int):
+        try:
+            height = int(height)
+        except Exception as exception:
+            raise ValueError("Value of 'height' can not be converted to int.") from exception
+
+    if not isinstance(format_, int):
+        try:
+            format_ = int(format_)
+        except Exception as exception:
+            raise ValueError("Value of 'format_' can not be converted to int.") from exception
+
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+            
+    if isinstance(pixels, bytes):
+        c_pixels = pixels
+    else:    
         if type_ == GL_FLOAT and format_ in [GL_RGB, GL_RGBA]:
+            if not isinstance(pixels, list) or not all(isinstance(item, float) for item in pixels):
+                try:
+                    pixels = [float(item) for item in pixels]
+                except:
+                    raise ValueError("Value of 'pixels' can not be converted to list of floats.")
+                    
             pixel_size  = 3 if format_ is GL_RGB else 4
             size        = int(width) * int(height) * pixel_size
-            c_pixels    = _Support.list_part_to_c_array(float, pixels, size, _C_GL_1_1.GLfloat)
+            c_pixels    = _Support.list_part_to_c_array_no_conv(pixels, size, _C_GL_1_1.GLfloat)
         else:
-            raise ValueError("Parameter 'pixels' is accepted as list of integers or floats, only when 'type_' is GL_FLOAT and 'format_' is either GL_RGB or GL_RGBA.")
-    else:
-        c_pixels = bytes(pixels)
+            raise ValueError("Parameter 'pixels' can be accepted as list of integers or floats, only when 'type_' is GL_FLOAT and 'format_' is either GL_RGB or GL_RGBA.")
 
-    _C_GL_1_1.glDrawPixels(int(width), int(height), int(format_), int(type_), c_pixels)
+    _C_GL_1_1.glDrawPixels(width, height, format_, type_, c_pixels)
 
 def glPixelZoom(xfactor, yfactor):
     """
-    xfactor          : float
-    yfactor          : float
+    xfactor         : float | SupportsFloat
+    yfactor         : float | SupportsFloat
     """
-    _C_GL_1_1.glPixelZoom(float(xfactor), float(yfactor))
+    if not isinstance(xfactor, float):
+        try:
+            xfactor = float(xfactor)
+        except Exception as exception:
+            raise ValueError("Value of 'xfactor' can not be converted to float.") from exception
+
+    if not isinstance(yfactor, float):
+        try:
+            yfactor = float(yfactor)
+        except Exception as exception:
+            raise ValueError("Value of 'yfactor' can not be converted to float.") from exception
+
+    _C_GL_1_1.glPixelZoom(xfactor, yfactor)
 
 # Bitmaps
 
 def glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap):
     """
-    width            : int
-    height           : int
-    xorig            : float
-    yorig            : float
-    xmove            : float
-    ymove            : float
-    bitmap           : bytes
+    width           : int | SupportsInt
+    height          : int | SupportsInt
+    xorig           : float | SupportsFloat
+    yorig           : float | SupportsFloat
+    xmove           : float | SupportsFloat
+    ymove           : float | SupportsFloat
+    bitmap          : bytes
     """
-    width = int(width)
-    hight = int(height)
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    if not isinstance(height, int):
+        try:
+            height = int(height)
+        except Exception as exception:
+            raise ValueError("Value of 'height' can not be converted to int.") from exception
+
+    if not isinstance(xorig, float):
+        try:
+            xorig = float(xorig)
+        except Exception as exception:
+            raise ValueError("Value of 'xorig' can not be converted to float.") from exception
+
+    if not isinstance(yorig, float):
+        try:
+            yorig = float(yorig)
+        except Exception as exception:
+            raise ValueError("Value of 'yorig' can not be converted to float.") from exception
+
+    if not isinstance(xmove, float):
+        try:
+            xmove = float(xmove)
+        except Exception as exception:
+            raise ValueError("Value of 'xmove' can not be converted to float.") from exception
+
+    if not isinstance(ymove, float):
+        try:
+            ymove = float(ymove)
+        except Exception as exception:
+            raise ValueError("Value of 'ymove' can not be converted to float.") from exception
+            
+    if not isinstance(bitmap, bytes):
+        try:
+            bitmap = bytes(bitmap)
+        except Exception as exception:
+            raise ValueError("Value of 'bitmap' can not be converted to bytes.") from exception
+    
     size = (width * height) // 8
 
     c_bitmap = (_C_GL_1_1.GLubyte * size).from_buffer_copy(bitmap)
-    _C_GL_1_1.glBitmap(int(width), int(height), float(xorig), float(yorig), float(xmove), float(ymove), c_bitmap)
+    _C_GL_1_1.glBitmap(width, height, xorig, yorig, xmove, ymove, c_bitmap)
 
 ### Texturing ###
 
@@ -3965,354 +4912,808 @@ def glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap):
 
 def glTexImage1D(target, level, internalformat, width, border, format_, type_, pixels):
     """
-    target           : int
-    level            : int
-    internalformat   : int
-    width            : int
-    border           : int
-    format_          : int
-    type_            : int
-    pixels           : Lists[float | int]
+    target          : int | SupportsInt
+    level           : int | SupportsInt
+    internalformat  : int | SupportsInt
+    width           : int | SupportsInt
+    border          : int | SupportsInt
+    format_         : int | SupportsInt
+    type_           : int | SupportsInt
+    pixels          : bytes 
+    pixels          : Lists[float] | Iterable[SupportsFloat]
         Acceptable, when parameter 'type_' is GL_FLOAT and parameter 'format_' is either GL_RGB or GL_RGBA.
-        All elements of list are converted to floats
     """
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(level, int):
+        try:
+            level = int(level)
+        except Exception as exception:
+            raise ValueError("Value of 'level' can not be converted to int.") from exception
+
+    if not isinstance(internalformat, int):
+        try:
+            internalformat = int(internalformat)
+        except Exception as exception:
+            raise ValueError("Value of 'internalformat' can not be converted to int.") from exception
+
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    if not isinstance(border, int):
+        try:
+            border = int(border)
+        except Exception as exception:
+            raise ValueError("Value of 'border' can not be converted to int.") from exception
+
+    if not isinstance(format_, int):
+        try:
+            format_ = int(format_)
+        except Exception as exception:
+            raise ValueError("Value of 'format_' can not be converted to int.") from exception
+
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+
     n = _Support.get_tex_format_element_number(format_)
     if n is None:
-        raise ValueError("Unexpected value of 'format_' parameter")
+        raise ValueError("Unexpected value of 'format_'.")
 
     md = _Support.get_tex_type_mul_div_size(type_)
     if md is None:
-        raise ValueError("Unexpected value of 'type_' parameter")
+        raise ValueError("Unexpected value of 'type_'.")
 
     m, d = md
 
-    expected_size = int(width)      # in pixels
+    expected_size = width           # in pixels
     single_item_size = (n * m // d) # in bytes
+    
+    if isinstance(pixels, bytes):
+        size = len(pixels) // single_item_size
 
-    if isinstance(pixels, list):
+        if expected_size != size:
+            raise ValueError("Unexpected size of 'pixels'. Should be %d pixels. It's %d pixels." % (expected_size, size))
+
+        c_pixels = pixels
+    else:
         if type_ != GL_FLOAT:
-            raise ValueError("Unexpected value of parameter 'type_'. For parameter 'pixels' being list of ints or floats, parameter 'type_' must be GL_FLOAT.")
+            raise ValueError("Unexpected value of 'type_'. For 'pixels' being a list of ints or floats, parameter 'type_' must be GL_FLOAT.")
         if format_ not in [GL_RGB, GL_RGBA]:
-            raise ValueError("Unexpected value of parameter 'format_'. For parameter 'lists' being list of ints or floats, parameter 'type_' must be either GL_RGB or GL_RGBA.")
+            raise ValueError("Unexpected value of 'format_'. For 'lists' being a list of ints or floats, parameter 'type_' must be either GL_RGB or GL_RGBA.")
         else:
+            if not isinstance(pixels, list) or not all(isinstance(item, float) for item in pixels):
+                try:
+                    pixels = [float(item) for item in pixels]
+                except:
+                    raise ValueError("Value of 'pixels' can not be converted to list of floats.")
+        
             # adjusted by size of single precision float
             size = len(pixels) * 4 // single_item_size  # in pixels
 
             if expected_size != size: 
-                raise ValueError("Unexpected size of 'pixels' parameter")
+                raise ValueError("Unexpected size of 'pixels'")
 
-            c_pixels = _Support.list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
-    else:
-        pixels = bytes(pixels)
+            c_pixels = _Support.list_to_c_array_no_conv(pixels, len(pixels), _C_GL_1_1.GLfloat)
 
-        size = len(pixels) // single_item_size
-
-        if expected_size != size:
-            raise ValueError("Unexpected size of 'pixels' parameter. Should be %d pixels. It's %d pixels." % (expected_size, size))
-
-        c_pixels = pixels
-
-    _C_GL_1_1.glTexImage1D(int(target), int(level), int(internalformat), int(width), int(border), int(format_), int(type_), c_pixels)
+    _C_GL_1_1.glTexImage1D(target, level, internalformat, width, border, format_, type_, c_pixels)
 
 def glTexImage2D(target, level, internalformat, width, height, border, format_, type_, pixels):
     """
-    target           : int
-    level            : int
-    internalformat   : int
-    width            : int
-    height           : int
-    border           : int
-    format_          : int
-    type_            : int
-    pixels           : bytes
-    pixels           : Lists[float | Any]
+    target          : int | SupportsInt
+    level           : int | SupportsInt
+    internalformat  : int | SupportsInt
+    width           : int | SupportsInt
+    height          : int | SupportsInt
+    border          : int | SupportsInt
+    format_         : int | SupportsInt
+    type_           : int | SupportsInt
+    pixels          : bytes
+    pixels          : Lists[float | Any]
         Acceptable, when parameter 'type_' is GL_FLOAT and parameter 'format_' is either GL_RGB or GL_RGBA.
         All items are converted to floats.
     """
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(level, int):
+        try:
+            level = int(level)
+        except Exception as exception:
+            raise ValueError("Value of 'level' can not be converted to int.") from exception
+
+    if not isinstance(internalformat, int):
+        try:
+            internalformat = int(internalformat)
+        except Exception as exception:
+            raise ValueError("Value of 'internalformat' can not be converted to int.") from exception
+
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    if not isinstance(height, int):
+        try:
+            height = int(height)
+        except Exception as exception:
+            raise ValueError("Value of 'height' can not be converted to int.") from exception
+
+    if not isinstance(border, int):
+        try:
+            border = int(border)
+        except Exception as exception:
+            raise ValueError("Value of 'border' can not be converted to int.") from exception
+
+    if not isinstance(format_, int):
+        try:
+            format_ = int(format_)
+        except Exception as exception:
+            raise ValueError("Value of 'format_' can not be converted to int.") from exception
+
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+            
     n = _Support.get_tex_format_element_number(format_)
     if n is None:
-        raise ValueError("Unexpected value of 'format_' parameter")
+        raise ValueError("Unexpected value of 'format_'")
 
     md = _Support.get_tex_type_mul_div_size(type_)
     if md is None:
-        raise ValueError("Unexpected value of 'type_' parameter")
+        raise ValueError("Unexpected value of 'type_'")
 
     m, d = md
-
-    width = int(width)
-    height = int(height)
 
     expected_size = width * height  # in pixels
     single_item_size = (n * m // d) # in bytes
 
-    if isinstance(pixels, list):
+    if isinstance(pixels, bytes):
+        size = len(pixels) // single_item_size
+
+        if expected_size != size:
+            raise ValueError("Unexpected size of 'pixels'. Should be %d pixels. It's %d pixels." % (expected_size, size))
+
+        c_pixels = pixels
+        
+    else:
         if type_ != GL_FLOAT:
-            raise ValueError("Unexpected value of 'type_' parameter. For 'pixels' parameter being list of ints or floats, 'type_' parameter must be GL_FLOAT.")
+            raise ValueError("Unexpected value of 'type_'. For 'pixels' being a list of ints or floats, 'type_' parameter must be GL_FLOAT.")
         if format_ not in [GL_RGB, GL_RGBA]:
-            raise ValueError("Unexpected value of 'format_' parameter. For 'lists' parameter being list of ints or floats, 'type_' parameter must be either GL_RGB or GL_RGBA.")
+            raise ValueError("Unexpected value of 'format_'. For 'lists' being a list of ints or floats, 'type_' parameter must be either GL_RGB or GL_RGBA.")
         else:
+            if not isinstance(pixels, list) or not all(isinstance(item, float) for item in pixels):
+                try:
+                    pixels = [float(item) for item in pixels]
+                except:
+                    raise ValueError("Value of 'pixels' can not be converted to list of floats.")
+                    
             # adjusted by size of single precision float
             size = len(pixels) * 4 // single_item_size # in pixels
 
             if expected_size != size: 
-                raise ValueError("Unexpected size of 'pixels' parameter")
+                raise ValueError("Unexpected size of 'pixels'")
 
-            c_pixels = _Support.list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
-    else:
-        pixels = bytes(pixels)
+            c_pixels = _Support.list_to_c_array_no_conv(pixels, len(pixels), _C_GL_1_1.GLfloat)
 
-        size = len(pixels) // single_item_size
-
-        if expected_size != size:
-            raise ValueError("Unexpected size of 'pixels' parameter. Should be %d pixels. It's %d pixels." % (expected_size, size))
-
-        c_pixels = pixels
-
-    _C_GL_1_1.glTexImage2D(int(target), int(level), int(internalformat), width, height, int(border), int(format_), int(type_), c_pixels)
+    _C_GL_1_1.glTexImage2D(target, level, internalformat, width, height, border, format_, type_, c_pixels)
 
 
 # Alt. Texture Image Specification Commands 
 
 def glCopyTexImage1D(target, level, internalFormat, x, y, width, border):
     """
-    target           : int
-    level            : int
-    internalFormat   : int
-    x                : int
-    y                : int
-    width            : int
-    border           : int
+    target          : int | SupportsInt
+    level           : int | SupportsInt
+    internalFormat  : int | SupportsInt
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    width           : int | SupportsInt
+    border          : int | SupportsInt
     """
-    _C_GL_1_1.glCopyTexImage1D(int(target), int(level), int(internalFormat), int(x), int(y), int(width), int(border))
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(level, int):
+        try:
+            level = int(level)
+        except Exception as exception:
+            raise ValueError("Value of 'level' can not be converted to int.") from exception
+
+    if not isinstance(internalFormat, int):
+        try:
+            internalFormat = int(internalFormat)
+        except Exception as exception:
+            raise ValueError("Value of 'internalFormat' can not be converted to int.") from exception
+
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    if not isinstance(border, int):
+        try:
+            border = int(border)
+        except Exception as exception:
+            raise ValueError("Value of 'border' can not be converted to int.") from exception
+
+    _C_GL_1_1.glCopyTexImage1D(target, level, internalFormat, x, y, width, border)
 
 def glCopyTexImage2D(target, level, internalFormat, x, y, width, height, border):
     """
-    target           : int
-    level            : int
-    internalFormat   : int
-    x                : int
-    y                : int
-    width            : int
-    height           : int
-    border           : int
+    target          : int | SupportsInt
+    level           : int | SupportsInt
+    internalFormat  : int | SupportsInt
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    width           : int | SupportsInt
+    height          : int | SupportsInt
+    border          : int | SupportsInt
     """
-    _C_GL_1_1.glCopyTexImage2D(int(target), int(level), int(internalFormat), int(x), int(y), int(width), int(height), int(border))
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(level, int):
+        try:
+            level = int(level)
+        except Exception as exception:
+            raise ValueError("Value of 'level' can not be converted to int.") from exception
+
+    if not isinstance(internalFormat, int):
+        try:
+            internalFormat = int(internalFormat)
+        except Exception as exception:
+            raise ValueError("Value of 'internalFormat' can not be converted to int.") from exception
+
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    if not isinstance(height, int):
+        try:
+            height = int(height)
+        except Exception as exception:
+            raise ValueError("Value of 'height' can not be converted to int.") from exception
+
+    if not isinstance(border, int):
+        try:
+            border = int(border)
+        except Exception as exception:
+            raise ValueError("Value of 'border' can not be converted to int.") from exception
+
+    _C_GL_1_1.glCopyTexImage2D(target, level, internalFormat, x, y, width, height, border)
 
 def glTexSubImage1D(target, level, xoffset, width, format_, type_, pixels):
     """
-    target           : int
-    level            : int
-    xoffset          : int
-    width            : int
-    format_          : int
-    type_            : int
-    pixels           : Lists[float | int]
+    target          : int | SupportsInt
+    level           : int | SupportsInt
+    xoffset         : int | SupportsInt
+    width           : int | SupportsInt
+    format_         : int | SupportsInt
+    type_           : int | SupportsInt
+    pixels          : bytes
+    pixels          : Lists[float | int]
         Acceptable, when parameter 'type_' is GL_FLOAT and parameter 'format_' is either GL_RGB or GL_RGBA.
         All elements of list are converted to floats
     """
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(level, int):
+        try:
+            level = int(level)
+        except Exception as exception:
+            raise ValueError("Value of 'level' can not be converted to int.") from exception
+
+    if not isinstance(xoffset, int):
+        try:
+            xoffset = int(xoffset)
+        except Exception as exception:
+            raise ValueError("Value of 'xoffset' can not be converted to int.") from exception
+
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    if not isinstance(format_, int):
+        try:
+            format_ = int(format_)
+        except Exception as exception:
+            raise ValueError("Value of 'format_' can not be converted to int.") from exception
+
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+    
     n = _Support.get_tex_format_element_number(format_)
     if n is None:
-        raise ValueError("Unexpected value of 'format_' parameter")
+        raise ValueError("Unexpected value of 'format_'")
 
     md = _Support.get_tex_type_mul_div_size(type_)
     if md is None:
-        raise ValueError("Unexpected value of 'type_' parameter")
+        raise ValueError("Unexpected value of 'type_'")
 
     m, d = md
 
-    expected_size = int(width)      # in pixels
+    expected_size = width           # in pixels
     single_item_size = (n * m // d) # in bytes
+    
+    if isinstance(pixels, bytes):
+        size = len(pixels) // single_item_size
 
-    if isinstance(pixels, list):
+        if expected_size != size:
+            raise ValueError("Unexpected size of 'pixels'. Should be %d pixels. It's %d pixels." % (expected_size, size))
+
+        c_pixels = pixels
+    else:
         if type_ != GL_FLOAT:
-            raise ValueError("Unexpected value of parameter 'type_'. For parameter 'pixels' being list of ints or floats, parameter 'type_' must be GL_FLOAT.")
+            raise ValueError("Unexpected value of 'type_'. For 'pixels' being list of ints or floats, 'type_' must be GL_FLOAT.")
         if format_ not in [GL_RGB, GL_RGBA]:
-            raise ValueError("Unexpected value of parameter 'format_'. For parameter 'lists' being list of ints or floats, parameter 'type_' must be either GL_RGB or GL_RGBA.")
+            raise ValueError("Unexpected value of 'format_'. For 'lists' being list of ints or floats, 'type_' must be either GL_RGB or GL_RGBA.")
         else:
+            if not isinstance(pixels, list) or not all(isinstance(item, float) for item in pixels):
+                try:
+                    pixels = [float(item) for item in pixels]
+                except:
+                    raise ValueError("Value of 'pixels' can not be converted to list of floats.")
+                    
             # adjusted by size of single precision float
             size = len(pixels) * 4 // single_item_size  # in pixels
 
             if expected_size != size: 
-                raise ValueError("Unexpected size of 'pixels' parameter")
+                raise ValueError("Unexpected size of 'pixels'.")
 
-            c_pixels = _Support.list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
-    else:
-        pixels = bytes(pixels)
+            c_pixels = _Support.list_to_c_array_no_conv(pixels, len(pixels), _C_GL_1_1.GLfloat)
 
-        size = len(pixels) // single_item_size
-
-        if expected_size != size:
-            raise ValueError("Unexpected size of 'pixels' parameter. Should be %d pixels. It's %d pixels." % (expected_size, size))
-
-        c_pixels = pixels
-
-    _C_GL_1_1.glTexSubImage1D(int(target), int(level), int(xoffset), int(width), int(format_), int(type_), c_pixels)
+    _C_GL_1_1.glTexSubImage1D(target, level, xoffset, width, format_, type_, c_pixels)
 
 def glTexSubImage2D(target, level, xoffset, yoffset, width, height, format_, type_, pixels):
     """
-    target           : int
-    level            : int
-    xoffset          : int
-    yoffset          : int
-    width            : int
-    height           : int
-    format_          : int
-    type_            : int
-    pixels           : Lists[float | Any]
+    target          : int | SupportsInt
+    level           : int | SupportsInt
+    xoffset         : int | SupportsInt
+    yoffset         : int | SupportsInt
+    width           : int | SupportsInt
+    height          : int | SupportsInt
+    format_         : int | SupportsInt
+    type_           : int | SupportsInt
+    pixels          : bytes
+    pixels          : Lists[float | Any]
         Acceptable, when parameter 'type_' is GL_FLOAT and parameter 'format_' is either GL_RGB or GL_RGBA.
         All items are converted to floats.
     """
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(level, int):
+        try:
+            level = int(level)
+        except Exception as exception:
+            raise ValueError("Value of 'level' can not be converted to int.") from exception
+
+    if not isinstance(xoffset, int):
+        try:
+            xoffset = int(xoffset)
+        except Exception as exception:
+            raise ValueError("Value of 'xoffset' can not be converted to int.") from exception
+
+    if not isinstance(yoffset, int):
+        try:
+            yoffset = int(yoffset)
+        except Exception as exception:
+            raise ValueError("Value of 'yoffset' can not be converted to int.") from exception
+
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    if not isinstance(height, int):
+        try:
+            height = int(height)
+        except Exception as exception:
+            raise ValueError("Value of 'height' can not be converted to int.") from exception
+
+    if not isinstance(format_, int):
+        try:
+            format_ = int(format_)
+        except Exception as exception:
+            raise ValueError("Value of 'format_' can not be converted to int.") from exception
+
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+    
     n = _Support.get_tex_format_element_number(format_)
     if n is None:
-        raise ValueError("Unexpected value of 'format_' parameter")
+        raise ValueError("Unexpected value of 'format_'")
 
     md = _Support.get_tex_type_mul_div_size(type_)
     if md is None:
-        raise ValueError("Unexpected value of 'type_' parameter")
+        raise ValueError("Unexpected value of 'type_'")
 
     m, d = md
-
-    width = int(width)
-    height = int(height)
 
     expected_size = width * height  # in pixels
     single_item_size = (n * m // d) # in bytes
 
-    if isinstance(pixels, list):
+    if isinstance(pixels, bytes):
+        size = len(pixels) // single_item_size
+
+        if expected_size != size:
+            raise ValueError("Unexpected size of 'pixels'. Should be %d pixels. It's %d pixels." % (expected_size, size))
+
+        c_pixels = pixels
+    else:
         if type_ != GL_FLOAT:
-            raise ValueError("Unexpected value of 'type_' parameter. For 'pixels' parameter being list of ints or floats, 'type_' parameter must be GL_FLOAT.")
+            raise ValueError("Unexpected value of 'type_'. For 'pixels' being list of ints or floats, 'type_' must be GL_FLOAT.")
         if format_ not in [GL_RGB, GL_RGBA]:
-            raise ValueError("Unexpected value of 'format_' parameter. For 'lists' parameter being list of ints or floats, 'type_' parameter must be either GL_RGB or GL_RGBA.")
+            raise ValueError("Unexpected value of 'format_'. For 'lists' being list of ints or floats, 'type_' must be either GL_RGB or GL_RGBA.")
         else:
+            if not isinstance(pixels, list) or not all(isinstance(item, float) for item in pixels):
+                try:
+                    pixels = [float(item) for item in pixels]
+                except:
+                    raise ValueError("Value of 'pixels' can not be converted to list of floats.")
+        
             # adjusted by size of single precision float
             size = len(pixels) * 4 // single_item_size # in pixels
 
             if expected_size != size: 
-                raise ValueError("Unexpected size of 'pixels' parameter")
+                raise ValueError("Unexpected size of 'pixels'.")
 
-            c_pixels = _Support.list_to_c_array(float, pixels, len(pixels), _C_GL_1_1.GLfloat)
-    else:
-        pixels = bytes(pixels)
+            c_pixels = _Support.list_to_c_array_no_conv(pixels, len(pixels), _C_GL_1_1.GLfloat)
 
-        size = len(pixels) // single_item_size
-
-        if expected_size != size:
-            raise ValueError("Unexpected size of 'pixels' parameter. Should be %d pixels. It's %d pixels." % (expected_size, size))
-
-        c_pixels = pixels
-
-    _C_GL_1_1.glTexSubImage2D(int(target), int(level), int(xoffset), int(yoffset), int(width), int(height), int(format_), int(type_), c_pixels)
+    _C_GL_1_1.glTexSubImage2D(target, level, xoffset, yoffset, width, height, format_, type_, c_pixels)
 
 def glCopyTexSubImage1D(target, level, xoffset, x, y, width):
     """
-    target           : int
-    level            : int
-    xoffset          : int
-    x                : int
-    y                : int
-    width            : int
+    target          : int | SupportsInt
+    level           : int | SupportsInt
+    xoffset         : int | SupportsInt
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    width           : int | SupportsInt
     """
-    _C_GL_1_1.glCopyTexSubImage1D(int(target), int(level), int(xoffset), int(x), int(y), int(width))
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(level, int):
+        try:
+            level = int(level)
+        except Exception as exception:
+            raise ValueError("Value of 'level' can not be converted to int.") from exception
+
+    if not isinstance(xoffset, int):
+        try:
+            xoffset = int(xoffset)
+        except Exception as exception:
+            raise ValueError("Value of 'xoffset' can not be converted to int.") from exception
+
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    _C_GL_1_1.glCopyTexSubImage1D(target, level, xoffset, x, y, width)
 
 def glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height):
     """
-    target           : int
-    level            : int
-    xoffset          : int
-    yoffset          : int
-    x                : int
-    y                : int
-    width            : int
-    height           : int
+    target          : int | SupportsInt
+    level           : int | SupportsInt
+    xoffset         : int | SupportsInt
+    yoffset         : int | SupportsInt
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    width           : int | SupportsInt
+    height          : int | SupportsInt
     """
-    _C_GL_1_1.glCopyTexSubImage2D(int(target), int(level), int(xoffset), int(yoffset), int(x), int(y), int(width), int(height))
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(level, int):
+        try:
+            level = int(level)
+        except Exception as exception:
+            raise ValueError("Value of 'level' can not be converted to int.") from exception
+
+    if not isinstance(xoffset, int):
+        try:
+            xoffset = int(xoffset)
+        except Exception as exception:
+            raise ValueError("Value of 'xoffset' can not be converted to int.") from exception
+
+    if not isinstance(yoffset, int):
+        try:
+            yoffset = int(yoffset)
+        except Exception as exception:
+            raise ValueError("Value of 'yoffset' can not be converted to int.") from exception
+
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    if not isinstance(height, int):
+        try:
+            height = int(height)
+        except Exception as exception:
+            raise ValueError("Value of 'height' can not be converted to int.") from exception
+
+    _C_GL_1_1.glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height)
 
 
 # Texture Parameters
 
 def glTexParameterf(target, pname, param):
     """
-    target           : int
-    pname            : int
-    param            : float
+    target          : int | SupportsInt
+    pname           : int | SupportsInt
+    param           : float | SupportsFloat
     """
-    _C_GL_1_1.glTexParameterf(int(target), int(pname), float(param))
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, float):
+        try:
+            param = float(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTexParameterf(target, pname, param)
 
 def glTexParameterfv(target, pname, params):
     """
-    target           : int
-    pname            : int
-    params           : List[int | float]
-        Values will be casted to float.
+    target          : int | SupportsInt
+    pname           : int | SupportsInt
+    params          : List[float] | Iterable[SupportsFloat]
     """
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, float) for item in params):
+        try:
+            params = [float(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of floats.")
+            
     length = _Support.get_tex_parameter_length(pname)
     if length is None:
-        raise ValueError("Unexpected value of parameter 'pname'.")
+        raise ValueError("Unexpected value of 'pname'.")
     elif length > len(params):
-        raise ValueError("To small length of parameter 'params'.")
+        raise ValueError("To small length of 'params'.")
     
-    c_params = _Support.list_to_c_array(float, params, length, _C_GL_1_1.GLfloat)
-    _C_GL_1_1.glTexParameterfv(int(target), int(pname), c_params)
+    c_params = _Support.list_to_c_array_no_conv(params, length, _C_GL_1_1.GLfloat)
+    _C_GL_1_1.glTexParameterfv(target, pname, c_params)
 
 def glTexParameteri(target, pname, param):
     """
-    target           : int
-    pname            : int
-    param            : int
+    target          : int | SupportsInt
+    pname           : int | SupportsInt
+    param           : int | SupportsInt
     """
-    _C_GL_1_1.glTexParameteri(int(target), int(pname), int(param))
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, int):
+        try:
+            param = int(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to int.") from exception
+
+    _C_GL_1_1.glTexParameteri(target, pname, param)
 
 def glTexParameteriv(target, pname, params):
     """
-    target           : int
-    pname            : int
-    params           : List[int | float]
-        Values will be casted to int.
-    """    
+    target          : int | SupportsInt
+    pname           : int | SupportsInt
+    params          : List[int] | Iterable[SupportsInt]
+    """
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, int) for item in params):
+        try:
+            params = [int(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of ints.")
+            
     length = _Support.get_tex_parameter_length(pname)
     if length is None:
-        raise ValueError("Unexpected value of parameter 'pname'.")
+        raise ValueError("Unexpected value of 'pname'.")
     elif length > len(params):
-        raise ValueError("To small length of parameter 'params'.")
+        raise ValueError("To small length of 'params'.")
     
-    c_params = _Support.list_to_c_array(int, params, length, _C_GL_1_1.GLint)
-    _C_GL_1_1.glTexParameteriv(int(target), int(pname), c_params)
+    c_params = _Support.list_to_c_array_no_conv(params, length, _C_GL_1_1.GLint)
+    _C_GL_1_1.glTexParameteriv(target, pname, c_params)
 
 # Texture Objects
 
 def glBindTexture(target, texture):
     """
-    target           : int
-    texture          : int
+    target          : int | SupportsInt
+    texture         : int | SupportsInt
 
     Note: According to OpenGL specification of this function, 
     binding with 0 should generate GL_INVALID_VALUE, 
     because default texture is not generated by glGenTextures function.
     """
-    _C_GL_1_1.glBindTexture(int(target), int(texture))
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(texture, int):
+        try:
+            texture = int(texture)
+        except Exception as exception:
+            raise ValueError("Value of 'texture' can not be converted to int.") from exception
+
+    _C_GL_1_1.glBindTexture(target, texture)
 
 def glDeleteTextures(textures):
     """
-    textures         : List[int]
+    textures        : List[int] | Iterable[SupportsInt]
     """
+    if not isinstance(textures, list) or not all(isinstance(item, int) for item in textures):
+        try:
+            textures = [int(item) for item in textures]
+        except:
+            raise ValueError("Value of 'textures' can not be converted to list of ints.")
+            
     n = len(textures)
-    c_textures = _Support.list_to_c_array(int, textures, n, _C_GL_1_1.GLuint)
+    c_textures = _Support.list_to_c_array_no_conv(textures, n, _C_GL_1_1.GLuint)
     _C_GL_1_1.glDeleteTextures(n, c_textures)
 
 def glGenTextures(n):
     """
-    n               : int
+    n               : int | SupportsInt
     Returns         : List[int]
         Refers to 'textures' parameter from OpenGL function specification. 
     """
-    n = int(n)
+    if not isinstance(n, int):
+        try:
+            n = int(n)
+        except Exception as exception:
+            raise ValueError("Value of 'n' can not be converted to int.") from exception
+            
     c_textures = _Support.make_c_array(_C_GL_1_1.GLuint, n)
     _C_GL_1_1.glGenTextures(n, c_textures)
     return _Support.c_array_to_list(int, c_textures)
 
 def glAreTexturesResident(textures, residences = None):
     """
-    textures        : List[int]
+    textures        : List[int] | SupportsInt
     residences      : List[bool] | None
     Returns         : bool
         True
@@ -4323,9 +5724,18 @@ def glAreTexturesResident(textures, residences = None):
 
     Note: glAreTexturesResident is deprecated. Information provided by this function might not be correct.
     """
+    if not isinstance(textures, list) or not all(isinstance(item, int) for item in textures):
+        try:
+            textures = [int(item) for item in textures]
+        except:
+            raise ValueError("Value of 'textures' can not be converted to list of ints.")
+
+    if (residences is not None) and (not isinstance(residences, list) or not all(isinstance(item, bool) for item in residences)):
+            raise TypeError("Unexpected type of 'residences'.")
+    
     n = len(textures)
 
-    c_textures      = _Support.list_to_c_array(int, textures, n, _C_GL_1_1.GLuint)
+    c_textures      = _Support.list_to_c_array_no_conv(textures, n, _C_GL_1_1.GLuint)
     c_residences    = _Support.make_c_array(_C_GL_1_1.GLboolean, n)
 
     is_all_resident = bool(_C_GL_1_1.glAreTexturesResident(n, c_textures, c_residences))
@@ -4337,13 +5747,25 @@ def glAreTexturesResident(textures, residences = None):
 
 def glPrioritizeTextures(textures, priorities):
     """
-    textures         : List[int]
-    priorities       : List[float]
+    textures        : List[int] | Iterable[SupportsInt]
+    priorities      : List[float] | Iterable[SupportsFloat]
     """
+    if not isinstance(textures, list) or not all(isinstance(item, int) for item in textures):
+        try:
+            textures = [int(item) for item in textures]
+        except:
+            raise ValueError("Value of 'textures' can not be converted to list of ints.")
+
+    if not isinstance(priorities, list) or not all(isinstance(item, float) for item in priorities):
+        try:
+            priorities = [float(item) for item in priorities]
+        except:
+            raise ValueError("Value of 'priorities' can not be converted to list of floats.")
+    
     n = len(textures)
 
-    c_textures      = _Support.list_to_c_array(int, textures, n, _C_GL_1_1.GLuint)
-    c_priorities    = _Support.list_to_c_array(float, priorities, n, _C_GL_1_1.GLclampf)
+    c_textures      = _Support.list_to_c_array_no_conv(textures, n, _C_GL_1_1.GLuint)
+    c_priorities    = _Support.list_to_c_array_no_conv(priorities, n, _C_GL_1_1.GLclampf)
 
     _C_GL_1_1.glPrioritizeTextures(n, c_textures, c_priorities)
 
@@ -4352,47 +5774,117 @@ def glPrioritizeTextures(textures, priorities):
 
 def glTexEnvf(target, pname, param):
     """
-    target           : int
-    pname            : int
-    param            : float
+    target          : int | SupportsInt
+    pname           : int | SupportsInt
+    param           : float | SupportsFloat
     """
-    _C_GL_1_1.glTexEnvf(int(target), int(pname), float(param))
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, float):
+        try:
+            param = float(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to float.") from exception
+
+    _C_GL_1_1.glTexEnvf(target, pname, param)
 
 def glTexEnvfv(target, pname, params):
     """
-    target           : int
-    pname            : int
-    params           : List[float] | Iterable[SupportsFloat]
+    target          : int | SupportsInt
+    pname           : int | SupportsInt
+    params          : List[float] | Iterable[SupportsFloat]
     """
-    params = list(params)
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, float) for item in params):
+        try:
+            params = [float(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of floats.")
+            
     n = _Support.get_tex_env_params_length(pname)
     if n is None:
-        raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _Support.list_part_to_c_array(float, params, n, _C_GL_1_1.GLfloat)
+        raise ValueError("Unexpected value of 'pname'.")
+    c_params = _Support.list_part_to_c_array_no_conv(params, n, _C_GL_1_1.GLfloat)
 
-    _C_GL_1_1.glTexEnvfv(int(target), int(pname), c_params)
+    _C_GL_1_1.glTexEnvfv(target, pname, c_params)
 
 def glTexEnvi(target, pname, param):
     """
-    target           : int
-    pname            : int
-    param            : int
+    target          : int | SupportsInt
+    pname           : int | SupportsInt
+    param           : int | SupportsInt
     """
-    _C_GL_1_1.glTexEnvi(int(target), int(pname), int(param))
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, int):
+        try:
+            param = int(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to int.") from exception
+
+    _C_GL_1_1.glTexEnvi(target, pname, param)
 
 def glTexEnviv(target, pname, params):
     """
-    target           : int
-    pname            : int
-    params           : List[int] | Iterable[SupportsInt]
+    target          : int | SupportsInt
+    pname           : int | SupportsInt
+    params          : List[int] | Iterable[SupportsInt]
     """
-    params = list(params)
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, int) for item in params):
+        try:
+            params = [int(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of ints.")
+            
     n = _Support.get_tex_env_params_length(pname)
     if n is None:
-        raise ValueError("Unexpected value of 'pname' parameter.")
-    c_params = _Support.list_part_to_c_array(int, params, n, _C_GL_1_1.GLint)
+        raise ValueError("Unexpected value of 'pname'.")
+    c_params = _Support.list_part_to_c_array_no_conv(params, n, _C_GL_1_1.GLint)
 
-    _C_GL_1_1.glTexEnviv(int(target), int(pname), c_params)
+    _C_GL_1_1.glTexEnviv(target, pname, c_params)
 
 
 # Enumerated Queries
@@ -4404,11 +5896,23 @@ def glGetTexEnvfv(target, pname):
     Returns         : List[float]
         Corresponds to 'params' parameter from OpenGL function specification.
     """
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
     n = _Support.get_tex_env_params_length(pname)
     if n is None:
-        raise ValueError("Unexpected value of 'pname' parameter.")
+        raise ValueError("Unexpected value of 'pname'.")
     c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, n)
-    _C_GL_1_1.glGetTexEnvfv(int(target), int(pname), c_params)
+    _C_GL_1_1.glGetTexEnvfv(target, pname, c_params)
     return _Support.c_array_to_list(float, c_params)
 
 def glGetTexEnviv(target, pname):
@@ -4418,125 +5922,233 @@ def glGetTexEnviv(target, pname):
     Returns         : List[int]
         Corresponds to 'params' parameter from OpenGL function specification. 
     """
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+            
     n = _Support.get_tex_env_params_length(pname)
     if n is None:
-        raise ValueError("Unexpected value of 'pname' parameter.")
+        raise ValueError("Unexpected value of 'pname'.")
     c_params = _Support.make_c_array(_C_GL_1_1.GLint, n)
-    _C_GL_1_1.glGetTexEnviv(int(target), int(pname), c_params)
+    _C_GL_1_1.glGetTexEnviv(target, pname, c_params)
     return _Support.c_array_to_list(int, c_params)
 
 def glGetTexGendv(coord, pname):
     """
-    coord           : int
-    pname           : int
+    coord           : int | SupportsInt
+    pname           : int | SupportsInt
     Returns         : List[float]
         Corresponds to 'params' parameter from OpenGL function specification. 
     """
+    if not isinstance(coord, int):
+        try:
+            coord = int(coord)
+        except Exception as exception:
+            raise ValueError("Value of 'coord' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+            
     n = _Support.get_tex_gen_params_length(pname)
     if n is None:
-        raise ValueError("Unexpected value of 'pname' parameter.")
+        raise ValueError("Unexpected value of 'pname'.")
     c_params = _Support.make_c_array(_C_GL_1_1.GLdouble, n)
-    _C_GL_1_1.glGetTexGendv(int(coord), int(pname), c_params)
+    _C_GL_1_1.glGetTexGendv(coord, pname, c_params)
     return _Support.c_array_to_list(float, c_params)
 
 def glGetTexGenfv(coord, pname):
     """
-    coord           : int
-    pname           : int
+    coord           : int | SupportsInt
+    pname           : int | SupportsInt
     Returns         : List[float]
         Corresponds to 'params' parameter from OpenGL function specification. 
     """
+    if not isinstance(coord, int):
+        try:
+            coord = int(coord)
+        except Exception as exception:
+            raise ValueError("Value of 'coord' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+            
     n = _Support.get_tex_gen_params_length(pname)
     if n is None:
-        raise ValueError("Unexpected value of 'pname' parameter.")
+        raise ValueError("Unexpected value of 'pname'.")
     c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, n)
-    _C_GL_1_1.glGetTexGenfv(int(coord), int(pname), c_params)
+    _C_GL_1_1.glGetTexGenfv(coord, pname, c_params)
     return _Support.c_array_to_list(float, c_params)
 
 def glGetTexGeniv(coord, pname):
     """
-    coord            : int
-    pname            : int
+    coord           : int | SupportsInt
+    pname           : int | SupportsInt
     Returns         : List[int]
         Corresponds to 'params' parameter from OpenGL function specification. 
     """
+    if not isinstance(coord, int):
+        try:
+            coord = int(coord)
+        except Exception as exception:
+            raise ValueError("Value of 'coord' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+            
     n = _Support.get_tex_gen_params_length(pname)
     if n is None:
-        raise ValueError("Unexpected value of 'pname' parameter.")
+        raise ValueError("Unexpected value of 'pname'.")
     c_params = _Support.make_c_array(_C_GL_1_1.GLint, n)
-    _C_GL_1_1.glGetTexGeniv(int(coord), int(pname), c_params)
+    _C_GL_1_1.glGetTexGeniv(coord, pname, c_params)
     return _Support.c_array_to_list(int, c_params)
 
 def glGetTexParameterfv(target, pname):
     """
-    target          : int
-    pname           : int
+    target          : int | SupportsInt
+    pname           : int | SupportsInt
     Returns         : List[float]
         Equivalent of parameter 'params' from OpenGL functions specification.
     """
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+            
     length = _Support.get_tex_parameter_length(pname)
     if length is None:
         raise ValueError("Unexpected value of parameter 'pname'.")
     
     c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, length)
-    _C_GL_1_1.glGetTexParameterfv(int(target), int(pname), c_params)
+    _C_GL_1_1.glGetTexParameterfv(target, pname, c_params)
     return _Support.c_array_to_list(float, c_params)
 
 def glGetTexParameteriv(target, pname):
     """
-    target          : int
-    pname           : int
+    target          : int | SupportsInt
+    pname           : int | SupportsInt
     Returns         : List[int]
         Equivalent of parameter 'params' from OpenGL functions specification.
     """
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+            
     length = _Support.get_tex_parameter_length(pname)
     if length is None:
         raise ValueError("Unexpected value of parameter 'pname'.")
     
     c_params = _Support.make_c_array(_C_GL_1_1.GLint, length)
-    _C_GL_1_1.glGetTexParameteriv(int(target), int(pname), c_params)
+    _C_GL_1_1.glGetTexParameteriv(target, pname, c_params)
     return _Support.c_array_to_list(int, c_params)
 
 def glGetTexLevelParameterfv(target, level, pname):
     """
-    target           : int
-    level            : int
-    pname            : int
-    Returns          : List[float]
+    target          : int | SupportsInt
+    level           : int | SupportsInt
+    pname           : int | SupportsInt
+    Returns         : List[float]
         Corresponds to 'params' parameter from OpenGL functions specification.
     """
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(level, int):
+        try:
+            level = int(level)
+        except Exception as exception:
+            raise ValueError("Value of 'level' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+            
     n = _Support.get_tex_level_parameter_number(pname)
     c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, n)
-    _C_GL_1_1.glGetTexLevelParameterfv(int(target), int(level), int(pname), c_params)
+    _C_GL_1_1.glGetTexLevelParameterfv(target, level, pname, c_params)
     return _Support.c_array_to_list(float, c_params)
 
 def glGetTexLevelParameteriv(target, level, pname):
     """
-    target           : int
-    level            : int
-    pname            : int
+    target          : int | SupportsInt
+    level           : int | SupportsInt
+    pname           : int | SupportsInt
     Returns          : List[int]
         Corresponds to 'params' parameter from OpenGL functions specification.
     """
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(level, int):
+        try:
+            level = int(level)
+        except Exception as exception:
+            raise ValueError("Value of 'level' can not be converted to int.") from exception
+
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+            
     n = _Support.get_tex_level_parameter_number(pname)
     c_params = _Support.make_c_array(_C_GL_1_1.GLint, n)
-    _C_GL_1_1.glGetTexLevelParameteriv(int(target), int(level), int(pname), c_params)
+    _C_GL_1_1.glGetTexLevelParameteriv(target, level, pname, c_params)
     return _Support.c_array_to_list(int, c_params)
 
 # Texture Queries
 
 def glGetTexImage(target, level, format_, type_, is_return_list = False):
     """
-    target           : int
-    level            : int
-    format_          : int
+    target          : int | SupportsInt
+    level           : int | SupportsInt
+    format_         : int | SupportsInt
         Any from expected values: GL_COLOR_INDEX, GL_STENCIL_INDEX, GL_DEPTH_COMPONENT, 
         GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA, GL_RGB, GL_RGBA, GL_LUMINANCE, GL_LUMINANCE_ALPHA.
-    type_            : int
+    type_           : int | SupportsInt
         Any from expected values: GL_UNSIGNED_BYTE, GL_BYTE, GL_UNSIGNED_SHORT, GL_SHORT, 
         GL_UNSIGNED_INT, GL_INT, GL_FLOAT.
-    is_return_list   : bool
-    Returns          : bytes | List[float]
+    is_return_list  : bool
+    Returns         : bytes | List[float]
         list of floats, when 'is_return_list' is True and 'type_' is GL_FLOAT and 'format_' is either GL_RGB or GL_RGBA.
         bytes, when 'is_return_list' is False.
 
@@ -4548,55 +6160,83 @@ def glGetTexImage(target, level, format_, type_, is_return_list = False):
         ValueError 
             When 'is_return_list' is True and 'type_' is not GL_FLOAT or 'format_' is neither GL_RGB nor GL_RGBA.
     """
-    target = int(target)
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(level, int):
+        try:
+            level = int(level)
+        except Exception as exception:
+            raise ValueError("Value of 'level' can not be converted to int.") from exception
+
+    if not isinstance(format_, int):
+        try:
+            format_ = int(format_)
+        except Exception as exception:
+            raise ValueError("Value of 'format_' can not be converted to int.") from exception
+
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+            
     if target not in _Support.get_acceptable_tex_target_ids():
-        raise ValueError("Unexpected value of 'target' parameter")
+        raise ValueError("Unexpected value of 'target'.")
 
     width   = glGetTexLevelParameteriv(target, level, GL_TEXTURE_WIDTH)[0]
     height  = glGetTexLevelParameteriv(target, level, GL_TEXTURE_HEIGHT)[0]
     # depth # for OpengGL 2.1+ for sure
 
-    format_ = int(format_)
-    type_   = int(type_)
-
     n = _Support.get_tex_format_element_number(format_)
     if n is None:
-        raise ValueError("Unexpected value of 'format_' parameter.")
+        raise ValueError("Unexpected value of 'format_'.")
 
     md = _Support.get_tex_type_mul_div_size(type_)
     if md is None:
-        raise ValueError("Unexpected value of 'type_' parameter.")
+        raise ValueError("Unexpected value of 'type_'.")
 
     m, d = md
 
     if is_return_list:
-        if type_ == GL_FLOAT and format_ in [GL_RGB, GL_RGBA]:
+        if type_ != GL_FLOAT:
+            raise ValueError("Unexpected value of 'type_' for 'is_return_list' being True.")
+        elif format_ not in [GL_RGB, GL_RGBA]:
+            raise ValueError("Unexpected value of 'format_' for 'is_return_list' being True.")
+        else:
             num_of_elements = _Support.get_tex_format_element_number(format_)
 
             length = width * height * num_of_elements
             c_pixels = _Support.make_c_array(_C_GL_1_1.GLfloat, length)
 
-            _C_GL_1_1.glGetTexImage(int(target), int(level), format_, type_, _ctypes.cast(c_pixels, _ctypes.c_void_p))
+            _C_GL_1_1.glGetTexImage(target, level, format_, type_, _ctypes.cast(c_pixels, _ctypes.c_void_p))
 
             return _Support.c_array_to_list(float, c_pixels)
-        else:
-            raise ValueError("Unexpected value of 'type_' and/or 'format_' parameters when 'is_return_list' parameter is True.")
     else:
         single_item_size = (n * m // d)             # in bytes
         size = width * height * single_item_size    # in bytes
         c_pixels = _Support.make_c_array(_C_GL_1_1.GLubyte, size)
 
-        _C_GL_1_1.glGetTexImage(int(target), int(level), format_, type_, _ctypes.cast(c_pixels, _ctypes.c_void_p))
+        _C_GL_1_1.glGetTexImage(target, level, format_, type_, _ctypes.cast(c_pixels, _ctypes.c_void_p))
 
         return bytes(c_pixels)
 
 
 def glIsTexture(texture):
     """
-    texture         : int
+    texture         : int | SupportsInt
     Returns         : bool
     """
-    return bool(_C_GL_1_1.glIsTexture(int(texture)))
+    if not isinstance(texture, int):
+        try:
+            texture = int(texture)
+        except Exception as exception:
+            raise ValueError("Value of 'texture' can not be converted to int.") from exception
+
+    return bool(_C_GL_1_1.glIsTexture(texture))
 
 
 ### Color Sum, Fog, and Hints  ###
@@ -4605,44 +6245,88 @@ def glIsTexture(texture):
 
 def glFogf(pname, param):
     """
-    pname            : int
-    param            : float
+    pname           : int | SupportsInt
+    param           : float | SupportsFloat
     """
-    _C_GL_1_1.glFogf(int(pname), float(param))
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, float):
+        try:
+            param = float(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to float.") from exception
+
+    _C_GL_1_1.glFogf(pname, param)
 
 def glFogfv(pname, params):
     """
-    pname            : int
-    params           : List[float] | Iterable[SupportFloat]
+    pname           : int | SupportsInt
+    params          : List[float] | Iterable[SupportsFloat]
     """
-    pname = int(pname)
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, float) for item in params):
+        try:
+            params = [float(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of floats.")
 
     length = _Support.get_fog_params_length(pname)
     if length is None:
-        raise ValueError("Unexpected value of 'pname' parameter.")
+        raise ValueError("Unexpected value of 'pname'.")
 
-    c_params = _Support.list_part_to_c_array(float, params, length, _C_GL_1_1.GLfloat)
+    c_params = _Support.list_part_to_c_array_no_conv(params, length, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glFogfv(pname, c_params)
 
 def glFogi(pname, param):
     """
-    pname            : int
-    param            : int
+    pname           : int | SupportsInt
+    param           : int | SupportsInt
     """
-    _C_GL_1_1.glFogi(int(pname), int(param))
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(param, int):
+        try:
+            param = int(param)
+        except Exception as exception:
+            raise ValueError("Value of 'param' can not be converted to int.") from exception
+
+    _C_GL_1_1.glFogi(pname, param)
 
 def glFogiv(pname, params):
     """
-    pname            : int
-    params           : List[int] | Iterable[SupportInt]
+    pname           : int | SupportsInt
+    params          : List[int] | Iterable[SupportsInt]
     """
-    pname = int(pname)
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
+    if not isinstance(params, list) or not all(isinstance(item, int) for item in params):
+        try:
+            params = [int(item) for item in params]
+        except:
+            raise ValueError("Value of 'params' can not be converted to list of ints.")
 
     length = _Support.get_fog_params_length(pname)
     if length is None:
-        raise ValueError("Unexpected value of 'pname' parameter.")
+        raise ValueError("Unexpected value of 'pname'.")
 
-    c_params = _Support.list_part_to_c_array(int, params, length, _C_GL_1_1.GLint)
+    c_params = _Support.list_part_to_c_array_no_conv(params, length, _C_GL_1_1.GLint)
 
     _C_GL_1_1.glFogiv(pname, c_params)
 
@@ -4651,10 +6335,22 @@ def glFogiv(pname, params):
 
 def glHint(target, mode):
     """
-    target           : int
-    mode             : int
+    target          : int | SupportsInt
+    mode            : int | SupportsInt
     """
-    _C_GL_1_1.glHint(int(target), int(mode))
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    _C_GL_1_1.glHint(target, mode)
 
 
 ### Drawing, Reading, and Copying Pixels ###
@@ -4663,13 +6359,13 @@ def glHint(target, mode):
 
 def glReadPixels(x, y, width, height, format_, type_):
     """
-    x               : int
-    y               : int
-    width           : int
-    height          : int
-    format_         : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    width           : int | SupportsInt
+    height          : int | SupportsInt
+    format_         : int | SupportsInt
         Equivalent of 'format' parameter.
-    type_           : int
+    type_           : int | SupportsInt
         Equivalent of 'type' parameter.
 
     Returns         : bytes | None
@@ -4677,6 +6373,41 @@ def glReadPixels(x, y, width, height, format_, type_):
         If type of returned object is bytes, then returned object contains pixel data.
         If type of returned object is None, then computed size of pixels is below one byte (parameter 'width' or 'height' might be zero).
     """
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    if not isinstance(height, int):
+        try:
+            height = int(height)
+        except Exception as exception:
+            raise ValueError("Value of 'height' can not be converted to int.") from exception
+
+    if not isinstance(format_, int):
+        try:
+            format_ = int(format_)
+        except Exception as exception:
+            raise ValueError("Value of 'format_' can not be converted to int.") from exception
+
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
 
     format_count = _Support.get_read_pixels_format_count(format_)
     if format_count is None:
@@ -4686,37 +6417,71 @@ def glReadPixels(x, y, width, height, format_, type_):
     if type_size is None:
         raise ValueError("Unexpected value of 'type_' parameter.")
 
-    width       = int(width)
-    height      = int(height)
     pixel_size  = int(format_count * type_size)
     size        = width * height * pixel_size
 
     if size > 0:
         c_pixels = _Support.make_c_array(_C_GL_1_1.GLubyte, size)
-        _C_GL_1_1.glReadPixels(int(x), int(y), width, height, int(format_), int(type_), c_pixels)
+        _C_GL_1_1.glReadPixels(x, y, width, height, format_, type_, c_pixels)
         return bytes(c_pixels)
     else:
-        _C_GL_1_1.glReadPixels(int(x), int(y), width, height, int(format_), int(type_), None)
+        _C_GL_1_1.glReadPixels(x, y, width, height, format_, type_, None)
         return None
 
 def glReadBuffer(mode):
     """
-    mode             : int
+    mode            : int | SupportsInt
     """
-    _C_GL_1_1.glReadBuffer(int(mode))
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    _C_GL_1_1.glReadBuffer(mode)
 
 
 # Copying Pixels
 
 def glCopyPixels(x, y, width, height, type_):
     """
-    x                : int
-    y                : int
-    width            : int
-    height           : int
-    type_            : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    width           : int | SupportsInt
+    height          : int | SupportsInt
+    type_           : int | SupportsInt
     """
-    _C_GL_1_1.glCopyPixels(int(x), int(y), int(width), int(height), int(type_))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    if not isinstance(height, int):
+        try:
+            height = int(height)
+        except Exception as exception:
+            raise ValueError("Value of 'height' can not be converted to int.") from exception
+
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+
+    _C_GL_1_1.glCopyPixels(x, y, width, height, type_)
 
 
 ### Per-Fragment Operations ###
@@ -4725,69 +6490,165 @@ def glCopyPixels(x, y, width, height, type_):
 
 def glScissor(x, y, width, height):
     """
-    x                : int
-    y                : int
-    width            : int
-    height           : int
+    x               : int | SupportsInt
+    y               : int | SupportsInt
+    width           : int | SupportsInt
+    height          : int | SupportsInt
     """
-    _C_GL_1_1.glScissor(int(x), int(y), int(width), int(height))
+    if not isinstance(x, int):
+        try:
+            x = int(x)
+        except Exception as exception:
+            raise ValueError("Value of 'x' can not be converted to int.") from exception
+
+    if not isinstance(y, int):
+        try:
+            y = int(y)
+        except Exception as exception:
+            raise ValueError("Value of 'y' can not be converted to int.") from exception
+
+    if not isinstance(width, int):
+        try:
+            width = int(width)
+        except Exception as exception:
+            raise ValueError("Value of 'width' can not be converted to int.") from exception
+
+    if not isinstance(height, int):
+        try:
+            height = int(height)
+        except Exception as exception:
+            raise ValueError("Value of 'height' can not be converted to int.") from exception
+
+    _C_GL_1_1.glScissor(x, y, width, height)
 
 
 # Alpha Test
 
 def glAlphaFunc(func, ref):
     """
-    func             : int
-    ref              : float
+    func            : int | SupportsInt
+    ref             : float | SupportsFloat
     """
-    _C_GL_1_1.glAlphaFunc(int(func), float(ref))
+    if not isinstance(func, int):
+        try:
+            func = int(func)
+        except Exception as exception:
+            raise ValueError("Value of 'func' can not be converted to int.") from exception
+
+    if not isinstance(ref, float):
+        try:
+            ref = float(ref)
+        except Exception as exception:
+            raise ValueError("Value of 'ref' can not be converted to float.") from exception
+
+    _C_GL_1_1.glAlphaFunc(func, ref)
 
 
 # Stencil Test
 
 def glStencilFunc(func, ref, mask):
     """
-    func             : int
-    ref              : int
-    mask             : int
+    func            : int | SupportsInt
+    ref             : int | SupportsInt
+    mask            : int | SupportsInt
     """
-    _C_GL_1_1.glStencilFunc(int(func), int(ref), int(mask))
+    if not isinstance(func, int):
+        try:
+            func = int(func)
+        except Exception as exception:
+            raise ValueError("Value of 'func' can not be converted to int.") from exception
+
+    if not isinstance(ref, int):
+        try:
+            ref = int(ref)
+        except Exception as exception:
+            raise ValueError("Value of 'ref' can not be converted to int.") from exception
+
+    if not isinstance(mask, int):
+        try:
+            mask = int(mask)
+        except Exception as exception:
+            raise ValueError("Value of 'mask' can not be converted to int.") from exception
+
+    _C_GL_1_1.glStencilFunc(func, ref, mask)
 
 def glStencilOp(fail, zfail, zpass):
     """
-    fail             : int
-    zfail            : int
-    zpass            : int
+    fail            : int | SupportsInt
+    zfail           : int | SupportsInt
+    zpass           : int | SupportsInt
     """
-    _C_GL_1_1.glStencilOp(int(fail), int(zfail), int(zpass))
+    if not isinstance(fail, int):
+        try:
+            fail = int(fail)
+        except Exception as exception:
+            raise ValueError("Value of 'fail' can not be converted to int.") from exception
+
+    if not isinstance(zfail, int):
+        try:
+            zfail = int(zfail)
+        except Exception as exception:
+            raise ValueError("Value of 'zfail' can not be converted to int.") from exception
+
+    if not isinstance(zpass, int):
+        try:
+            zpass = int(zpass)
+        except Exception as exception:
+            raise ValueError("Value of 'zpass' can not be converted to int.") from exception
+
+    _C_GL_1_1.glStencilOp(fail, zfail, zpass)
 
 
 # Depth Buffer Test
 
 def glDepthFunc(func):
     """
-    func             : int
+    func            : int | SupportsInt
     """
-    _C_GL_1_1.glDepthFunc(int(func))
+    if not isinstance(func, int):
+        try:
+            func = int(func)
+        except Exception as exception:
+            raise ValueError("Value of 'func' can not be converted to int.") from exception
+
+    _C_GL_1_1.glDepthFunc(func)
 
 
 # Blending
 
 def glBlendFunc(sfactor, dfactor):
     """
-    sfactor          : int
-    dfactor          : int
+    sfactor         : int | SupportsInt
+    dfactor         : int | SupportsInt
     """
-    _C_GL_1_1.glBlendFunc(int(sfactor), int(dfactor))
+    if not isinstance(sfactor, int):
+        try:
+            sfactor = int(sfactor)
+        except Exception as exception:
+            raise ValueError("Value of 'sfactor' can not be converted to int.") from exception
+
+    if not isinstance(dfactor, int):
+        try:
+            dfactor = int(dfactor)
+        except Exception as exception:
+            raise ValueError("Value of 'dfactor' can not be converted to int.") from exception
+
+    _C_GL_1_1.glBlendFunc(sfactor, dfactor)
 
 
 # Logical Operation 
 
 def glLogicOp(opcode):
     """
-    opcode           : int
+    opcode          : int | SupportsInt
     """
-    _C_GL_1_1.glLogicOp(int(opcode))
+    if not isinstance(opcode, int):
+        try:
+            opcode = int(opcode)
+        except Exception as exception:
+            raise ValueError("Value of 'opcode' can not be converted to int.") from exception
+
+    _C_GL_1_1.glLogicOp(opcode)
 
 
 ### Whole Framebuffer Operations ###
@@ -4796,94 +6657,226 @@ def glLogicOp(opcode):
 
 def glDrawBuffer(mode):
     """
-    mode             : int
+    mode            : int | SupportsInt
     """
-    _C_GL_1_1.glDrawBuffer(int(mode))
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    _C_GL_1_1.glDrawBuffer(mode)
+
 
 
 # Fine Control of Buffer Updates
 
 def glIndexMask(mask):
     """
-    mask             : int
+    mask            : int | SupportsInt
     """
-    _C_GL_1_1.glIndexMask(int(mask))
+    if not isinstance(mask, int):
+        try:
+            mask = int(mask)
+        except Exception as exception:
+            raise ValueError("Value of 'mask' can not be converted to int.") from exception
+
+    _C_GL_1_1.glIndexMask(mask)
 
 def glColorMask(red, green, blue, alpha):
     """
-    red              : bool
-    green            : bool
-    blue             : bool
-    alpha            : bool
+    red             : bool
+    green           : bool
+    blue            : bool
+    alpha           : bool
     """
-    _C_GL_1_1.glColorMask(bool(red), bool(green), bool(blue), bool(alpha))
+    if not isinstance(red, bool):
+        try:
+            red = bool(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to bool.") from exception
 
+    if not isinstance(green, bool):
+        try:
+            green = bool(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to bool.") from exception
+
+    if not isinstance(blue, bool):
+        try:
+            blue = bool(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to bool.") from exception
+
+    if not isinstance(alpha, bool):
+        try:
+            alpha = bool(alpha)
+        except Exception as exception:
+            raise ValueError("Value of 'alpha' can not be converted to bool.") from exception
+
+    _C_GL_1_1.glColorMask(red, green, blue, alpha)
+    
 def glDepthMask(flag):
     """
-    flag             : bool
+    flag            : bool
     """
-    _C_GL_1_1.glDepthMask(bool(flag))
+    if not isinstance(flag, bool):
+        try:
+            flag = bool(flag)
+        except Exception as exception:
+            raise ValueError("Value of 'flag' can not be converted to bool.") from exception
+
+    _C_GL_1_1.glDepthMask(flag)
 
 def glStencilMask(mask):
     """
-    mask             : int
+    mask            : int | SupportsInt
     """
-    _C_GL_1_1.glStencilMask(int(mask))
+    if not isinstance(mask, int):
+        try:
+            mask = int(mask)
+        except Exception as exception:
+            raise ValueError("Value of 'mask' can not be converted to int.") from exception
 
+    _C_GL_1_1.glStencilMask(mask)
 
 # Clearing the Buffers
 
 def glClear(mask):
     """
-    mask             : int
+    mask            : int | SupportsInt
     """
-    _C_GL_1_1.glClear(int(mask))
+    if not isinstance(mask, int):
+        try:
+            mask = int(mask)
+        except Exception as exception:
+            raise ValueError("Value of 'mask' can not be converted to int.") from exception
+
+    _C_GL_1_1.glClear(mask)
 
 def glClearColor(red, green, blue, alpha):
     """
-    red              : float
-    green            : float
-    blue             : float
-    alpha            : float
+    red             : float | SupportsFloat
+    green           : float | SupportsFloat
+    blue            : float | SupportsFloat
+    alpha           : float | SupportsFloat
     """
-    _C_GL_1_1.glClearColor(float(red), float(green), float(blue), float(alpha))
+    if not isinstance(red, float):
+        try:
+            red = float(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to float.") from exception
+
+    if not isinstance(green, float):
+        try:
+            green = float(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to float.") from exception
+
+    if not isinstance(blue, float):
+        try:
+            blue = float(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to float.") from exception
+
+    if not isinstance(alpha, float):
+        try:
+            alpha = float(alpha)
+        except Exception as exception:
+            raise ValueError("Value of 'alpha' can not be converted to float.") from exception
+
+    _C_GL_1_1.glClearColor(red, green, blue, alpha)
 
 def glClearIndex(c):
     """
-    c                : float
+    c               : float | SupportsFloat
     """
-    _C_GL_1_1.glClearIndex(float(c))
+    if not isinstance(c, float):
+        try:
+            c = float(c)
+        except Exception as exception:
+            raise ValueError("Value of 'c' can not be converted to float.") from exception
+
+    _C_GL_1_1.glClearIndex(c)
 
 def glClearDepth(depth):
     """
-    depth            : float
+    depth           : float | SupportsFloat
     """
-    _C_GL_1_1.glClearDepth(float(depth))
+    if not isinstance(depth, float):
+        try:
+            depth = float(depth)
+        except Exception as exception:
+            raise ValueError("Value of 'depth' can not be converted to float.") from exception
+
+    _C_GL_1_1.glClearDepth(depth)
 
 def glClearStencil(s):
     """
-    s                : int
+    s               : int | SupportsInt
     """
-    _C_GL_1_1.glClearStencil(int(s))
+    if not isinstance(s, int):
+        try:
+            s = int(s)
+        except Exception as exception:
+            raise ValueError("Value of 's' can not be converted to int.") from exception
+
+    _C_GL_1_1.glClearStencil(s)
 
 def glClearAccum(red, green, blue, alpha):
     """
-    red              : float
-    green            : float
-    blue             : float
-    alpha            : float
+    red             : float | SupportsFloat
+    green           : float | SupportsFloat
+    blue            : float | SupportsFloat
+    alpha           : float | SupportsFloat
     """
-    _C_GL_1_1.glClearAccum(float(red), float(green), float(blue), float(alpha))
+    if not isinstance(red, float):
+        try:
+            red = float(red)
+        except Exception as exception:
+            raise ValueError("Value of 'red' can not be converted to float.") from exception
+
+    if not isinstance(green, float):
+        try:
+            green = float(green)
+        except Exception as exception:
+            raise ValueError("Value of 'green' can not be converted to float.") from exception
+
+    if not isinstance(blue, float):
+        try:
+            blue = float(blue)
+        except Exception as exception:
+            raise ValueError("Value of 'blue' can not be converted to float.") from exception
+
+    if not isinstance(alpha, float):
+        try:
+            alpha = float(alpha)
+        except Exception as exception:
+            raise ValueError("Value of 'alpha' can not be converted to float.") from exception
+
+    _C_GL_1_1.glClearAccum(red, green, blue, alpha)
 
 
 # Accumulation Buffer
 
 def glAccum(op, value):
     """
-    op               : int
-    value            : float
+    op              : int | SupportsInt
+    value           : float | SupportsFloat
     """
-    _C_GL_1_1.glAccum(int(op), float(value))
+    if not isinstance(op, int):
+        try:
+            op = int(op)
+        except Exception as exception:
+            raise ValueError("Value of 'op' can not be converted to int.") from exception
+
+    if not isinstance(value, float):
+        try:
+            value = float(value)
+        except Exception as exception:
+            raise ValueError("Value of 'value' can not be converted to float.") from exception
+
+    _C_GL_1_1.glAccum(op, value)
 
 
 ### Special Functions ###
@@ -4892,10 +6885,10 @@ def glAccum(op, value):
 
 def glMap1d(target, u1, u2, points):
     """
-    target           : int
-    u1               : float
-    u2               : float
-    points           : List[float]
+    target          : int | SupportsInt
+    u1              : float | SupportsFloat
+    u2              : float | SupportsFloat
+    points          : List[float] | Iterable[SupportsFloat]
         List (or iterable), which contains control points.
         Each control point is represented by one or more items in list (or iterable).
         Number of items in list (or iterable) per control point for target:
@@ -4912,28 +6905,48 @@ def glMap1d(target, u1, u2, points):
     Note: Value of 'order' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
     Note: Value of 'stride' parameter (from OpenGL function specification) is deduced from 'target' parameter.
     """
-    stride = int(stride)
-    points = list(points)
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(u1, float):
+        try:
+            u1 = float(u1)
+        except Exception as exception:
+            raise ValueError("Value of 'u1' can not be converted to float.") from exception
+
+    if not isinstance(u2, float):
+        try:
+            u2 = float(u2)
+        except Exception as exception:
+            raise ValueError("Value of 'u2' can not be converted to float.") from exception
+
+    if not isinstance(points, list) or not all(isinstance(item, float) for item in points):
+        try:
+            points = [float(item) for item in points]
+        except:
+            raise ValueError("Value of 'points' can not be converted to list of floats.")
 
     stride = _Support.get_map_1d_stride(target)
     if stride is None:
-        raise ValueError("Unexpected value of 'target' parameter.")
+        raise ValueError("Unexpected value of 'target'.")
 
     if len(points) % stride != 0:
-        raise ValueError("Number of items in 'points' parameter must be multiply of %s (its stride)." % stride)
+        raise ValueError("Number of items in 'points' must be multiply of %s (its stride)." % stride)
 
     order = len(points) // stride
-    c_points = _Support.list_to_c_array(float, points, len(points), _C_GL_1_1.GLdouble)
+    c_points = _Support.list_to_c_array_no_conv(points, len(points), _C_GL_1_1.GLdouble)
 
-    _C_GL_1_1.glMap1d(int(target), float(u1), float(u2), stride, order, c_points)
+    _C_GL_1_1.glMap1d(target, u1, u2, stride, order, c_points)
 
 def glMap1f(target, u1, u2, points):
     """
-    target           : int
-    u1               : float
-    u2               : float
-    stride           : int
-    points           : List[float]
+    target          : int | SupportsInt
+    u1              : float | SupportsFloat
+    u2              : float | SupportsFloat
+    points          : List[float] | Iterable[SupportsFloat]
         List (or iterable), which contains control points.
         Each control point is represented by one or more items in list (or iterable).
         Number of items in list (or iterable) per control point for target:
@@ -4950,29 +6963,51 @@ def glMap1f(target, u1, u2, points):
     Note: Value of 'order' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
     Note: Value of 'stride' parameter (from OpenGL function specification) is deduced from 'target' parameter.
     """
-    points = list(points)
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(u1, float):
+        try:
+            u1 = float(u1)
+        except Exception as exception:
+            raise ValueError("Value of 'u1' can not be converted to float.") from exception
+
+    if not isinstance(u2, float):
+        try:
+            u2 = float(u2)
+        except Exception as exception:
+            raise ValueError("Value of 'u2' can not be converted to float.") from exception
+
+    if not isinstance(points, list) or not all(isinstance(item, float) for item in points):
+        try:
+            points = [float(item) for item in points]
+        except:
+            raise ValueError("Value of 'points' can not be converted to list of floats.")
 
     stride = _Support.get_map_1d_stride(target)
     if stride is None:
-        raise ValueError("Unexpected value of 'target' parameter.")
+        raise ValueError("Unexpected value of 'target'.")
 
     if len(points) % stride != 0:
-        raise ValueError("Number of items in 'points' parameter must be multiply of value from 'stride' parameter.")
+        raise ValueError("Number of items in 'points' must be multiply of value from 'stride'.")
 
     order = len(points) // stride
-    c_points = _Support.list_to_c_array(float, points, len(points), _C_GL_1_1.GLfloat)
+    c_points = _Support.list_to_c_array_no_conv(points, len(points), _C_GL_1_1.GLfloat)
 
-    _C_GL_1_1.glMap1f(int(target), float(u1), float(u2), stride, order, c_points)
+    _C_GL_1_1.glMap1f(target, u1, u2, stride, order, c_points)
 
 def glMap2d(target, u1, u2, v1, v2, vorder, points):
     """
-    target           : int
-    u1               : float
-    u2               : float
-    v1               : float
-    v2               : float
-    vorder           : int
-    points           : List[float]
+    target          : int | SupportsInt
+    u1              : float | SupportsFloat
+    u2              : float | SupportsFloat
+    v1              : float | SupportsFloat
+    v2              : float | SupportsFloat
+    vorder          : int | SupportsInt
+    points          : List[float] | Iterable[SupportsFloat]
         List (or iterable), which contains control points.
         Each control point is represented by one or more items in list (or iterable).
         Number of items in list (or iterable) per control point for target:
@@ -4989,7 +7024,47 @@ def glMap2d(target, u1, u2, v1, v2, vorder, points):
     Note: Value of 'uorder' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
     Note: Values of 'ustride' parameter and 'vstride' parameter (from OpenGL function specification) is deduced from 'target' parameter.
     """
-    points = list(points)
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(u1, float):
+        try:
+            u1 = float(u1)
+        except Exception as exception:
+            raise ValueError("Value of 'u1' can not be converted to float.") from exception
+
+    if not isinstance(u2, float):
+        try:
+            u2 = float(u2)
+        except Exception as exception:
+            raise ValueError("Value of 'u2' can not be converted to float.") from exception
+
+    if not isinstance(v1, float):
+        try:
+            v1 = float(v1)
+        except Exception as exception:
+            raise ValueError("Value of 'v1' can not be converted to float.") from exception
+
+    if not isinstance(v2, float):
+        try:
+            v2 = float(v2)
+        except Exception as exception:
+            raise ValueError("Value of 'v2' can not be converted to float.") from exception
+
+    if not isinstance(vorder, int):
+        try:
+            vorder = int(vorder)
+        except Exception as exception:
+            raise ValueError("Value of 'vorder' can not be converted to int.") from exception
+
+    if not isinstance(points, list) or not all(isinstance(item, float) for item in points):
+        try:
+            points = [float(item) for item in points]
+        except:
+            raise ValueError("Value of 'points' can not be converted to list of floats.")
 
     ustride = _Support.get_map_2d_stride(target)
     if ustride is None:
@@ -5001,19 +7076,19 @@ def glMap2d(target, u1, u2, v1, v2, vorder, points):
     uorder = len(points) // (ustride * vorder)
     vstride = ustride * uorder
 
-    c_points = _Support.list_to_c_array(float, points, len(points), _C_GL_1_1.GLdouble)
+    c_points = _Support.list_to_c_array_no_conv(points, len(points), _C_GL_1_1.GLdouble)
 
-    _C_GL_1_1.glMap2d(int(target), float(u1), float(u2), ustride, uorder, float(v1), float(v2), vstride, vorder, c_points)
+    _C_GL_1_1.glMap2d(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, c_points)
 
 def glMap2f(target, u1, u2, v1, v2, vorder, points):
     """
-    target           : int
-    u1               : float
-    u2               : float
-    v1               : float
-    v2               : float
-    vorder           : int
-    points           : List[float]
+    target          : int | SupportsInt
+    u1              : float | SupportsFloat
+    u2              : float | SupportsFloat
+    v1              : float | SupportsFloat
+    v2              : float | SupportsFloat
+    vorder          : int | SupportsInt
+    points          : List[float] | Iterable[SupportsFloat]
         List (or iterable), which contains control points.
         Each control point is represented by one or more items in list (or iterable).
         Number of items in list (or iterable) per control point for target:
@@ -5027,164 +7102,446 @@ def glMap2f(target, u1, u2, v1, v2, vorder, points):
                 3 - GL_MAP1_VERTEX_3, 
                 4 - GL_MAP1_VERTEX_4.
                 
-
     Note: Value of 'uorder' parameter (from OpenGL function specification) is deduced from length of 'points' parameter.
     Note: Values of 'ustride' parameter and 'vstride' parameter (from OpenGL function specification) is deduced from 'target' parameter.
     """
-    points = list(points)
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(u1, float):
+        try:
+            u1 = float(u1)
+        except Exception as exception:
+            raise ValueError("Value of 'u1' can not be converted to float.") from exception
+
+    if not isinstance(u2, float):
+        try:
+            u2 = float(u2)
+        except Exception as exception:
+            raise ValueError("Value of 'u2' can not be converted to float.") from exception
+
+    if not isinstance(v1, float):
+        try:
+            v1 = float(v1)
+        except Exception as exception:
+            raise ValueError("Value of 'v1' can not be converted to float.") from exception
+
+    if not isinstance(v2, float):
+        try:
+            v2 = float(v2)
+        except Exception as exception:
+            raise ValueError("Value of 'v2' can not be converted to float.") from exception
+
+    if not isinstance(vorder, int):
+        try:
+            vorder = int(vorder)
+        except Exception as exception:
+            raise ValueError("Value of 'vorder' can not be converted to int.") from exception
+
+    if not isinstance(points, list) or not all(isinstance(item, float) for item in points):
+        try:
+            points = [float(item) for item in points]
+        except:
+            raise ValueError("Value of 'points' can not be converted to list of floats.")
 
     ustride = _Support.get_map_2d_stride(target)
     if ustride is None:
-        raise ValueError("Unexpected value of 'target' parameter.")
+        raise ValueError("Unexpected value of 'target'.")
 
     if len(points) % ustride != 0:
-        raise ValueError("Number of items in 'points' parameter must be multiply of %d." % ustride)
+        raise ValueError("Number of items in 'points' must be multiply of %d." % ustride)
 
     uorder = len(points) // (ustride * vorder)
     vstride = ustride * uorder
 
     c_points = _Support.list_to_c_array(float, points, len(points), _C_GL_1_1.GLfloat)
 
-    _C_GL_1_1.glMap2f(int(target), float(u1), float(u2), ustride, uorder, float(v1), float(v2), vstride, vorder, c_points)
+    _C_GL_1_1.glMap2f(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, c_points)
 
 
 def glEvalCoord1d(u):
     """
-    u                : float
+    u               : float | SupportsFloat
     """
-    _C_GL_1_1.glEvalCoord1d(float(u))
+    if not isinstance(u, float):
+        try:
+            u = float(u)
+        except Exception as exception:
+            raise ValueError("Value of 'u' can not be converted to float.") from exception
+
+    _C_GL_1_1.glEvalCoord1d(u)
 
 def glEvalCoord1dv(u):
     """
-    u                : List[float]
+    u               : List[float] | Iterable[SupportsFloat]
     """
-    c_u = _Support.list_part_to_c_array(float, u, 1, _C_GL_1_1.GLdouble)
+    if not isinstance(u, list) or not all(isinstance(item, float) for item in u):
+        try:
+            u = [float(item) for item in u]
+        except:
+            raise ValueError("Value of 'u' can not be converted to list of floats.")
+            
+    c_u = _Support.list_part_to_c_array_no_conv(u, 1, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glEvalCoord1dv(c_u)
 
 def glEvalCoord1f(u):
     """
-    u                : float
+    u               : float | SupportsFloat
     """
-    _C_GL_1_1.glEvalCoord1f(float(u))
+    if not isinstance(u, float):
+        try:
+            u = float(u)
+        except Exception as exception:
+            raise ValueError("Value of 'u' can not be converted to float.") from exception
+
+    _C_GL_1_1.glEvalCoord1f(u)
 
 def glEvalCoord1fv(u):
     """
-    u                : List[float]
+    u               : List[float] | Iterable[SupportsFloat]
     """
-    c_u = _Support.list_part_to_c_array(float, u, 1, _C_GL_1_1.GLfloat)
+    if not isinstance(u, list) or not all(isinstance(item, float) for item in u):
+        try:
+            u = [float(item) for item in u]
+        except:
+            raise ValueError("Value of 'u' can not be converted to list of floats.")
+
+    c_u = _Support.list_part_to_c_array_no_conv(u, 1, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glEvalCoord1fv(c_u)
 
 def glEvalCoord2d(u, v):
     """
-    u                : float
-    v                : float
+    u               : float | SupportsFloat
+    v               : float | SupportsFloat
     """
-    _C_GL_1_1.glEvalCoord2d(float(u), float(v))
+    if not isinstance(u, float):
+        try:
+            u = float(u)
+        except Exception as exception:
+            raise ValueError("Value of 'u' can not be converted to float.") from exception
+
+    if not isinstance(v, float):
+        try:
+            v = float(v)
+        except Exception as exception:
+            raise ValueError("Value of 'v' can not be converted to float.") from exception
+
+    _C_GL_1_1.glEvalCoord2d(u, v)
 
 def glEvalCoord2dv(u):
     """
-    u                : List[float]
+    u               : List[float] | Iterable[SupportsFloat]
     """
-    c_u = _Support.list_part_to_c_array(float, u, 2, _C_GL_1_1.GLdouble)
+    if not isinstance(u, list) or not all(isinstance(item, float) for item in u):
+        try:
+            u = [float(item) for item in u]
+        except:
+            raise ValueError("Value of 'u' can not be converted to list of floats.")
+            
+    c_u = _Support.list_part_to_c_array_no_conv(u, 2, _C_GL_1_1.GLdouble)
     _C_GL_1_1.glEvalCoord2dv(c_u)
 
 def glEvalCoord2f(u, v):
     """
-    u                : float
-    v                : float
+    u               : float | SupportsFloat
+    v               : float | SupportsFloat
     """
-    _C_GL_1_1.glEvalCoord2f(float(u), float(v))
+    if not isinstance(u, float):
+        try:
+            u = float(u)
+        except Exception as exception:
+            raise ValueError("Value of 'u' can not be converted to float.") from exception
+
+    if not isinstance(v, float):
+        try:
+            v = float(v)
+        except Exception as exception:
+            raise ValueError("Value of 'v' can not be converted to float.") from exception
+
+    _C_GL_1_1.glEvalCoord2f(u, v)
 
 def glEvalCoord2fv(u):
     """
-    u                : List[float]
+    u               : List[float] | Iterable[SupportsFloat]
     """
-    c_u = _Support.list_part_to_c_array(float, u, 2, _C_GL_1_1.GLfloat)
+    if not isinstance(u, list) or not all(isinstance(item, float) for item in u):
+        try:
+            u = [float(item) for item in u]
+        except:
+            raise ValueError("Value of 'u' can not be converted to list of floats.")
+            
+    c_u = _Support.list_part_to_c_array_no_conv(u, 2, _C_GL_1_1.GLfloat)
     _C_GL_1_1.glEvalCoord2fv(c_u)
 
 def glMapGrid1d(un, u1, u2):
     """
-    un               : int
-    u1               : float
-    u2               : float
+    un              : int | SupportsInt
+    u1              : float | SupportsFloat
+    u2              : float | SupportsFloat
     """
-    _C_GL_1_1.glMapGrid1d(int(un), float(u1), float(u2))
+    if not isinstance(un, int):
+        try:
+            un = int(un)
+        except Exception as exception:
+            raise ValueError("Value of 'un' can not be converted to int.") from exception
+
+    if not isinstance(u1, float):
+        try:
+            u1 = float(u1)
+        except Exception as exception:
+            raise ValueError("Value of 'u1' can not be converted to float.") from exception
+
+    if not isinstance(u2, float):
+        try:
+            u2 = float(u2)
+        except Exception as exception:
+            raise ValueError("Value of 'u2' can not be converted to float.") from exception
+
+    _C_GL_1_1.glMapGrid1d(un, u1, u2)
 
 def glMapGrid1f(un, u1, u2):
     """
-    un               : int
-    u1               : float
-    u2               : float
+    un              : int | SupportsInt
+    u1              : float | SupportsFloat
+    u2              : float | SupportsFloat
     """
-    _C_GL_1_1.glMapGrid1f(int(un), float(u1), float(u2))
+    if not isinstance(un, int):
+        try:
+            un = int(un)
+        except Exception as exception:
+            raise ValueError("Value of 'un' can not be converted to int.") from exception
+
+    if not isinstance(u1, float):
+        try:
+            u1 = float(u1)
+        except Exception as exception:
+            raise ValueError("Value of 'u1' can not be converted to float.") from exception
+
+    if not isinstance(u2, float):
+        try:
+            u2 = float(u2)
+        except Exception as exception:
+            raise ValueError("Value of 'u2' can not be converted to float.") from exception
+
+    _C_GL_1_1.glMapGrid1f(un, u1, u2)
 
 def glMapGrid2d(un, u1, u2, vn, v1, v2):
     """
-    un               : int
-    u1               : float
-    u2               : float
-    vn               : int
-    v1               : float
-    v2               : float
+    un              : int | SupportsInt
+    u1              : float | SupportsFloat
+    u2              : float | SupportsFloat
+    vn              : int | SupportsInt
+    v1              : float | SupportsFloat
+    v2              : float | SupportsFloat
     """
-    _C_GL_1_1.glMapGrid2d(int(un), float(u1), float(u2), int(vn), float(v1), float(v2))
+    if not isinstance(un, int):
+        try:
+            un = int(un)
+        except Exception as exception:
+            raise ValueError("Value of 'un' can not be converted to int.") from exception
+
+    if not isinstance(u1, float):
+        try:
+            u1 = float(u1)
+        except Exception as exception:
+            raise ValueError("Value of 'u1' can not be converted to float.") from exception
+
+    if not isinstance(u2, float):
+        try:
+            u2 = float(u2)
+        except Exception as exception:
+            raise ValueError("Value of 'u2' can not be converted to float.") from exception
+
+    if not isinstance(vn, int):
+        try:
+            vn = int(vn)
+        except Exception as exception:
+            raise ValueError("Value of 'vn' can not be converted to int.") from exception
+
+    if not isinstance(v1, float):
+        try:
+            v1 = float(v1)
+        except Exception as exception:
+            raise ValueError("Value of 'v1' can not be converted to float.") from exception
+
+    if not isinstance(v2, float):
+        try:
+            v2 = float(v2)
+        except Exception as exception:
+            raise ValueError("Value of 'v2' can not be converted to float.") from exception
+
+    _C_GL_1_1.glMapGrid2d(un, u1, u2, vn, v1, v2)
 
 def glMapGrid2f(un, u1, u2, vn, v1, v2):
     """
-    un               : int
-    u1               : float
-    u2               : float
-    vn               : int
-    v1               : float
-    v2               : float
+    un              : int | SupportsInt
+    u1              : float | SupportsFloat
+    u2              : float | SupportsFloat
+    vn              : int | SupportsInt
+    v1              : float | SupportsFloat
+    v2              : float | SupportsFloat
     """
-    _C_GL_1_1.glMapGrid2f(int(un), float(u1), float(u2), int(vn), float(v1), float(v2))
+    if not isinstance(un, int):
+        try:
+            un = int(un)
+        except Exception as exception:
+            raise ValueError("Value of 'un' can not be converted to int.") from exception
+
+    if not isinstance(u1, float):
+        try:
+            u1 = float(u1)
+        except Exception as exception:
+            raise ValueError("Value of 'u1' can not be converted to float.") from exception
+
+    if not isinstance(u2, float):
+        try:
+            u2 = float(u2)
+        except Exception as exception:
+            raise ValueError("Value of 'u2' can not be converted to float.") from exception
+
+    if not isinstance(vn, int):
+        try:
+            vn = int(vn)
+        except Exception as exception:
+            raise ValueError("Value of 'vn' can not be converted to int.") from exception
+
+    if not isinstance(v1, float):
+        try:
+            v1 = float(v1)
+        except Exception as exception:
+            raise ValueError("Value of 'v1' can not be converted to float.") from exception
+
+    if not isinstance(v2, float):
+        try:
+            v2 = float(v2)
+        except Exception as exception:
+            raise ValueError("Value of 'v2' can not be converted to float.") from exception
+
+    _C_GL_1_1.glMapGrid2f(un, u1, u2, vn, v1, v2)
 
 
 def glEvalMesh1(mode, i1, i2):
     """
-    mode             : int
-    i1               : int
-    i2               : int
+    mode            : int | SupportsInt
+    i1              : int | SupportsInt
+    i2              : int | SupportsInt
     """
-    _C_GL_1_1.glEvalMesh1(int(mode), int(i1), int(i2))
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    if not isinstance(i1, int):
+        try:
+            i1 = int(i1)
+        except Exception as exception:
+            raise ValueError("Value of 'i1' can not be converted to int.") from exception
+
+    if not isinstance(i2, int):
+        try:
+            i2 = int(i2)
+        except Exception as exception:
+            raise ValueError("Value of 'i2' can not be converted to int.") from exception
+
+    _C_GL_1_1.glEvalMesh1(mode, i1, i2)
 
 def glEvalMesh2(mode, i1, i2, j1, j2):
     """
-    mode             : int
-    i1               : int
-    i2               : int
-    j1               : int
-    j2               : int
+    mode            : int | SupportsInt
+    i1              : int | SupportsInt
+    i2              : int | SupportsInt
+    j1              : int | SupportsInt
+    j2              : int | SupportsInt
     """
-    _C_GL_1_1.glEvalMesh2(int(mode), int(i1), int(i2), int(j1), int(j2))
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    if not isinstance(i1, int):
+        try:
+            i1 = int(i1)
+        except Exception as exception:
+            raise ValueError("Value of 'i1' can not be converted to int.") from exception
+
+    if not isinstance(i2, int):
+        try:
+            i2 = int(i2)
+        except Exception as exception:
+            raise ValueError("Value of 'i2' can not be converted to int.") from exception
+
+    if not isinstance(j1, int):
+        try:
+            j1 = int(j1)
+        except Exception as exception:
+            raise ValueError("Value of 'j1' can not be converted to int.") from exception
+
+    if not isinstance(j2, int):
+        try:
+            j2 = int(j2)
+        except Exception as exception:
+            raise ValueError("Value of 'j2' can not be converted to int.") from exception
+
+    _C_GL_1_1.glEvalMesh2(mode, i1, i2, j1, j2)
 
 
 def glEvalPoint1(i):
     """
-    i                : int
+    i               : int | SupportsInt
     """
-    _C_GL_1_1.glEvalPoint1(int(i))
+    if not isinstance(i, int):
+        try:
+            i = int(i)
+        except Exception as exception:
+            raise ValueError("Value of 'i' can not be converted to int.") from exception
+
+    _C_GL_1_1.glEvalPoint1(i)
 
 def glEvalPoint2(i, j):
     """
-    i                : int
-    j                : int
+    i               : int | SupportsInt
+    j               : int | SupportsInt
     """
-    _C_GL_1_1.glEvalPoint2(int(i), int(j))
+    if not isinstance(i, int):
+        try:
+            i = int(i)
+        except Exception as exception:
+            raise ValueError("Value of 'i' can not be converted to int.") from exception
+
+    if not isinstance(j, int):
+        try:
+            j = int(j)
+        except Exception as exception:
+            raise ValueError("Value of 'j' can not be converted to int.") from exception
+
+    _C_GL_1_1.glEvalPoint2(i, j)
 
 
 # Enumerated Query
 
 def glGetMapdv(target, query):
     """
-    target          : int 
-    query           : int
+    target          : int | SupportsInt
+    query           : int | SupportsInt
     Returns         : List[float]
         Corresponds to 'v' parameter from OpenGL function specification.
     """
-    target = int(target)
-    query = int(query)
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(query, int):
+        try:
+            query = int(query)
+        except Exception as exception:
+            raise ValueError("Value of 'query' can not be converted to int.") from exception
 
     if query == GL_COEFF:
         stride = _Support.get_map_stride(target)
@@ -5221,13 +7578,22 @@ def glGetMapdv(target, query):
 
 def glGetMapfv(target, query):
     """
-    target          : int
-    query           : int
+    target          : int | SupportsInt
+    query           : int | SupportsInt
     Returns         : List[float]
         Corresponds to 'v' parameter from OpenGL function specification.
     """
-    target = int(target)
-    query = int(query)
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(query, int):
+        try:
+            query = int(query)
+        except Exception as exception:
+            raise ValueError("Value of 'query' can not be converted to int.") from exception
 
     if query == GL_COEFF:
         stride = _Support.get_map_stride(target)
@@ -5262,13 +7628,22 @@ def glGetMapfv(target, query):
 
 def glGetMapiv(target, query):
     """
-    target          : int
-    query           : int
+    target          : int | SupportsInt
+    query           : int | SupportsInt
     Returns         : List[int]
         Corresponds to 'v' parameter from OpenGL function specification.
     """
-    target = int(target)
-    query = int(query)
+    if not isinstance(target, int):
+        try:
+            target = int(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' can not be converted to int.") from exception
+
+    if not isinstance(query, int):
+        try:
+            query = int(query)
+        except Exception as exception:
+            raise ValueError("Value of 'query' can not be converted to int.") from exception
 
     if query == GL_COEFF:
         stride = _Support.get_map_stride(target)
@@ -5312,75 +7687,152 @@ def glPopName():
 
 def glPushName(name):
     """
-    name             : int
+    name            : int | SupportsInt
     """
-    _C_GL_1_1.glPushName(int(name))
+    if not isinstance(name, int):
+        try:
+            name = int(name)
+        except Exception as exception:
+            raise ValueError("Value of 'name' can not be converted to int.") from exception
+
+    _C_GL_1_1.glPushName(name)
 
 def glLoadName(name):
     """
-    name             : int
+    name            : int | SupportsInt
     """
-    _C_GL_1_1.glLoadName(int(name))
+    if not isinstance(name, int):
+        try:
+            name = int(name)
+        except Exception as exception:
+            raise ValueError("Value of 'name' can not be converted to int.") from exception
+
+    _C_GL_1_1.glLoadName(name)
 
 def glRenderMode(mode):
     """
-    mode             : int
-    Returns (int).
+    mode            : int | SupportsInt
+    Returns         : int
     """
-    return int(_C_GL_1_1.glRenderMode(int(mode)))
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    return int(_C_GL_1_1.glRenderMode(mode))
 
 #def glSelectBuffer(size, buffer):
 #    """
-#    size             : int
-#    buffer           : ???
+#    size            : int | SupportsInt
+#    buffer          : List[int] | Iterable[SupportsInt]
 #    """
-#    _C_GL_1_1.glSelectBuffer(int(size), ???(buffer))
+#    if not isinstance(size, int):
+#        try:
+#            size = int(size)
+#        except Exception as exception:
+#            raise ValueError("Value of 'size' can not be converted to int.") from exception
+#
+#    if not isinstance(buffer, list) or not all(isinstance(item, int) for item in buffer):
+#        try:
+#            buffer = [int(item) for item in buffer]
+#        except:
+#            raise ValueError("Value of 'buffer' can not be converted to list of ints.")
+#
+#    _C_GL_1_1.glSelectBuffer(size, buffer)
 
 
 # Feedback
 
 #def glFeedbackBuffer(size, type_, buffer):
 #    """
-#    size             : int
-#    type_            : int
-#    buffer           : ???
+#    size            : int | SupportsInt
+#    type_           : int | SupportsInt
+#    buffer          : List[float] | Iterable[SupportsFloat]
 #    """
-#    _C_GL_1_1.glFeedbackBuffer(int(size), int(type_), ???(buffer))
+#    if not isinstance(size, int):
+#        try:
+#            size = int(size)
+#        except Exception as exception:
+#            raise ValueError("Value of 'size' can not be converted to int.") from exception
+#
+#    if not isinstance(type_, int):
+#        try:
+#            type_ = int(type_)
+#        except Exception as exception:
+#            raise ValueError("Value of 'type_' can not be converted to int.") from exception
+#
+#    if not isinstance(buffer, list) or not all(isinstance(item, float) for item in buffer):
+#        try:
+#            buffer = [float(item) for item in buffer]
+#        except:
+#            raise ValueError("Value of 'buffer' can not be converted to list of floats.")
+#
+#    _C_GL_1_1.glFeedbackBuffer(size, type_, buffer)
 
 def glPassThrough(token):
     """
-    token            : float
+    token           : float | SupportsFloat
     """
-    _C_GL_1_1.glPassThrough(float(token))
+    if not isinstance(token, float):
+        try:
+            token = float(token)
+        except Exception as exception:
+            raise ValueError("Value of 'token' can not be converted to float.") from exception
+
+    _C_GL_1_1.glPassThrough(token)
 
 
 # Display Lists
 
 def glNewList(list_, mode):
     """
-    list_            : int
-    mode             : int
+    list_           : int | SupportsInt
+    mode            : int | SupportsInt
     """
-    _C_GL_1_1.glNewList(int(list_), int(mode))
+    if not isinstance(list_, int):
+        try:
+            list_ = int(list_)
+        except Exception as exception:
+            raise ValueError("Value of 'list_' can not be converted to int.") from exception
+
+    if not isinstance(mode, int):
+        try:
+            mode = int(mode)
+        except Exception as exception:
+            raise ValueError("Value of 'mode' can not be converted to int.") from exception
+
+    _C_GL_1_1.glNewList(list_, mode)
 
 def glEndList():
     _C_GL_1_1.glEndList()
 
 def glCallList(list_):
     """
-    list_            : int
+    list_           : int | SupportsInt
     """
-    _C_GL_1_1.glCallList(int(list_))
+    if not isinstance(list_, int):
+        try:
+            list_ = int(list_)
+        except Exception as exception:
+            raise ValueError("Value of 'list_' can not be converted to int.") from exception
+
+    _C_GL_1_1.glCallList(list_)
 
 def glCallLists(type_, lists):
     """
-    type_            : int
-    lists            : List[int | float]
-    lists            : bytes
+    type_           : int | SupportsInt
+    lists           : List[int | float] | Iterable[SupportsInt | SupportsFloat]
+    lists           : bytes
         Acceptable when parameter 'type_' is  GL_UNSIGNED_BYTE.
-    lists            : str
+    lists           : str
         Acceptable when parameter 'type_' is  GL_UNSIGNED_INT.
     """
+    if not isinstance(type_, int):
+        try:
+            type_ = int(type_)
+        except Exception as exception:
+            raise ValueError("Value of 'type_' can not be converted to int.") from exception
 
     if isinstance(lists, bytes):
         if type_ == GL_UNSIGNED_BYTE:
@@ -5398,43 +7850,86 @@ def glCallLists(type_, lists):
             raise ValueError("Unexpected value of parameter 'type_'. For parameter 'lists' being list of integers or floats, parameter 'type_' must be GL_UNSIGNED_INT.")
 
     else:
+        c_type      = _Support.get_call_lists_c_type(type_)
+        if c_type is None:
+            raise ValueError("Unexpected value of 'type_'.")
+            
+        py_types    = _Support.get_call_lists_py_type(type_)
+        if py_types is None:
+            raise ValueError("Unexpected value of 'type_'.")
+        
+        if not isinstance(lists, list) or not all(isinstance(item, py_types) for item in lists):
+            try:
+                lists = [py_types(item) for item in lists]
+            except:
+                py_type_str = "float" if py_type is float else "int"
+                
+                raise ValueError("Value of 'lists' can not be converted to list of %ss." % (py_type_str))
+                
         n = len(lists)
         if type_ == GL_2_BYTES:     n //= 2
         elif type_ == GL_3_BYTES:   n //= 3
         elif type_ == GL_4_BYTES:   n //= 4
 
-        c_type      = _Support.get_call_lists_c_type(type_)
-        py_types    = _Support.get_call_lists_py_type(type_)
-
-        c_lists = _Support.list_part_to_c_array(py_types, lists, len(lists), c_type)
-        _C_GL_1_1.glCallLists(n, int(type_), c_lists)
+        c_lists = _Support.list_part_to_c_array_no_conv(lists, len(lists), c_type)
+        _C_GL_1_1.glCallLists(n, type_, c_lists)
 
 def glListBase(base):
     """
-    base             : int
+    base            : int | SupportsInt
     """
-    _C_GL_1_1.glListBase(int(base))
+    if not isinstance(base, int):
+        try:
+            base = int(base)
+        except Exception as exception:
+            raise ValueError("Value of 'base' can not be converted to int.") from exception
+
+    _C_GL_1_1.glListBase(base)
 
 def glGenLists(range_):
     """
-    range_           : int
-    Returns (int).
+    range_          : int | SupportsInt
+    Returns         : int
     """
-    return int(_C_GL_1_1.glGenLists(int(range_)))
+    if not isinstance(range_, int):
+        try:
+            range_ = int(range_)
+        except Exception as exception:
+            raise ValueError("Value of 'range_' can not be converted to int.") from exception
+
+    return int(_C_GL_1_1.glGenLists(range_))
 
 def glIsList(list_):
     """
-    list_            : int
-    Returns (bool).
+    list_           : int | SupportsInt
+    Returns         : bool
     """
-    return bool(_C_GL_1_1.glIsList(int(list_)))
+    if not isinstance(list_, int):
+        try:
+            list_ = int(list_)
+        except Exception as exception:
+            raise ValueError("Value of 'list_' can not be converted to int.") from exception
+
+    return bool(_C_GL_1_1.glIsList(list_))
 
 def glDeleteLists(list_, range_):
     """
-    list_            : int
-    range_           : int
+    list_           : int | SupportsInt
+    range_          : int | SupportsInt
     """
-    _C_GL_1_1.glDeleteLists(int(list_), int(range_))
+    if not isinstance(list_, int):
+        try:
+            list_ = int(list_)
+        except Exception as exception:
+            raise ValueError("Value of 'list_' can not be converted to int.") from exception
+
+    if not isinstance(range_, int):
+        try:
+            range_ = int(range_)
+        except Exception as exception:
+            raise ValueError("Value of 'range_' can not be converted to int.") from exception
+
+    _C_GL_1_1.glDeleteLists(list_, range_)
 
 
 ### Synchronization ###
@@ -5452,15 +7947,27 @@ def glFinish():
 
 def glDisable(cap):
     """
-    cap              : int
+    cap             : int | SupportsInt
     """
-    _C_GL_1_1.glDisable(int(cap))
+    if not isinstance(cap, int):
+        try:
+            cap = int(cap)
+        except Exception as exception:
+            raise ValueError("Value of 'cap' can not be converted to int.") from exception
+
+    _C_GL_1_1.glDisable(cap)
 
 def glEnable(cap):
     """
-    cap              : int
+    cap             : int | SupportsInt
     """
-    _C_GL_1_1.glEnable(int(cap))
+    if not isinstance(cap, int):
+        try:
+            cap = int(cap)
+        except Exception as exception:
+            raise ValueError("Value of 'cap' can not be converted to int.") from exception
+
+    _C_GL_1_1.glEnable(cap)
 
 
 # Simple Queries
@@ -5468,74 +7975,102 @@ def glEnable(cap):
 def glGetBooleanv(pname):
     """
     pname            : int
-    params           : List[bool]
+    Returns          : List[bool]
         Equivalent of 'params'.
     """
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+            
     num = _Support.get_num_of_get_values(pname)
     if num is None:
         raise ValueError("Unexpected value of 'pname'.")
 
     c_params = _Support.make_c_array(_C_GL_1_1.GLboolean, num)
-    _C_GL_1_1.glGetBooleanv(int(pname), c_params)
+    _C_GL_1_1.glGetBooleanv(pname, c_params)
     return _Support.c_array_to_list(bool, c_params)
 
 def glGetIntegerv(pname):
     """
     pname           : int
-    ReturnType      : List[int]
+    Returns         : List[int]
         Equivalent of 'params'.
     """
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+
     num = _Support.get_num_of_get_values(pname)
     if num is None:
         raise ValueError("Unexpected value of 'pname'.")
 
     c_params = _Support.make_c_array(_C_GL_1_1.GLint, num)
-    _C_GL_1_1.glGetIntegerv(int(pname), c_params)
+    _C_GL_1_1.glGetIntegerv(pname, c_params)
     return _Support.c_array_to_list(int, c_params)
 
 def glGetFloatv(pname):
     """
-    pname            : int
-    ReturnType       : List[float]
+    pname           : int
+    Returns         : List[float]
         Equivalent of 'params'.
     """
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+            
     num = _Support.get_num_of_get_values(pname)
     if num is None:
         raise ValueError("Unexpected value of 'pname'.")
 
     c_params = _Support.make_c_array(_C_GL_1_1.GLfloat, num)
-    _C_GL_1_1.glGetFloatv(int(pname), c_params)
+    _C_GL_1_1.glGetFloatv(pname, c_params)
     return _Support.c_array_to_list(float, c_params)
 
 
 def glGetDoublev(pname):
     """
-    pname            : int
-    n                : int
-        Number of floats to get.
-    ReturnType       : List[float]
+    pname           : int
+    Returns         : List[float]
         Equivalent of 'params'.
     """
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
+            
     num = _Support.get_num_of_get_values(pname)
     if num is None:
         raise ValueError("Unexpected value of 'pname'.")
 
     c_params = _Support.make_c_array(_C_GL_1_1.GLdouble, num)
-    _C_GL_1_1.glGetDoublev(int(pname), c_params)
+    _C_GL_1_1.glGetDoublev(pname, c_params)
     return _Support.c_array_to_list(float, c_params)
 
 def glIsEnabled(cap):
     """
-    cap              : int
-    Returns (bool).
+    cap             : int | SupportsInt
+    Returns         : bool
     """
-    return bool(_C_GL_1_1.glIsEnabled(int(cap)))
+    if not isinstance(cap, int):
+        try:
+            cap = int(cap)
+        except Exception as exception:
+            raise ValueError("Value of 'cap' can not be converted to int.") from exception
+
+    return bool(_C_GL_1_1.glIsEnabled(cap))
 
 # Pointer and String Queries 
 
 def glGetPointerv(pname):
     """
-    pname           : int
+    pname           : int | SupportsInt
     Returns         : bytes | List[int | float]
         Bytes or list of all array elements (depends on what was type of object provided to 'pointer' parameter in gl{Vertex|Color|...}Pointer function).
         Equivalent of 'params' parameter from OpenGl function specification.
@@ -5544,6 +8079,11 @@ def glGetPointerv(pname):
             When cashed array mismatch actual array pointer. 
             To get actual array pointer, use function 'PyTrivialOpenGL.C_GL.glGetPointerv'.
     """
+    if not isinstance(pname, int):
+        try:
+            pname = int(pname)
+        except Exception as exception:
+            raise ValueError("Value of 'pname' can not be converted to int.") from exception
 
     if pname in [GL_FEEDBACK_BUFFER_POINTER, GL_SELECTION_BUFFER_POINTER]:
         raise ValueError("Unsupported value of 'pname'.")
@@ -5570,7 +8110,7 @@ def glGetPointerv(pname):
         raise ValueError("Unexpected value of 'pname'.")
 
     c_params = _ctypes.c_void_p(None)
-    _C_GL_1_1.glGetPointerv(int(pname), _ctypes.byref(c_params))
+    _C_GL_1_1.glGetPointerv(pname, _ctypes.byref(c_params))
 
     if c_array is None:
         if c_params.value is None or c_params.value == 0:
@@ -5595,24 +8135,42 @@ def glGetPointerv(pname):
 
 def glGetString(name):
     """
-    name   : int
-    Returns (str).
+    name            : int | SupportsInt
+    Returns         : str
     """
-    return _ctypes.cast(_C_GL_1_1.glGetString(int(name)), _ctypes.c_char_p).value.decode()
+    if not isinstance(name, int):
+        try:
+            name = int(name)
+        except Exception as exception:
+            raise ValueError("Value of 'name' can not be converted to int.") from exception
+            
+    return _ctypes.cast(_C_GL_1_1.glGetString(name), _ctypes.c_char_p).value.decode()
 
 # Saving and Restoring State
 
 def glPushAttrib(mask):
     """
-    mask             : int
+    mask            : int | SupportsInt
     """
-    _C_GL_1_1.glPushAttrib(int(mask))
+    if not isinstance(mask, int):
+        try:
+            mask = int(mask)
+        except Exception as exception:
+            raise ValueError("Value of 'mask' can not be converted to int.") from exception
+
+    _C_GL_1_1.glPushAttrib(mask)
 
 def glPushClientAttrib(mask):
     """
-    mask             : int
+    mask            : int | SupportsInt
     """
-    _C_GL_1_1.glPushClientAttrib(int(mask))
+    if not isinstance(mask, int):
+        try:
+            mask = int(mask)
+        except Exception as exception:
+            raise ValueError("Value of 'mask' can not be converted to int.") from exception
+
+    _C_GL_1_1.glPushClientAttrib(mask)
 
 def glPopAttrib():
     _C_GL_1_1.glPopAttrib()
