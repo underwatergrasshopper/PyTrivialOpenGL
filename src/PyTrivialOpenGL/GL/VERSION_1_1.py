@@ -7722,25 +7722,37 @@ def glRenderMode(mode):
 
     return int(_C_GL_1_1.glRenderMode(mode))
 
-#def glSelectBuffer(size, buffer):
-#    """
-#    size            : int | SupportsInt
-#    buffer          : List[int] | Iterable[SupportsInt]
-#    """
-#    if not isinstance(size, int):
-#        try:
-#            size = int(size)
-#        except Exception as exception:
-#            raise ValueError("Value of 'size' can not be converted to int.") from exception
-#
-#    if not isinstance(buffer, list) or not all(isinstance(item, int) for item in buffer):
-#        try:
-#            buffer = [int(item) for item in buffer]
-#        except:
-#            raise ValueError("Value of 'buffer' can not be converted to list of ints.")
-#
-#    _C_GL_1_1.glSelectBuffer(size, buffer)
+def glSelectBuffer(size = None):
+    """
+    When type of 'size' is int or SupportsInt, creates and attaches buffer for select mode. 
+    When type of 'size' is None, returns buffer.
 
+    size            : int | SupportsInt | None
+        When int or SupportsInt, length of the buffer.
+    Returns         : List[int] | None
+        Corresponds to 'buffer' from OpenGL function specification.
+
+        List of ints, when buffer was created.
+        None, when buffer was not created or 'size' is None.
+
+    Warning: If C_GL.glSelectBuffer function was used to attach buffer, then GL.glSelectBuffer() call won't return that buffer.
+    """
+    if size is None:
+        if _Support.to_cache().c_select_buffer is None:
+            return None
+
+        return _Support.c_array_to_list(int, _Support.to_cache().c_select_buffer)
+
+    else:
+        if not isinstance(size, int):
+            try:
+                size = int(size)
+            except Exception as exception:
+                raise ValueError("Value of 'size' can not be converted to int.") from exception
+
+        _Support.to_cache().c_select_buffer = _Support.make_c_array(_C_GL_1_1.GLuint, size)
+        _C_GL_1_1.glSelectBuffer(size, _Support.to_cache().c_select_buffer)
+        return None
 
 # Feedback
 

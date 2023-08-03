@@ -22,6 +22,8 @@ class _Cache:
 
         self.c_array                        = None
 
+        self.c_select_buffer                = None
+
 _cache = _Cache()
 
 def to_cache():

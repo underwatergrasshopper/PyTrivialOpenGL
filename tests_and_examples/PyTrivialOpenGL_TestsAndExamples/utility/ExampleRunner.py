@@ -84,18 +84,20 @@ class ExampleRunner:
             )
 
         if category & ExampleCategoryBit.MANUAL_TESTS:
-            example_manager.add_example("mt.draw_array",       manual_tests.draw_array.run,        ["inter", "stride"])
-            example_manager.add_example("mt.draw_elements",    manual_tests.draw_elements.run)
-            example_manager.add_example("mt.draw_rectangle",   manual_tests.draw_rectangle.run)
-            example_manager.add_example("mt.matrix",           manual_tests.matrix.run)
-            example_manager.add_example("mt.clip_plane",       manual_tests.clip_plane.run)
-            example_manager.add_example("mt.light_and_fog",    manual_tests.light_and_fog.run)
-            example_manager.add_example("mt.draw_pixels",      manual_tests.draw_pixels.run)
-            example_manager.add_example("mt.draw_stipple",     manual_tests.draw_stipple.run)
-            example_manager.add_example("mt.display_list",     manual_tests.display_list.run)
-            example_manager.add_example("mt.draw_texture",     manual_tests.draw_texture.run,      ["float", "1d", "sub", "vec", "fps"]),
-            example_manager.add_example("mt.bezier_curve",     manual_tests.bezier_curve.run),
-            example_manager.add_example("mt.bezier_surface",   manual_tests.bezier_surface.run),
+            example_manager.add_example("mt.draw_array",        manual_tests.draw_array.run,        ["inter", "stride"])
+            example_manager.add_example("mt.draw_elements",     manual_tests.draw_elements.run)
+            example_manager.add_example("mt.draw_rectangle",    manual_tests.draw_rectangle.run)
+            example_manager.add_example("mt.matrix",            manual_tests.matrix.run)
+            example_manager.add_example("mt.clip_plane",        manual_tests.clip_plane.run)
+            example_manager.add_example("mt.light_and_fog",     manual_tests.light_and_fog.run)
+            example_manager.add_example("mt.draw_pixels",       manual_tests.draw_pixels.run)
+            example_manager.add_example("mt.draw_stipple",      manual_tests.draw_stipple.run)
+            example_manager.add_example("mt.display_list",      manual_tests.display_list.run)
+            example_manager.add_example("mt.draw_texture",      manual_tests.draw_texture.run,      ["float", "1d", "sub", "vec", "fps"]),
+            example_manager.add_example("mt.bezier_curve",      manual_tests.bezier_curve.run)
+            example_manager.add_example("mt.bezier_surface",    manual_tests.bezier_surface.run)
+            example_manager.add_example("mt.c_selection",       manual_tests.c_selection.run)
+            example_manager.add_example("mt.selection",         manual_tests.selection.run)
 
         if default_example_name is None:
             if category & ExampleCategoryBit.MANUAL_TESTS:
