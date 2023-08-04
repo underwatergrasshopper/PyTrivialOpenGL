@@ -7731,9 +7731,10 @@ def glSelectBuffer(size = None):
         When int or SupportsInt, length of the buffer.
     Returns         : List[int] | None
         Corresponds to 'buffer' from OpenGL function specification.
-
-        List of ints, when buffer was created.
-        None, when buffer was not created or 'size' is None.
+        
+        None, when type of 'size' is not None.
+        None, when buffer was not created.
+        List of ints, when type of 'size' is None.
 
     Warning: If C_GL.glSelectBuffer function was used to attach buffer, then GL.glSelectBuffer() call won't return that buffer.
     """
@@ -7756,31 +7757,51 @@ def glSelectBuffer(size = None):
 
 # Feedback
 
-#def glFeedbackBuffer(size, type_, buffer):
-#    """
-#    size            : int | SupportsInt
-#    type_           : int | SupportsInt
-#    buffer          : List[float] | Iterable[SupportsFloat]
-#    """
-#    if not isinstance(size, int):
-#        try:
-#            size = int(size)
-#        except Exception as exception:
-#            raise ValueError("Value of 'size' can not be converted to int.") from exception
-#
-#    if not isinstance(type_, int):
-#        try:
-#            type_ = int(type_)
-#        except Exception as exception:
-#            raise ValueError("Value of 'type_' can not be converted to int.") from exception
-#
-#    if not isinstance(buffer, list) or not all(isinstance(item, float) for item in buffer):
-#        try:
-#            buffer = [float(item) for item in buffer]
-#        except:
-#            raise ValueError("Value of 'buffer' can not be converted to list of floats.")
-#
-#    _C_GL_1_1.glFeedbackBuffer(size, type_, buffer)
+def glFeedbackBuffer(size = None, type_ = None):
+    """
+    When type of 'size' is int or SupportsInt and type of 'type_' is int or SupportsInt, then creates and assigns feedback buffer.
+    When both 'size' and 'type_' are None, then returns feedback buffer.
+    
+    size            : int | SupportsInt
+    type_           : int | SupportsInt
+    Returns         : List[float] | None
+        Corresponds to 'buffer' from OpenGL function specification.
+
+        None, when type of both 'size' and 'type_' is not None.
+        None, when buffer was not created.
+        List of floats, when type of both 'size' and 'type_' is None.
+        
+    Exceptions
+        TypeErrror
+            When type of 'size' is None and type of 'type_' is not None.
+            When type of 'size' is not None and type of 'type_' is None.
+
+    Warning: If C_GL.glFeedbackBuffer function was used to attach buffer, then GL.glFeedbackBuffer() call won't return that buffer.
+    """
+    if size is None and type_ is None:
+        if _Support.to_cache().c_feedback_buffer is None:
+            return None
+
+        return _Support.c_array_to_list(float, _Support.to_cache().c_feedback_buffer)
+
+    elif size is not None and type_ is not None:
+        if not isinstance(size, int):
+            try:
+                size = int(size)
+            except Exception as exception:
+                raise ValueError("Value of 'size' can not be converted to int.") from exception
+
+        if not isinstance(type_, int):
+            try:
+                type_ = int(type_)
+            except Exception as exception:
+                raise ValueError("Value of 'type_' can not be converted to int.") from exception
+
+        _Support.to_cache().c_feedback_buffer = _Support.make_c_array(_C_GL_1_1.GLfloat, size)
+        _C_GL_1_1.glFeedbackBuffer(size, type_, _Support.to_cache().c_feedback_buffer)
+        return None
+    else:
+        raise TypeError("Either type of 'size' or 'type_' is None, but other is not None.")
 
 def glPassThrough(token):
     """
@@ -7793,7 +7814,6 @@ def glPassThrough(token):
             raise ValueError("Value of 'token' can not be converted to float.") from exception
 
     _C_GL_1_1.glPassThrough(token)
-
 
 # Display Lists
 

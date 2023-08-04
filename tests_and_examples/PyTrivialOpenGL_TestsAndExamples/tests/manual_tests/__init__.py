@@ -14,4 +14,5 @@ from . import (
     selection,
     c_selection,
     c_feedback,
+    feedback,
 )

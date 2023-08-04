@@ -1,6 +1,5 @@
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
-from PyTrivialOpenGL import C_GL
 import ctypes
 
 from ...utility.ExampleSupport import is_close
@@ -112,63 +111,47 @@ def check():
     print("Ok")
 
 def do_on_create():
-    C_GL.glPushAttrib(GL_ALL_ATTRIB_BITS)
+    glPushAttrib(GL_ALL_ATTRIB_BITS)
 
-    C_GL.glClearColor(0, 0, 0.5, 1)
+    glClearColor(0, 0, 0.5, 1)
 
     print("F        - Display Feedback List")
     print("C        - Check Feedback List")
     print("Escape   - Exit")
 
 def do_on_destroy():
-    C_GL.glPopAttrib()
+    glPopAttrib()
 
     print("Bye. Bye.")
 
 def draw_scene(is_pass_throug = False):
-    if is_pass_throug: C_GL.glPassThrough(1.0)
-    C_GL.glColor3f(1, 0, 0)
-    C_GL.glRectd(-0.5, -0.5, 0.5, 0.5)
+    if is_pass_throug: glPassThrough(1.0)
+    glColor3f(1, 0, 0)
+    glRectd(-0.5, -0.5, 0.5, 0.5)
     
-    if is_pass_throug: C_GL.glPassThrough(2.0)
-    C_GL.glColor3f(0, 1, 0)
-    C_GL.glRectd(-1.2, -1.2, -0.4, -0.4)
+    if is_pass_throug: glPassThrough(2.0)
+    glColor3f(0, 1, 0)
+    glRectd(-1.2, -1.2, -0.4, -0.4)
     
     # is out of view, won't hit
-    if is_pass_throug: C_GL.glPassThrough(3.0)
-    C_GL.glColor3f(1, 1, 0)
-    C_GL.glRectd(-2, -2, -1.2, -1.2)
+    if is_pass_throug: glPassThrough(3.0)
+    glColor3f(1, 1, 0)
+    glRectd(-2, -2, -1.2, -1.2)
 
 def draw():
-    C_GL.glClear(GL_COLOR_BUFFER_BIT)
+    glClear(GL_COLOR_BUFFER_BIT)
 
     LENGTH = 512
-    c_buffer = (C_GL.GLfloat * LENGTH)()
-    C_GL.glFeedbackBuffer(LENGTH, GL_3D_COLOR, c_buffer)
-    C_GL.glRenderMode(GL_FEEDBACK)
-
-    # Note: They all fail. GL_INVALID_ENUM is issued.
-    # c_ptr = ctypes.c_void_p(None)
-    # C_GL.glGetPointerv(GL_FEEDBACK_BUFFER_POINTER, ctypes.byref(c_ptr))
-    # print(c_ptr.value)
-    # print(togl.get_gl_error_str(C_GL.glGetError()))
-    # 
-    # c_size = C_GL.GLint(0)
-    # C_GL.glGetIntegerv(GL_FEEDBACK_BUFFER_SIZE, ctypes.byref(c_size))
-    # print(c_size.value)
-    # print(togl.get_gl_error_str(C_GL.glGetError()))
-    # 
-    # c_type = C_GL.GLint(0)
-    # C_GL.glGetIntegerv(GL_FEEDBACK_BUFFER_TYPE, ctypes.byref(c_type))
-    # print(c_type.value)
-    # print(togl.get_gl_error_str(C_GL.glGetError()))
+    glFeedbackBuffer(LENGTH, GL_3D_COLOR)
+    glRenderMode(GL_FEEDBACK)
 
     draw_scene(is_pass_throug = True)
 
-    C_GL.glFlush()
-    length = C_GL.glRenderMode(GL_RENDER)
+    glFlush()
+    length = glRenderMode(GL_RENDER)
 
-    buffer = [float(c_buffer[index]) for index in range(length)]
+    buffer = glFeedbackBuffer()[:length]
+
     _feedback.generate(buffer)
 
     draw_scene()
@@ -192,7 +175,7 @@ def run(name, options):
     togl.set_log_level(togl.LogLevel.INFO)
 
     return togl.to_window().create_and_run(
-        window_name         = "C Feedback",
+        window_name         = "Feedback",
         area                = (800, 400),
         style               = togl.WindowStyleBit.DRAW_AREA_SIZE,
 

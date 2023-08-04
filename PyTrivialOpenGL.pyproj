@@ -46,6 +46,7 @@
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\winapi.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\bezier_surface.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\bezier_curve.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\feedback.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\c_feedback.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\c_selection.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\selection.py" />
