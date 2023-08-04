@@ -115,13 +115,13 @@ class Logger:
 
     def get_log_level(self):
         """
-        Returns (int).
+        Returns     : int
         """
         return self._log_level
 
     def is_log_level_at_least(self, log_level):
         """
-        Returns (bool).
+        Returns     : bool
         """
         return log_level <= self._log_level
 

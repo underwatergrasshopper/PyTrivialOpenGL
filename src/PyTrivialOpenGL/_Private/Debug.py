@@ -4,7 +4,7 @@ def wm_to_str(window_message):
     """
     window_message : int
         Window message id.
-    Returns (str).
+    Returns : str
     """
     text = {
         WM_NULL                             : "WM_NULL",

@@ -9,46 +9,56 @@ class Point:
     x : int | float
     y : int | float
 
-    Exceptions: ValueError - When to x or y is assigned value which is neither int or float.
+    Exceptions 
+        ValueError
+            When values assigned to x or y is neither int or float.
     """
     def __init__(self, x, y):
         """
-        x : int | float
-        y : int | float
-        Exceptions: ValueError - When x or y is neither int or float.
+        x : int | float | SupportsInt
+        y : int | float | SupportsInt
+
+        Exceptions 
+            ValueError
+                When x or y is neither int or float.
         """
         self.x = x
         self.y = y
 
     def is_zero(self):
         """
-        Returns (bool) True - when both x and y are equal to 0.
+        Returns     : bool 
+            True - when both x and y are equal to 0.
         """
         return self.x == 0 and self.y == 0
 
     def is_between(self, a, b):
         """
-        a : Point
-        b : Point
-        Returns (bool) True  - when is between a and b (a is inclusive, b is exclusive).
+        a           : Point
+        b           : Point
+        Returns     : bool
+            True  - when is between a and b (a is inclusive, b is exclusive).
         """
         return a <= self and self < b
 
     def to_tuple(self):
         """
-        Returns (tuple[T, T]) (x, y).
+        Returns : Tuple[T, T]) 
+            (x, y).
         """
         return (self.x, self.y)
 
     def to_tuple_i(self):
         """
-        Returns (tuple[int, int]) (x, y).
+        Returns : Tuple[int, int] 
+            (x, y).
         """
         return (int(self.x), int(self.y))
 
     def to_tuple_f(self):
         """
-        Returns (tuple[float, float]) (x, y).
+        Returns : Tuple[float, float] 
+            (x, y).
         """
         return (float(self.x), float(self.y))
 

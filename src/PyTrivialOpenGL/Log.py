@@ -27,7 +27,8 @@ _logger = Logger()
 
 def to_logger():
     """
-    Returns (Logger) reference to global logger instance.
+    Returns     : Logger 
+        Reference to global logger instance.
     """
     return _logger
 
@@ -79,13 +80,13 @@ def set_log_level(log_level):
 
 def get_log_level():
     """
-    Returns (int).
+    Returns     : int
     """
     return _logger.get_log_level()
 
 def is_log_level_at_least(log_level):
     """
-    log_level : int
+    log_level   : int
     """
     return _logger.is_log_level_at_least(log_level)
 

@@ -37,6 +37,10 @@ class OpenGL_Version:
     minor : int
     """
     def __init__(self, major, minor):
+        """
+        major : int | SupportsInt
+        minor : int | SupportsInt
+        """
         self.major = major
         self.minor = minor
 
@@ -61,7 +65,8 @@ class OpenGL_Version:
 
 def get_work_area():
     """
-    Returns (Area) desktop area without task bar.
+    Returns : Area
+        Desktop area without task bar.
     """
     rc = _C_WinApi.RECT()
     _C_WinApi.SystemParametersInfoW(_C_WinApi.SPI_GETWORKAREA, 0, _ctypes.byref(rc), 0)
@@ -70,7 +75,7 @@ def get_work_area():
 
 def get_work_area():
     """
-    Returns (Area).
+    Returns : Area
     """
     rc = _C_WinApi.RECT()
     _C_WinApi.SystemParametersInfoW(_C_WinApi.SPI_GETWORKAREA, 0, _ctypes.byref(rc), 0)
@@ -78,7 +83,7 @@ def get_work_area():
 
 def get_screen_size():
     """
-    Returns (Size).
+    Returns : Size
     """
     width   = _C_WinApi.GetSystemMetrics(_C_WinApi.SM_CXSCREEN)
     height  = _C_WinApi.GetSystemMetrics(_C_WinApi.SM_CYSCREEN)
@@ -86,7 +91,7 @@ def get_screen_size():
 
 def get_cursor_pos_in_screen():
     """
-    Returns (Point).
+    Returns : Point
     """
     pt = _C_WinApi.POINT()
     if _C_WinApi.GetCursorPos(_ctypes.byref(pt)):
@@ -100,7 +105,8 @@ def run_question_box(title = None, message = None):
     Run question box and waits for answer.
     title   : str | None
     content : str | None
-    Returns (bool) True, when 'Yes' was pressed. False, when 'No' was pressed.
+    Returns : bool
+        True, when 'Yes' was pressed. False, when 'No' was pressed.
     """
     if title is None:
         title = ""

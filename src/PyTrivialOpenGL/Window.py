@@ -54,9 +54,9 @@ class WindowStyleBit:
 
 def window_style_bitfield_to_str(style):
     """
-    style : int
+    style   : int
         Bitfield made from values of WindowStyleBit or 0.
-    Returns (str).
+    Returns : str
     """
     names = []
 
@@ -101,10 +101,10 @@ class Window:
     _timer_time_interval            : int
     _is_auto_sleep_blocked          : bool
 
-    _instance_handle                : _C_WinApi.HINSTANCE
-    _window_handle                  : _C_WinApi.HWND
-    _device_context_handle          : _C_WinApi.HDC
-    _rendering_context_handle       : _C_WinApi.HGLRC
+    _instance_handle                : C_WinApi.HINSTANCE
+    _window_handle                  : C_WinApi.HWND
+    _device_context_handle          : C_WinApi.HDC
+    _rendering_context_handle       : C_WinApi.HGLRC
 
     _window_style                   : int
     _window_extended_style          : int
@@ -327,7 +327,7 @@ class Window:
             time_interval
                 Time in milliseconds.
 
-        Exceptions:
+        Exceptions
             ValueError
                 When either area.x, area.y, area[0] or area[1] is not in range <-2^31, 2^31-1>. 
                 When either area.width, area.height, area[2] or area[3] is not in range <0, 2^31-1>.
@@ -538,7 +538,7 @@ class Window:
 
     def is_running(self):
         """
-        Returns (bool).
+        Returns : bool
         """
         return self._is_running
 
@@ -588,8 +588,8 @@ class Window:
 
     def is_enabled(self, window_option_id):
         """
-        window_option_id : WindowOptionId
-        Returns (bool).
+        window_option_id    : WindowOptionId
+        Returns             : bool
             True, when option is enabled.
             False, when option is disabled.
         """
@@ -682,7 +682,7 @@ class Window:
         offset      : Point | None
             Offset in screen coordinate system.
 
-        Exceptions:
+        Exceptions
             TypeError
                 When offset type is not Point or None.
             ValueError
@@ -741,7 +741,7 @@ class Window:
             If True, then draw area of window is resized.
             (default) If False, then window is resized.
 
-        Exceptions:
+        Exceptions
             TypeError
                 When size type is not Size or None.
             ValueError
@@ -811,7 +811,7 @@ class Window:
             If True, then draw area of window is reshaped.
             (default) If False, then window is reshaped.
 
-        Exceptions:
+        Exceptions
             TypeError
                 When area type is not Area or None.
             ValueError
@@ -896,7 +896,7 @@ class Window:
 
         Draw area is place in window when OpenGL draws in.
 
-        Exceptions:
+        Exceptions
             TypeError
                 When size type is not Size or None.
             ValueError
@@ -952,43 +952,50 @@ class Window:
 
     def get_x(self):
         """
-        Returns (int) position in screen X axis of left-top corner of window.
+        Returns : int 
+            Position in screen X axis of left-top corner of window.
         """
         return self.get_area().x
 
     def get_y(self):
         """
-        Returns (int) position in screen Y axis of left-top corner of window.
+        Returns : int
+            Position in screen Y axis of left-top corner of window.
         """
         return self.get_area().y
 
     def get_width(self):
         """
-        Returns (int) width of window.
+        Returns : int
+            Width of window.
         """
         return self.get_area().width
 
     def get_height(self):
         """
-        Returns (int) height of window.
+        Returns : int
+            Height of window.
         """
         return self.get_area().height
 
     def get_pos(self):
         """
-        Returns (Point) position in screen of left-top corner of window.
+        Returns : Point
+            Position in screen of left-top corner of window.
         """
         return self.get_area().get_pos()
 
     def get_size(self):
         """
-        Returns (Size) size of window.
+        Returns : Size
+            Size of window.
         """
         return self.get_area().get_size()
 
     def get_area(self):
         """
-        Returns (Area) area of window.
+        Returns : Area
+            Area of window.
         """
         if self._state_id == WindowStateId.MINIMIZED:
             return Area(0, 0, 0, 0)
@@ -1003,43 +1010,50 @@ class Window:
 
     def get_draw_area_x(self):
         """
-        Returns (int) position in screen X axis of left-top corner of draw area.
+        Returns : int
+            Position in screen X axis of left-top corner of draw area.
         """
         return self.get_draw_area().x
 
     def get_draw_area_y(self):
         """
-        Returns (int) position in screen Y axis of left-top corner of draw area.
+        Returns : int 
+            Position in screen Y axis of left-top corner of draw area.
         """
         return self.get_draw_area().y
 
     def get_draw_area_width(self):
         """
-        Returns (int) width of draw area.
+        Returns : int
+            Width of draw area.
         """
         return self.get_draw_area().width
 
     def get_draw_area_height(self):
         """
-        Returns (int) height of draw area.
+        Returns : int
+            Height of draw area.
         """
         return self.get_draw_area().height
 
     def get_draw_area_pos(self):
         """
-        Returns (Point) position in screen of left-top corner of draw area.
+        Returns : Point
+            Position in screen of left-top corner of draw area.
         """
         return self.get_draw_area().get_pos()
 
     def get_draw_area_size(self):
         """
-        Returns (Size) size of draw area.
+        Returns : Size
+            Size of draw area.
         """
         return self.get_draw_area().get_size()
 
     def get_draw_area(self):
         """
-        Returns (Area) area of draw area.
+        Returns : Area
+            Area of draw area.
         """
         if self._state_id == WindowStateId.MINIMIZED:
             return Area(0, 0, 0, 0)
@@ -1180,37 +1194,37 @@ class Window:
 
     def get_state_id(self):
         """
-        Returns (WindowStateId).
+        Returns : WindowStateId
         """
         return self._state_id
 
     def get_previous_state_id(self):
         """
-        Returns (WindowStateId).
+        Returns : WindowStateId
         """
         return self._previous_state_id
 
     def is_normal(self):
         """
-        Returns (bool).
+        Returns : bool
         """
         return self.get_state_id() == WindowStateId.NORMAL
 
     def is_minimized(self):
         """
-        Returns (bool).
+        Returns : bool
         """
         return self.get_state_id() == WindowStateId.MINIMIZED
 
     def is_maximized(self):
         """
-        Returns (bool).
+        Returns : bool
         """
         return self.get_state_id() == WindowStateId.MAXIMIZED
 
     def is_windowed_full_screened(self):
         """
-        Returns (bool).
+        Returns : bool
         """
         return self.get_state_id() == WindowStateId.WINDOWED_FULL_SCREENED
 
@@ -1224,7 +1238,7 @@ class Window:
 
     def is_foreground(self):
         """
-        Returns (bool).
+        Returns : bool
         """
         return _C_WinApi.GetForegroundWindow() == self._window_handle
 
@@ -1232,13 +1246,14 @@ class Window:
     
     def get_style(self):
         """
-        Returns (int) bitfield made of values from WindowStyleBit or 0.
+        Returns : int
+            Bitfield made of values from WindowStyleBit or 0.
         """
         return self._style
 
     def get_cursor_pos_in_draw_area(self):
         """
-        Returns (Point).
+        Returns : Point
         """
         pos = _C_WinApi.POINT()
         if _C_WinApi.GetCursorPos(_ctypes.byref(pos)) and _C_WinApi.ScreenToClient(self._window_handle, _ctypes.byref(pos)):
@@ -1247,7 +1262,7 @@ class Window:
 
     def get_opengl_version(self):
         """
-        Returns (OpenGL_Version).
+        Returns : OpenGL_Version
         """
         return _deepcopy(self._opengl_version)
 
@@ -1336,7 +1351,7 @@ class Window:
 
     def _execute_main_loop(self):
         """
-        Returns (int).
+        Returns : int
         """
         msg = _C_WinApi.MSG()
 
@@ -1379,7 +1394,7 @@ class Window:
 
     def _try_load_icon(self):
         """
-        Returns (HICON).
+        Returns : C_WinApi.HICON
         """
         if len(self._icon_file_name) != 0:
             icon_handle = _C_WinApi.LoadImageW(
@@ -1415,8 +1430,8 @@ class Window:
 
     def _solve_window_area(self, area):
         """
-        area : Area
-        Returns (Area).
+        area    : Area
+        Returns : Area
         """
         window_area = Area(0, 0, 0, 0)
 
@@ -1556,7 +1571,7 @@ class Window:
         window_message  : int
         w_param         : int
         l_param         : int
-        Returns (bool).
+        Returns         : bool
         """
         is_discard = True
 
@@ -1599,7 +1614,7 @@ class Window:
         is_down : bool
         w_param : int
         l_param : int
-        Returns (bool).
+        Returns : bool
         """
         is_discard = True
 
@@ -1686,7 +1701,7 @@ class Window:
 
     def _create(self, window_handle):
         """
-        window_handle : _C_WinApi.HWND
+        window_handle : C_WinApi.HWND
         """
         pfd = _C_WinApi.PIXELFORMATDESCRIPTOR()
         pfd.nSize           = _ctypes.sizeof(_C_WinApi.PIXELFORMATDESCRIPTOR)
@@ -1791,7 +1806,8 @@ class Window:
 
     def _close(self):
         """
-        Returns (bool) False, when window destroy is aborted.
+        Returns : bool
+            False, when window destroy is aborted.
         """
         if self._do_on_close:
             is_abort = not self._do_on_close()
@@ -1821,10 +1837,10 @@ class Window:
 
     def _window_proc(self, window_handle, window_message, w_param, l_param):
         """
-        window_handle   : HWND
-        window_message  : UINT
-        w_param         : WPARAM
-        l_param         : LPARAM
+        window_handle   : C_WinApi.HWND
+        window_message  : C_WinApi.UINT
+        w_param         : C_WinApi.WPARAM
+        l_param         : C_WinApi.LPARAM
         """
 
         ### Draw ###
@@ -2212,33 +2228,33 @@ _window = Window()
 
 def to_window():
     """
-    Returns (Window).
+    Returns : Window
     """
     return _window
 
 def _get_window_style_draw_area_only():
     """
-    Returns (int).
+    Returns : int
     """
     return _C_WinApi.WS_POPUP | _C_WinApi.WS_CLIPSIBLINGS | _C_WinApi.WS_CLIPCHILDREN
 
 def _get_window_extended_style_draw_area_only():
     """
-    Returns (int).
+    Returns : int
     """
     return _C_WinApi.WS_EX_APPWINDOW
 
 def _make_area_from_rect(rect):
     """
-    rect : _C_WinApi.RECT
+    rect : C_WinApi.RECT
     """
     return Area(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top)
 
 
 def _get_window_area(window_handle):
     """
-    window_handle : _C_WinApi.HWND
-    Returns (Area).
+    window_handle   : C_WinApi.HWND
+    Returns         : Area
     """
     rect = _C_WinApi.RECT()
 
@@ -2251,7 +2267,7 @@ def _get_window_area_from_draw_area(draw_area, window_style):
     """
     draw_area       : Area
     window_style    : int
-    Returns (Area).
+    Returns         : Area
     """
     draw_area = draw_area.get_area_i()
     rect = _C_WinApi.RECT(
@@ -2268,7 +2284,7 @@ def _get_window_area_from_draw_area(draw_area, window_style):
 def _mk_to_str(mk_code):
     """
     mk_code : int
-    Returns (str).
+    Returns : str
     """
     text = ""
     if mk_code & _C_WinApi.MK_LBUTTON:  text += "MK_LBUTTON "

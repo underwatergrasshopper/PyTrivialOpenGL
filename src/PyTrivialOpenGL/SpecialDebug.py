@@ -28,6 +28,6 @@ _special_debug = SpecialDebug()
 
 def to_special_debug():
     """
-    Returns (SpecialDebug).
+    Returns : SpecialDebug
     """
     return _special_debug

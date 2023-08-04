@@ -30,7 +30,7 @@ class Key:
 
     def check(self, key_id, is_down = True):
         """
-        Return (bool).
+        Returns : bool
         """
         return self.key_id == key_id and self.is_down == is_down
 
@@ -84,7 +84,7 @@ class KeyExtra:
 
     def _all_is_down_to_str(self):
         """
-        Returns (str).
+        Returns     : str
         """
         def as_text(is_down):
             if is_down:

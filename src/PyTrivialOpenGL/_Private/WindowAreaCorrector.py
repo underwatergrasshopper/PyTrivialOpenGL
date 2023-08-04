@@ -15,8 +15,8 @@ class WindowAreaCorrector:
 
     def get_correction(self, window_handle):
         """
-        window_handle : HWND
-        Returns (Area).
+        window_handle   : HWND
+        Returns         : Area
         """
         window_rect = _C_WinApi.RECT()
         _C_WinApi.GetWindowRect(window_handle, _ctypes.byref(window_rect))
@@ -36,9 +36,9 @@ class WindowAreaCorrector:
 
     def add_invisible_frame_to_area(self, area, window_handle):
         """
-        area            : TrivialOpenGL.Area
+        area            : Area
         window_handle   : HWND
-        Returns (TrivialOpenGL.Area).
+        Returns         : Area
         """
         correction = self.get_correction(window_handle)
         return Area(
@@ -50,9 +50,9 @@ class WindowAreaCorrector:
 
     def add_invisible_frame_to_size(self, size, window_handle):
         """
-        size            : TrivialOpenGL.Size
+        size            : Size
         window_handle   : HWND
-        Returns (TrivialOpenGL.Size).
+        Returns         : Size
         """
         correction = self.get_correction(window_handle)
         return Size(
@@ -62,9 +62,9 @@ class WindowAreaCorrector:
 
     def add_invisible_frame_to_pos(self, pos, window_handle):
         """
-        pos             : TrivialOpenGL.Point
+        pos             : Point
         window_handle   : HWND
-        Returns (TrivialOpenGL.Point).
+        Returns         : Point
         """
         correction = self.get_correction(window_handle)
         return Point(
@@ -74,9 +74,9 @@ class WindowAreaCorrector:
 
     def remove_invisible_frame_from_area(self, area, window_handle):
         """
-        area            : TrivialOpenGL.Area
+        area            : Area
         window_handle   : HWND
-        Returns (TrivialOpenGL.Area).
+        Returns         : Area
         """
         correction = self.get_correction(window_handle)
         return Area(
@@ -88,9 +88,9 @@ class WindowAreaCorrector:
 
     def remove_invisible_frame_from_size(self, size, window_handle):
         """
-        size            : TrivialOpenGL.Size
+        size            : Size
         window_handle   : HWND
-        Returns (TrivialOpenGL.Size).
+        Returns         : Size
         """
         correction = self.get_correction(window_handle)
         return Size(
@@ -100,9 +100,9 @@ class WindowAreaCorrector:
 
     def remove_invisible_frame_from_pos(self, pos, window_handle):
         """
-        pos             : TrivialOpenGL.Point
+        pos             : Point
         window_handle   : HWND
-        Returns (TrivialOpenGL.Point).
+        Returns         : Point
         """
         correction = self.get_correction(window_handle)
         return Point(

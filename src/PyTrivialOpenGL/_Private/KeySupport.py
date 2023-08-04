@@ -33,8 +33,8 @@ class VirtualKeyData:
 
 def key_id_to_vk_code(key_id):
     """
-    key_id : KeyId
-    Returns (int) 
+    key_id      : KeyId
+    Returns     : int
         virtual key code    - If there is corresponding key id to it,
         0                   - Otherwise.
     """
@@ -159,7 +159,7 @@ def key_id_to_vk_code(key_id):
 def vk_code_to_key_id(vk_code):
     """
     vk_code : int
-    Returns (KeyId) 
+    Returns : KeyId
         key id          - If there is corresponding virtual key code to it,
         KeyId.UNKNOWN   - Otherwise.
     """
@@ -284,7 +284,7 @@ def vk_code_to_key_id(vk_code):
 def get_key_id_from_w_param(w_param):
     """
     w_param : int
-    Returns (KeyId).
+    Returns : KeyId
     """
     return vk_code_to_key_id(w_param)
 
@@ -292,7 +292,7 @@ def get_mouse_key_id(message, w_param):
     """
     message : int
     w_param : int
-    Returns (KeyId).
+    Returns : KeyId
     """
     key_id = {
         _C_WinApi.WM_LBUTTONDOWN    : KeyId.LEFT_MOUSE_BUTTON,
@@ -319,15 +319,15 @@ def get_mouse_key_id(message, w_param):
 def is_mouse_button_down(message):
     """
     message : int
-    Returns (bool).
+    Returns : bool
     """
     return int(message) in (_C_WinApi.WM_LBUTTONDOWN, _C_WinApi.WM_RBUTTONDOWN, _C_WinApi.WM_MBUTTONDOWN, _C_WinApi.WM_XBUTTONDOWN)
 
 def get_keyboard_side_id(key_id, virtual_key_data):
     """
-    key_id : KeyId
-    virtual_key_data : _VirtualKeyData
-    Returns (KeyboardSideId).
+    key_id              : KeyId
+    virtual_key_data    : VirtualKeyData
+    Returns             : KeyboardSideId
     """
     if key_id == KeyId.SHIFT:
         vk_code_ext = _C_WinApi.MapVirtualKeyA(virtual_key_data.scan_code, _C_WinApi.MAPVK_VSC_TO_VK_EX)
@@ -346,7 +346,7 @@ def get_keyboard_side_id(key_id, virtual_key_data):
 
 def vk_code_to_str(vk_code):
     """
-    Returns (str).
+    Returns : str
     """
     text = {
         _C_WinApi.VK_CANCEL           : "VK_CANCEL",
@@ -444,7 +444,7 @@ def vk_code_to_str(vk_code):
 
 def is_mw_mouse_button(window_message):
     """
-    Returns (bool).
+    Returns : bool
     """
     return window_message in [
         _C_WinApi.WM_LBUTTONDOWN,
@@ -459,7 +459,7 @@ def is_mw_mouse_button(window_message):
 
 def is_mw_mouse_button_x(window_message):
     """
-    Returns (bool).
+    Returns : bool
     """
     return window_message in [
         _C_WinApi.WM_XBUTTONDOWN,
