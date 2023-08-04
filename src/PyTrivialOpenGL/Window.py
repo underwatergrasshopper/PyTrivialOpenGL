@@ -202,7 +202,7 @@ class Window:
             do_on_time              = None,
             ):
         """
-        window_name             : str
+        window_name             : str | Any
         area                    : Area | Tuple[int, int, int, int] | Tuple[int, int] | None
             Position and size of created window. 
 
@@ -347,7 +347,13 @@ class Window:
 
         self._is_running = True
 
-        self._window_name = str(window_name)
+        if isinstance(window_name, str):
+            self._window_name = window_name
+        else:
+            try:
+                self._window_name = str(window_name)
+            except Exception as exception:
+                raise ValueError("Value of 'window_name' can not be converted to str.") from exception
 
         if isinstance(area, tuple):
             if len(area) == 4:
