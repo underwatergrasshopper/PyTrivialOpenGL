@@ -2,7 +2,7 @@ from PyTrivialOpenGL_TestsAndExamples.utility.ExampleRunner import ExampleRunner
 
 def run():
     example_runner = ExampleRunner()
-    example_runner.run(ExampleCategoryBit.ALL, "area_and_state")
+    example_runner.run(ExampleCategoryBit.ALL, "debug.area_and_state")
 
 if __name__ == "__main__":
    run()

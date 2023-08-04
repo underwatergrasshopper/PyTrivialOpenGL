@@ -103,10 +103,10 @@ class ExampleRunner:
 
         if default_example_name is None:
             if category & ExampleCategoryBit.MANUAL_TESTS:
-                example_manager.set_default("display_list")
+                example_manager.set_default("mt.display_list")
 
             if category & ExampleCategoryBit.DEBUGS:
-                example_manager.set_default("area_and_state")
+                example_manager.set_default("debug.area_and_state")
 
             if category & ExampleCategoryBit.EXAMPLES:
                 example_manager.set_default("simple_triangle")
