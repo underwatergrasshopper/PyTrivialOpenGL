@@ -186,7 +186,7 @@ def do_on_key(key_id, is_down, extra):
             check()
 
 def do_on_resize(width, height):
-    glViewport(0, 0, width, height)
+    C_GL.glViewport(0, 0, width, height)
 
 def run(name, options):
     togl.set_log_level(togl.LogLevel.INFO)

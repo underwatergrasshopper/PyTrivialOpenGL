@@ -15,14 +15,14 @@ class HitRecord:
         self.names = names
 
 def do_on_create():
-    glPushAttrib(GL_ALL_ATTRIB_BITS)
+    C_GL.glPushAttrib(GL_ALL_ATTRIB_BITS)
 
-    glClearColor(0, 0, 0.5, 1)
+    C_GL.glClearColor(0, 0, 0.5, 1)
 
     print("Escape - Exit")
 
 def do_on_destroy():
-    glPopAttrib()
+    C_GL.glPopAttrib()
 
     print("Bye. Bye.")
 
@@ -38,17 +38,17 @@ def draw():
     C_GL.glPushName(0)
 
     C_GL.glLoadName(1)
-    glColor3f(1, 0, 0)
-    glRectd(-0.5, -0.5, 0.5, 0.5)
+    C_GL.glColor3f(1, 0, 0)
+    C_GL.glRectd(-0.5, -0.5, 0.5, 0.5)
     
     C_GL.glLoadName(2)
-    glColor3f(0, 1, 0)
-    glRectd(-1.2, -1.2, -0.4, -0.4)
+    C_GL.glColor3f(0, 1, 0)
+    C_GL.glRectd(-1.2, -1.2, -0.4, -0.4)
     
     # is out of view, won't hit
     C_GL.glLoadName(3)
-    glColor3f(1, 1, 0)
-    glRectd(-2, -2, -1.2, -1.2)
+    C_GL.glColor3f(1, 1, 0)
+    C_GL.glRectd(-2, -2, -1.2, -1.2)
 
     C_GL.glFlush()
     number_of_hits = C_GL.glRenderMode(GL_RENDER)
@@ -94,7 +94,7 @@ def do_on_key(key_id, is_down, extra):
             togl.to_window().request_close()
 
 def do_on_resize(width, height):
-    glViewport(0, 0, width, height)
+    C_GL.glViewport(0, 0, width, height)
 
 def run(name, options):
     togl.set_log_level(togl.LogLevel.INFO)
