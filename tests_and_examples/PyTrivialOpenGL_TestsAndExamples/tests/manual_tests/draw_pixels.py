@@ -2,7 +2,7 @@ import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
 from PyTrivialOpenGL import C_GL
 from PyTrivialOpenGL.Utility import get_gl_error_str
-import math
+from ...utility.ExampleSupport import is_close
 
 __all__ = [
     "run"
@@ -10,16 +10,6 @@ __all__ = [
 
 _WIDTH = 800
 _HEIGHT = 400
-
-def is_close(l_a, l_b, delta):
-    if (len(l_a) != len(l_b)):
-        return False
-
-    for ix in range(len(l_a)):
-        if not math.isclose(l_a[ix], l_b[ix], rel_tol = delta):
-            return False
-
-    return True
 
 def do_on_create():
     glPushAttrib(GL_ALL_ATTRIB_BITS)

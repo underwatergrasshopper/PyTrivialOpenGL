@@ -17,6 +17,7 @@ __all__ = [
     "display_info",
     "draw_rgb_triangle",
     "draw_rectangle",
+    "is_close",
 ]
 
 EXIT_SUCCESS = 0
@@ -182,3 +183,19 @@ def draw_rectangle(x, y, width, height):
     glVertex2f(x, y + height)
 
     glEnd()
+
+def is_close(a, b, delta = 0.001):
+    if isinstance(a, (list, tuple)):
+        if not isinstance(b, (list, tuple)):
+            return False
+
+        if len(a) != len(b):
+            return False
+
+        l = len(a)
+        for i in range(l):
+            if not is_close(a[i], b[i], delta):
+                return False
+        return True
+    else:
+        return math.isclose(a, b, abs_tol = delta)

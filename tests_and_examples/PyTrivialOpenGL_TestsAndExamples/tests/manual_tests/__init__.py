@@ -13,4 +13,5 @@ from . import (
     bezier_surface,
     selection,
     c_selection,
+    c_feedback,
 )

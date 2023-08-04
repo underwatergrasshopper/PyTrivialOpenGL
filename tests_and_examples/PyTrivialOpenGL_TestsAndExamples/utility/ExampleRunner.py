@@ -98,6 +98,7 @@ class ExampleRunner:
             example_manager.add_example("mt.bezier_surface",    manual_tests.bezier_surface.run)
             example_manager.add_example("mt.c_selection",       manual_tests.c_selection.run)
             example_manager.add_example("mt.selection",         manual_tests.selection.run)
+            example_manager.add_example("mt.c_feedback",        manual_tests.c_feedback.run)
 
         if default_example_name is None:
             if category & ExampleCategoryBit.MANUAL_TESTS:

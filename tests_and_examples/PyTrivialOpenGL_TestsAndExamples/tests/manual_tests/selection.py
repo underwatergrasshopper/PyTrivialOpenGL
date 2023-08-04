@@ -19,8 +19,6 @@ def do_on_create():
 
     glClearColor(0, 0, 0.5, 1)
 
-    #raise RuntimeError("Muuu")
-
     print("Escape - Exit")
 
 def do_on_destroy():

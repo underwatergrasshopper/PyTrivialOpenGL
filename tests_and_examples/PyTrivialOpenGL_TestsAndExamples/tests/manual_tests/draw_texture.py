@@ -3,23 +3,12 @@ from PyTrivialOpenGL.GL import *
 from PyTrivialOpenGL import C_GL
 import ctypes
 import math
-from ...utility.ExampleSupport import FPS_Counter
+from ...utility.ExampleSupport import FPS_Counter, check_gl_error, is_close
 
-from ...utility.ExampleSupport import check_gl_error
 
 __all__ = [
     "run"
 ]
-
-def is_close(l_a, l_b, delta):
-    if (len(l_a) != len(l_b)):
-        return False
-
-    for ix in range(len(l_a)):
-        if not math.isclose(l_a[ix], l_b[ix], rel_tol = delta):
-            return False
-
-    return True
 
 class _Data:
     def __init__(self):

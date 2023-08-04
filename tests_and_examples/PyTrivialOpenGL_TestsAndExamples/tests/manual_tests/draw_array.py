@@ -2,22 +2,12 @@ import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
 from PyTrivialOpenGL import C_GL
 import ctypes
-import math
 
+from ...utility.ExampleSupport import is_close
 
 __all__ = [
     "run"
 ]
-
-def is_close(l_a, l_b, delta):
-    if (len(l_a) != len(l_b)):
-        return False
-
-    for ix in range(len(l_a)):
-        if not math.isclose(l_a[ix], l_b[ix], rel_tol = delta):
-            return False
-
-    return True
 
 def list_to_bytes(py_type, list_, c_type):
     return bytes((c_type * len(list_))(*(py_type(item) for item in list_)))

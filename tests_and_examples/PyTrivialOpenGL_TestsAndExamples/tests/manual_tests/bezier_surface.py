@@ -3,20 +3,11 @@ import math
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
 from PyTrivialOpenGL import C_GL
+from ...utility.ExampleSupport import is_close
 
 __all__ = [
     "run"
 ]
-
-def is_close(l_a, l_b, delta):
-    if (len(l_a) != len(l_b)):
-        return False
-
-    for ix in range(len(l_a)):
-        if not math.isclose(l_a[ix], l_b[ix], rel_tol = delta):
-            return False
-
-    return True
 
 class Vec3:
     def __init__(self, x, y, z):
