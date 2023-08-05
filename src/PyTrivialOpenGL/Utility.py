@@ -103,20 +103,27 @@ def get_cursor_pos_in_screen():
 def run_question_box(title = None, message = None):
     """
     Run question box and waits for answer.
-    title   : str | None
-    content : str | None
+    title   : str | Any | None
+    message : str | Any | None
     Returns : bool
-        True, when 'Yes' was pressed. False, when 'No' was pressed.
+        True, when 'Yes' was pressed. 
+        False, when 'No' was pressed.
     """
     if title is None:
         title = ""
     elif not isinstance(title, str):
-        title = str(title)
+        try:
+            title = str(title)
+        except Exception as exception:
+            raise ValueError("Value of 'title' is not convertible to str.") from exception
 
     if message is None:
         message = ""
     elif not isinstance(message, str):
-        message = str(message)
+        try:
+            message = str(message)
+        except Exception as exception:
+            raise ValueError("Value of 'message' is not convertible to str.") from exception
 
     result = _C_WinApi.OwnerlessMessageBox_FromNewThreadWithWait(message, title, _C_WinApi.MB_ICONQUESTION | _C_WinApi.MB_YESNO)
 
@@ -126,13 +133,19 @@ def run_question_box(title = None, message = None):
 
 def is_defined_in_gl(target):
     """
-    target  : str
+    target  : str | Any
         OpenGl extension name or OpenGL core version name.
     Returns : bool
         True, when constants and functions for target are defined in GL module.
 
     Note: Even if constants and functions are defined, GPU vendor might not provide them.
     """
+    if not isinstance(target, str):
+        try:
+            target = str(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' is not convertible to str.") from exception
+
     return target in set(
         "GL_VERSION_1_0",
         "GL_VERSION_1_1",
@@ -140,17 +153,34 @@ def is_defined_in_gl(target):
 
 def is_defined_in_c_gl(target):
     """
-    target  : str
+    target  : str | Any
         OpenGl extension name or OpenGL core version name.
     Returns : bool
         True, when constants and functions for target are defined in C_GL module.
 
     Note: Even if constants and functions are defined, GPU vendor might not provide them.
     """
+    if not isinstance(target, str):
+        try:
+            target = str(target)
+        except Exception as exception:
+            raise ValueError("Value of 'target' is not convertible to str.") from exception
+
     return target in set(
         "GL_VERSION_1_0",
         "GL_VERSION_1_1",
     )
 
 def get_gl_error_str(gl_error_code):
+    """
+    gl_error_code  : int | SupportsInt
+        Value returned by glGetError().
+    Returns : str
+    """
+    if not isinstance(gl_error_code, int):
+        try:
+            gl_error_code = int(gl_error_code)
+        except Exception as exception:
+            raise ValueError("Value of 'gl_error_code' is not convertible to int.") from exception
+
     return _gl_support.get_gl_error_str(gl_error_code)

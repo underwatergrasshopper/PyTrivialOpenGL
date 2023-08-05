@@ -4,7 +4,7 @@ import math
 from PyTrivialOpenGL.Size import Size
 from PyTrivialOpenGL.Area import Area
 from PyTrivialOpenGL.Point import Point
-from PyTrivialOpenGL._Basics import *
+from PyTrivialOpenGL._Private.Basics import *
 
 __all__ = [
     "run"

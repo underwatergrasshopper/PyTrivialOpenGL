@@ -1,10 +1,9 @@
 import pytest
 import math
 
-from PyTrivialOpenGL.Key import *
-from PyTrivialOpenGL.Key import _vk_code_to_key_id
-from PyTrivialOpenGL.Key import _key_id_to_vk_code
-from PyTrivialOpenGL._C_WinApi import *
+from PyTrivialOpenGL.Key                    import *
+from PyTrivialOpenGL._Private.KeySupport    import *
+from PyTrivialOpenGL._Private.C_WinApi      import *
 
 __all__ = [
     "run"
@@ -26,12 +25,12 @@ def test_key_id():
     assert key_id != 'A'
 
 def test_vk_code_to_key_id():
-    assert _vk_code_to_key_id(VK_F1) == KeyId.F1
-    assert _vk_code_to_key_id(-1) == KeyId.UNKNOWN
+    assert vk_code_to_key_id(VK_F1) == KeyId.F1
+    assert vk_code_to_key_id(-1) == KeyId.UNKNOWN
 
 def test_key_id_to_vk_code():
-    assert _key_id_to_vk_code(KeyId.F1) == VK_F1
-    assert _key_id_to_vk_code(KeyId.UNKNOWN) == 0
+    assert key_id_to_vk_code(KeyId.F1) == VK_F1
+    assert key_id_to_vk_code(KeyId.UNKNOWN) == 0
 
 def run():
     print("test_key start")

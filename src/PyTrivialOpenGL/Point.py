@@ -133,7 +133,7 @@ class Point:
             try:
                 value = int(value)
             except:
-                raise TypeError("Value of '%s' can not be converted to int." % (name))
+                raise ValueError("Value of '%s' can not be converted to int." % (name))
 
             self.__dict__[name] = value
 

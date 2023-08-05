@@ -31,7 +31,7 @@ def test_size():
 
     try:
         size = Size(1, "text")
-    except TypeError as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'height' can not be converted to int.")
     except Exception:
         assert False, "Wrong exception."
@@ -67,7 +67,7 @@ def test_size():
     size = Size(1, 2)
     try:
         size.height = "text"
-    except TypeError as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'height' can not be converted to int.")
     except Exception:
         assert False, "Wrong exception."

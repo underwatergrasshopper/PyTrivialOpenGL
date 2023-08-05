@@ -1,44 +1,18 @@
 import enum     as _enum
 import ctypes   as _ctypes
 
-from ._Private import C_WinApi as _C_WinApi
-from ._Private import KeySupport as _KeySupport
+from ._Private import C_WinApi      as _C_WinApi
+from ._Private import KeySupport    as _KeySupport
 
-from .KeyId import KeyId
-from .KeyboardSideId import KeyboardSideId
+from .KeyId             import KeyId
+from .KeyboardSideId    import KeyboardSideId
 
 __all__ = [
-    "Key",
     "KeyId",
     "KeyboardSideId",
     "KeyExtra",
     "is_key_toggled",
 ]
-
-################################################################################
-
-class Key:
-    """
-    key_id  : KeyId
-    is_down : bool
-    extra   : KeyExtra
-    """
-    def __init__(self, key_id, is_down, extra):
-        self.key_id     = key_id
-        self.is_down    = is_down
-        self.extra      = extra
-
-    def check(self, key_id, is_down = True):
-        """
-        Returns : bool
-        """
-        return self.key_id == key_id and self.is_down == is_down
-
-    def __str__(self):
-        return "key_id=%s, is_down=%s, %s" % (self.key_id, self.is_down, self.extra.name)
-
-    def __repr__(self):
-        return self.__str__()
 
 class KeyExtra:
     """
@@ -104,5 +78,12 @@ class KeyExtra:
 _KEY_TOGGLE_BIT = 0x0001
 
 def is_key_toggled(key_id):
+    """
+    key_id  : KeyId
+    Returns : bool
+    """
+    if not isinstance(key_id, KeyId):
+        raise TypeError("Unexpected type of 'key_id'.")
+
     return _C_WinApi.GetKeyState(_KeySupport.key_id_to_vk_code(key_id)) & _KEY_TOGGLE_BIT
 

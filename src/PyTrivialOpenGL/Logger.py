@@ -41,10 +41,16 @@ class Logger:
     def log_message(self, log_message_type_id, message):
         """
         log_message_type_id : LogMessageTypeId
-        message             : str
+        message             : str | Any
         """
         if not isinstance(log_message_type_id, LogMessageTypeId):
-            raise TypeError("Value of log_message_type_id is not LogMessageTypeId enum type.")
+            raise TypeError("Unexpected type of 'log_message_type_id'.")
+
+        if not isinstance(message, str):
+            try:
+                message = str(message)
+            except Exception as exception:
+                raise ValueError("Value of 'message' is not convertible to str.") from exception
 
         if log_message_type_id == LogMessageTypeId.DEBUG:
             if self.is_log_level_at_least(LogLevel.DEBUG):
@@ -70,40 +76,70 @@ class Logger:
 
     def log_debug(self, message):
         """
-        message : str
+        message : str | Any
         """
+        if not isinstance(message, str):
+            try:
+                message = str(message)
+            except Exception as exception:
+                raise ValueError("Value of 'message' is not convertible to str.") from exception
+
         self.log_message(LogMessageTypeId.DEBUG, message)
 
     def log_info(self, message):
         """
-        message : str
+        message : str | Any
         """
+        if not isinstance(message, str):
+            try:
+                message = str(message)
+            except Exception as exception:
+                raise ValueError("Value of 'message' is not convertible to str.") from exception
+
         self.log_message(LogMessageTypeId.INFO, message)
 
     def log_warning(self, message):
         """
-        message : str
+        message : str | Any
         """
+        if not isinstance(message, str):
+            try:
+                message = str(message)
+            except Exception as exception:
+                raise ValueError("Value of 'message' is not convertible to str.") from exception
+
         self.log_message(LogMessageTypeId.WARNING, message)
 
     def log_error(self, message):
         """
-        message : str
+        message : str | Any
         """
+        if not isinstance(message, str):
+            try:
+                message = str(message)
+            except Exception as exception:
+                raise ValueError("Value of 'message' is not convertible to str.") from exception
+
         self.log_message(LogMessageTypeId.ERROR, message)
 
     def log_fatal_error(self, message):
         """
         Exits program after logging message with error code 1.
-        message : str
+        message : str | Any
         """
+        if not isinstance(message, str):
+            try:
+                message = str(message)
+            except Exception as exception:
+                raise ValueError("Value of 'message' is not convertible to str.") from exception
+
         self.log_message(LogMessageTypeId.FATAL_ERROR, message)
 
     ### log level ###
 
     def set_log_level(self, log_level):
         """
-        log_level : int
+        log_level : int | SupportsInt
             Might be: LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARNING or LogLevel.ERROR.
             For:
                 LogLevel.DEBUG      - logs debug, info, warning and error messages,
@@ -111,6 +147,12 @@ class Logger:
                 LogLevel.WARNING    - logs warning and error messages,
                 LogLevel.ERROR      - logs error messages only.
         """
+        if not isinstance(log_level, int):
+            try:
+                log_level = int(log_level)
+            except Exception as exception:
+                raise ValueError("Value of 'log_level' is not convertible to int.") from exception
+
         self._log_level = log_level
 
     def get_log_level(self):
@@ -123,6 +165,12 @@ class Logger:
         """
         Returns     : bool
         """
+        if not isinstance(log_level, int):
+            try:
+                log_level = int(log_level)
+            except Exception as exception:
+                raise ValueError("Value of 'log_level' is not convertible to int.") from exception
+
         return log_level <= self._log_level
 
     ### log message to output ###
@@ -139,6 +187,9 @@ class Logger:
                                         For example: "Error: " for error messages.
                 message               - Log message.
         """
+        if not callable(log_message_to_output):
+            raise TypeError("Object assigned to 'log_message_to_output' is not callable.")
+
         self._log_message_to_output = log_message_to_output
 
 

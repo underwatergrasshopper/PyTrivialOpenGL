@@ -89,7 +89,7 @@ def test_color_b():
 
     try:
         color = ColorB(11, 22, "text", 44)
-    except TypeError as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'b' can not be converted to int.")
     except Exception:
         assert False, "Wrong exception."
@@ -99,7 +99,7 @@ def test_color_b():
     color = ColorB(11, 22, 33, 44)
     try:
         color.b = "text"
-    except TypeError as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'b' can not be converted to int.")
     except Exception:
         assert False, "Wrong exception."
@@ -243,7 +243,7 @@ def test_color_f():
 
     try:
         color = ColorF(0.1, 0.2, "text", 0.3)
-    except TypeError as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'b' can not be converted to float.")
     except Exception:
         assert False, "Wrong exception."
@@ -253,7 +253,7 @@ def test_color_f():
     color = ColorF(0.1, 0.2, 0.3, 0.4)
     try:
         color.b = "text"
-    except TypeError as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'b' can not be converted to float.")
     except Exception:
         assert False, "Wrong exception."

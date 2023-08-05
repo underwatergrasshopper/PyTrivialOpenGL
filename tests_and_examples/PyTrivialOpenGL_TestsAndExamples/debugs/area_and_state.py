@@ -43,6 +43,7 @@ _window = togl.to_window()
 
 _legend = """--- Legend ---
 Arrows      - Move by 30px
+J           - Move Test (window should ended at the same position) [wait for 'done']
 T           - Delay 3s -> Foreground                        [wait for 'done']
 H           - Hide 1s -> Show                               [wait for 'done']
 M           - Minimize 1s -> Center (width=600, height=300) [wait for 'done']
@@ -58,15 +59,18 @@ P           - Move to (x=10, y=50)
 L. Ctrl + P - Move to (x=10)
 R. Ctrl + P - Move to (y=50)
 O           - Move to (x=0, y=0)
-Shift + O   - Move to (pos=Point(0,0))
+L. Ctrl + O - Move to (pos=Point(10,50))
+R. Ctrl + O - Move to (pos=(10,50))
     
 S           - Resize (width=300, height=200)
 L. Ctrl + S - Resize (width=300)
 R. Ctrl + S - Resize (height=200)
-Shift + S   - Resize (width=600, height=300)
+L. Shift + S - Resize (size=Size(600, 300))
+R. Shift + S - Resize (size=(600, 300))
     
 A           - Reshape(x=10, y=50, width=600, height=300)
-Shift + A   - Reshape(area=Area(10, 50, 600, 300)
+L. Shift + A - Reshape(area=Area(10, 50, 600, 300)
+R. Shift + A - Reshape(area=(10, 50, 600, 300)
 L. Ctrl + A - Reshape(x=10, width=600)
 R. Ctrl + A - Reshape(y=50, height=300)
     
@@ -109,7 +113,7 @@ def do_on_create():
 
     _data.fps_counter.reset()
 
-    # Cause exception.
+    # Note: Will cause an exception (as should be). 
     #togl.to_window().center()
 
     print("L - Legend")
@@ -136,6 +140,8 @@ def draw():
     if "show_fps" in _data.options: _data.fps_counter.update()
 
 def do_on_key(key_id, is_down, extra):
+    is_up = not is_down
+
     if False:
         pass
 
@@ -147,6 +153,25 @@ def do_on_key(key_id, is_down, extra):
         _window.move_by(0, -_MOVE_STEP)
     elif key_id == togl.KeyId.ARROW_DOWN and is_down:
         _window.move_by(0, _MOVE_STEP)
+
+    elif key_id == 'J' and is_up:
+        _data.action_chain.add(0.2, lambda: _window.move_by(offset_x = -_MOVE_STEP))
+        _data.action_chain.add(0.2, lambda: _window.move_by(-_MOVE_STEP, 0))
+        _data.action_chain.add(0.2, lambda: _window.move_by(offset = (-_MOVE_STEP, 0)))
+        _data.action_chain.add(0.2, lambda: _window.move_by(offset = togl.Point(-_MOVE_STEP, 0)))
+        _data.action_chain.add(0.2, lambda: _window.move_by(offset_x = _MOVE_STEP))
+        _data.action_chain.add(0.2, lambda: _window.move_by(_MOVE_STEP, 0))
+        _data.action_chain.add(0.2, lambda: _window.move_by(offset = (_MOVE_STEP, 0)))
+        _data.action_chain.add(0.2, lambda: _window.move_by(offset = togl.Point(_MOVE_STEP, 0)))
+        _data.action_chain.add(0.2, lambda: _window.move_by(offset_y = -_MOVE_STEP))
+        _data.action_chain.add(0.2, lambda: _window.move_by(0, -_MOVE_STEP))
+        _data.action_chain.add(0.2, lambda: _window.move_by(offset = (0, -_MOVE_STEP)))
+        _data.action_chain.add(0.2, lambda: _window.move_by(offset = togl.Point(0, -_MOVE_STEP)))
+        _data.action_chain.add(0.2, lambda: _window.move_by(offset_y = _MOVE_STEP))
+        _data.action_chain.add(0.2, lambda: _window.move_by(0, _MOVE_STEP))
+        _data.action_chain.add(0.2, lambda: _window.move_by(offset = (0, _MOVE_STEP)))
+        _data.action_chain.add(0.2, lambda: _window.move_by(offset = togl.Point(0, _MOVE_STEP)))
+        _data.action_chain.add(0, lambda: print("done"))
 
     elif key_id == 'T' and not is_down:
         def do():
@@ -202,14 +227,18 @@ def do_on_key(key_id, is_down, extra):
             _window.move_to(10, 50, is_draw_area = _data.is_draw_area)
 
     elif key_id == 'O' and not is_down:
-        if extra.is_shift_down:
-            _window.move_to(pos = togl.Point(0, 0), is_draw_area = _data.is_draw_area)
+        if extra.is_left_ctrl_down:
+            _window.move_to(pos = togl.Point(10, 50), is_draw_area = _data.is_draw_area)
+        elif extra.is_right_ctrl_down:
+            _window.move_to(pos = (10, 50), is_draw_area = _data.is_draw_area)
         else:
             _window.move_to(0, 0, is_draw_area = _data.is_draw_area)
 
     elif key_id == 'S' and not is_down:
-        if extra.is_shift_down:
-            _window.resize(_WIDTH, _HEIGHT, is_draw_area = _data.is_draw_area)
+        if extra.is_left_shift_down:
+            _window.resize(size = togl.Size(_WIDTH, _HEIGHT), is_draw_area = _data.is_draw_area)
+        elif extra.is_right_shift_down:
+            _window.resize(size = (_WIDTH, _HEIGHT), is_draw_area = _data.is_draw_area)
         elif extra.is_left_ctrl_down:
             _window.resize(width = _WIDTH / 2, is_draw_area = _data.is_draw_area)
         elif extra.is_right_ctrl_down:
@@ -218,8 +247,10 @@ def do_on_key(key_id, is_down, extra):
             _window.resize(_WIDTH / 2, _HEIGHT / 2, is_draw_area = _data.is_draw_area)
 
     elif key_id == 'A' and not is_down:
-        if extra.is_shift_down:
+        if extra.is_left_shift_down:
             _window.reshape(area = togl.Area(10, 50, _WIDTH, _HEIGHT), is_draw_area = _data.is_draw_area)
+        elif extra.is_right_shift_down:
+            _window.reshape(area = (10, 50, _WIDTH, _HEIGHT), is_draw_area = _data.is_draw_area)
         elif extra.is_left_ctrl_down:
             _window.reshape(x = 10, width = _WIDTH, is_draw_area = _data.is_draw_area)
         elif extra.is_right_ctrl_down:

@@ -9,21 +9,21 @@ class Area:
     """
     Represents area from position (x, y) and size (width, height).
 
-    x       : int | float
-    y       : int | float
-    width   : int | float
-    height  : int | float
+    x       : int | float | SupportsInt
+    y       : int | float | SupportsInt
+    width   : int | float | SupportsInt
+    height  : int | float | SupportsInt
     """
     def __init__(self, x, y, width, height):
         """
-        x       : int | float
-        y       : int | float
-        width   : int | float
-        height  : int | float
+        x       : int | float | SupportsInt
+        y       : int | float | SupportsInt
+        width   : int | float | SupportsInt
+        height  : int | float | SupportsInt
 
         Exceptions
             ValueError
-                When x, y width or height is neither int or float.
+                When x, y width or height is neither int or float or can not be converted to int.
         """
         self.x      = x
         self.y      = y
@@ -72,9 +72,13 @@ class Area:
 
     def is_in(self, pos):
         """
+        pos         : Point
         Returns     : bool
             True - When pos is in area.
         """
+        if not isinstance(pos, Point):
+            raise TypeError("Unexpected type of 'pos'.")
+
         return pos.is_between(self.get_pos(), self.get_pos() + self.get_size())
 
     def get_area_i(self):
@@ -133,6 +137,6 @@ class Area:
             try:
                 value = int(value)
             except:
-                raise TypeError("Value of '%s' can not be converted to int." % (name))
+                raise ValueError("Value of '%s' can not be converted to int." % (name))
 
             self.__dict__[name] = value

@@ -32,7 +32,7 @@ def test_point():
 
     try:
         point = Point(1, "text")
-    except TypeError as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'y' can not be converted to int.")
     except Exception:
         assert False, "Wrong exception."
@@ -68,7 +68,7 @@ def test_point():
     point = Point(1, 2)
     try:
         point.y = "text"
-    except TypeError as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'y' can not be converted to int.")
     except Exception:
         assert False, "Wrong exception."

@@ -84,12 +84,6 @@ class _WindowAreaPartId(_enum.Enum):
     SIZE                = _enum.auto()
     ALL                 = _enum.auto()
 
-class _DelayedAreaChange:
-    def __init__(self, area, area_part_id, is_draw_area):
-        self.area           = area
-        self.area_part_id   = area_part_id
-        self.is_draw_area   = is_draw_area
-
 class Window:
     """
     _window_name                    : str
@@ -203,7 +197,7 @@ class Window:
             ):
         """
         window_name             : str | Any
-        area                    : Area | Tuple[int, int, int, int] | Tuple[int, int] | None
+        area                    : Area | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt] | Tuple[int | SupportsInt, int | SupportsInt] | None
             Position and size of created window. 
 
             When Area, then:
@@ -211,11 +205,11 @@ class Window:
                 Values area.width and area.height corresponds to window size or draw area size if style is DRAW_AREA_SIZE.
                 All values must be int type or convertible to int.
             
-            When Tuple[int, int, int, int], then:
+            When Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt], then:
                 Values area[0] and area[0] corresponds to left-top corner of window in screen coordinate system,
                 Values area[1] and area[2] corresponds to window size or draw area size if style is DRAW_AREA_SIZE.
 
-            When Tuple[int, int], then:
+            When Tuple[int | SupportsInt, int | SupportsInt], then:
                 Values area[0] and area[0] corresponds to window size or draw area size if style is DRAW_AREA_SIZE.
                 Window is centered to middle of work area (desktop area without task bar).
 
@@ -223,25 +217,25 @@ class Window:
                 Window have one fourth size of work area (desktop area without task bar)
                 and it is centered to middle of work area.
 
-        style                   : int 
+        style                   : int | SupportsInt
             Bitfield made of value from WindowStyleBit or 0.
 
-        opengl_version          : OpenGL_Version | Tuple[int, int] | None
+        opengl_version          : OpenGL_Version | Tuple[int | SupportsInt, int | SupportsInt] | None
             Request creating rendering context with minimal version of OpenGL. 
 
-            When Tuple[int, int], then:
+            When Tuple[int | SupportsInt, int | SupportsInt], then:
                 Value opengl_version[0] corresponds to major version.
                 Value opengl_version[1] corresponds to minor version.
             When None, then it's OpenGL 1.1.
 
-        icon_file_name          : str
+        icon_file_name          : str | Any
             File name of icon file to be loaded.
             If loaded successfully, then will displayed on title bar and task bar.
 
-        timer_time_interval     : int
+        timer_time_interval     : int | SupportsInt
             Time interval in milliseconds for do_on_time callback.
 
-        is_auto_sleep_blocked   : bool
+        is_auto_sleep_blocked   : bool | Any
             If True, then prevents system from going to sleep mode while window is running.
 
         do_on_create            : Callable[[], None]
@@ -353,9 +347,14 @@ class Window:
             try:
                 self._window_name = str(window_name)
             except Exception as exception:
-                raise ValueError("Value of 'window_name' can not be converted to str.") from exception
+                raise ValueError("Value of 'window_name' is not convertible to str.") from exception
 
         if isinstance(area, tuple):
+            try:
+                area = tuple(int(item) for item in area)
+            except Exception as esception:
+                raise ValueError("At least one value from 'area' is not convertible to int.") from esception
+
             if len(area) == 4:
                 area = Area(area[0], area[1], area[2], area[3])
             elif len(area) == 2:
@@ -366,31 +365,47 @@ class Window:
 
             try:
                 _Basics.check_area_i32_u16(area)
-            except ValueError as e:
-                raise ValueError("Wrong value range in parameter 'area'.") from e
+            except ValueError as exception:
+                raise ValueError("Wrong value range in parameter 'area'.") from exception
 
         elif isinstance(area, Area):
             try:
                 _Basics.check_area_i32_u16(area)
-            except ValueError as e:
-                raise ValueError("Wrong value range in parameter 'area'.") from e
+            except ValueError as exception:
+                raise ValueError("Wrong value range in parameter 'area'.") from exception
             area = _deepcopy(area)
 
         else:
             raise TypeError("Wrong type of parameter 'area'.")
 
-        self._style = int(style)
+        if isinstance(style, int):
+             self._style = style
+        else:
+            try:
+                 self._style = int(style)
+            except Exception as exception:
+                raise ValueError("Value of 'style' is not convertible to int.") from exception
+
 
         if not isinstance(state_id, WindowStateId):
             raise TypeError("Wrong type of parameter 'state_id'.")
 
-        is_hidden = bool(is_hidden)
+        if not isinstance(is_auto_sleep_blocked, bool):
+            try:
+                is_hidden = bool(is_hidden)
+            except Exception as exception:
+                raise ValueError("Value of 'is_hidden' is not convertible to bool.") from exception
 
         if opengl_version is None:
             self._opengl_version = OpenGL_Version(0, 0)
         elif isinstance(opengl_version, OpenGL_Version):
             self._opengl_version = _deepcopy(opengl_version)
         elif isinstance(opengl_version, tuple):
+            try:
+                opengl_version = tuple(int(item) for item in opengl_version)
+            except Exception as esception:
+                raise ValueError("At least one value from 'opengl_version' is not convertible to int.") from esception
+
             if len(opengl_version) == 2:
                 self._opengl_version = OpenGL_Version(opengl_version[0], opengl_version[1])
             else:
@@ -398,9 +413,29 @@ class Window:
         else:
             TypeError("Wrong type of parameter 'opengl_version'. Should be 'Tuple[int, int]' or 'OpenGL_Version'.")
 
-        self._icon_file_name            = str(icon_file_name)
-        self._timer_time_interval       = int(timer_time_interval)
-        self._is_auto_sleep_blocked     = bool(is_auto_sleep_blocked)
+        if isinstance(icon_file_name, str):
+            self._window_name = window_name
+        else:
+            try:
+                self._icon_file_name = str(icon_file_name)
+            except Exception as exception:
+                raise ValueError("Value of 'icon_file_name' is not convertible to str.") from exception
+
+        if isinstance(timer_time_interval, int):
+            self._timer_time_interval = timer_time_interval
+        else:
+            try:
+                self._timer_time_interval = int(timer_time_interval)
+            except Exception as exception:
+                raise ValueError("Value of 'timer_time_interval' is not convertible to int.") from exception
+
+        if isinstance(is_auto_sleep_blocked, bool):
+            self._is_auto_sleep_blocked = is_auto_sleep_blocked
+        else:
+            try:
+                self._is_auto_sleep_blocked = bool(is_auto_sleep_blocked)
+            except Exception as exception:
+                raise ValueError("Value of 'is_auto_sleep_blocked' is not convertible to bool.") from exception
 
         ### callbacks ###
 
@@ -585,10 +620,19 @@ class Window:
         window_option_id : WindowOptionId
             AUTO_SLEEP_MODE
                 No going into sleep mode by system while window is running.
-        is_enabled : bool
+        is_enabled : bool | Any
             When True, then enables option.
             When False, then disables option.
         """
+        if not isinstance(window_option_id, WindowOptionId):
+            raise TypeError("Unexpected type of 'window_option_id'.")
+
+        if not isinstance(is_enabled, bool):
+            try:
+                is_enabled = bool(is_enabled)
+            except Exception as exception:
+                raise TypeError("Value of 'is_enabled' is not convertible to bool.") from exception
+
         if window_option_id == WindowOptionId.AUTO_SLEEP_MODE:
             self._is_auto_sleep_blocked = not is_enabled
 
@@ -599,11 +643,13 @@ class Window:
             True, when option is enabled.
             False, when option is disabled.
         """
+        if not isinstance(window_option_id, WindowOptionId):
+            raise TypeError("Unexpected type of 'window_option_id'.")
+
         if window_option_id == WindowOptionId.AUTO_SLEEP_MODE:
             return not self._is_auto_sleep_blocked
-        
-        raise RuntimeError("Unexpected window option id '%s'." % window_option_id.name)
 
+        return False
     ###
 
     def move_to(self, x = None, y = None, pos = None, is_draw_area = False):
@@ -616,21 +662,26 @@ class Window:
             move_to(y = 10)                                     - Moves to new position only at Y axis.
             move_to(10, 30, is_draw_area = True)                - Moves left-top corner of draw area to new position. 
             move_to(pos = Point(10, 30))                        - Moves to new position.
+            move_to(pos = (10, 30))                             - Moves to new position.
             move_to(pos = Point(10, 30), is_draw_area = True)   - Moves left-top corner of draw area to new position. 
 
-        x               : int | None
+        x               : int | SupportInt | None
             New position in screen coordinate system in X axis.
-        y               : int | None
+        y               : int | SupportInt | None
             New position in screen coordinate system in Y axis.
-        pos             : Point | None
+        pos             : Point | Tuple[int | SupportInt, int | SupportInt] | None
             New position in screen coordinate system.
-        is_draw_area    : bool
+        is_draw_area    : bool | Any
             If True, then new position of window corresponding to left-top corner of draw area.
             (default) If False, then new position of window corresponding to left-top corner of window.
 
+        Assignment to at least one of 'x', 'y' or 'pos' needs to be present.
+        When assignment to 'pos' is present then assignment to either 'x' or 'y' can not be present.
+
         Exceptions:
             TypeError
-                When pos type is not Point.
+                When pos type is other than expected.
+                When unexpected combination of arguments.
             ValueError
                 When either x, y, pos.x, pos.y is not in range of <-2^31, 2^31-1>.
             RuntimeError
@@ -639,34 +690,79 @@ class Window:
         if self._is_during_do_on_create:
             raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
 
-        if x is not None and not _is_i32(x):
-            raise ValueError("Argument 'x' is out of range for 32 bit integer.")
-        if y is not None and not _is_i32(y):
-            raise ValueError("Argument 'y' is out of range for 32 bit integer.")
-        if pos is not None:
-            if not isinstance(pos, Point):
-                raise TypeError("Type of argument 'pos' is not 'Point'.")
-            if not _is_i32(pos.x):
-                raise ValueError("Value 'x' of argument 'pos' is out of range for 32 bit integer.")
-            if not _is_i32(pos.y):
-                raise ValueError("Value 'y' of argument 'pos' is out of range for 32 bit integer.")
+        if not isinstance(is_draw_area, bool):
+            try:
+                is_draw_area = bool(is_draw_area)
+            except Exception as exception:
+                raise ValueError("Value of 'is_draw_area' is not convertible to bool.") from exception
 
         if pos is not None:
-            area = Area(pos.x, pos.y, 0, 0)
+            if x is not None:
+                raise TypeError("Unexpected combination of arguments. Assignment to 'x' shouldn't be present when assignment to 'pos' is present.")
+            if y is not None:
+                raise TypeError("Unexpected combination of arguments. Assignment to 'y' shouldn't be present when assignment to 'pos' is present.")
 
-        elif (x is not None) and (y is not None):
+            if isinstance(pos, tuple):
+                if len(pos) != 2:
+                    raise TypeError("Length of tuple 'pos' is not 2.")
+
+                try:
+                    pos = tuple(int(item) for item in pos)
+                except Exception as exception:
+                    raise ValueError("At least one value from 'pos' is not convertible to int.") from exception
+
+                if not _is_i32(pos[0]):
+                    raise ValueError("First value of 'pos' is out of range for 32 bit integer.")
+                if not _is_i32(pos[1]):
+                    raise ValueError("Second value of 'pos' is out of range for 32 bit integer.")
+
+                area = Area(pos[0], pos[1], 0, 0)
+
+            elif isinstance(pos, Point):
+                if not _is_i32(pos.x):
+                    raise ValueError("Value of 'x' from 'pos' is out of range for 32 bit integer.")
+                if not _is_i32(pos.y):
+                    raise ValueError("Value of 'y' from 'pos' is out of range for 32 bit integer.")
+
+                area = Area(pos.x, pos.y, 0, 0)
+            else:
+                raise TypeError("Unexpected type of 'pos'.")
+
+        elif (x is not None) or (y is not None):
+            if (x is None) or (y is None):
+                if is_draw_area:
+                    current_pos = self.get_draw_area_pos()
+                else:
+                    current_pos = self.get_pos()
+
+            if x is not None:
+                if not isinstance(x, int):
+                    try:
+                        x = int(x)
+                    except Exception as exception:
+                        raise ValueError("Value of 'x' is not convertible to int.") from exception
+
+                if not _is_i32(x):
+                    raise ValueError("Value of 'x' is out of range for 32 bit integer.")
+            else:
+                x = current_pos.x
+
+            if y is not None:
+                if not isinstance(y, int):
+                    try:
+                        y = int(y)
+                    except Exception as exception:
+                        raise ValueError("Value of 'y' is not convertible to int.") from exception
+
+                if not _is_i32(y):
+                    raise ValueError("Value of 'y' is out of range for 32 bit integer.")
+            else:
+                y = current_pos.y
+
             area = Area(x, y, 0, 0)
 
         else:
-            if is_draw_area:
-                pos = self.get_draw_area_pos()
-            else:
-                pos = self.get_pos()
-
-            if x is None: x = pos.x
-            if y is None: y = pos.y
-
-            area = Area(x, y, 0, 0)
+            raise TypeError("Unexpected combination of arguments. Assignment to at least one of 'x', 'y' or 'pos' should be present.")
 
         self._set_area(area, _WindowAreaPartId.POSITION, is_draw_area)
 
@@ -680,17 +776,21 @@ class Window:
             move_by(offset_x = 10)                              - Moves by 10 only on X axis.
             move_by(offset_y = 10)                              - Moves by 10 only on Y axis.
             move_by(offset = Point(10, 30))                     - Moves by (10, 30). 
+            move_by(offset = (10, 30))                          - Moves by (10, 30). 
 
-        offset_x    : int | None
+        offset_x    : int | SupportsInt | None
             Offset in screen coordinate system at X axis.
-        offset_y    : int | None
+        offset_y    : int | SupportsInt | None
             Offset in screen coordinate system at Y axis.
-        offset      : Point | None
+        offset      : Point | Tuple[int | SupportsInt, int | SupportsInt] | None
             Offset in screen coordinate system.
+
+        Assignment to at least one of 'offset_x', 'offset_y' or 'offset' needs to be present.
+        When assignment to 'offset' is present then assignment to either 'offset_x' or 'offset_y' can not be present.
 
         Exceptions
             TypeError
-                When offset type is not Point or None.
+                When offset type is other than expected.
             ValueError
                 When either offset_x, offset_y, offset.x, offset.y is not in range of <-2^31, 2^31-1>.
             RuntimeError
@@ -699,29 +799,67 @@ class Window:
         if self._is_during_do_on_create:
             raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
 
-        if offset_x is not None and not _is_i32(offset_x):
-            raise ValueError("Argument 'offset_x' is out of range for 32 bit integer.")
-        if offset_y is not None and not _is_i32(offset_y):
-            raise ValueError("Argument 'offset_y' is out of range for 32 bit integer.")
         if offset is not None:
-            if not isinstance(offset, Point):
-                raise TypeError("Type of argument 'offset' is not 'Point'.")
-            if not _is_i32(offset.x):
-                raise ValueError("Value 'x' of argument 'offset' is out of range for 32 bit integer.")
-            if not _is_i32(offset.y):
-                raise ValueError("Value 'y' of argument 'offset' is out of range for 32 bit integer.")
+            if offset_x is not None:
+                raise TypeError("Unexpected combination of arguments. Assignment to 'offset_x' shouldn't be present when assignment to 'offset' is present.")
+            if offset_y is not None:
+                raise TypeError("Unexpected combination of arguments. Assignment to 'offset_x' shouldn't be present when assignment to 'offset' is present.")
 
-        if offset is not None:
-            area = Area(offset.x, offset.y, 0, 0)
+            if isinstance(offset, tuple):
+                if len(offset) != 2:
+                    raise TypeError("Length of tuple 'offset' is not 2.")
 
-        elif (offset_x is not None) and (offset_y is not None):
+                try:
+                    offset = tuple(int(item) for item in offset)
+                except Exception as exception:
+                    raise ValueError("At least one value from 'offset' is not convertible to int.") from exception
+
+                if not _is_i32(offset[0]):
+                    raise ValueError("First value of 'offset' is out of range for 32 bit integer.")
+                if not _is_i32(offset[1]):
+                    raise ValueError("Second value of 'offset' is out of range for 32 bit integer.")
+
+                area = Area(offset[0], offset[1], 0, 0)
+
+            elif isinstance(offset, Point):
+                if not _is_i32(offset.x):
+                    raise ValueError("Value of 'x' from 'offset' is out of range for 32 bit integer.")
+                if not _is_i32(offset.y):
+                    raise ValueError("Value of 'y' from 'offset' is out of range for 32 bit integer.")
+
+                area = Area(offset.x, offset.y, 0, 0)
+            else:
+                raise TypeError("Unexpected type of 'offset'.")
+
+        elif (offset_x is not None) or (offset_y is not None):
+            if offset_x is not None:
+                if not isinstance(offset_x, int):
+                    try:
+                        offset_x = int(offset_x)
+                    except Exception as exception:
+                        raise ValueError("Value of 'offset_x' is not convertible to int.") from exception
+
+                if not _is_i32(offset_x):
+                    raise ValueError("Value of 'offset_x' is out of range for 32 bit integer.")
+            else:
+                offset_x = 0
+
+            if offset_y is not None:
+                if not isinstance(offset_y, int):
+                    try:
+                        offset_y = int(offset_y)
+                    except Exception as exception:
+                        raise ValueError("Value of 'offset_y' is not convertible to int.") from exception
+
+                if not _is_i32(offset_y):
+                    raise ValueError("Value of 'offset_y' is out of range for 32 bit integer.")
+            else:
+                offset_y = 0
+
             area = Area(offset_x, offset_y, 0, 0)
 
         else:
-            if offset_x is None: offset_x = 0
-            if offset_y is None: offset_y = 0
-
-            area = Area(offset_x, offset_y, 0, 0)
+            raise TypeError("Unexpected combination of arguments. Assignment to at least one of 'offset_x', 'offset_y' or 'offset' should be present.")
 
         self._set_area(area, _WindowAreaPartId.POSITION_OFFSET, False)
 
@@ -735,21 +873,26 @@ class Window:
             resize(height = 100)                                - Changes only height of window.
             resize(100, 300, is_draw_area = True)               - Changes both width and height of window's draw area.
             resize(size = Size(100, 300))                       - Changes both width and height of window.
+            resize(size = (100, 300))                           - Changes both width and height of window.
             resize(size = Size(100, 300), is_draw_area = True)  - Changes both width and height of window's draw area.
 
-        width           : int | None
+        width           : int | SupportsInt | None
             New width in screen coordinate system.
-        height          : int | None
+        height          : int | SupportsInt | None
             New height in screen coordinate system.
-        size            : Point | None
+        size            : Size | Tuple[int | SupportsInt, int | SupportsInt] | None
             New size in screen coordinate system.
-        is_draw_area    : bool
+        is_draw_area    : bool | Any
             If True, then draw area of window is resized.
             (default) If False, then window is resized.
 
+
+        Assignment to at least one of 'width', 'height' or 'size' needs to be present.
+        When assignment to 'size' is present then assignment to either 'width' or 'height' can not be present.
+
         Exceptions
             TypeError
-                When size type is not Size or None.
+                When size type is other than expected.
             ValueError
                 When either width, height, size.width, size.height is not in range of <0, 2^31-1>.
             RuntimeError
@@ -758,34 +901,79 @@ class Window:
         if self._is_during_do_on_create:
             raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
 
-        if width is not None and not _is_u16(width):
-            raise ValueError("Argument 'width' is out of range for 16 bit unsigned integer.")
-        if height is not None and not _is_u16(height):
-            raise ValueError("Argument 'height' is out of range for 16 bit unsigned integer.")
-        if size is not None:
-            if not isinstance(size, Size):
-                raise TypeError("Type of argument 'size' is not 'Size'.")
-            if not _is_u16(size.width):
-                raise ValueError("Value 'width' of argument 'size' is out of range for 16 bit unsigned integer.")
-            if not _is_u16(size.height):
-                raise ValueError("Value 'height' of argument 'size' is out of range for 16 bit unsigned integer.")
+        if not isinstance(is_draw_area, bool):
+            try:
+                is_draw_area = bool(is_draw_area)
+            except Exception as exception:
+                raise ValueError("Value of 'is_draw_area' is not convertible to bool.") from exception
 
         if size is not None:
-            area = Area(0, 0, size.width, size.height)
+            if width is not None:
+                raise TypeError("Unexpected combination of arguments. Assignment to 'width' shouldn't be present when assignment to 'size' is present.")
+            if height is not None:
+                raise TypeError("Unexpected combination of arguments. Assignment to 'height' shouldn't be present when assignment to 'size' is present.")
 
-        elif (width is not None) and (height is not None):
+            if isinstance(size, tuple):
+                if len(size) != 2:
+                    raise TypeError("Length of tuple 'size' is not 2.")
+
+                try:
+                    size = tuple(int(item) for item in size)
+                except Exception as exception:
+                    raise ValueError("At least one value from 'size' is not convertible to int.") from exception
+
+                if not _is_u16(size[0]):
+                    raise ValueError("First value of 'size' is out of range for 16 bit unsigned integer.")
+                if not _is_u16(size[1]):
+                    raise ValueError("Second value of 'size' is out of range for 16 bit unsigned integer.")
+
+                area = Area(0, 0, size[0], size[1])
+
+            elif isinstance(size, Size):
+                if not _is_u16(size.width):
+                    raise ValueError("Value of 'width' from 'size' is out of range for 16 bit unsigned integer.")
+                if not _is_u16(size.height):
+                    raise ValueError("Value of 'height' from 'size' is out of range for 16 bit unsigned integer.")
+
+                area = Area(0, 0, size.width, size.height)
+            else:
+                raise TypeError("Unexpected type of 'size'.")
+
+        elif (width is not None) or (height is not None):
+            if (width is None) or (height is None):
+                if is_draw_area:
+                    current_size = self.get_draw_area_size()
+                else:
+                    current_size = self.get_size()
+
+            if width is not None:
+                if not isinstance(width, int):
+                    try:
+                        width = int(width)
+                    except Exception as exception:
+                        raise ValueError("Value of 'width' is not convertible to int.") from exception
+
+                if not _is_u16(width):
+                    raise ValueError("Value of 'width' is out of range for 16 bit unsigned integer.")
+            else:
+                width = current_size.width
+
+            if height is not None:
+                if not isinstance(height, int):
+                    try:
+                        height = int(height)
+                    except Exception as exception:
+                        raise ValueError("Value of 'height' is not convertible to int.") from exception
+
+                if not _is_u16(height):
+                    raise ValueError("Value of 'height' is out of range for 16 bit unsigned integer.")
+            else:
+                height = current_size.height
+
             area = Area(0, 0, width, height)
 
         else:
-            if is_draw_area:
-                size = self.get_draw_area_size()
-            else:
-                size = self.get_size()
-
-            if width is None:   width   = size.width
-            if height is None:  height  = size.height
-
-            area = Area(0, 0, width, height)
+            raise TypeError("Unexpected combination of arguments. Assignment to at least one of 'width', 'height' or 'size' should be present.")
 
         self._set_area(area, _WindowAreaPartId.SIZE, is_draw_area)
 
@@ -800,26 +988,30 @@ class Window:
             reshape(width = 100)                                - Changes only width of window.
             reshape(height = 100)                               - Changes only height of window.
             reshape(10, 20, 100, 300, is_draw_area = True)      - Reshapes area of window. Coordinates corresponds to draw area.
-            reshape(area = Area(100, 300))                      - Reshapes area of window.
-            reshape(area = Area(100, 300), is_draw_area = True) - Reshapes area of window. Coordinates corresponds to draw area.
+            reshape(area = (10, 20, 100, 300))                          - Reshapes area of window.
+            reshape(area = Area(10, 20, 100, 300))                      - Reshapes area of window.
+            reshape(area = Area(10, 20, 100, 300), is_draw_area = True) - Reshapes area of window. Coordinates corresponds to draw area.
 
-        x               : int | None
+        x               : int | SupportsInt | None
             New position in screen coordinate system in X axis.
-        y               : int | None
+        y               : int | SupportsInt | None
             New position in screen coordinate system in Y axis.
-        width           : int | None
+        width           : int | SupportsInt | None
             New width in screen coordinate system.
-        height          : int | None
+        height          : int | SupportsInt | None
             New height in screen coordinate system.
-        size            : Point | None
+        area            : Area | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt] | None
             New size in screen coordinate system.
-        is_draw_area    : bool
+        is_draw_area    : bool | Any
             If True, then draw area of window is reshaped.
             (default) If False, then window is reshaped.
 
+        Assignment to at least one of 'x', 'y', 'width', 'height' or 'area' needs to be present.
+        When assignment to 'area' is present then assignment to any of 'x', 'y', 'width' or 'height' can not be present.
+
         Exceptions
             TypeError
-                When area type is not Area or None.
+                When area type is other than expected.
             ValueError
                 When either x, y, area.x, area.y is not in range of <-2^31, 2^31-1>.
                 When either width, height, area.width, area.height is not in range of <0, 2^31-1>.
@@ -829,51 +1021,117 @@ class Window:
         if self._is_during_do_on_create:
             raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
 
-        if x is not None and not _is_i32(x):
-            raise ValueError("Argument 'x' is out of range for 32 bit integer.")
-        if y is not None and not _is_i32(y):
-            raise ValueError("Argument 'y' is out of range for 32 bit integer.")
-        if width is not None and not _is_u16(width):
-            raise ValueError("Argument 'width' is out of range for 16 bit unsigned integer.")
-        if height is not None and not _is_u16(height):
-            raise ValueError("Argument 'height' is out of range for 16 bit unsigned integer.")
-        if area is not None:
-            if not isinstance(area, Area):
-                raise TypeError("Type of argument 'area' is not 'Area'.")
-            if not _is_i32(area.x):
-                raise ValueError("Value 'x' of argument 'area' is out of range for 32 bit integer.")
-            if not _is_i32(area.y):
-                raise ValueError("Value 'y' of argument 'area' is out of range for 32 bit integer.")
-            if not _is_u16(area.width):
-                raise ValueError("Value 'width' of argument 'area' is out of range for 16 bit unsigned integer.")
-            if not _is_u16(area.height):
-                raise ValueError("Value 'height' of argument 'area' is out of range for 16 bit unsigned integer.")
+        if not isinstance(is_draw_area, bool):
+            try:
+                is_draw_area = bool(is_draw_area)
+            except Exception as exception:
+                raise ValueError("Value of 'is_draw_area' is not convertible to bool.") from exception
 
         if area is not None:
-            area = _deepcopy(area)
+            if x is not None:
+                raise TypeError("Unexpected combination of arguments. Assignment to 'x' shouldn't be present when assignment to 'area' is present.")
+            if y is not None:
+                raise TypeError("Unexpected combination of arguments. Assignment to 'y' shouldn't be present when assignment to 'area' is present.")
+            if width is not None:
+                raise TypeError("Unexpected combination of arguments. Assignment to 'width' shouldn't be present when assignment to 'area' is present.")
+            if height is not None:
+                raise TypeError("Unexpected combination of arguments. Assignment to 'height' shouldn't be present when assignment to 'area' is present.")
 
-        elif (x is not None) and (y is not None) and (width is not None) and (height is not None):
-            area = Area(x, y, width, height)
+            if isinstance(area, tuple):
+                if len(area) != 4:
+                    raise TypeError("Length of tuple 'area' is not 4.")
 
-        else:
-            if is_draw_area:
-                area = self.get_draw_area()
+                try:
+                    area = tuple(int(item) for item in area)
+                except Exception as exception:
+                    raise ValueError("At least one value from 'area' is not convertible to int.") from exception
+
+                if not _is_i32(area[0]):
+                    raise ValueError("First value of 'area' is out of range for 32 bit integer.")
+                if not _is_i32(area[1]):
+                    raise ValueError("Second value of 'area' is out of range for 32 bit integer.")
+                if not _is_u16(area[2]):
+                    raise ValueError("Third value of 'area' is out of range for 16 bit unsigned integer.")
+                if not _is_u16(area[3]):
+                    raise ValueError("Fourth value of 'area' is out of range for 16 bit unsigned integer.")
+
+                new_area = Area(area[0], area[1], area[2], area[3])
+
+            elif isinstance(area, Area):
+                if not _is_i32(area.x):
+                    raise ValueError("Value of 'x' from 'area' is out of range for 32 bit integer.")
+                if not _is_i32(area.y):
+                    raise ValueError("Value of 'y' from 'area' is out of range for 32 bit integer.")
+                if not _is_u16(area.width):
+                    raise ValueError("Value of 'width' from 'area' is out of range for 16 bit unsigned integer.")
+                if not _is_u16(area.height):
+                    raise ValueError("Value of 'height' from 'area' is out of range for 16 bit unsigned integer.")
+
+                new_area = _deepcopy(area)
             else:
-                area = self.get_area()
+                raise TypeError("Unexpected type of 'area'.")
+
+        elif (x is not None) or (y is not None) or (width is not None) or (height is not None):
+            if (x is None) or (y is None) or (width is None) or (height is None):
+                if is_draw_area:
+                    current_area = self.get_draw_area()
+                else:
+                    current_area = self.get_area()
 
             if x is not None:
-                area.x = x
+                if not isinstance(x, int):
+                    try:
+                        x = int(x)
+                    except Exception as exception:
+                        raise ValueError("Value of 'x' is not convertible to int.") from exception
+
+                if not _is_i32(x):
+                    raise ValueError("Value of 'x' is out of range for 32 bit integer.")
+            else:
+                x = current_area.x
 
             if y is not None:
-                area.y = y
+                if not isinstance(y, int):
+                    try:
+                        y = int(y)
+                    except Exception as exception:
+                        raise ValueError("Value of 'y' is not convertible to int.") from exception
+
+                if not _is_i32(y):
+                    raise ValueError("Value of 'y' is out of range for 32 bit integer.")
+            else:
+                y = current_area.y
 
             if width is not None:
-                area.width = width
+                if not isinstance(width, int):
+                    try:
+                        width = int(width)
+                    except Exception as exception:
+                        raise ValueError("Value of 'width' is not convertible to int.") from exception
+
+                if not _is_u16(width):
+                    raise ValueError("Value of 'width' is out of range for 16 bit unsigned integer.")
+            else:
+                width = current_area.width
 
             if height is not None:
-                area.height = height
+                if not isinstance(height, int):
+                    try:
+                        height = int(height)
+                    except Exception as exception:
+                        raise ValueError("Value of 'height' is not convertible to int.") from exception
 
-        self._set_area(area, _WindowAreaPartId.ALL, is_draw_area)
+                if not _is_u16(height):
+                    raise ValueError("Value of 'height' is out of range for 16 bit unsigned integer.")
+            else:
+                height = current_area.height
+
+            new_area = Area(x, y, width, height)
+
+        else:
+            raise TypeError("Unexpected combination of arguments. Assignment to at least one of 'x', 'y', 'width', 'height' or 'area' should be present.")
+
+        self._set_area(new_area, _WindowAreaPartId.ALL, is_draw_area)
 
     def center(self, width = None, height = None, size = None, is_draw_area_size = False):
         """
@@ -882,29 +1140,31 @@ class Window:
         Calling convention:
             center(400, 300)                            - Changes window size to (400, 300) and centers window.
             center(size = Size(400, 300))               - Changes window size to (400, 300) and centers window.
+            center(size = (400, 300))                   - Changes window size to (400, 300) and centers window.
             center(width = 400)                         - Changes only window width to 400 and centers window.
             center(height = 300)                        - Changes only window height to 300 and centers window.
             center(400, 300, is_draw_area_size = True)  - Changes draw area size to (400, 300) and centers window.
 
-        width               : int | None
+        width               : int | SupportsInt | None
             New width of window when 'is_draw_area_size' is False.
             New width of draw area when 'is_draw_area_size' is True.
 
-        height              : int | None
+        height              : int | SupportsInt | None
             New height of window when 'is_draw_area_size' is False.
             New height of draw area when 'is_draw_area_size' is True.
 
-        size                : Size | None
+        size                : Size | SupportsInt | None
             New size of window when 'is_draw_area_size' is False.
             New size of draw area when 'is_draw_area_size' is True.
 
-        is_draw_area_size   : bool
+        is_draw_area_size   : bool | Any
+            True - width and height (or size if not None) applies to window draw area.
 
         Draw area is place in window when OpenGL draws in.
 
         Exceptions
             TypeError
-                When size type is not Size or None.
+                When size type is other than expected.
             ValueError
                 When either width, height, size.width, size.height is not in range of <0, 2^31-1>.
             RuntimeError
@@ -913,35 +1173,81 @@ class Window:
         if self._is_during_do_on_create:
             raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
 
-        if width is not None and not _is_u16(width):
-            raise ValueError("Argument 'width' is out of range for 16 bit unsigned integer.")
-        if height is not None and not _is_u16(height):
-            raise ValueError("Argument 'height' is out of range for 16 bit unsigned integer.")
-        if size is not None:
-            if not isinstance(size, Size):
-                raise TypeError("Type of argument 'size' is not 'Size'.")
-            if not _is_u16(size.width):
-                raise ValueError("Value 'width' of argument 'size' is out of range for 16 bit unsigned integer.")
-            if not _is_u16(size.height):
-                raise ValueError("Value 'height' of argument 'size' is out of range for 16 bit unsigned integer.")
+        if not isinstance(is_draw_area_size, bool):
+            try:
+                is_draw_area_size = bool(is_draw_area_size)
+            except Exception as exception:
+                raise ValueError("Value of 'is_draw_area_size' is not convertible to bool.") from exception
 
         if size is not None:
-            size = _deepcopy(size)
+            if isinstance(size, tuple):
+                if len(size) != 2:
+                    raise TypeError("Length of tuple 'size' is not 2.")
 
-        elif (width is not None) and (height is not None):
-            size = Size(width, height)
+                try:
+                    size = tuple(int(item) for item in size)
+                except Exception as exception:
+                    raise ValueError("At least one value from 'size' is not convertible to int.") from exception
+
+                if not _is_u16(size[0]):
+                    raise ValueError("First value of 'size' is out of range for 16 bit unsigned integer.")
+                if not _is_u16(size[1]):
+                    raise ValueError("Second value of 'size' is out of range for 16 bit unsigned integer.")
+
+                window_area = Area(0, 0, size[0], size[1])
+
+            elif isinstance(size, Size):
+                if not _is_u16(size.width):
+                    raise ValueError("Value of 'width' from 'size' is out of range for 16 bit unsigned integer.")
+                if not _is_u16(size.height):
+                    raise ValueError("Value of 'height' from 'size' is out of range for 16 bit unsigned integer.")
+
+                window_area = Area(0, 0, size.width, size.height)
+            else:
+                raise TypeError("Unexpected type of 'size'.")
+
+        elif (width is not None) or (height is not None):
+            if (width is None) or (height is None):
+                if is_draw_area_size:
+                    current_size = self.get_draw_area_size()
+                else:
+                    current_size = self.get_size()
+
+            if width is not None:
+                if not isinstance(width, int):
+                    try:
+                        width = int(width)
+                    except Exception as exception:
+                        raise ValueError("Value of 'width' is not convertible to int.") from exception
+
+                if not _is_u16(width):
+                    raise ValueError("Value of 'width' is out of range for 16 bit unsigned integer.")
+            else:
+                width = current_size.width
+
+            if height is not None:
+                if not isinstance(height, int):
+                    try:
+                        height = int(height)
+                    except Exception as exception:
+                        raise ValueError("Value of 'height' is not convertible to int.") from exception
+
+                if not _is_u16(height):
+                    raise ValueError("Value of 'height' is out of range for 16 bit unsigned integer.")
+            else:
+                height = current_size.height
+
+            window_area = Area(0, 0, width, height)
 
         else:
             if is_draw_area_size:
-                size = self.get_draw_area_size()
+                current_size = self.get_draw_area_size()
             else:
-                size = self.get_size()
+                current_size = self.get_size()
 
-            if width is not None:   size.width   = width
-            if height is not None:  size.height  = height
+            window_area = Area(0, 0, current_size.width, current_size.height)
 
         work_area = get_work_area()
-        window_area = Area(0, 0, size.width, size.height)
 
         self._restore()
 

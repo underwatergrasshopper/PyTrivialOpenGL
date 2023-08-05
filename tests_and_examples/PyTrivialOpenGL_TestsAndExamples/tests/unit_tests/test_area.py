@@ -45,7 +45,7 @@ def test_area():
 
     try:
         area = Area(1, "text", 3, 4)
-    except TypeError as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'y' can not be converted to int.")
     except Exception:
         assert False, "Wrong exception."
@@ -90,7 +90,7 @@ def test_area():
     area = Area(1, 2, 3, 4)
     try:
         area.y = "text"
-    except TypeError as e:
+    except ValueError as e:
         assert(str(e) == "Value of 'y' can not be converted to int.")
     except Exception:
         assert False, "Wrong exception."

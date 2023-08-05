@@ -59,21 +59,27 @@ class ColorB(Color):
 
     def __init__(self, r, g, b, a = 255, is_clamp = False):
         """
-        r           : int       
+        r           : int | SupportsInt
             Red color channel. Valid value range 0..255.       
-        g           : int       
+        g           : int | SupportsInt      
             Green color channel. Valid value range 0..255.  
-        b           : int       
+        b           : int | SupportsInt      
             Blue color channel. Valid value range 0..255.  
-        a           : int       
+        a           : int | SupportsInt   
             (optional, default = 255) Alpha channel. Valid value range 0..255.  
-        is_clamp    : bool      
+        is_clamp    : bool | Any 
             (optional, default = False) When true, then clamp values of r, g, b and a variables to valid range.
             When false, then throws ValueError exception if any values of r, g, b or a variable is out of valid range.
         Exceptions            
             ValueError
                 When any value of r, g, b or a variable is out of valid range.
         """
+        if not isinstance(is_clamp, bool):
+            try:
+                is_clamp = bool(is_clamp)
+            except:
+                raise ValueError("Value of 'is_clamp' is not convertible to bool.")
+
         if is_clamp:
             self.r = _clamp(r, 0, 255)
             self.g = _clamp(g, 0, 255)
@@ -105,10 +111,11 @@ class ColorB(Color):
         return ColorF(self.r / 255.0, self.g / 255.0, self.b / 255.0, self.a / 255.0)
 
     def __setattr__(self, name, value):
-        try:
-            value = int(value)
-        except:
-            raise TypeError("Value of '%s' can not be converted to int." % (name))
+        if not isinstance(value, int):
+            try:
+                value = int(value)
+            except:
+                raise ValueError("Value of '%s' can not be converted to int." % (name))
 
         if not (0 <= value and value <= 255):
             raise ValueError("Value of '%s' is out of acceptable range 0..255." % (name))
@@ -145,15 +152,15 @@ class ColorF(Color):
 
     def __init__(self, r, g, b, a = 1, is_clamp = False):
         """
-        r           : float     
+        r           : float | SupportsFloat
             Red color channel. Valid value range 0..1.       
-        g           : float     
+        g           : float | SupportsFloat  
             Green color channel. Valid value range 0..1.  
-        b           : float     
+        b           : float | SupportsFloat    
             Blue color channel. Valid value range 0..1.  
-        a           : float     
+        a           : float | SupportsFloat    
             (optional, default = 255)  Alpha channel. Valid value range 0..1.  
-        is_clamp    : bool      
+        is_clamp    : bool | Any     
             (optional, default = False) When true, then clamp values of r, g, b and a variables to valid range.
             When false, then throws ValueError exception if any values of r, g, b or a variable is out of valid range.
 
@@ -161,6 +168,12 @@ class ColorF(Color):
             ValueError
                 When any value of r, g, b or a variable is out of valid range.
         """
+        if not isinstance(is_clamp, bool):
+            try:
+                is_clamp = bool(is_clamp)
+            except:
+                raise ValueError("Value of 'is_clamp' is not convertible to bool.")
+
         if is_clamp:
             self.r = _clamp(r, 0.0, 1.0)
             self.g = _clamp(g, 0.0, 1.0)
@@ -192,10 +205,11 @@ class ColorF(Color):
         return self
 
     def __setattr__(self, name, value):
-        try:
-            value = float(value)
-        except:
-            raise TypeError("Value of '%s' can not be converted to float." % (name))
+        if not isinstance(value, float):
+            try:
+                value = float(value)
+            except:
+                raise ValueError("Value of '%s' can not be converted to float." % (name))
 
         if not (0.0 <= value and value <= 1.0):
             raise ValueError("Value of '%s' is out of acceptable range 0..1." % (name))
