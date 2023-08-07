@@ -486,7 +486,7 @@ class Window:
         
         ###
 
-        self._instance_handle = _C_WinApi.GetModuleHandleW(_C_WinApi.NULL);
+        self._instance_handle = _C_WinApi.GetModuleHandleW(_C_WinApi.NULL)
 
         self._window_class_name = self._window_name + " WINDOW CLASS"
 

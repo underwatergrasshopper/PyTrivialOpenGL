@@ -914,6 +914,117 @@ SC_MONITORPOWER         = 0xF170
 SC_CONTEXTHELP          = 0xF180
 SC_SEPARATOR            = 0xF00F
 
+TA_NOUPDATECP                = 0
+TA_UPDATECP                  = 1
+
+# SetTextAlign
+TA_LEFT                      = 0
+TA_RIGHT                     = 2
+TA_CENTER                    = 6
+
+TA_TOP                       = 0
+TA_BOTTOM                    = 8
+TA_BASELINE                  = 24
+
+TA_RTLREADING                = 256
+TA_MASK                      = (TA_BASELINE + TA_CENTER + TA_UPDATECP + TA_RTLREADING)
+
+GDI_ERROR                   = 0xFFFFFFFF
+
+# SetMapMode
+MM_TEXT                     = 1
+MM_LOMETRIC                 = 2
+MM_HIMETRIC                 = 3
+MM_LOENGLISH                = 4
+MM_HIENGLISH                = 5
+MM_TWIPS                    = 6
+MM_ISOTROPIC                = 7
+MM_ANISOTROPIC              = 8
+
+MM_MIN                      = MM_TEXT
+MM_MAX                      = MM_ANISOTROPIC
+MM_MAX_FIXEDSCALE           = MM_TWIPS
+
+# CreateFontW
+FW_DONTCARE                 = 0
+FW_THIN                     = 100
+FW_EXTRALIGHT               = 200
+FW_LIGHT                    = 300
+FW_NORMAL                   = 400
+FW_MEDIUM                   = 500
+FW_SEMIBOLD                 = 600
+FW_BOLD                     = 700
+FW_EXTRABOLD                = 800
+FW_HEAVY                    = 900
+                        
+FW_ULTRALIGHT               = FW_EXTRALIGHT
+FW_REGULAR                  = FW_NORMAL
+FW_DEMIBOLD                 = FW_SEMIBOLD
+FW_ULTRABOLD                = FW_EXTRABOLD
+FW_BLACK                    = FW_HEAVY
+
+ANSI_CHARSET                = 0
+DEFAULT_CHARSET             = 1
+SYMBOL_CHARSET              = 2
+SHIFTJIS_CHARSET            = 128
+HANGEUL_CHARSET             = 129
+HANGUL_CHARSET              = 129
+GB2312_CHARSET              = 134
+CHINESEBIG5_CHARSET         = 136
+OEM_CHARSET                 = 255
+                            
+JOHAB_CHARSET               = 130
+HEBREW_CHARSET              = 177
+ARABIC_CHARSET              = 178
+GREEK_CHARSET               = 161
+TURKISH_CHARSET             = 162
+VIETNAMESE_CHARSET          = 163
+THAI_CHARSET                = 222
+EASTEUROPE_CHARSET          = 238
+RUSSIAN_CHARSET             = 204
+                            
+MAC_CHARSET                 = 77
+BALTIC_CHARSET              = 186
+
+OUT_DEFAULT_PRECIS          = 0
+OUT_STRING_PRECIS           = 1
+OUT_CHARACTER_PRECIS        = 2
+OUT_STROKE_PRECIS           = 3
+OUT_TT_PRECIS               = 4
+OUT_DEVICE_PRECIS           = 5
+OUT_RASTER_PRECIS           = 6
+OUT_TT_ONLY_PRECIS          = 7
+OUT_OUTLINE_PRECIS          = 8
+OUT_SCREEN_OUTLINE_PRECIS   = 9
+OUT_PS_ONLY_PRECIS          = 10
+
+CLIP_DEFAULT_PRECIS         = 0
+CLIP_CHARACTER_PRECIS       = 1
+CLIP_STROKE_PRECIS          = 2
+CLIP_MASK                   = 0x0F
+CLIP_LH_ANGLES              = (1 << 4)
+CLIP_TT_ALWAYS              = (2 << 4)
+CLIP_DFA_DISABLE            = (4 << 4)
+CLIP_EMBEDDED               = (8 << 4)
+
+DEFAULT_QUALITY             = 0
+DRAFT_QUALITY               = 1
+PROOF_QUALITY               = 2
+NONANTIALIASED_QUALITY      = 3
+ANTIALIASED_QUALITY         = 4
+
+FF_DONTCARE                 = (0 << 4)
+FF_ROMAN                    = (1 << 4)
+FF_SWISS                    = (2 << 4)
+FF_MODERN                   = (3 << 4)
+FF_SCRIPT                   = (4 << 4)
+FF_DECORATIVE               = (5 << 4)
+
+DEFAULT_PITCH               = 0
+FIXED_PITCH                 = 1
+VARIABLE_PITCH              = 2
+MONO_FONT                   = 8
+
 # BMP
 BI_BITFIELDS            = 3
 LCS_GM_GRAPHICS         = 0x00000002

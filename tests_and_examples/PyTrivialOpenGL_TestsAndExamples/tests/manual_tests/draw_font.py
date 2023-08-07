@@ -4,8 +4,7 @@ from PyTrivialOpenGL.GL import *
 from PyTrivialOpenGL import C_GL
 from PyTrivialOpenGL._Private import C_WGL
 
-from PyTrivialOpenGL.Font import _FrameBuffer
-
+from PyTrivialOpenGL.Font import _FrameBuffer, _FontDataGenerator, _FontInfo
 import ctypes
 
 __all__ = [
@@ -58,12 +57,21 @@ def do_on_create():
     # C_GL.glGetIntegerv(_GL_FRAMEBUFFER_BINDING, ctypes.byref(c_prev_fbo))
     # print(c_prev_fbo.value)
 
-    _data.frame_buffer.create(_data.width, _data.height)
-    print(_data.frame_buffer.get_err_msg())
-    print(_data.frame_buffer.gen_and_bind_tex())
-    print(_data.frame_buffer.get_err_msg())
-    _data.frame_buffer.destroy()
-    print(_data.frame_buffer.get_err_msg())
+    # _data.frame_buffer.create(_data.width, _data.height)
+    # print(_data.frame_buffer.get_err_msg())
+    # print(_data.frame_buffer.gen_and_bind_tex())
+    # print(_data.frame_buffer.get_err_msg())
+    # _data.frame_buffer.destroy()
+    # print(_data.frame_buffer.get_err_msg())
+
+    generator = _FontDataGenerator()
+    font_data = generator.generate(_FontInfo("Courier New", 16, togl.FontSizeUnitId.PIXELS, togl.FontStyleId.NORMAL, togl.UnicodeCharSetId.ENGLISH))
+    if not generator.is_ok():
+        print(generator.get_err_msg())
+
+    togl.save_texture_as_bmp("out/font.bmp", font_data.tex_objs[0])
+
+
 
     print("Escape - Exit")
 
