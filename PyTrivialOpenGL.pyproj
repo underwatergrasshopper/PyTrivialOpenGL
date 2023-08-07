@@ -36,6 +36,8 @@
     <Content Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\assets\icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\PyTrivialOpenGL\FineText.py" />
+    <Compile Include="src\PyTrivialOpenGL\Font.py" />
     <Compile Include="src\PyTrivialOpenGL\GL\_Private\__init__.py" />
     <Compile Include="src\PyTrivialOpenGL\KeyboardSideId.py" />
     <Compile Include="src\PyTrivialOpenGL\KeyId.py" />
@@ -46,6 +48,7 @@
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\winapi.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\bezier_surface.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\bezier_curve.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\draw_font.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\feedback.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\c_feedback.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\c_selection.py" />

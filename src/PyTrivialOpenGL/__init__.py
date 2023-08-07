@@ -8,3 +8,5 @@ from .SpecialDebug  import *
 from .Key           import *
 from .Window        import *
 from .Exceptions    import *
+from .Font          import *
+from .FineText      import *

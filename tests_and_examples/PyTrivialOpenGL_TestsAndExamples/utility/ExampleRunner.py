@@ -105,6 +105,7 @@ class ExampleRunner:
             example_manager.add_example("mt.selection",         manual_tests.selection.run)
             example_manager.add_example("mt.c_feedback",        manual_tests.c_feedback.run)
             example_manager.add_example("mt.feedback",          manual_tests.feedback.run)
+            example_manager.add_example("mt.draw_font",         manual_tests.draw_font.run)
 
         if default_example_name is None:
             if category & ExampleCategoryBit.MANUAL_TESTS:
