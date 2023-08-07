@@ -845,6 +845,7 @@ HCURSOR                 = HICON
 HINSTANCE               = _wintypes.HINSTANCE
 HMODULE                 = _wintypes.HMODULE
 HMENU                   = _wintypes.HMENU
+HGDIOBJ                 = _wintypes.HGDIOBJ
 
 HWND                    = _wintypes.HWND
 HDC                     = _wintypes.HDC
@@ -970,6 +971,51 @@ class PIXELFORMATDESCRIPTOR(_ctypes.Structure):
         ("dwVisibleMask",   DWORD),    
         ("dwDamageMask",    DWORD),
     ]
+
+class TEXTMETRICW(_ctypes.Structure):
+    _fields_ = [
+        ("tmHeight",            LONG),
+        ("tmAscent",            LONG),
+        ("tmDescent",           LONG),
+        ("tmInternalLeading",   LONG),
+        ("tmExternalLeading",   LONG),
+        ("tmAveCharWidth",      LONG),
+        ("tmMaxCharWidth",      LONG),
+        ("tmWeight",            LONG),
+        ("tmOverhang",          LONG),
+        ("tmDigitizedAspectX",  LONG),
+        ("tmDigitizedAspectY",  LONG),
+        ("tmFirstChar",         WCHAR),
+        ("tmLastChar",          WCHAR),
+        ("tmDefaultChar",       WCHAR),
+        ("tmBreakChar",         WCHAR),
+        ("tmItalic",            BYTE),
+        ("tmUnderlined",        BYTE),
+        ("tmStruckOut",         BYTE),
+        ("tmPitchAndFamily",    BYTE),
+        ("tmCharSet",           BYTE),
+    ]
+
+LPTEXTMETRICW = _ctypes.POINTER(TEXTMETRICW) 
+
+class WCRANGE(_ctypes.Structure):
+    _fields_ = [
+        ("wcLow",   WCHAR),
+        ("cGlyphs", USHORT),
+    ]
+
+LPWCRANGE = _ctypes.POINTER(WCRANGE)
+
+class GLYPHSET(_ctypes.Structure):
+    _fields_ = [
+        ("cbThis",              DWORD),
+        ("flAccel",             DWORD),
+        ("cGlyphsSupported",    DWORD),
+        ("cRanges",             DWORD),
+        ("ranges",              WCRANGE * 1),
+    ]
+
+LPGLYPHSET = _ctypes.POINTER(GLYPHSET)
 
 ### Macros ###
 
@@ -1416,4 +1462,66 @@ DescribePixelFormat     = _ctypes.WINFUNCTYPE(_ctypes.c_int, HDC, _ctypes.c_int,
     ((1, "hdc"), (1, "iPixelFormat"), (1, "nBytes"), (1, "ppfd"), )
 )
 
+### Functions - Object ###
 
+SelectObject            = _ctypes.WINFUNCTYPE(HGDIOBJ, HDC, HGDIOBJ)(
+    ("SelectObject", _Gdi32), 
+    ((1, "hdc"), (1, "h"))
+)
+
+
+DeleteObject            = _ctypes.WINFUNCTYPE(BOOL, HGDIOBJ)(
+    ("DeleteObject", _Gdi32), 
+    ((1, "ho"),)
+)
+
+### Functions - Font ###
+
+CreateFontW             = _ctypes.WINFUNCTYPE(
+    HFONT, 
+    _ctypes.c_int, _ctypes.c_int, _ctypes.c_int, _ctypes.c_int, _ctypes.c_int, 
+    DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD,
+    LPCWSTR)(
+    ("CreateFontW", _Gdi32), 
+    (
+        (1, "cHeight"), 
+        (1, "cWidth"), 
+        (1, "cEscapement"), 
+        (1, "cOrientation"), 
+        (1, "cWeight"), 
+        (1, "bItalic"), 
+        (1, "bUnderline"), 
+        (1, "bStrikeOut"), 
+        (1, "iCharSet"), 
+        (1, "iOutPrecision"), 
+        (1, "iClipPrecision"), 
+        (1, "iQuality"), 
+        (1, "iPitchAndFamily"), 
+        (1, "pszFaceName"), 
+    )
+)
+
+SetTextAlign            = _ctypes.WINFUNCTYPE(UINT, HDC, UINT)(
+    ("SetTextAlign", _Gdi32), 
+    ((1, "hdc"), (1, "align"))
+)
+
+SetMapMode              = _ctypes.WINFUNCTYPE(_ctypes.c_int, HDC, _ctypes.c_int)(
+    ("SetMapMode", _Gdi32), 
+    ((1, "hdc"), (1, "iMode"))
+)
+
+GetTextMetricsW         = _ctypes.WINFUNCTYPE(BOOL, HDC, LPTEXTMETRICW)(
+    ("GetTextMetricsW", _Gdi32), 
+    ((1, "hdc"), (1, "lptm"))
+)
+
+GetFontUnicodeRanges    = _ctypes.WINFUNCTYPE(DWORD, HDC, LPGLYPHSET)(
+    ("GetFontUnicodeRanges", _Gdi32), 
+    ((1, "hdc"), (1, "lpgs"))
+)
+
+GetTextExtentPoint32W    = _ctypes.WINFUNCTYPE(BOOL, HDC, LPCWSTR, _ctypes.c_int, LPSIZE)(
+    ("GetTextExtentPoint32W", _Gdi32), 
+    ((1, "hdc"), (1, "lpString"), (1, "c"), (1, "psizl"))
+)
