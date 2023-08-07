@@ -1,3 +1,5 @@
+import os as _os
+
 from .ExampleManager import ExampleManager
 
 from ..         import examples
@@ -59,6 +61,9 @@ class ExampleRunner:
             Bitfield made of 'ExampleCategoryBit' value or 0.
         default_example_name    : str | None
         """
+
+        if not _os.path.exists("out"):
+            _os.makedirs("out")
         
         example_manager = ExampleManager()
 

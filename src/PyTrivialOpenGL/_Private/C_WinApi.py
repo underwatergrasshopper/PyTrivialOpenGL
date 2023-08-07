@@ -914,6 +914,11 @@ SC_MONITORPOWER         = 0xF170
 SC_CONTEXTHELP          = 0xF180
 SC_SEPARATOR            = 0xF00F
 
+# BMP
+BI_BITFIELDS            = 3
+LCS_GM_GRAPHICS         = 0x00000002
+LCS_sRGB                = int.from_bytes(b'sRGB', byteorder = "big")
+
 ### Structures ###
 
 POINT                   = _wintypes.POINT
@@ -1016,6 +1021,68 @@ class GLYPHSET(_ctypes.Structure):
     ]
 
 LPGLYPHSET = _ctypes.POINTER(GLYPHSET)
+
+
+class BITMAPFILEHEADER(_ctypes.Structure):
+    _pack_ = 1
+    _fields_ = [
+        ("bfType",      WORD),
+        ("bfSize",      DWORD),
+        ("bfReserved1", WORD),
+        ("bfReserved2", WORD),
+        ("bfOffBits",   DWORD),
+    ]
+
+LPBITMAPFILEHEADER = _ctypes.POINTER(BITMAPFILEHEADER)
+
+FXPT2DOT30      = _ctypes.c_long
+
+class CIEXYZ(_ctypes.Structure):
+    _pack_ = 1
+    _fields_ = [
+        ("ciexyzX", FXPT2DOT30),
+        ("ciexyzY", FXPT2DOT30),
+        ("ciexyzZ", FXPT2DOT30),
+    ]
+
+class CIEXYZTRIPLE(_ctypes.Structure):
+    _pack_ = 1
+    _fields_ = [
+        ("ciexyzRed",   CIEXYZ),
+        ("ciexyzGreen", CIEXYZ),
+        ("ciexyzBlue",  CIEXYZ),
+    ]
+
+class BITMAPV5HEADER(_ctypes.Structure):
+    _pack_ = 1
+    _fields_ = [
+        ("bV5Size",             DWORD),
+        ("bV5Width",            LONG),
+        ("bV5Height",           LONG),
+        ("bV5Planes",           WORD),
+        ("bV5BitCount",         WORD),
+        ("bV5Compression",      DWORD),
+        ("bV5SizeImage",        DWORD),
+        ("bV5XPelsPerMeter",    LONG),
+        ("bV5YPelsPerMeter",    LONG),
+        ("bV5ClrUsed",          DWORD),
+        ("bV5ClrImportant",     DWORD),
+        ("bV5RedMask",          DWORD),
+        ("bV5GreenMask",        DWORD),
+        ("bV5BlueMask",         DWORD),
+        ("bV5AlphaMask",        DWORD),
+        ("bV5CSType",           DWORD),
+        ("bV5Endpoints",        CIEXYZTRIPLE),
+        ("bV5GammaRed",         DWORD),
+        ("bV5GammaGreen",       DWORD),
+        ("bV5GammaBlue",        DWORD),
+        ("bV5Intent",           DWORD),
+        ("bV5ProfileData",      DWORD),
+        ("bV5ProfileSize",      DWORD),
+        ("bV5Reserved",         DWORD),
+    ]
+
+LPBITMAPV5HEADER = _ctypes.POINTER(BITMAPV5HEADER)
 
 ### Macros ###
 

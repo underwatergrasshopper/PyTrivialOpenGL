@@ -198,6 +198,16 @@ def do_on_create():
     #c_params = C_GL.GLint(GL_EYE_LINEAR)
     #ctypes.windll.OpenGL32.glTexGeniv(GL_S, GL_TEXTURE_GEN_MODE, ctypes.byref(c_params))
 
+
+    pixel_data = bytes.fromhex(
+        "FF0000FF 00FF00FF 0000FFFF"
+        "FFFFFFFF 000000FF FFFFFF7F"
+    )
+
+    togl.save_as_bmp("out/pixels.bmp", pixel_data, 3, 2, False)
+    togl.save_texture_as_bmp("out/texture.bmp", _data.tex_obj)
+
+
     print("Escape - Exit")
 
 def do_on_destroy():

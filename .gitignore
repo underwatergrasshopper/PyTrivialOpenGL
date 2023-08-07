@@ -140,3 +140,6 @@ TestResults/
 
 # log
 log/
+
+# out
+out/
