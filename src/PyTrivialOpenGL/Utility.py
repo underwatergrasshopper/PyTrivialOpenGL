@@ -319,11 +319,11 @@ def save_texture_as_bmp(file_name, tex_obj):
         PIXEL_SIZE = 4 # in bytes
 
         data_size = width * height * PIXEL_SIZE
-        data = (_ctypes.c_uint8 * data_size)()
+        c_data = (_ctypes.c_uint8 * data_size)()
                    
-        _C_GL.glGetTexImage(_C_GL.GL_TEXTURE_2D, 0, _C_GL.GL_RGBA, _C_GL.GL_UNSIGNED_BYTE, data);
+        _C_GL.glGetTexImage(_C_GL.GL_TEXTURE_2D, 0, _C_GL.GL_RGBA, _C_GL.GL_UNSIGNED_BYTE, c_data);
 
-        is_success = save_as_bmp(file_name, data, width, height, False)
+        is_success = save_as_bmp(file_name, c_data, width, height, False)
 
     _C_GL.glPopAttrib()
 
