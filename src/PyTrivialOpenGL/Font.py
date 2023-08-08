@@ -267,19 +267,20 @@ class Font:
             
             self._render_end()
 
-    def get_glyph_size(self, code_point):
+    def get_glyph_size(self, c):
         """
-        code_point  : int | SupportsInt
-        Returns     : Size
+        c       : str
+            One character text.
+        Returns : Size
             Glyph size (width and height, both in pixels).
         """
-        if not isinstance(code_point, int):
+        if not isinstance(c, str):
             try:
-                code_point = int(code_point)
+                c = str(c)
             except Exception as exception:
-                raise ValueError("Value of 'code_point' is not convertible to int.") from exception
+                raise ValueError("Value of 'c' is not convertible to str.") from exception
 
-        return self._get_glyph_size(code_point)
+        return self._get_glyph_size(ord(c))
 
     def get_glyph_count_in_width(self, text, width):
         """

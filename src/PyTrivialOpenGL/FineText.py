@@ -78,6 +78,30 @@ class FineText:
 
         self._elements = []
 
+        try:
+            self.append(*elements)
+        except Exception as e:
+            raise e
+
+    def clear(self):
+        self._elements.clear()
+
+    def append(self, *elements):
+        """
+        elements : List[Text | str | TextHorizontalSpacer | int | ColorF | ColorB | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt] | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt]]
+            When type of item from list is:
+                Text | str
+                    Then it is interpreted as text.
+                TextHorizontalSpacer | int
+                    Then is interpreted as horizontal space in pixels.
+                ColorF 
+                    Then is interpreted as color of text with alpha. Value range is from 0.0 to 1.0.
+                ColorB
+                    Then is interpreted as color of text with alpha. Value range is from 0 to 255.
+                Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt]
+                    Then is interpreted as color of text with alpha (rgba). Value range is from 0 to 255.
+        """
+
         if not isinstance(elements, list):
             raise TypeError("Type of 'elements' is not list.")
 
@@ -117,10 +141,16 @@ class FineText:
 
             index += 1
 
+
     def to_elements(self):
         """
         Returns : List[Text | TextHorizontalSpacer | ColorF | ColorB]
         """
         return self._elements()
+
+    def __iadd__(self, other):
+        if not isinstance(other, FineText):
+            raise TypeError("Type of 'other' is unexpected. Only object of FineText is acceptable.")
+        self._elements.extend(other)
 
         
