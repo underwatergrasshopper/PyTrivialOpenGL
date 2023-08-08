@@ -40,7 +40,13 @@ def do_on_create():
 
     unicode_char_set_id = togl.UnicodeCharSetId.RANGE_0000_FFFF if "plane_0" in _data.options else togl.UnicodeCharSetId.ENGLISH
 
+
+
+
     _data.font.load("Courier New", 32, togl.FontSizeUnitId.PIXELS, togl.FontStyleId.NORMAL, unicode_char_set_id)
+
+    if "left_top" in _data.options:
+        _data.font.set_origin_id(togl.OriginId.LEFT_TOP)
 
     if not _data.font.is_ok():
         print(_data.font.get_err_msg)
