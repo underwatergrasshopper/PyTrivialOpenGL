@@ -41,6 +41,7 @@
     <Compile Include="src\PyTrivialOpenGL\GL\_Private\__init__.py" />
     <Compile Include="src\PyTrivialOpenGL\KeyboardSideId.py" />
     <Compile Include="src\PyTrivialOpenGL\KeyId.py" />
+    <Compile Include="src\PyTrivialOpenGL\OriginId.py" />
     <Compile Include="src\PyTrivialOpenGL\_Private\KeySupport.py" />
     <Compile Include="src\PyTrivialOpenGL\_Private\__init__.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\wgl_window.py" />

@@ -5,6 +5,8 @@ from PyTrivialOpenGL import C_GL
 from PyTrivialOpenGL._Private import C_WGL
 
 from PyTrivialOpenGL.Font import _FrameBuffer, _FontDataGenerator, _FontInfo
+from ...utility.ExampleSupport import FPS_Counter
+
 import ctypes
 
 __all__ = [
@@ -12,10 +14,14 @@ __all__ = [
 ]
 class _Data:
     def __init__(self):
-        self.width  = 800
-        self.height = 400
+        self.options        = set()
 
-        self.frame_buffer = _FrameBuffer()
+        self.width          = 800
+        self.height         = 400
+
+        self.fps_counter    = FPS_Counter()
+
+        self.font           = togl.Font()
 
 _data = _Data()
 
@@ -32,50 +38,25 @@ def do_on_create():
 
     glClearColor(0, 0, 0.5, 1)
 
-    # address = C_WGL.wglGetProcAddress(b"glGenFramebuffersEXT")
-    # print(address)
-    # 
-    # glGenFramebuffersEXT = ctypes.WINFUNCTYPE(None, C_GL.GLsizei, ctypes.POINTER(C_GL.GLuint))(address)
-    # if glGenFramebuffersEXT:
-    #     print("ok")
-    # print(glGenFramebuffersEXT)
-    # 
-    # c_fbo = C_GL.GLuint(0)
-    # 
-    # glGenFramebuffersEXT(1, ctypes.byref(c_fbo))
-    # print(c_fbo.value)
-    # 
-    # glGenFramebuffersEXT(1, ctypes.byref(c_fbo))
-    # print(c_fbo.value)
-    # 
-    # _GL_FRAMEBUFFER_EXT             = 0x8D40
-    # _GL_FRAMEBUFFER_BINDING         = 0x8CA6
-    # _GL_COLOR_ATTACHMENT0_EXT       = 0x8CE0
-    # _GL_FRAMEBUFFER_COMPLETE_EXT    = 0x8CD5
-    # 
-    # c_prev_fbo = C_GL.GLint(0)
-    # C_GL.glGetIntegerv(_GL_FRAMEBUFFER_BINDING, ctypes.byref(c_prev_fbo))
-    # print(c_prev_fbo.value)
+    unicode_char_set_id = togl.UnicodeCharSetId.RANGE_0000_FFFF if "plane_0" in _data.options else togl.UnicodeCharSetId.ENGLISH
 
-    # _data.frame_buffer.create(_data.width, _data.height)
-    # print(_data.frame_buffer.get_err_msg())
-    # print(_data.frame_buffer.gen_and_bind_tex())
-    # print(_data.frame_buffer.get_err_msg())
-    # _data.frame_buffer.destroy()
-    # print(_data.frame_buffer.get_err_msg())
+    _data.font.load("Courier New", 32, togl.FontSizeUnitId.PIXELS, togl.FontStyleId.NORMAL, unicode_char_set_id)
 
-    generator = _FontDataGenerator()
-    font_data = generator.generate(_FontInfo("Courier New", 16, togl.FontSizeUnitId.PIXELS, togl.FontStyleId.NORMAL, togl.UnicodeCharSetId.ENGLISH))
-    if not generator.is_ok():
-        print(generator.get_err_msg())
+    if not _data.font.is_ok():
+        print(_data.font.get_err_msg)
+    else:
+        if "export" in _data.options:
+            print("Exporting textures...")
+            _data.font.export_as_bmp("out/font")
+            print("Textures has been exported.")
 
-    togl.save_texture_as_bmp("out/font.bmp", font_data.tex_objs[0])
-
-
+    _data.fps_counter.reset()
 
     print("Escape - Exit")
 
 def do_on_destroy():
+    _data.font.unload()
+
     glPopAttrib()
 
     print("Bye. Bye.")
@@ -85,8 +66,24 @@ def draw():
 
     glMatrixMode(GL_MODELVIEW)
 
+    glPushMatrix()
+    glTranslatef(100, 200, 0)
+
+    glColor3f(1, 1, 1)
+    _data.font.render_text("Some text.")
+
+    glPopMatrix()
+
+    glPushMatrix()
+    glTranslatef(100, 100, 0)
+
     glColor3f(1, 0, 0)
-    glRectdv([10, 10], [400, 200])
+    _data.font.render_text("Some red text.")
+
+    glPopMatrix()
+    
+    if "show_fps" in _data.options:
+        _data.fps_counter.update()
 
 
 def do_on_key(key_id, is_down, extra):
@@ -103,7 +100,12 @@ def do_on_resize(width, height):
     set_orthogonal_projection(_data.width, _data.height)
 
 def run(name, options):
-    togl.set_log_level(togl.LogLevel.INFO)
+    _data.options = options
+
+    if "debug" in options:
+        togl.set_log_level(togl.LogLevel.DEBUG)
+    else:
+        togl.set_log_level(togl.LogLevel.INFO)
 
     return togl.to_window().create_and_run(
         window_name         = "Draw Font",

@@ -1,19 +1,21 @@
-import ctypes as _ctypes
-import enum as _enum
+import ctypes   as _ctypes
+import enum     as _enum
+import os       as _os
+
 from copy import deepcopy as _deepcopy
 
-from PyTrivialOpenGL.C_GL.VERSION_1_1.Types import GLuint
+from .Size      import Size
+from .Point     import Point
+from .Log       import *
+from .OriginId  import OriginId
 
 from ._Private  import C_WGL    as _C_WGL
 from ._Private  import C_WinApi as _C_WinApi
 from .          import C_GL     as _C_GL
 
-from .Utility import get_gl_error_str as _get_gl_error_str
-from .Size import Size
-from .Point import Point
-from .Log import log_debug as _log_debug
-
-from .Window import to_window as _to_window
+from .Utility   import get_gl_error_str     as _get_gl_error_str
+from .Utility   import save_texture_as_bmp  as _save_texture_as_bmp
+from .Window    import to_window            as _to_window
 
 class FontSizeUnitId(_enum.Enum):
     PIXELS = _enum.auto()
@@ -23,9 +25,11 @@ class FontStyleId(_enum.Enum):
     NORMAL  = _enum.auto()
     BOLD    = _enum.auto()
 
-# Ranges are from unicode space.
-# Font might not have all glyphs from this ranges.
 class UnicodeCharSetId(_enum.Enum):
+    """
+    Ranges are from unicode space.
+    Font might not have all glyphs from this ranges.
+    """
     CUSTOM          = _enum.auto()
 
     # Unicode Plane 0 - BMP - Basic Multilingual Plane 
@@ -33,13 +37,17 @@ class UnicodeCharSetId(_enum.Enum):
     ENGLISH         = _enum.auto()
 
 class UnicodeCodePoint:
-    # "WHITE SQUARE" 
-    # Represents missing glyph.
     WHITE_SQUARE               = 0x25A1
+    """
+    "WHITE SQUARE"
+    Represents missing glyph.
+    """
 
-    # "REPLACEMENT CHARACTER"
-    # Represent out of range character.
     REPLACEMENT_CHARACTER      = 0xFFFD
+    """
+    "REPLACEMENT CHARACTER"
+    Represent out of range character.
+    """
 
 class CodePointRange:
     """
@@ -69,30 +77,28 @@ class CodePointRange:
         self.from_  = from_
         self.to     = to
 
-def _get_code_point_ranges(char_set_id):
+class Font:
     """
-    char_set_id : UnicodeCharSetId
-    Returns     : List[CodePointRange]
+    _data              : _FontData
+    _draw_oringin_id   : OriginId
+    
+    _is_loaded         : bool
+    _err_msg           : str
     """
-    if char_set_id == UnicodeCharSetId.CUSTOM:
-        return []
+    def __init__(self):
+        self._initialize()
 
-    if char_set_id == UnicodeCharSetId.RANGE_0000_FFFF:
-        return [CodePointRange(0x0000, 0xFFFF)]
+    def __del__(self):
+        self.unload()
 
-    if char_set_id == UnicodeCharSetId.ENGLISH:
-        return [
-            CodePointRange(0x0020, 0x007E),
-            CodePointRange(UnicodeCodePoint.WHITE_SQUARE),
-            CodePointRange(UnicodeCodePoint.REPLACEMENT_CHARACTER),
-        ]
-
-    return []
-
-
-class _FontInfo:
-    def __init__(self, name, size, size_unit_id, style_id, charset_id, code_point_ranges = None, distance_between_glyphs = 0, distance_between_lines = 0):
+    def load(self, name, size, size_unit_id, style_id, charset_id, code_point_ranges = None, distance_between_glyphs = 0, distance_between_lines = 0):
         """
+        Unloads current font if loaded. Loads new font.
+        If font has been loaded successfully, then is_ok() should return True and also is_loaded() should return True. 
+        Otherwise, font failed to load, and error message can be retrieved by get_err_msg().
+        Font size for loaded font might be different than requested from 'size', when 'size_unit_id' is FontSizUnitId.PIXELS.
+        To get font size (in pixels) of loaded font, call get_height().
+
         name                    : str | Any
         size                    : int | SupportsInt
         size_unit_id            : FontSizeUnitId
@@ -104,6 +110,8 @@ class _FontInfo:
         distance_between_glyphs : int | SupportsInt
         distance_between_lines  : int | SupportsInt
         """
+        self.unload()
+
         if not isinstance(name, str):
             try:
                 name = str(name)
@@ -145,6 +153,8 @@ class _FontInfo:
                     proper_code_point_rangess.append(CodePointRange(code_point_range))
                 index += 1
 
+            code_point_ranges = proper_code_point_rangess
+
         elif code_point_ranges is not None:
             raise ValueError("Type of 'code_point_ranges' is unexpected.")
 
@@ -157,6 +167,435 @@ class _FontInfo:
         if charset_id != UnicodeCharSetId.CUSTOM:
             code_point_ranges = _get_code_point_ranges(charset_id)
 
+        font_info = _FontInfo(
+            name                    = name,              
+            size                    = size,                   
+            size_unit_id            = size_unit_id,           
+            style_id                = style_id,               
+            charset_id              = charset_id,             
+            code_point_ranges       = code_point_ranges,      
+            distance_between_glyphs = distance_between_glyphs,
+            distance_between_lines  = distance_between_lines, 
+        )
+
+        if is_log_level_at_least(LogLevel.DEBUG):
+            log_debug("Font Unicode Ranges:")
+
+            for range_ in font_info.code_point_ranges:
+                if range_.from_ == range_.to:
+                    log_debug("[%04X]" % (range_.from_))
+                else:
+                    log_debug("[%04X..%04X]" % (range_.from_, range_.to))
+
+        font_data_generator = _FontDataGenerator()
+
+        log_debug("Generating font textures...")
+        
+        self._data = font_data_generator.generate(font_info)
+
+        if font_data_generator.is_ok():
+            log_debug("Font textures has been generated.")
+            
+            self._is_loaded = True
+        else:
+            log_debug("Failed to generate font texture. Error: %s" % font_data_generator.get_err_msg())
+            
+            self._err_msg = font_data_generator.get_err_msg()
+
+    def unload(self):
+        for tex_obj in self._data.tex_objs:
+            c_texture = _C_GL.GLuint(tex_obj)
+            _C_GL.glDeleteTextures(1, _ctypes.byref(c_texture))
+
+        self._initialize()
+
+    def is_loaded(self):
+        """
+        Returns : bool
+        """
+        return self._is_loaded
+
+    def is_ok(self):
+        """
+        Returns : bool
+            True
+                When no error occurred. 
+            False
+                When error occurred.
+                Call get_err_msg() to get error message.
+        """
+        return self._err_msg == ""
+
+    def get_err_msg(self):
+        """
+        Returns : str
+        """
+        return self._err_msg
+
+    def render_text(self, text):
+        """
+        Renders text.
+        Special characters (like '\n', '\t', ... and so on) are interpreted as "unrepresented characters" and render anyway.
+
+        To set position of text use 'glTranslate{f|d}'.
+        To set color of text use 'glColor{3|4}{f|d|ub}'.
+
+        text : str | Any
+        """
+        if not isinstance(text, str):
+            try:
+                text = str(text)
+            except Exception as exception:
+                raise ValueError("Value of 'text' is not convertible to str.") from exception
+
+        if self._is_loaded:
+            self._render_begin()
+
+            x = 0
+
+            for c in text:
+                code_point = ord(c)
+
+                _C_GL.glPushMatrix()
+                _C_GL.glTranslatef(x, 0, 0)
+
+                self._render_glyph(code_point)
+
+                x += self._get_glyph_size(code_point).width + self._data.info.distance_between_glyphs
+
+                _C_GL.glPopMatrix()
+            
+            self._render_end()
+
+    def get_glyph_size(self, code_point):
+        """
+        code_point  : int | SupportsInt
+        Returns     : Size
+            Glyph size (width and height, both in pixels).
+        """
+        if not isinstance(code_point, int):
+            try:
+                code_point = int(code_point)
+            except Exception as exception:
+                raise ValueError("Value of 'code_point' is not convertible to int.") from exception
+
+        return self._get_glyph_size(code_point)
+
+    def get_glyph_count_in_width(self, text, width):
+        """
+        text    : str | Any
+            Each character (code point) is interpreted as single printable glyph in single line (even '\t' and '\n').
+        width   : int | SupportsInt
+            In pixels.
+        Returns : int
+            Number of glyphs from 'text' which will fit in line with 'width'.
+        """
+        if not isinstance(text, str):
+            try:
+                text = str(text)
+            except Exception as exception:
+                raise ValueError("Value of 'text' is not convertible to str.") from exception
+
+        if not isinstance(width, int):
+            try:
+                width = int(width)
+            except Exception as exception:
+                raise ValueError("Value of 'width' is not convertible to int.") from exception
+
+        return self._get_glyph_count_in_width(text, width)
+
+
+
+    def set_origin_id(self, origin_id):
+        """
+        Sets coordinates system origin for rendering glyphs.
+
+        origin_id : OriginId
+        """
+        if not isinstance(origin_id, OriginId):
+            raise ValueError("Type of 'origin_id' is unexpected.")
+
+        self._origin_id = origin_id
+
+    def get_origin_id(self):
+        """
+        Returns : OriginId
+        """
+        return self._origin_id 
+
+    def get_name(self):
+        """
+        Returns : str
+            Name of font.
+        """
+        return self._data.info.name
+
+    def get_style_id(self):
+        """
+        Returns : FontStyleId
+        """
+        return self._data.info.style_id
+
+    def get_charset_id(self):
+        """
+        Returns : UnicodeCharSetId
+        """
+        return self._data.info.charset_id
+
+    def get_code_point_ranges(self):
+        """
+        Returns : List[CodePointRange]
+        """
+        return _deepcopy(self._data.info.code_point_ranges)
+
+    def get_distance_between_glyphs(self):
+        """
+        Returns : int
+            Distance between rendered glyphs in pixels.
+        """
+        return self._data.info.distance_between_glyphs
+
+    def get_distance_between_lines(self):
+        """
+        Returns : int
+            Distance between rendered lines in pixels.
+        """
+        return self._data.info.distance_between_lines
+
+    # height = ascent + descent
+
+    def get_heigth(self):
+        """
+        Returns : int
+            Font height in pixels.
+        """
+        return self._data.font_height
+
+    def get_descent(self):
+        """
+        Returns : int
+            Font descent length in pixels.
+        """
+        return self._data.font_descent
+
+    def get_ascent(self):
+        """
+        Returns : int
+            Font ascent length in pixels.
+        """
+        return self._data.font_ascent
+
+    def get_internal_leading(self):
+        """
+        Returns : int
+            Font internal leading in pixels.
+        """
+        return self._data.font_internal_leading
+
+    def export_as_bmp(self, path):
+        """
+        Exports font as one or multiple '.bmp' files into 'path'.
+
+        Font file name is in format '\k<font_name> \[\k<image_index>\]\.bmp' (regex), 
+        where <font_name>  is text, and <image_index> is number equal or bigger than 0.
+
+        path    : str | Any
+            Path to folder where font images will be exported.
+            If path don't exists, then will be created.
+        Returns : bool
+            True
+                When font has been exported successfully.
+            False
+                Otherwise.
+        """
+        if not isinstance(path, str):
+            try:
+                path = str(path)
+            except Exception as exception:
+                raise ValueError("Value of 'path' is not convertible to str.") from exception
+
+        if not _os.path.exists(path):
+            _os.makedirs(path)
+
+        if len(path) > 1 and path[-1] != "/" and path[-2:] != "\\":
+            path += "/"
+        elif len(path) > 0 and path[-1] != "/":
+            path += "/"
+
+        for index in range(len(self._data.tex_objs)):
+            file_name = "%s%s [%d].bmp" % (path, self._data.info.name, index)
+
+            if not _save_texture_as_bmp(file_name, self._data.tex_objs[index]):
+                return False
+
+        return True
+
+    def _initialize(self):
+        self._data              = _FontData()
+        self._origin_id         = OriginId.LEFT_BOTTOM
+
+        self._is_loaded         = False
+        self._err_msg           = ""
+
+    def _render_begin(self):
+        """
+        Note: Each section of code which starts with _render_begin() MUST end with _render_end().
+        """
+        _C_GL.glPushAttrib(_C_GL.GL_TEXTURE_BIT)
+        _C_GL.glPushAttrib(_C_GL.GL_ENABLE_BIT)
+        _C_GL.glPushAttrib(_C_GL.GL_COLOR_BUFFER_BIT)
+        _C_GL.glPushAttrib(_C_GL.GL_LIST_BIT)
+
+        _C_GL.glEnable(_C_GL.GL_BLEND)
+        _C_GL.glBlendFunc(_C_GL.GL_SRC_ALPHA, _C_GL.GL_ONE_MINUS_SRC_ALPHA)
+
+    def _render_end(self):
+        """
+        Note: Each section of code which starts with _render_begin() MUST end with _render_end().
+        """
+        _C_GL.glPopAttrib()
+        _C_GL.glPopAttrib()
+        _C_GL.glPopAttrib()
+        _C_GL.glPopAttrib()
+
+    def _render_glyph(self, code_point):
+        """
+        Renders single glyph.
+        Can be used only in between _render_begin() and _render_end().
+
+        code_point : int
+        """
+        if self._is_loaded:
+            glyph_data = self._find_glyph_data(code_point)
+
+            if glyph_data is not None and glyph_data.tex_obj != 0:
+                _C_GL.glBindTexture(_C_GL.GL_TEXTURE_2D, glyph_data.tex_obj)
+                _C_GL.glEnable(_C_GL.GL_TEXTURE_2D)
+
+                _C_GL.glBegin(_C_GL.GL_TRIANGLE_FAN)
+
+                if self._origin_id == OriginId.LEFT_BOTTOM:
+                    _C_GL.glTexCoord2d(glyph_data.x1, glyph_data.y1)
+                    _C_GL.glVertex2i(0, 0)
+
+                    _C_GL.glTexCoord2d(glyph_data.x2, glyph_data.y1)
+                    _C_GL.glVertex2i(glyph_data.width, 0)
+
+                    _C_GL.glTexCoord2d(glyph_data.x2, glyph_data.y2)
+                    _C_GL.glVertex2i(glyph_data.width, self._data.font_height)
+                
+                    _C_GL.glTexCoord2d(glyph_data.x1, glyph_data.y2)
+                    _C_GL.glVertex2i(0, self._data.font_height)
+                else:
+                    _C_GL.glTexCoord2d(glyph_data.x1, glyph_data.y2)
+                    _C_GL.glVertex2i(0, 0)
+                
+                    _C_GL.glTexCoord2d(glyph_data.x2, glyph_data.y2)
+                    _C_GL.glVertex2i(glyph_data.width, 0)
+                
+                    _C_GL.glTexCoord2d(glyph_data.x2, glyph_data.y1)
+                    _C_GL.glVertex2i(glyph_data.width, self._data.font_height)
+                
+                    _C_GL.glTexCoord2d(glyph_data.x1, glyph_data.y1)
+                    _C_GL.glVertex2i(0, self._data.font_height)
+
+                _C_GL.glEnd()
+            else:
+                # Renders replacement for missing glyph.
+                _C_GL.glDisable(_C_GL.GL_TEXTURE_2D)
+
+                _C_GL.glBegin(_C_GL.GL_TRIANGLE_FAN)
+                _C_GL.glVertex2i(0, 0);
+                _C_GL.glVertex2i(self._data.font_height, 0)
+                _C_GL.glVertex2i(self._data.font_height, self._data.font_height)
+                _C_GL.glVertex2i(0, self._data.font_height)
+                _C_GL.glEnd()
+
+    def _get_glyph_size(self, code_point):
+        """
+        code_point : int
+        Returns : Size
+        """
+        size = Size(0, 0)
+
+        if self._is_loaded:
+            glyph_data = self._find_glyph_data(code_point)
+
+            if glyph_data is not None:
+                size = Size(glyph_data.width, self._data.font_height)
+            else:
+                size = Size(self._data.font_height, self._data.font_height)
+
+        return size
+
+    def _get_glyph_count_in_width(self, text, width):
+        """
+        text : str
+        width : int 
+        Returns : int
+        """
+        count           = 0
+        current_width   = 0
+        is_first        = True
+
+        for c in text:
+            if is_first:
+                is_first = False
+            else:
+                current_width += self._data.info.distance_between_glyphs
+            
+            current_width += self._get_glyph_size(ord(c)).width
+            if current_width > width: 
+                break
+
+            count += 1
+
+        return count
+
+    def _find_glyph_data(self, code_point):
+        """
+        code_point  : int
+        Returns     : _GlyphData | None
+        """
+        glyph_data = self._data.glyphs.get(code_point, None)
+
+        if glyph_data is None: glyph_data = self._data.glyphs.get(UnicodeCodePoint.WHITE_SQUARE, None)
+        if glyph_data is None: glyph_data = self._data.glyphs.get(UnicodeCodePoint.REPLACEMENT_CHARACTER, None)
+
+        return glyph_data
+
+def _get_code_point_ranges(char_set_id):
+    """
+    char_set_id : UnicodeCharSetId
+    Returns     : List[CodePointRange]
+    """
+    if char_set_id == UnicodeCharSetId.CUSTOM:
+        return []
+
+    if char_set_id == UnicodeCharSetId.RANGE_0000_FFFF:
+        return [CodePointRange(0x0000, 0xFFFF)]
+
+    if char_set_id == UnicodeCharSetId.ENGLISH:
+        return [
+            CodePointRange(0x0020, 0x007E),
+            CodePointRange(UnicodeCodePoint.WHITE_SQUARE),
+            CodePointRange(UnicodeCodePoint.REPLACEMENT_CHARACTER),
+        ]
+
+    return []
+
+class _FontInfo:
+    """
+    name                    : str 
+    size                    : int 
+    size_unit_id            : FontSizeUnitId
+    style_id                : FontStyleId
+    charset_id              : UnicodeCharSetId
+    code_point_ranges       : List[CodePointRange]
+    distance_between_glyphs : int
+    distance_between_lines  : int
+    """
+    def __init__(self, name, size, size_unit_id, style_id, charset_id, code_point_ranges, distance_between_glyphs, distance_between_lines):
         self.name                    = name              
         self.size                    = size                   
         self.size_unit_id            = size_unit_id           
@@ -191,7 +630,7 @@ class _FontData:
     tex_objs                : List[int]
     """
     def __init__(self):
-        self.info                   = _FontInfo("", 0, FontSizeUnitId.PIXELS, FontStyleId.NORMAL, UnicodeCharSetId.ENGLISH)
+        self.info                   = _FontInfo("", 0, FontSizeUnitId.PIXELS, FontStyleId.NORMAL, UnicodeCharSetId.ENGLISH, [], 0, 0)
 
         self.font_height            = 0         # in pixels    
         self.font_ascent            = 0         # in pixels   
@@ -511,7 +950,7 @@ class _FontDataGenerator:
 
                     # debug
                     #for range_ in get_code_point_ranges_of_current_win_font(self.device_context_handle)):
-                    #    _log_debug("[%04X..%04X]" % (range_.from_, range_.to))
+                    #    log_debug("[%04X..%04X]" % (range_.from_, range_.to))
 
                     # --- Generates Display Lists and Intermediary Font Bitmaps --- #
 
@@ -553,7 +992,7 @@ class _FontDataGenerator:
                         _C_GL.glPushAttrib(_C_GL.GL_ALL_ATTRIB_BITS)
 
                         for range_ in ranges:
-                            # _log_debug("[%04X..%04X]" % (range_.from_, range_.to)) # debug
+                            # log_debug("[%04X..%04X]" % (range_.from_, range_.to)) # debug
                    
                             display_list_set = _DisplayListSet(range_.from_, range_.to)
 
