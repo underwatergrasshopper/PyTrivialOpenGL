@@ -30,6 +30,9 @@ class Text:
 
         self._text = content
 
+    def __eq__(self, other):
+        return isinstance(other, Text) and self._text == other._text
+
 
 class TextHorizontalSpacer:
     def __init__(self, width):
@@ -57,12 +60,14 @@ class TextHorizontalSpacer:
         """
         return self._width
 
+    def __eq__(self, other):
+        return isinstance(other, TextHorizontalSpacer) and self._width == other._width
 
 class FineText:
     def __init__(self, *elements):
         """
-        elements : Tuple[Text | str | TextHorizontalSpacer | int | ColorF | ColorB | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt] | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt], ...]
-            When type of item from elements is:
+        elements : *Union[Text, str, TextHorizontalSpacer, int, ColorF, ColorB, Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt], Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt]]
+            When type of single element is:
                 Text | str
                     Then it is interpreted as text.
                 TextHorizontalSpacer | int
@@ -75,7 +80,6 @@ class FineText:
                     Then is interpreted as color of text with alpha (rgba). Value range is from 0 to 255.
 
         """
-
         self._elements = []
 
         try:
@@ -88,12 +92,12 @@ class FineText:
 
     def append(self, *elements):
         """
-        elements : Tuple[Text | str | TextHorizontalSpacer | int | ColorF | ColorB | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt] | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt], ...]
-            When type of item from elements is:
+        elements : *Union[Text, str, TextHorizontalSpacer, int, ColorF, ColorB, Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt], Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt]]
+            When type of single element is:
                 Text | str
                     Then it is interpreted as text.
                 TextHorizontalSpacer | int
-                    Then is interpreted as horizontal space in pixels.
+                    Then is interpreted as horizontal empty space in pixels.
                 ColorF 
                     Then is interpreted as color of text with alpha. Value range is from 0.0 to 1.0.
                 ColorB
@@ -125,18 +129,20 @@ class FineText:
                     try:
                         element = [int(item) for item in element]
                     except Exception as exception:
-                        raise ValueError("At %d item of 'elements'. At least on value of tuple is not convertible to int." % index) from exception
+                        raise ValueError("At %d element from 'elements'. At least on value of tuple is not convertible to int." % index) from exception
 
                     self._elements.append(ColorB(element[0], element[1], element[2], element[3]))
                 elif len(element) == 3: #RGB
                     try:
                         element = [int(item) for item in element]
                     except Exception as exception:
-                        raise ValueError("At %d item of 'elements'. At least on value of tuple is not convertible to int." % index) from exception
+                        raise ValueError("At %d element from 'elements'. At least on value of tuple is not convertible to int." % index) from exception
 
                     self._elements.append(ColorB(element[0], element[1], element[2], 255))
                 else:
-                    raise ValueError("At %d item of 'elements'. Unexpected number of items in tuple." % index)
+                    raise ValueError("At %d element from 'elements'. Unexpected number of items in tuple." % index)
+            else:
+                raise ValueError("At %d element from 'elements'. Unexpected type." % index)
 
             index += 1
 

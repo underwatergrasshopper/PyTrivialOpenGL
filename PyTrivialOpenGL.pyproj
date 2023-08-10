@@ -58,6 +58,7 @@
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\c_selection.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\selection.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\manual_tests\draw_texture.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\tests\unit_tests\test_fine_text.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\utility\ExampleRunner.py" />
     <Compile Include="tests_and_examples\run_manual_tests.py" />
     <Compile Include="tests_and_examples\run_debugs.py" />

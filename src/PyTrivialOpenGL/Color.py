@@ -134,6 +134,9 @@ class ColorB(Color):
         yield self.b
         yield self.a
 
+    def __eq__(self, other):
+        return isinstance(other, ColorB) and self.r == other.r and self.g == other.g and self.b == other.b and self.a == other.a
+
 class ColorF(Color):
     """
     Contains color with three color channels and one alpha channel.
@@ -227,6 +230,9 @@ class ColorF(Color):
         yield self.g
         yield self.b
         yield self.a
+
+    def __eq__(self, other):
+        return isinstance(other, ColorF) and self.r == other.r and self.g == other.g and self.b == other.b and self.a == other.a
 
 
 

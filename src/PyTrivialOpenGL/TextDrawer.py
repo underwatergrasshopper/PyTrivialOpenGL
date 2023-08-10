@@ -102,18 +102,18 @@ class TextDrawer:
 
     def set_color(self, r = None, g = None, b = None, a = None, color = None):
         """
-        r : float | SupportsFloat | None
-            Expected range from 0.0 to 1.0.
-        g : float | SupportsFloat | None
-            Expected range from 0.0 to 1.0.
-        b : float | SupportsFloat | None
-            Expected range from 0.0 to 1.0.
-        a : float | SupportsFloat | None
-            Expected range from 0.0 to 1.0.
-        color : ColorF | ColorB | Tuple[float | SupportsFloat, float | SupportsFloat, float | SupportsFloat, float | SupportsFloat]
+        r : int | SupportsInt | None
+            Expected range from 0 to 255.
+        g : int | SupportsInt | None
+            Expected range from 0 to 255.
+        b : int | SupportsInt | None
+            Expected range from 0 to 255.
+        a : int | SupportsInt | None
+            Expected range from 0 to 255.
+        color : ColorF | ColorB | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt]
             When tuple:
                 Contains four channels (red, green, blue, alpha).
-                Expected range of each channel from 0.0 to 1.0.
+                Expected range of each channel from 0 to 255.
 
         Expected combination of arguments:
         When both 'r', 'g', 'b' and 'a' are None, then 'color' must be not None.
@@ -126,29 +126,29 @@ class TextDrawer:
                 When type of argument is unexpected.
         """
         if (r is not None) and (g is not None) and (b is not None) and (a is not None) and (color is None):
-            if not isinstance(r, float):
+            if not isinstance(r, int):
                 try:
-                    r = float(r)
+                    r = int(r)
                 except Exception as exception:
-                    raise ValueError("Value of 'r' is not convertible to float.") from exception
+                    raise ValueError("Value of 'r' is not convertible to int.") from exception
 
-            if not isinstance(g, float):
+            if not isinstance(g, int):
                 try:
-                    g = float(g)
+                    g = int(g)
                 except Exception as exception:
-                    raise ValueError("Value of 'g' is not convertible to float.") from exception
+                    raise ValueError("Value of 'g' is not convertible to int.") from exception
 
-            if not isinstance(b, float):
+            if not isinstance(b, int):
                 try:
-                    b = float(b)
+                    b = int(b)
                 except Exception as exception:
-                    raise ValueError("Value of 'b' is not convertible to float.") from exception
+                    raise ValueError("Value of 'b' is not convertible to int.") from exception
 
-            if not isinstance(a, float):
+            if not isinstance(a, int):
                 try:
-                    a = float(a)
+                    a = int(a)
                 except Exception as exception:
-                    raise ValueError("Value of 'a' is not convertible to float.") from exception
+                    raise ValueError("Value of 'a' is not convertible to int.") from exception
 
             color = ColorF(r, g, b, a)
 
@@ -158,7 +158,7 @@ class TextDrawer:
                     raise ValueError("Length of 'color' is unexpected. Should be 4.")
 
                 try:
-                    color = [float(item) for item in color]
+                    color = [int(item) for item in color]
                 except Exception as exception:
                     raise ValueError("One of values from 'color' is not convertible to float.") from exception
 

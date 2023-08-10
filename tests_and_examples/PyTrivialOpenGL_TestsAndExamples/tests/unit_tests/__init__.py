@@ -7,6 +7,7 @@ from . import test_logger
 from . import test_log
 from . import test_key
 from . import test_window
+from . import test_fine_text
 
 def run():
     test_basics.run()
@@ -18,3 +19,4 @@ def run():
     test_log.run()
     test_key.run()
     test_window.run()
+    test_fine_text.run()
