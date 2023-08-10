@@ -5,8 +5,8 @@ class TextAdjuster:
     """
     Used to support TextDrawer module with rendering text.
 
-    Wrap text after certain length of line. (optional)
-    Align vertically all tabs.
+    Wraps text after certain length of line. (optional)
+    Aligns vertically all tabs.
 
     _number_of_spaces_in_tab    : int
     _wrap_line_width            : int
