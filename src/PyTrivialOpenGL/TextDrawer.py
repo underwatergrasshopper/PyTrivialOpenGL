@@ -150,7 +150,7 @@ class TextDrawer:
                 except Exception as exception:
                     raise ValueError("Value of 'a' is not convertible to int.") from exception
 
-            color = ColorF(r, g, b, a)
+            color = ColorB(r, g, b, a).to_color_f()
 
         elif (r is None) and (g is None) and (b is None) and (a is None) and (color is not None):
             if isinstance(color, tuple):
@@ -208,7 +208,7 @@ class TextDrawer:
 
             fine_text = FineText(text)
 
-        size = Size(0, font.get_heigth())
+        size = Size(0, font.get_height())
         width = 0
 
         is_glyph_before = False
@@ -283,7 +283,7 @@ class TextDrawer:
                     for c in element.get_content():
                         if c == '\n':
                             self._pos.x = self._base.x
-                            self._pos.y += (font.get_heigth() + font.get_distance_between_lines()) * self._orientation_factor_y
+                            self._pos.y += (font.get_height() + font.get_distance_between_lines()) * self._orientation_factor_y
                         else:
                             _C_GL.glPushMatrix()
                             _C_GL.glTranslatef(self._pos.x, self._pos.y, 0)

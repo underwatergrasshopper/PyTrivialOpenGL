@@ -106,7 +106,7 @@ class ExampleRunner:
             example_manager.add_example("mt.c_feedback",        manual_tests.c_feedback.run)
             example_manager.add_example("mt.feedback",          manual_tests.feedback.run)
             example_manager.add_example("mt.draw_font",         manual_tests.draw_font.run,         ["debug", "plane_0", "export", "show_fps", "left_top"])
-            example_manager.add_example("mt.draw_text",         manual_tests.draw_text.run,         ["debug", "plane_0", "export", "show_fps", "left_top"])
+            example_manager.add_example("mt.draw_text",         manual_tests.draw_text.run,         ["debug", "plane_0", "export", "show_fps", "left_top", "stats", "arial"])
 
         if default_example_name is None:
             if category & ExampleCategoryBit.MANUAL_TESTS:

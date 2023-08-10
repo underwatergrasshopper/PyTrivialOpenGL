@@ -1,14 +1,14 @@
 import PyTrivialOpenGL as togl
-from PyTrivialOpenGL import TextAdjuster
 from PyTrivialOpenGL.GL import *
 
 from PyTrivialOpenGL import C_GL
 from PyTrivialOpenGL._Private import C_WGL
 
 from PyTrivialOpenGL.Font import _FrameBuffer, _FontDataGenerator, _FontInfo
-from ...utility.ExampleSupport import FPS_Counter
+from ...utility.ExampleSupport import FPS_Counter, draw_rectangle
 
 import ctypes
+import cProfile
 
 __all__ = [
     "run"
@@ -24,6 +24,9 @@ class _Data:
 
         self.font           = togl.Font()
         self.text_drawer    = togl.TextDrawer()
+        self.text_adjuster  = togl.TextAdjuster()
+
+        self.fine_text      = togl.FineText()
 
 _data = _Data()
 
@@ -42,7 +45,8 @@ def do_on_create():
 
     unicode_char_set_id = togl.UnicodeCharSetId.RANGE_0000_FFFF if "plane_0" in _data.options else togl.UnicodeCharSetId.ENGLISH
 
-    _data.font.load("Courier New", 32, togl.FontSizeUnitId.PIXELS, togl.FontStyleId.NORMAL, unicode_char_set_id)
+    font_name = "Arial" if "arial" in _data.options else "Courier New"
+    _data.font.load(font_name, 16, togl.FontSizeUnitId.PIXELS, togl.FontStyleId.NORMAL, unicode_char_set_id)
 
     if "left_top" in _data.options:
         _data.font.set_origin_id(togl.OriginId.LEFT_TOP)
@@ -55,7 +59,7 @@ def do_on_create():
             _data.font.export_as_bmp("out/font")
             print("Textures has been exported.")
 
-    _data.text_drawer.set_color(1, 1, 1, 1)
+    _data.text_drawer.set_color(255, 255, 255, 255)
 
     _data.fps_counter.reset()
 
@@ -68,20 +72,37 @@ def do_on_destroy():
 
     print("Bye. Bye.")
 
+
+
 def draw():
     glClear(GL_COLOR_BUFFER_BIT)
 
     glMatrixMode(GL_MODELVIEW)
-
-    _data.text_drawer.set_pos(100, 100)
-    _data.text_drawer.render_text(_data.font, "Some text.\nNew line text.")
     
-    _data.text_drawer.set_pos(100, 300)
-    line_width = _data.width - 100
-    text_adjuster = TextAdjuster()
-    text_adjuster.set_line_wrap_width(line_width)
-    fine_text = text_adjuster.adjust_text(_data.font, togl.FineText("Some text.", (255, 0, 0, 255), "\nNew line red text."))
-    _data.text_drawer.render_text(_data.font, fine_text)
+    #C_GL.glColor3f(1, 0.5, 0)
+    #C_GL.glPushMatrix()
+    #C_GL.glTranslatef(50, 100, 0)
+    #C_GL.glScaled(3, 3, 1)
+    #_data.font.render_text("Somme text. Xj\u3400\u5016\u9D9B\u0001\U00024B62")
+    #C_GL.glPopMatrix()
+    #
+    #_data.text_drawer.set_pos(50, 100)
+    #_data.text_drawer.set_color(255, 0, 0, 255)
+    #
+    #_data.text_drawer.render_text(_data.font, "Some text. Xj\u3400\u5016\u9D9B\u0001\U00024B62\nNew Line.")
+    #_data.text_drawer.render_text(_data.font, "\nAnd another line.")
+    #_data.text_drawer.render_text(_data.font, "\n\tTab.\b")
+    
+    text_size = _data.text_drawer.get_text_size(_data.font, _data.fine_text)
+    
+    C_GL.glColor3f(1, 1, 1)
+
+    draw_rectangle(0, _data.height - text_size.height, _data.width - 10, text_size.height)
+    
+    _data.text_drawer.set_pos(0 , _data.height - _data.font.get_height())
+            
+    _data.text_drawer.set_color(255, 0, 0, 255)
+    _data.text_drawer.render_text(_data.font, _data.fine_text)
     
     if "show_fps" in _data.options:
         _data.fps_counter.update()
@@ -100,6 +121,29 @@ def do_on_resize(width, height):
 
     set_orthogonal_projection(_data.width, _data.height)
 
+    fine_text = togl.FineText(
+        (0, 255, 0, 255),
+        "Xj\n",
+        (255, 0, 0, 255),
+        "Xj\n",
+        (0, 0, 0, 255),
+        (
+            "Some text. \u3400\u5016\u9D9B\u0001\U00024B62. Many words in line. Many words in line. Many words in line. Many words in line. Many words in line. Many words in line.\n"
+            "Many words in line with \ttab.\n"
+            "Many words in line with i\ttab.\n"
+            "Many words in line with ii\ttab.\n"
+            "Many words in line with iii\ttab.\n"
+            "Many words in line with iiii\ttab.\n"
+            "New line. "
+            "\tTab.Long                                 line. "
+            "Very-long-text-to-split-apart. "
+        )
+    )
+
+    _data.text_adjuster.set_line_wrap_width(_data.width - 10)
+    _data.fine_text = _data.text_adjuster.adjust_text(_data.font, fine_text)
+
+
 def run(name, options):
     _data.options = options
 
@@ -108,7 +152,11 @@ def run(name, options):
     else:
         togl.set_log_level(togl.LogLevel.INFO)
 
-    return togl.to_window().create_and_run(
+    if "stats" in options:
+        pr = cProfile.Profile()
+        pr.enable()
+
+    result = togl.to_window().create_and_run(
         window_name         = "Draw Text",
         area                = (_data.width, _data.height),
         style               = togl.WindowStyleBit.DRAW_AREA_SIZE,
@@ -121,3 +169,9 @@ def run(name, options):
         do_on_key           = do_on_key,
         do_on_resize        = do_on_resize,
     )
+
+    if "stats" in options:
+        pr.disable()
+        pr.print_stats('tottime') # cumulative, tottime
+
+    return result

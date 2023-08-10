@@ -365,7 +365,7 @@ class Font:
 
     # height = ascent + descent
 
-    def get_heigth(self):
+    def get_height(self):
         """
         Returns : int
             Font height in pixels.
@@ -472,16 +472,16 @@ class Font:
             if glyph_data is not None and glyph_data.tex_obj != 0:
                 _C_GL.glBindTexture(_C_GL.GL_TEXTURE_2D, glyph_data.tex_obj)
                 _C_GL.glEnable(_C_GL.GL_TEXTURE_2D)
-
+                
                 _C_GL.glBegin(_C_GL.GL_TRIANGLE_FAN)
-
+                
                 if self._origin_id == OriginId.LEFT_BOTTOM:
                     _C_GL.glTexCoord2d(glyph_data.x1, glyph_data.y1)
                     _C_GL.glVertex2i(0, 0)
-
+                
                     _C_GL.glTexCoord2d(glyph_data.x2, glyph_data.y1)
                     _C_GL.glVertex2i(glyph_data.width, 0)
-
+                
                     _C_GL.glTexCoord2d(glyph_data.x2, glyph_data.y2)
                     _C_GL.glVertex2i(glyph_data.width, self._data.font_height)
                 
@@ -499,8 +499,9 @@ class Font:
                 
                     _C_GL.glTexCoord2d(glyph_data.x1, glyph_data.y1)
                     _C_GL.glVertex2i(0, self._data.font_height)
-
+                
                 _C_GL.glEnd()
+                pass
             else:
                 # Renders replacement for missing glyph.
                 _C_GL.glDisable(_C_GL.GL_TEXTURE_2D)

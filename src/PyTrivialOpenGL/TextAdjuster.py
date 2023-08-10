@@ -139,9 +139,9 @@ class TextAdjuster:
                 if is_glyph_before: 
                     width += font.get_distance_between_glyphs()
 
-                width += font.get_glyph_size(' ').width * self._num_of_spaces_in_tab
-                if self._num_of_spaces_in_tab > 1:
-                   width += font.get_distance_between_glyphs() * self._num_of_spaces_in_tab - 1
+                width += font.get_glyph_size(' ').width * self._number_of_spaces_in_tab
+                if self._number_of_spaces_in_tab > 1:
+                   width += font.get_distance_between_glyphs() * self._number_of_spaces_in_tab - 1
 
                 is_glyph_before = True
             elif c == '\n':
