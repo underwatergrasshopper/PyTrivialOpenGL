@@ -1,4 +1,5 @@
 import PyTrivialOpenGL as togl
+from PyTrivialOpenGL import TextAdjuster
 from PyTrivialOpenGL.GL import *
 
 from PyTrivialOpenGL import C_GL
@@ -76,7 +77,11 @@ def draw():
     _data.text_drawer.render_text(_data.font, "Some text.\nNew line text.")
     
     _data.text_drawer.set_pos(100, 300)
-    _data.text_drawer.render_text(_data.font, togl.FineText("Some text.", (255, 0, 0, 255), "\nNew line red text."))
+    line_width = _data.width - 100
+    text_adjuster = TextAdjuster()
+    text_adjuster.set_line_wrap_width(line_width)
+    fine_text = text_adjuster.adjust_text(_data.font, togl.FineText("Some text.", (255, 0, 0, 255), "\nNew line red text."))
+    _data.text_drawer.render_text(_data.font, fine_text)
     
     if "show_fps" in _data.options:
         _data.fps_counter.update()

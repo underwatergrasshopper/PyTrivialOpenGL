@@ -150,6 +150,7 @@ class FineText:
     def __iadd__(self, other):
         if not isinstance(other, FineText):
             raise TypeError("Type of 'other' is unexpected. Only object of FineText is acceptable.")
-        self._elements.extend(other)
+        self._elements.extend(other._elements)
+        return self
 
         
