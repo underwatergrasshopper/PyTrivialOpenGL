@@ -2,6 +2,17 @@ from .FineText  import *
 from .Font      import *
 
 class TextAdjuster:
+    """
+    Used to support TextDrawer module with rendering text.
+
+    Wrap text after certain length of line. (optional)
+    Align vertically all tabs.
+
+    _number_of_spaces_in_tab    : int
+    _wrap_line_width            : int
+    _width_of_full_tab          : int   
+    _line_width                 : int
+    """
     def __init__(self):
         self._number_of_spaces_in_tab   = 4
         self._wrap_line_width           = 0
