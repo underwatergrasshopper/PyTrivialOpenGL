@@ -61,8 +61,8 @@ class TextHorizontalSpacer:
 class FineText:
     def __init__(self, *elements):
         """
-        elements : List[Text | str | TextHorizontalSpacer | int | ColorF | ColorB | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt] | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt]]
-            When type of item from list is:
+        elements : Tuple[Text | str | TextHorizontalSpacer | int | ColorF | ColorB | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt] | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt], ...]
+            When type of item from elements is:
                 Text | str
                     Then it is interpreted as text.
                 TextHorizontalSpacer | int
@@ -88,8 +88,8 @@ class FineText:
 
     def append(self, *elements):
         """
-        elements : List[Text | str | TextHorizontalSpacer | int | ColorF | ColorB | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt] | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt]]
-            When type of item from list is:
+        elements : Tuple[Text | str | TextHorizontalSpacer | int | ColorF | ColorB | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt] | Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt], ...]
+            When type of item from elements is:
                 Text | str
                     Then it is interpreted as text.
                 TextHorizontalSpacer | int
@@ -101,8 +101,7 @@ class FineText:
                 Tuple[int | SupportsInt, int | SupportsInt, int | SupportsInt, int | SupportsInt]
                     Then is interpreted as color of text with alpha (rgba). Value range is from 0 to 255.
         """
-
-        if not isinstance(elements, list):
+        if not isinstance(elements, tuple):
             raise TypeError("Type of 'elements' is not list.")
 
         index = 0
@@ -146,7 +145,7 @@ class FineText:
         """
         Returns : List[Text | TextHorizontalSpacer | ColorF | ColorB]
         """
-        return self._elements()
+        return self._elements
 
     def __iadd__(self, other):
         if not isinstance(other, FineText):

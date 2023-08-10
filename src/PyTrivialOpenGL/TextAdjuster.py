@@ -53,10 +53,10 @@ class TextAdjuster:
         Returns     : FineText
         """
         if not isinstance(font, Font):
-            raise ValueError("Type of 'font' is unexpected.")
+            raise TypeError("Type of 'font' is unexpected.")
 
         if not isinstance(fine_text, FineText):
-            raise ValueError("Type of 'fine_text' is unexpected.")
+            raise TypeError("Type of 'fine_text' is unexpected.")
 
         adjusted_fine_text = FineText()
 

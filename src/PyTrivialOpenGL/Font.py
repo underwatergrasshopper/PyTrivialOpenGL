@@ -125,13 +125,13 @@ class Font:
                 raise ValueError("Value of 'size' is not convertible to int.") from exception
 
         if not isinstance(size_unit_id, FontSizeUnitId):
-            raise ValueError("Type of 'size_unit_id' is unexpected.")
+            raise TypeError("Type of 'size_unit_id' is unexpected.")
 
         if not isinstance(style_id, FontStyleId):
-            raise ValueError("Type of 'style_id' is unexpected.")
+            raise TypeError("Type of 'style_id' is unexpected.")
 
         if not isinstance(charset_id, UnicodeCharSetId):
-            raise ValueError("Type of 'charset_id' is unexpected.")
+            raise TypeError("Type of 'charset_id' is unexpected.")
 
         if isinstance(code_point_ranges, list):
             proper_code_point_rangess = []
@@ -314,7 +314,7 @@ class Font:
         origin_id : OriginId
         """
         if not isinstance(origin_id, OriginId):
-            raise ValueError("Type of 'origin_id' is unexpected.")
+            raise TypeError("Type of 'origin_id' is unexpected.")
 
         self._origin_id = origin_id
 

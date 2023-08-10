@@ -10,3 +10,5 @@ from .Window        import *
 from .Exceptions    import *
 from .Font          import *
 from .FineText      import *
+from .TextAdjuster  import *
+from .TextDrawer    import *

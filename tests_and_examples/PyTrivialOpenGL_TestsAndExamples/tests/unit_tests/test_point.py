@@ -268,6 +268,12 @@ def test_point():
     assert str(Point(1, 2)) == "1 2"
     assert tuple(Point(1, 2)) == (1, 2)
 
+    ### copy ###
+    p = Point(1, 2)
+    p2 = p.copy()
+    assert p == p2
+    assert p is not p2
+
 def run():
     print("test_point start")
     test_point()

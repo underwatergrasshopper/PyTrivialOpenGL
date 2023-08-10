@@ -62,6 +62,12 @@ class Point:
         """
         return (float(self.x), float(self.y))
 
+    def copy(self):
+        """
+        Returns : Point
+        """
+        return Point(self.x, self.y)
+
     ### logic ###
 
     def __eq__(self, other): # ==

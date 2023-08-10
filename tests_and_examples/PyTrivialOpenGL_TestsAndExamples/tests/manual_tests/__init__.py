@@ -16,4 +16,5 @@ from . import (
     c_feedback,
     feedback,
     draw_font,
+    draw_text,
 )
