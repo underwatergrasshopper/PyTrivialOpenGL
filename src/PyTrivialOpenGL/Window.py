@@ -414,7 +414,7 @@ class Window:
             TypeError("Wrong type of parameter 'opengl_version'. Should be 'Tuple[int, int]' or 'OpenGL_Version'.")
 
         if isinstance(icon_file_name, str):
-            self._window_name = window_name
+            self._icon_file_name = icon_file_name
         else:
             try:
                 self._icon_file_name = str(icon_file_name)

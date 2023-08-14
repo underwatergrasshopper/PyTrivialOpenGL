@@ -30,7 +30,7 @@ def check_gl_error():
         exit(EXIT_FAILURE)
 
 def get_path_to_assets():
-    return os.path.dirname(os.path.dirname(__file__)) + "\\assets"
+    return os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + "/../assets")
 
 def print_rect(r):
     print("%d %d %d %d" % (r.left, r.top, r.right, r.bottom))
@@ -101,12 +101,20 @@ class FPS_Counter:
         self._accum     = 0
         self._count     = 0
         self._interval  = interval
+        self._fps       = 0
 
     def reset(self):
         self._now   = _timer()
         self._accum = 0
+        self._fps   = 0.0
 
-    def update(self):
+    def get_fps(self):
+        """
+        Returns : float
+        """
+        return self._fps
+
+    def update(self, is_display = True):
         self._count += 1
 
         new_now = _timer()
@@ -119,7 +127,10 @@ class FPS_Counter:
             self._accum = 0
             self._count = 0
 
-            print("FPS: %.0f" % (fps))
+            self._fps = fps
+
+            if is_display:
+                print("FPS: %.0f" % (fps))
      
 def draw_rgb_triangle(x, y, scale, angle):
     glPushMatrix()

@@ -13,10 +13,11 @@ __all__ = [
     "run"
 ]
 
-_WIDTH      = 600   # in pixels
-_HEIGHT     = 300   # in pixels
+_WIDTH      = 800   # in pixels
+_HEIGHT     = 400   # in pixels
 
 _MOVE_STEP  = 30    # in pixels
+_FONT_SIZE  = 16    # in pixels
 
 class Data:
     """
@@ -31,64 +32,71 @@ class Data:
         self.reset()
 
     def reset(self):
+        self.width              = _WIDTH
+        self.height             = _HEIGHT
+        self.legend_offset      = 0
+
         self.angle              = 0
         self.is_draw_area       = False
+
         self.options            = set() 
         self.action_chain       = ActionChain()
         self.animated_triangle  = AnimatedTriangle()
         self.fps_counter        = FPS_Counter()
+        self.font               = togl.Font()
+        self.text_drawer        = togl.TextDrawer()
+
 
 _data   = Data()
 _window = togl.to_window()
 
-_legend = """--- Legend ---
-Arrows      - Move by 30px
-J           - Move Test (window should ended at the same position) [wait for 'done']
-T           - Delay 3s -> Foreground                        [wait for 'done']
-H           - Hide 1s -> Show                               [wait for 'done']
-M           - Minimize 1s -> Center (width=600, height=300) [wait for 'done']
-Shift + M   - Maximize
-F           - Windowed Full Screen
+_legend = """Scroll          - Move Legend Up/Down
+Arrows          - Move by 30px
+J               - Move Test (window should ended at the same position) [wait for 'done']
+T               - Delay 3s -> Foreground                        [wait for 'done']
+H               - Hide 1s -> Show                               [wait for 'done']
+M               - Minimize 1s -> Center (width=600, height=300) [wait for 'done']
+Shift + M       - Maximize
+F               - Windowed Full Screen
 
-C           - Center
-Shift + C   - Center (width=600, height=300)
-L. Ctrl + C - Center Draw Area (width=600, height=300)
-R. Ctrl + C - Center Window Area (width=600, height=300)
+C               - Center
+Shift + C       - Center (width=600, height=300)
+L. Ctrl + C     - Center Draw Area (width=600, height=300)
+R. Ctrl + C     - Center Window Area (width=600, height=300)
  
-P           - Move to (x=10, y=50)
-L. Ctrl + P - Move to (x=10)
-R. Ctrl + P - Move to (y=50)
-O           - Move to (x=0, y=0)
-L. Ctrl + O - Move to (pos=Point(10,50))
-R. Ctrl + O - Move to (pos=(10,50))
+P               - Move to (x=10, y=50)
+L. Ctrl + P     - Move to (x=10)
+R. Ctrl + P     - Move to (y=50)
+O               - Move to (x=0, y=0)
+L. Ctrl + O     - Move to (pos=Point(10,50))
+R. Ctrl + O     - Move to (pos=(10,50))
     
-S           - Resize (width=300, height=200)
-L. Ctrl + S - Resize (width=300)
-R. Ctrl + S - Resize (height=200)
-L. Shift + S - Resize (size=Size(600, 300))
-R. Shift + S - Resize (size=(600, 300))
+S               - Resize (width=300, height=200)
+L. Ctrl + S     - Resize (width=300)
+R. Ctrl + S     - Resize (height=200)
+L. Shift + S    - Resize (size=Size(600, 300))
+R. Shift + S    - Resize (size=(600, 300))
     
-A           - Reshape(x=10, y=50, width=600, height=300)
-L. Shift + A - Reshape(area=Area(10, 50, 600, 300)
-R. Shift + A - Reshape(area=(10, 50, 600, 300)
-L. Ctrl + A - Reshape(x=10, width=600)
-R. Ctrl + A - Reshape(y=50, height=300)
+A               - Reshape(x=10, y=50, width=600, height=300)
+L. Shift + A    - Reshape(area=Area(10, 50, 600, 300)
+R. Shift + A    - Reshape(area=(10, 50, 600, 300)
+L. Ctrl + A     - Reshape(x=10, width=600)
+R. Ctrl + A     - Reshape(y=50, height=300)
     
-D           - Toggle: by Window Area <-> by Draw Area
-R           - Request Draw
+D               - Toggle: by Window Area <-> by Draw Area
+R               - Request Draw
         
-0           - Move by (none) 1s -> Move to (none) 1s -> Resize (none) 1s -> 
-              Reshape (none)  1s -> Center (none)           [wait for 'done']
-1           - Minimize -> Move by (30, 0) -> Resize (600, 300) [wait for 'done']
+0               - Move by (none) 1s -> Move to (none) 1s -> Resize (none) 1s -> 
+                  Reshape (none)  1s -> Center (none)               [wait for 'done']
+1               - Minimize -> Move by (30, 0) -> Resize (600, 300)  [wait for 'done']
 
-I           - Info
-L           - Legend
-Escape      - Exit
----
+I               - Info
+L               - Legend
+Escape          - Exit
 """
 
 def display_legend():
-    print(_legend)
+    print("--- Legend ---\n" + _legend + "---\n")
 
 def set_orthogonal_projection(width, height):
     glPushAttrib(GL_TRANSFORM_BIT)
@@ -98,6 +106,9 @@ def set_orthogonal_projection(width, height):
     glOrtho(0, width, 0, height, 1, -1)
 
     glPopAttrib()
+
+    _data.width     = width
+    _data.height    = height
 
 def do_on_create():
     print("do_on_create")
@@ -116,7 +127,14 @@ def do_on_create():
     # Note: Will cause an exception (as should be). 
     #togl.to_window().center()
 
-    print("L - Legend")
+    _data.font.load("Courier New", _FONT_SIZE, togl.FontSizeUnitId.PIXELS, togl.FontStyleId.NORMAL, togl.UnicodeCharSetId.ENGLISH)
+    if _data.font.is_ok():
+        print("Font loaded.")
+    else:
+        print("Can not load font.")
+        print("Error: " + _data.font.get_err_msg())
+
+    print("L - Legend", flush = True)
 
 def do_on_close():
     print("do_on_close")
@@ -127,7 +145,9 @@ def do_on_destroy():
 
     glPopAttrib()
 
-    print("Bye. Bye.")
+    _data.font.unload()
+
+    print("Bye. Bye.", flush = True)
 
 def draw():
     glClear(GL_COLOR_BUFFER_BIT)
@@ -137,7 +157,13 @@ def draw():
 
     _data.animated_triangle.draw()
 
-    if "show_fps" in _data.options: _data.fps_counter.update()
+    _data.fps_counter.update(is_display = ("show_fps" in _data.options))
+
+    _data.text_drawer.set_pos(0, _data.height - _FONT_SIZE + _data.legend_offset)
+    _data.text_drawer.render_text(_data.font, ("FPS: %.0f\n" % _data.fps_counter.get_fps()) + _legend)
+
+def do_on_mouse_wheel_roll(step_cout, x, y):
+    _data.legend_offset -= step_cout * _FONT_SIZE
 
 def do_on_key(key_id, is_down, extra):
     is_up = not is_down
@@ -401,6 +427,7 @@ def run(name, options):
         do_on_destroy           = do_on_destroy,
         draw                    = draw,
 
+        do_on_mouse_wheel_roll  = do_on_mouse_wheel_roll,
         do_on_key               = do_on_key,
 
         do_on_resize            = do_on_resize,

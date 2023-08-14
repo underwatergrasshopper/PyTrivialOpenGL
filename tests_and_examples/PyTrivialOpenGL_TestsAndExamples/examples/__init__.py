@@ -1,3 +1,4 @@
 from . import (
-    simple_triangle
+    custom_icon,
+    simple_triangle,
 )

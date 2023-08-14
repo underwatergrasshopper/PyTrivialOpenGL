@@ -71,7 +71,8 @@ class ExampleRunner:
         example_manager = ExampleManager()
 
         if category & ExampleCategoryBit.EXAMPLES:
-           example_manager.add_example("simple_triangle",  lambda name, options: examples.simple_triangle.run())
+           example_manager.add_example("custom_icon",       lambda name, options: examples.custom_icon.run())
+           example_manager.add_example("simple_triangle",   lambda name, options: examples.simple_triangle.run())
 
         if category & ExampleCategoryBit.DEBUGS:
             example_manager.add_example("debug.winapi",           debugs.winapi.run,          ["min_max"])

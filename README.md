@@ -8,16 +8,26 @@ Provides OpenGL 1.1 functions, types, and constant (all optional to use) with an
 - `PyTrivialOpenGL.GL` - OpenGL functions, types and constants (more readable).
 - `PyTrivialOpenGL.C_GL` - OpenGL functions, types and constants with ctypes dependency for using (faster).
 
+Provides some very basic functionality to draw text (optional).
+- `PyTrivialOpenGL.Font`
+- `PyTrivialOpenGL.TextDrawer`
+
 No external DLLs are required, other than some defaults provided by system (Kernel32, User32, Dwmapi, Gdi32), python (ctypes) and graphic card vendor (OpenGL32).
 
 No GLUT is required.
+
+*Current Problems:*
+- *Speed of `Font` and `TextDrawer`.*
+- *No python `typing` and python `match-case`. Requires moving to python versions 3.10, at least.*
+- *Small number of example. Having some 3D examples would be nice.*
+- *No game as example.*
 
 ## Requirements
 
 |
 -|-
 Python Version | 3.9 (32bit) or later
-Operating System | Window 7/10 
+Operating System | Window 10 
 
 ## HowTo: Install
 - Go to `Releases` section and download last release package with `whl` extension. 
@@ -25,7 +35,7 @@ Operating System | Window 7/10
 
 *Note: The `<version>` in install command need to be replaced with a version of the package.*
 
-## HowTo: Unistall
+## HowTo: Uninstall
 
 - Run `pip uninstall PyTrivialOpenGL`.
 
@@ -105,9 +115,69 @@ When PyTrivialOpenGL package is installed, all examples can be run individually 
 *Note: Local version of package is used, not installed.*
 
 ## Code Examples
+- [Custom Icon](#custom-icon)
 - [Simple Triangle](#simple-triangle)
 
+### Custom Icon
+
+Loads icon image from file.
+Loaded icon image will be displayed on task bar and window title bar.
+
+```python
+import PyTrivialOpenGL as togl
+from PyTrivialOpenGL.GL import *
+
+__all__ = [
+    "run"
+]
+
+def do_on_create():
+    glClearColor(0, 0, 0.5, 1)
+
+    print("Escape - Exit", flush = True)
+
+def do_on_destroy():
+    print("Bye. Bye.", flush = True)
+
+def draw():
+    glClear(GL_COLOR_BUFFER_BIT)
+
+def do_on_key(key_id, is_down, extra):
+    if key_id == togl.KeyId.ESCAPE:
+        if not is_down:
+            togl.to_window().request_close()
+
+def do_on_resize(width, height):
+    glViewport(0, 0, width, height)
+
+def run():
+    togl.set_log_level(togl.LogLevel.INFO)
+
+    return togl.to_window().create_and_run(
+        window_name         = "Custom Icon",
+        area                = (800, 400),
+        style               = togl.WindowStyleBit.DRAW_AREA_SIZE,
+
+        icon_file_name      = "icon.ico",
+
+        do_on_create        = do_on_create,
+        do_on_destroy       = do_on_destroy,
+
+        draw                = draw,
+
+        do_on_key           = do_on_key,
+        do_on_resize        = do_on_resize,
+    )
+
+if __name__ == "__main__":
+    run()
+```
+- [Back to: Code Examples](#code-examples)
+
 ### Simple Triangle
+
+Draws simple triangle.
+
 ```python
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
