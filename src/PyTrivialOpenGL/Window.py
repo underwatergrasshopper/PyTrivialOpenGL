@@ -95,10 +95,10 @@ class Window:
     _timer_time_interval            : int
     _is_auto_sleep_blocked          : bool
 
-    _instance_handle                : C_WinApi.HINSTANCE
-    _window_handle                  : C_WinApi.HWND
-    _device_context_handle          : C_WinApi.HDC
-    _rendering_context_handle       : C_WinApi.HGLRC
+    _instance_handle                : int | None
+    _window_handle                  : int | None
+    _device_context_handle          : int | None
+    _rendering_context_handle       : int | None
 
     _window_style                   : int
     _window_extended_style          : int
@@ -529,6 +529,7 @@ class Window:
             self._instance_handle,
             _C_WinApi.NULL
         )
+        print(type(self._window_handle))
 
         if self._window_handle:
             log_debug("Created window.")
@@ -2171,7 +2172,7 @@ class Window:
             # Tells DefWindowProc to not erase background. It's unnecessary since background is handled by OpenGL.
             return 1
         
-        ## Mouse ###
+        ### Mouse ###
         
         elif window_message == _C_WinApi.WM_MOUSEMOVE:
             if to_special_debug().is_notify_mouse_move:
