@@ -130,7 +130,7 @@ class FPS_Counter:
             self._fps = fps
 
             if is_display:
-                print("FPS: %.0f" % (fps))
+                print("FPS: %.0f" % (fps), flush = True)
      
 def draw_rgb_triangle(x, y, scale, angle):
     glPushMatrix()
