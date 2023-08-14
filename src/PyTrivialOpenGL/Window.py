@@ -529,7 +529,6 @@ class Window:
             self._instance_handle,
             _C_WinApi.NULL
         )
-        print(type(self._window_handle))
 
         if self._window_handle:
             log_debug("Created window.")

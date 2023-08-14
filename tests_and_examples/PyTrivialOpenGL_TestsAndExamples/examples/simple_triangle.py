@@ -8,10 +8,10 @@ __all__ = [
 def do_on_create():
     glClearColor(0, 0, 0.5, 1)
 
-    print("Escape - Exit")
+    print("Escape - Exit", flush = True)
 
 def do_on_destroy():
-    print("Bye. Bye.")
+    print("Bye. Bye.", flush = True)
 
 def draw():
     glClear(GL_COLOR_BUFFER_BIT)
@@ -42,8 +42,11 @@ def run():
 
     return togl.to_window().create_and_run(
         window_name         = "Simple Triangle",
+
         # Sets width and height of windows draw area.
         area                = (800, 400),
+
+        # Interprets size from 'area' parameter as size of draw area of window.
         style               = togl.WindowStyleBit.DRAW_AREA_SIZE,
 
         do_on_create        = do_on_create,

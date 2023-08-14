@@ -3,13 +3,17 @@ import sys
 import os
 import shutil
 
+_path_to_src = os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + "/../../../../src")
+sys.path.insert(0, _path_to_src)
+
 from PyTrivialOpenGL.Log import *
 
 __all__ = [
     "run"
 ]
+_path_to_project = os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + "/../../../..")
 
-output_folder_path = "log/tests/log"
+output_folder_path = _path_to_project + "/log/tests/log"
 
 def gen_test_output(test_file_name, test_flag, output_file_name):
     content = ""
@@ -17,7 +21,7 @@ def gen_test_output(test_file_name, test_flag, output_file_name):
     if not os.path.exists(output_folder_path):
         os.makedirs(output_folder_path)
 
-    os.system("python tests_and_examples/PyTrivialOpenGL_TestsAndExamples/tests/unit_tests/" + test_file_name + " " + test_flag + " > " + output_folder_path + "/" + output_file_name)
+    os.system("python " + _path_to_project + "/tests_and_examples/PyTrivialOpenGL_TestsAndExamples/tests/unit_tests/" + test_file_name + " " + test_flag + " > " + output_folder_path + "/" + output_file_name)
 
     with open(output_folder_path + "/" + output_file_name) as file:
         content = file.read()

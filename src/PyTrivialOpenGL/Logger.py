@@ -24,7 +24,7 @@ def defautl_log_message_to_output(log_message_type_id, prefix, message):
     """
     Logs message to stdout.
     """
-    print("%s%s" % (prefix, message))
+    print("%s%s" % (prefix, message), flush = True)
 
 class Logger:
     """

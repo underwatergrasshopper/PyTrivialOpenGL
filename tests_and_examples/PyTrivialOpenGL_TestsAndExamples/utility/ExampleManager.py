@@ -7,6 +7,8 @@ __all__ = [
     "ExampleManager",
 ]
 
+_path_to_project = _os.path.abspath(_os.path.dirname(_os.path.realpath(__file__)) + "/../../..")
+
 class Example:
     def __init__(self, name, function, possible_options, default_options):
         """
@@ -99,7 +101,7 @@ class ExampleManager:
                 print("\n    ", end = "")
         print("")
 
-    def set_log_path_root(self, log_path_root = ".\\"):
+    def set_log_path_root(self, log_path_root = _path_to_project):
         self._log_path_root = log_path_root
         self._log_path = self._log_path_root + "log\\ExampleManager"
 

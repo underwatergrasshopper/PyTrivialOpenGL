@@ -9,10 +9,14 @@ from ...utility.ExampleSupport import FPS_Counter, draw_rectangle
 
 import ctypes
 import cProfile
+import os
 
 __all__ = [
     "run"
 ]
+
+_path_to_project = os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + "/../../../..")
+
 class _Data:
     def __init__(self):
         self.options        = set()
@@ -56,7 +60,7 @@ def do_on_create():
     else:
         if "export" in _data.options:
             print("Exporting textures...")
-            _data.font.export_as_bmp("out/font")
+            _data.font.export_as_bmp(_path_to_project + "/out/font")
             print("Textures has been exported.")
 
     _data.text_drawer.set_color(255, 255, 255, 255)
@@ -72,26 +76,10 @@ def do_on_destroy():
 
     print("Bye. Bye.")
 
-
-
 def draw():
     glClear(GL_COLOR_BUFFER_BIT)
 
     glMatrixMode(GL_MODELVIEW)
-    
-    #C_GL.glColor3f(1, 0.5, 0)
-    #C_GL.glPushMatrix()
-    #C_GL.glTranslatef(50, 100, 0)
-    #C_GL.glScaled(3, 3, 1)
-    #_data.font.render_text("Somme text. Xj\u3400\u5016\u9D9B\u0001\U00024B62")
-    #C_GL.glPopMatrix()
-    #
-    #_data.text_drawer.set_pos(50, 100)
-    #_data.text_drawer.set_color(255, 0, 0, 255)
-    #
-    #_data.text_drawer.render_text(_data.font, "Some text. Xj\u3400\u5016\u9D9B\u0001\U00024B62\nNew Line.")
-    #_data.text_drawer.render_text(_data.font, "\nAnd another line.")
-    #_data.text_drawer.render_text(_data.font, "\n\tTab.\b")
     
     text_size = _data.text_drawer.get_text_size(_data.font, _data.fine_text)
     

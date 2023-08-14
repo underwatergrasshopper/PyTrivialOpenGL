@@ -1,4 +1,5 @@
-import os as _os
+import os   as _os
+import sys  as _sys
 
 from .ExampleManager import ExampleManager
 
@@ -10,6 +11,8 @@ __all__ = [
     "ExampleCategoryBit",
     "ExampleRunner",
 ]
+
+_path_to_project = _os.path.abspath(_os.path.dirname(_os.path.realpath(__file__)) + "/../../..")
 
 class ExampleCategoryBit:
     EXAMPLES        = 0x01
@@ -62,8 +65,8 @@ class ExampleRunner:
         default_example_name    : str | None
         """
 
-        if not _os.path.exists("out"):
-            _os.makedirs("out")
+        if not _os.path.exists(_path_to_project + "/out"):
+            _os.makedirs(_path_to_project + "/out")
         
         example_manager = ExampleManager()
 

@@ -8,6 +8,9 @@ from PyTrivialOpenGL.Font import _FrameBuffer, _FontDataGenerator, _FontInfo
 from ...utility.ExampleSupport import FPS_Counter
 
 import ctypes
+import os
+
+_path_to_project = os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + "/../../../..")
 
 __all__ = [
     "run"
@@ -40,9 +43,6 @@ def do_on_create():
 
     unicode_char_set_id = togl.UnicodeCharSetId.RANGE_0000_FFFF if "plane_0" in _data.options else togl.UnicodeCharSetId.ENGLISH
 
-
-
-
     _data.font.load("Courier New", 32, togl.FontSizeUnitId.PIXELS, togl.FontStyleId.NORMAL, unicode_char_set_id)
 
     if "left_top" in _data.options:
@@ -53,7 +53,7 @@ def do_on_create():
     else:
         if "export" in _data.options:
             print("Exporting textures...")
-            _data.font.export_as_bmp("out/font")
+            _data.font.export_as_bmp(_path_to_project + "/out/font")
             print("Textures has been exported.")
 
     _data.fps_counter.reset()
