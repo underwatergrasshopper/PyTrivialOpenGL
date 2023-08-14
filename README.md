@@ -80,6 +80,8 @@ Operating System | Window 7/10
     - `l` - which means last used options names
     - `d` - which means default options names
 
+Examples with `c_` prefix are using `C_GL` module instead of `GL` module.
+
 *Note: Local version of package is used, not installed.*
 
 When PyTrivialOpenGL package is installed, all examples can be run individually by going to `tests_and_examples/PyTrivialOpenGL_TestsAndExamples/examples` folder and running `python <example_name>.py` command.
