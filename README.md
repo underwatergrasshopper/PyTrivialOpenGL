@@ -82,7 +82,7 @@ Operating System | Window 7/10
 
 *Note: Local version of package is used, not installed.*
 
-When PyTrivialOpenGL package is installed, all examples can be run individually by going to `tests_and_examples/PyTrivialOpenGL_TestsAndExamples/examples` folder and run `python <example_name>.py` command.
+When PyTrivialOpenGL package is installed, all examples can be run individually by going to `tests_and_examples/PyTrivialOpenGL_TestsAndExamples/examples` folder and running `python <example_name>.py` command.
 
 ## HowTo: Run All non Unit Tests
 
