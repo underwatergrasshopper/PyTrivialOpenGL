@@ -5,6 +5,8 @@ A simple library which allows to create window with OpenGL rendering context,
 and draw into client area of window (draw area) by using OpenGL functions.
 
 Provides OpenGL 1.1 functions, types, and constant (all optional to use) with and without need to use ctypes module (also optional).
+- `PyTrivialOpenGL.GL` - OpenGL functions, types and constants (more readable).
+- `PyTrivialOpenGL.C_GL` - OpenGL functions, types and constants with ctypes dependency for using (faster).
 
 No external DLLs are required, other than some defaults provided by system (Kernel32, User32, Dwmapi, Gdi32), python (ctypes) and graphic card vendor (OpenGL32).
 
