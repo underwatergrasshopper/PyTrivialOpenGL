@@ -8,7 +8,7 @@ Provides OpenGL 1.1 functions, types, and constant (all optional to use) with an
 
 No external DLLs are required, other than some defaults provided by system (Kernel32, User32, Dwmapi, Gdi32), python (ctypes) and graphic card vendor (OpenGL32).
 
-No glide is required.
+No GLUT is required.
 
 ## Requirements
 
