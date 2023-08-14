@@ -34,16 +34,43 @@ class _Data:
 
 _data = _Data()
 
-def set_orthogonal_projection(width, height):
-    glMatrixMode(GL_PROJECTION)
+def resize(width, height):
+    glViewport(0, 0, width, height)
 
+    glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     glOrtho(0, width, 0, height, 1, -1)
 
-def do_on_create():
+    _data.width = width
+    _data.height = height
+
+    fine_text = togl.FineText(
+        (0, 255, 0, 255),
+        "Xj\n",
+        (255, 0, 0, 255),
+        "Xj\n",
+        (0, 0, 0, 255),
+        (
+            "Some text. \u3400\u5016\u9D9B\u0001\U00024B62. Many words in line. Many words in line. Many words in line. Many words in line. Many words in line. Many words in line.\n"
+            "Many words in line with \ttab.\n"
+            "Many words in line with i\ttab.\n"
+            "Many words in line with ii\ttab.\n"
+            "Many words in line with iii\ttab.\n"
+            "Many words in line with iiii\ttab.\n"
+            "New line. "
+            "\tTab.Long                                 line. "
+            "Very-long-text-to-split-apart. "
+        )
+    )
+
+    _data.text_adjuster.set_line_wrap_width(_data.width - 10)
+    _data.fine_text = _data.text_adjuster.adjust_text(_data.font, fine_text)
+
+
+def do_on_create(data):
     glPushAttrib(GL_ALL_ATTRIB_BITS)
 
-    set_orthogonal_projection(_data.width, _data.height)
+    resize(data.width, data.height)
 
     glClearColor(0, 0, 0.5, 1)
 
@@ -102,34 +129,7 @@ def do_on_key(key_id, is_down, extra):
             togl.to_window().request_close()
 
 def do_on_resize(width, height):
-    glViewport(0, 0, width, height)
-
-    _data.width = width
-    _data.height = height
-
-    set_orthogonal_projection(_data.width, _data.height)
-
-    fine_text = togl.FineText(
-        (0, 255, 0, 255),
-        "Xj\n",
-        (255, 0, 0, 255),
-        "Xj\n",
-        (0, 0, 0, 255),
-        (
-            "Some text. \u3400\u5016\u9D9B\u0001\U00024B62. Many words in line. Many words in line. Many words in line. Many words in line. Many words in line. Many words in line.\n"
-            "Many words in line with \ttab.\n"
-            "Many words in line with i\ttab.\n"
-            "Many words in line with ii\ttab.\n"
-            "Many words in line with iii\ttab.\n"
-            "Many words in line with iiii\ttab.\n"
-            "New line. "
-            "\tTab.Long                                 line. "
-            "Very-long-text-to-split-apart. "
-        )
-    )
-
-    _data.text_adjuster.set_line_wrap_width(_data.width - 10)
-    _data.fine_text = _data.text_adjuster.adjust_text(_data.font, fine_text)
+    resize(width, height)
 
 
 def run(name, options):

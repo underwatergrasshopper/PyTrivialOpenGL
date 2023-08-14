@@ -18,8 +18,10 @@ class _Data:
 
 _data = _Data()
 
-def do_on_create():
+def do_on_create(data):
     glPushAttrib(GL_ALL_ATTRIB_BITS)
+
+    glViewport(0, 0, data.width, data.height)
 
     glClearColor(0, 0, 0.5, 1)
 
@@ -28,7 +30,6 @@ def do_on_create():
     print(glGetBooleanv(GL_COLOR_WRITEMASK))
 
     print(glGetBooleanv(GL_COLOR_WRITEMASK) == [GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE])
-
 
     vertices = [
         0,      0.5,

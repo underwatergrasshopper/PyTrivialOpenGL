@@ -9,12 +9,18 @@ def get_path_to_assets():
     from os import path as _path
     return _path.abspath(_path.dirname(_path.realpath(__file__)) + "/../assets")
 
-def do_on_create():
+def do_on_create(data):
+    glPushAttrib(GL_ALL_ATTRIB_BITS)
+
+    glViewport(0, 0, data.width, data.height)
+
     glClearColor(0, 0, 0.5, 1)
 
     print("Escape - Exit", flush = True)
 
 def do_on_destroy():
+    glPopAttrib()
+
     print("Bye. Bye.", flush = True)
 
 def draw():

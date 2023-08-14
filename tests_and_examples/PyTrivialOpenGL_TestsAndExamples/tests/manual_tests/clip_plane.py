@@ -15,8 +15,10 @@ def isclose(l_a, l_b, delta):
             return False
     return True
 
-def do_on_create():
+def do_on_create(data):
     glPushAttrib(GL_ALL_ATTRIB_BITS)
+
+    glViewport(0, 0, data.width, data.height)
 
     glEnable(GL_CLIP_PLANE0)
     glEnable(GL_CLIP_PLANE1)

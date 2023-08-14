@@ -131,7 +131,9 @@ __all__ = [
     "run"
 ]
 
-def do_on_create():
+def do_on_create(data):    
+    glViewport(0, 0, data.width, data.height)
+
     glClearColor(0, 0, 0.5, 1)
 
     print("Escape - Exit", flush = True)
@@ -186,7 +188,9 @@ __all__ = [
     "run"
 ]
 
-def do_on_create():
+def do_on_create(data):    
+    glViewport(0, 0, data.width, data.height)
+
     glClearColor(0, 0, 0.5, 1)
 
     print("Escape - Exit", flush = True)

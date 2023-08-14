@@ -60,9 +60,9 @@ Shift + M       - Maximize
 F               - Windowed Full Screen
 
 C               - Center
-Shift + C       - Center (width=600, height=300)
-L. Ctrl + C     - Center Draw Area (width=600, height=300)
-R. Ctrl + C     - Center Window Area (width=600, height=300)
+Ctrl + C        - Center (width=600, height=300)
+L. Shift + C    - Center Draw Area (width=600, height=300)
+R. Shift + C    - Center Window Area (width=600, height=300)
  
 P               - Move to (x=10, y=50)
 L. Ctrl + P     - Move to (x=10)
@@ -99,6 +99,8 @@ def display_legend():
     print("--- Legend ---\n" + _legend + "---\n")
 
 def set_orthogonal_projection(width, height):
+    glViewport(0, 0, width, height)
+
     glPushAttrib(GL_TRANSFORM_BIT)
 
     glMatrixMode(GL_PROJECTION)
@@ -107,10 +109,12 @@ def set_orthogonal_projection(width, height):
 
     glPopAttrib()
 
+    _data.animated_triangle.resize(width, height)
+
     _data.width     = width
     _data.height    = height
 
-def do_on_create():
+def do_on_create(data):
     print("do_on_create")
 
     glPushAttrib(GL_ALL_ATTRIB_BITS)
@@ -118,14 +122,13 @@ def do_on_create():
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
-    set_orthogonal_projection(_WIDTH, _HEIGHT)
+    set_orthogonal_projection(data.width, data.height)
 
     glClearColor(0, 0, 0, 1)
 
     _data.fps_counter.reset()
 
-    # Note: Will cause an exception (as should be). 
-    #togl.to_window().center()
+    # togl.to_window().go_windowed_full_screen() # debug
 
     _data.font.load("Courier New", _FONT_SIZE, togl.FontSizeUnitId.PIXELS, togl.FontStyleId.NORMAL, togl.UnicodeCharSetId.ENGLISH)
     if _data.font.is_ok():
@@ -235,11 +238,11 @@ def do_on_key(key_id, is_down, extra):
         _window.go_windowed_full_screen()
 
     elif key_id == 'C' and not is_down:
-        if extra.is_shift_down:
+        if extra.is_ctrl_down:
             _window.center(_WIDTH, _HEIGHT, is_draw_area_size = _data.is_draw_area)
-        elif extra.is_left_ctrl_down:
+        elif extra.is_left_shift_down:
             _window.center(_WIDTH, _HEIGHT, is_draw_area_size = True)
-        elif extra.is_right_ctrl_down:
+        elif extra.is_right_shift_down:
             _window.center(_WIDTH, _HEIGHT, is_draw_area_size = False)
         else:
             _window.center()
@@ -348,14 +351,8 @@ def do_on_key(key_id, is_down, extra):
 
 def do_on_resize(width, height):
     print("do_on_resize: %d %d" % (width, height))
-    if height < 1: 
-        height = 1
-
-    glViewport(0, 0, width, height)
 
     set_orthogonal_projection(width, height)
-
-    _data.animated_triangle.resize(width, height)
 
 
 def do_on_state_change(state_id):

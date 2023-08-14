@@ -19,10 +19,12 @@ class _Data:
 
 _data = _Data()
 
-def do_on_create():
+def do_on_create(data):
     glPushAttrib(GL_ALL_ATTRIB_BITS)
 
     glClearColor(0, 0, 0.5, 1)
+    
+    glViewport(0, 0, data.width, data.height)
 
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()

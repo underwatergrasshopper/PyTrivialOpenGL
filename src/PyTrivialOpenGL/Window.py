@@ -78,6 +78,23 @@ class WindowStateId(_enum.IntEnum):
 class WindowOptionId(_enum.IntEnum):
     AUTO_SLEEP_MODE = _enum.auto()
 
+class WindowCreateData:
+    """
+    width               : int
+        Width of window draw area in pixels.
+    height              : int
+        Height of window draw area in pixels.
+    is_visible          : bool
+    is_foreground       : bool
+    state_id            : WindowStateId
+    """
+    def __init__(self, width, height, is_visible, is_foreground, state_id):
+        self.width              = width
+        self.height             = height
+        self.is_visible         = is_visible
+        self.is_foreground      = is_foreground
+        self.state_id           = state_id
+
 class _WindowAreaPartId(_enum.Enum):
     POSITION            = _enum.auto()
     POSITION_OFFSET     = _enum.auto()
@@ -111,10 +128,14 @@ class Window:
 
     _is_apply_fake_width                    : bool 
     _is_enable_do_on_resize                 : bool  
+    _is_enable_do_on_hide_show              : bool  
+    _is_enable_do_on_foreground             : bool  
     _is_enable_change_state_at_resize       : bool  
     _is_in_draw                             : bool
 
     _is_enable_do_on_resize_stack           : List[bool]
+    _is_enable_do_on_hide_show_stack        : List[bool]
+    _is_enable_do_on_foreground_stack       : List[bool]
     _is_enable_change_state_at_resize_stack : List[bool]
 
     _is_shift_down                  : bool
@@ -138,7 +159,7 @@ class Window:
     _is_two_utf16_code_units        : bool
     _is_decode_fail                 : bool
 
-    _do_on_create                   : Callable[[], None]
+    _do_on_create                   : Callable[[WindowCreateData], None]
     _do_on_close                    : Callable[[], bool]
     _do_on_destroy                  : Callable[[], None]
     _draw                           : Callable[[], None]
@@ -238,7 +259,9 @@ class Window:
         is_auto_sleep_blocked   : bool | Any
             If True, then prevents system from going to sleep mode while window is running.
 
-        do_on_create            : Callable[[], None]
+        do_on_create            : Callable[[WindowCreateData], None]
+            Argument name convention: do_on_create(data).
+            This is the first callback called.
             Called right after window is created.
 
         do_on_close                    : Callable[[], bool]
@@ -247,6 +270,7 @@ class Window:
             If returns False, then window destroy is aborted, and window continues running.
 
         do_on_destroy           : Callable[[], None]
+            This is the last callback called.
             Called right before window is destroyed.
 
         draw                    : Callable[[], None]
@@ -302,10 +326,10 @@ class Window:
             Called each time when window state changes.
 
         do_on_show              : Callable[[], None]
-            Called when window is about to show.
+            Called when window change to be visible.
 
         do_on_hide              : Callable[[], None]
-            Called when window is about to hide.
+            Called when window change to not be visible.
 
         do_on_foreground        : Callable[[bool], None]
             Argument name convention: do_on_foreground(is_gain).
@@ -530,15 +554,15 @@ class Window:
             _C_WinApi.NULL
         )
 
+        self._push_is_enable_change_state_at_resize(False)
+        self._push_is_enable_do_on_hide_show(False)
+        self._push_is_enable_do_on_foreground(False)
+        self._push_is_enable_do_on_resize(False)
+
         if self._window_handle:
             log_debug("Created window.")
         else:
             log_fatal_error("Can not create window.")
-
-        if self._do_on_create is not None:
-            self._is_during_do_on_create = True
-            self._do_on_create()
-            self._is_during_do_on_create = False
 
         if state_id == WindowStateId.NORMAL:
             self._solve_and_set_area(area)
@@ -558,6 +582,19 @@ class Window:
         elif self._state_id != WindowStateId.MINIMIZED:
             _C_WinApi.SetForegroundWindow(self._window_handle)
             _C_WinApi.SetFocus(self._window_handle)
+
+        self._pop_is_enable_change_state_at_resize()
+        self._pop_is_enable_do_on_hide_show()
+        self._pop_is_enable_do_on_foreground()
+        self._pop_is_enable_do_on_resize()
+
+        if self._do_on_create is not None:
+            size = self.get_draw_area_size()
+            data = WindowCreateData(size.width, size.height, self._is_visible, self._is_active, self._state_id)
+
+            self._is_during_do_on_create = True
+            self._do_on_create(data)
+            self._is_during_do_on_create = False
 
         if self._timer_time_interval > 0:
             result = _C_WinApi.SetTimer(self._window_handle, self._DEFAULT_TIMER_ID, self._timer_time_interval, _C_WinApi.TIMERPROC(0))
@@ -684,12 +721,7 @@ class Window:
                 When unexpected combination of arguments.
             ValueError
                 When either x, y, pos.x, pos.y is not in range of <-2^31, 2^31-1>.
-            RuntimeError
-                When called from do_on_create.
         """
-        if self._is_during_do_on_create:
-            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
-
         if not isinstance(is_draw_area, bool):
             try:
                 is_draw_area = bool(is_draw_area)
@@ -793,12 +825,7 @@ class Window:
                 When offset type is other than expected.
             ValueError
                 When either offset_x, offset_y, offset.x, offset.y is not in range of <-2^31, 2^31-1>.
-            RuntimeError
-                When called from do_on_create.
         """
-        if self._is_during_do_on_create:
-            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
-
         if offset is not None:
             if offset_x is not None:
                 raise TypeError("Unexpected combination of arguments. Assignment to 'offset_x' shouldn't be present when assignment to 'offset' is present.")
@@ -895,12 +922,7 @@ class Window:
                 When size type is other than expected.
             ValueError
                 When either width, height, size.width, size.height is not in range of <0, 2^31-1>.
-            RuntimeError
-                When called from do_on_create.
         """
-        if self._is_during_do_on_create:
-            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
-
         if not isinstance(is_draw_area, bool):
             try:
                 is_draw_area = bool(is_draw_area)
@@ -1015,12 +1037,7 @@ class Window:
             ValueError
                 When either x, y, area.x, area.y is not in range of <-2^31, 2^31-1>.
                 When either width, height, area.width, area.height is not in range of <0, 2^31-1>.
-            RuntimeError
-                When called from do_on_create.
         """
-        if self._is_during_do_on_create:
-            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
-
         if not isinstance(is_draw_area, bool):
             try:
                 is_draw_area = bool(is_draw_area)
@@ -1167,12 +1184,7 @@ class Window:
                 When size type is other than expected.
             ValueError
                 When either width, height, size.width, size.height is not in range of <0, 2^31-1>.
-            RuntimeError
-                When called from do_on_create.
         """
-        if self._is_during_do_on_create:
-            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
-
         if not isinstance(is_draw_area_size, bool):
             try:
                 is_draw_area_size = bool(is_draw_area_size)
@@ -1392,15 +1404,9 @@ class Window:
     ###
 
     def show(self):
-        if self._is_during_do_on_create:
-            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
-
         _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
 
     def hide(self):
-        if self._is_during_do_on_create:
-            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
-
         _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_HIDE)
 
     def is_visible(self):
@@ -1409,9 +1415,6 @@ class Window:
     ###
 
     def minimize(self):
-        if self._is_during_do_on_create:
-            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
-
         if self._state_id == WindowStateId.WINDOWED_FULL_SCREENED:
             self._push_is_enable_do_on_resize(False)
             self._push_is_enable_change_state_at_resize(False)
@@ -1435,9 +1438,6 @@ class Window:
         _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_MINIMIZE)
 
     def maximize(self):
-        if self._is_during_do_on_create:
-            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
-
         if not self._is_visible:
             _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
 
@@ -1468,9 +1468,6 @@ class Window:
             _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_MAXIMIZE)
 
     def go_windowed_full_screen(self):
-        if self._is_during_do_on_create:
-            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
-
         if not self._is_visible:
             _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_SHOW)
         
@@ -1543,9 +1540,6 @@ class Window:
     ###
 
     def go_foreground(self):
-        if self._is_during_do_on_create:
-            raise RuntimeError("Can not use this method during window creation (during 'do_on_create').")
-
         _C_WinApi.SetForegroundWindow(self._window_handle)
 
     def is_foreground(self):
@@ -1610,10 +1604,14 @@ class Window:
 
         self._is_apply_fake_width               = False
         self._is_enable_do_on_resize            = True
+        self._is_enable_do_on_hide_show         = True
+        self._is_enable_do_on_foreground        = True
         self._is_enable_change_state_at_resize  = True
         self._is_in_draw                        = False
 
         self._is_enable_do_on_resize_stack              = []
+        self._is_enable_do_on_hide_show_stack           = []
+        self._is_enable_do_on_foreground_stack          = []
         self._is_enable_change_state_at_resize_stack    = []
 
         self._is_shift_down                 = False
@@ -1866,6 +1864,28 @@ class Window:
     def _pop_is_enable_do_on_resize(self):
         if len(self._is_enable_do_on_resize_stack) > 0:
             self._is_enable_do_on_resize = self._is_enable_do_on_resize_stack.pop()
+
+    def _push_is_enable_do_on_hide_show(self, new_value):
+        """
+        new_value : bool
+        """
+        self._is_enable_do_on_hide_show_stack.append(self._is_enable_do_on_hide_show)
+        self._is_enable_do_on_hide_show = new_value
+
+    def _pop_is_enable_do_on_hide_show(self):
+        if len(self._is_enable_do_on_hide_show_stack) > 0:
+            self._is_enable_do_on_hide_show = self._is_enable_do_on_hide_show_stack.pop()
+
+    def _push_is_enable_do_on_foreground(self, new_value):
+        """
+        new_value : bool
+        """
+        self._is_enable_do_on_foreground_stack.append(self._is_enable_do_on_foreground)
+        self._is_enable_do_on_foreground = new_value
+
+    def _pop_is_enable_do_on_foreground(self):
+        if len(self._is_enable_do_on_foreground_stack) > 0:
+            self._is_enable_do_on_foreground = self._is_enable_do_on_foreground_stack.pop()
 
     def _push_is_enable_change_state_at_resize(self, new_value):
         """
@@ -2400,6 +2420,12 @@ class Window:
                 else:
                     status_name = ""
 
+                if not self._is_enable_do_on_hide_show:
+                    if visibility_text == "SHOW":
+                        status_name += " without:do_on_show"
+                    else:
+                        status_name += " without:do_on_hide"
+
                 log_debug("%-20s: %s %s" % (wm_text, visibility_text, status_name))
 
             is_visible = (w_param == _C_WinApi.TRUE)
@@ -2408,9 +2434,11 @@ class Window:
                 self._is_visible = is_visible
 
                 if self._is_visible and self._do_on_show:
-                    self._do_on_show()
+                    if self._is_enable_do_on_hide_show:
+                        self._do_on_show()
                 elif (not self._is_visible) and self._do_on_hide:
-                    self._do_on_hide()
+                    if self._is_enable_do_on_hide_show:
+                        self._do_on_hide()
 
             return 0
         
@@ -2439,13 +2467,17 @@ class Window:
                 else:
                     transition_text = ""
 
+                if not self._is_enable_do_on_foreground:
+                    transition_text += " without:do_on_foreground"
+
                 log_debug("%-20s:%s %s%s" % (wm_text, minimized_text, activation_state_name, transition_text))
 
             if is_active != self._is_active:
                 self._is_active = is_active
 
                 if self._do_on_foreground:
-                    self._do_on_foreground(is_active)
+                    if self._is_enable_do_on_foreground:
+                        self._do_on_foreground(is_active)
 
             return 0
 

@@ -50,20 +50,20 @@ def display_legend():
     print(_legend)
 
 def set_orthogonal_projection(width, height):
-    glPushAttrib(GL_TRANSFORM_BIT)
+    glViewport(0, 0, width, height)
 
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     glOrtho(0, width, 0, height, 1, -1)
 
-    glPopAttrib()
+    _data.animated_triangle.resize(width, height)
 
-def do_on_create():
+def do_on_create(data):
     glPushAttrib(GL_ALL_ATTRIB_BITS)
 
     display_legend()
 
-    set_orthogonal_projection(_WIDTH, _HEIGHT)
+    set_orthogonal_projection(data.width, data.height)
 
     glClearColor(0, 0, 0.5, 1)
 
@@ -123,10 +123,6 @@ def do_on_text(text, is_correct):
 
 def do_on_resize(width, height):
     print("do_on_resize: %d %d" % (width, height))
-
-    glViewport(0, 0, width, height)
-
-    _data.animated_triangle.resize(width, height)
         
     set_orthogonal_projection(width, height)
 

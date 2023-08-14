@@ -11,13 +11,15 @@ __all__ = [
 _WIDTH = 800
 _HEIGHT = 400
 
-def do_on_create():
+def do_on_create(data):
     glPushAttrib(GL_ALL_ATTRIB_BITS)
+
+    glViewport(0, 0, data.width, data.height)
 
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
-    glOrtho(0, _WIDTH, 0, _HEIGHT, 1, -1)
+    glOrtho(0, data.width, 0, data.height, 1, -1)
 
     glClearColor(0, 0, 0.5, 1)
 

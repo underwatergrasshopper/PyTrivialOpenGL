@@ -170,7 +170,7 @@ class Data:
 
 _data = Data()
 
-def do_on_create():
+def do_on_create(data):
     glPushAttrib(GL_ALL_ATTRIB_BITS)
 
     print(glIsEnabled(GL_CULL_FACE))
@@ -185,6 +185,8 @@ def do_on_create():
     glEnableClientState(GL_VERTEX_ARRAY)
     glEnableClientState(GL_NORMAL_ARRAY)
     glEnableClientState(GL_COLOR_ARRAY)
+
+    glViewport(0, 0, data.width, data.height)
 
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()

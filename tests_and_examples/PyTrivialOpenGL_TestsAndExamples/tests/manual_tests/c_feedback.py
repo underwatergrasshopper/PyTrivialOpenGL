@@ -111,8 +111,10 @@ def check():
 
     print("Ok")
 
-def do_on_create():
+def do_on_create(data):
     C_GL.glPushAttrib(GL_ALL_ATTRIB_BITS)
+
+    C_GL.glViewport(0, 0, data.width, data.height)
 
     C_GL.glClearColor(0, 0, 0.5, 1)
 

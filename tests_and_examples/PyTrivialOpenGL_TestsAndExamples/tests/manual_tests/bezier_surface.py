@@ -30,8 +30,10 @@ class Data:
 
 _data = Data()
 
-def do_on_create():
+def do_on_create(data):
     glPushAttrib(GL_ALL_ATTRIB_BITS)
+
+    glViewport(0, 0, data.width, data.height)
 
     glEnable(GL_CULL_FACE)
     glEnable(GL_DEPTH_TEST)

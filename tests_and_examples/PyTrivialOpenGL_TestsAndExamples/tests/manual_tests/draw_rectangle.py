@@ -5,8 +5,10 @@ __all__ = [
     "run"
 ]
 
-def do_on_create():
+def do_on_create(data):
     glPushAttrib(GL_ALL_ATTRIB_BITS)
+
+    glViewport(0, 0, data.width, data.height)
 
     glClearColor(0, 0, 0.5, 1)
 
