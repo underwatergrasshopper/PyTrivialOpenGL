@@ -129,9 +129,10 @@ class TextAdjuster:
                 part = sentence[pos:next_part_pos]
             else:
                 part = sentence[pos:]
-                break
 
             parts.append(part)
+            if next_part_pos is None:
+                break
             pos = next_part_pos
 
         return parts

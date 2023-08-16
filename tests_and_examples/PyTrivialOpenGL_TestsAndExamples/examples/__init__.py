@@ -6,4 +6,11 @@ from . import (
 
     simple_triangle,
     animated_triangle,
+
+    simple_text,
+    colored_text,
+    top_to_bottom_text,
+    unicode_text,
+    formated_text,
+    text_box,
 )

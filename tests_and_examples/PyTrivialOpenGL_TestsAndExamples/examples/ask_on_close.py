@@ -39,7 +39,10 @@ def run():
     return togl.to_window().create_and_run(
         window_name         = "Ask on Close",
 
+        # Sets width and height of windows draw area.
         area                = (800, 400),
+
+        # Interprets size from 'area' parameter as size of draw area of window.
         style               = togl.WindowStyleBit.DRAW_AREA_SIZE,
 
         do_on_create        = do_on_create,

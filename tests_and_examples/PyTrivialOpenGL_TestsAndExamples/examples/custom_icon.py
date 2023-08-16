@@ -39,7 +39,11 @@ def run():
 
     return togl.to_window().create_and_run(
         window_name         = "Custom Icon",
+
+        # Sets width and height of windows draw area.
         area                = (800, 400),
+
+        # Interprets size from 'area' parameter as size of draw area of window.
         style               = togl.WindowStyleBit.DRAW_AREA_SIZE,
 
         icon_file_name      = get_path_to_assets() + "/icon.ico",

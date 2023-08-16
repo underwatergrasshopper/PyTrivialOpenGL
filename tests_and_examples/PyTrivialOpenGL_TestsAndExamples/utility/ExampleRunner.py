@@ -71,15 +71,20 @@ class ExampleRunner:
         example_manager = ExampleManager()
 
         if category & ExampleCategoryBit.EXAMPLES:
-           example_manager.add_example("custom_icon",       lambda name, options: examples.custom_icon.run())
-           example_manager.add_example("opengl_version",    lambda name, options: examples.opengl_version.run())
-           example_manager.add_example("timer",             lambda name, options: examples.timer.run())
-           example_manager.add_example("ask_on_close",      lambda name, options: examples.ask_on_close.run())
+           example_manager.add_example("custom_icon",           lambda name, options: examples.custom_icon.run())
+           example_manager.add_example("opengl_version",        lambda name, options: examples.opengl_version.run())
+           example_manager.add_example("timer",                 lambda name, options: examples.timer.run())
+           example_manager.add_example("ask_on_close",          lambda name, options: examples.ask_on_close.run())
 
-           example_manager.add_example("simple_triangle",   lambda name, options: examples.simple_triangle.run())
-           example_manager.add_example("animated_triangle", lambda name, options: examples.animated_triangle.run())
+           example_manager.add_example("simple_triangle",       lambda name, options: examples.simple_triangle.run())
+           example_manager.add_example("animated_triangle",     lambda name, options: examples.animated_triangle.run())
 
-
+           example_manager.add_example("simple_text",           lambda name, options: examples.simple_text.run())
+           example_manager.add_example("colored_text",          lambda name, options: examples.colored_text.run())
+           example_manager.add_example("top_to_bottom_text",    lambda name, options: examples.top_to_bottom_text.run())
+           example_manager.add_example("unicode_text",          lambda name, options: examples.unicode_text.run())
+           example_manager.add_example("formated_text",         lambda name, options: examples.formated_text.run())
+           example_manager.add_example("text_box",              lambda name, options: examples.text_box.run())
 
         if category & ExampleCategoryBit.DEBUGS:
             example_manager.add_example("debug.winapi",           debugs.winapi.run,          ["min_max"])

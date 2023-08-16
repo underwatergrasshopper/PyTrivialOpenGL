@@ -135,10 +135,13 @@ def run():
     return togl.to_window().create_and_run(
         window_name         = "Animated Triangle",
 
+        # Sets width and height of windows draw area.
         area                = (800, 400),
+
+        # Interprets size from 'area' parameter as size of draw area of window.
         style               = togl.WindowStyleBit.DRAW_AREA_SIZE,
+
         timer_time_interval = 20,
-        
 
         do_on_create        = do_on_create,
         do_on_destroy       = do_on_destroy,
