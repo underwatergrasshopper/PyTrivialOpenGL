@@ -605,11 +605,3 @@ if __name__ == "__main__":
 ```
 [Back to: Code Examples](#code-examples)
 
-### Title
-
-
-```python
-
-```
-[Back to: Code Examples](#code-examples)
-
