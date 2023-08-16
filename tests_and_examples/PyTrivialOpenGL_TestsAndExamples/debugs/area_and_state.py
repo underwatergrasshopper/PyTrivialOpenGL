@@ -146,9 +146,9 @@ def do_on_close():
 def do_on_destroy():
     print("do_on_destroy")
 
-    glPopAttrib()
-
     _data.font.unload()
+
+    glPopAttrib()
 
     print("Bye. Bye.", flush = True)
 

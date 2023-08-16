@@ -51,6 +51,8 @@
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\debugs\winapi.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\examples\ask_on_close.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\examples\colored_text.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\examples\window_state.py" />
+    <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\examples\font_custom_code_point_range.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\examples\text_box.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\examples\formated_text.py" />
     <Compile Include="tests_and_examples\PyTrivialOpenGL_TestsAndExamples\examples\unicode_text.py" />

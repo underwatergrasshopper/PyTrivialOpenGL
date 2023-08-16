@@ -141,7 +141,15 @@ class Font:
                 if isinstance(code_point_range, CodePointRange):
                     proper_code_point_rangess.append(_deepcopy(code_point_range))
                 elif isinstance(code_point_range, tuple):
-                    pass
+                    if len(code_point_range) == 2:
+                        try:
+                            code_point_range = [int(item) for item in code_point_range]
+                        except Exception as exception:
+                            raise ValueError("At %d item of 'code_point_ranges'. Value is not convertible to int.") from exception
+
+                        proper_code_point_rangess.append(CodePointRange(code_point_range[0], code_point_range[1]))
+                    else:
+                        raise ValueError("At %d item of 'code_point_ranges'. Wrong size of tuple. Size should be equal to 2.")
                 elif isinstance(code_point_range, int):
                     proper_code_point_rangess.append(CodePointRange(code_point_range))
                 else:

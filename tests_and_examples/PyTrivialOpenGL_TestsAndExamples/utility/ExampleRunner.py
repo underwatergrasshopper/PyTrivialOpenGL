@@ -85,6 +85,9 @@ class ExampleRunner:
            example_manager.add_example("unicode_text",          lambda name, options: examples.unicode_text.run())
            example_manager.add_example("formated_text",         lambda name, options: examples.formated_text.run())
            example_manager.add_example("text_box",              lambda name, options: examples.text_box.run())
+           example_manager.add_example("font_custom_code_point_range", lambda name, options: examples.font_custom_code_point_range.run())
+           example_manager.add_example("window_state",          lambda name, options: examples.window_state.run())
+           
 
         if category & ExampleCategoryBit.DEBUGS:
             example_manager.add_example("debug.winapi",           debugs.winapi.run,          ["min_max"])
