@@ -122,6 +122,8 @@ When PyTrivialOpenGL package is installed, all examples can be run individually 
 - [Simple Triangle](#simple-triangle)
 - [Animated Triangle](#animated-triangle)
 
+For more examples go to `tests_and_examples/PyTrivialOpenGL_TestsAndExamples/examples` folder.
+
 ### Custom Icon
 
 Loads icon image from file.
