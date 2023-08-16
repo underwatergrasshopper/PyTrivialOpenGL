@@ -2095,7 +2095,6 @@ class Window:
             rendering_context_handle = wglCreateContextAttribsARB(self._device_context_handle, 0, attribute_list)
             if not rendering_context_handle:
                 log_fatal_error("Can not create OpenGl Rendering Context for version %d.%d (error code = %d)." % (self._opengl_version.major, self._opengl_version.minor, _C_WinApi.GetLastError()))
-            
 
             if not _C_WGL.wglMakeCurrent(self._device_context_handle, rendering_context_handle):
                 log_fatal_error( "Can not set created OpenGl Rendering Context for version %d.%d to be current." % (self._opengl_version.major, self._opengl_version.minor))
