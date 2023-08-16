@@ -87,6 +87,7 @@ class ExampleRunner:
            example_manager.add_example("text_box",              lambda name, options: examples.text_box.run())
            example_manager.add_example("font_custom_code_point_range", lambda name, options: examples.font_custom_code_point_range.run())
            example_manager.add_example("window_state",          lambda name, options: examples.window_state.run())
+           example_manager.add_example("cube_in_fog",           lambda name, options: examples.cube_in_fog.run())
            
 
         if category & ExampleCategoryBit.DEBUGS:
