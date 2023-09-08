@@ -1,7 +1,3 @@
-__all__ = [
-    "Size",
-]
-
 class Size:
     """
     width   : int | float

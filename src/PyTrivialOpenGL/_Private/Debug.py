@@ -1,4 +1,12 @@
+"""
+This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL package.
+"""
+
 from .C_WinApi import *
+
+__all__ = [
+    "wm_to_str"
+]
 
 def wm_to_str(window_message):
     """

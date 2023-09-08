@@ -4,18 +4,19 @@ import os       as _os
 
 from copy import deepcopy as _deepcopy
 
-from .Size      import Size
-from .Point     import Point
-from .Log       import *
-from .OriginId  import OriginId
-
 from ._Private  import C_WGL    as _C_WGL
 from ._Private  import C_WinApi as _C_WinApi
 from .          import C_GL     as _C_GL
 
-from .Utility   import get_gl_error_str     as _get_gl_error_str
-from .Utility   import save_texture_as_bmp  as _save_texture_as_bmp
-from .Window    import to_window            as _to_window
+from .Utility   import get_gl_error_str         as _get_gl_error_str
+from .Utility   import save_texture_as_bmp      as _save_texture_as_bmp
+from .Window    import to_window                as _to_window
+from .          import Log                      as _Log
+
+# Same level modules.
+from .Size      import Size
+from .Point     import Point
+from .OriginId  import OriginId
 
 class FontSizeUnitId(_enum.Enum):
     PIXELS = _enum.auto()
@@ -186,27 +187,27 @@ class Font:
             distance_between_lines  = distance_between_lines, 
         )
 
-        if is_log_level_at_least(LogLevel.DEBUG):
-            log_debug("Font Unicode Ranges:")
+        if _Log.is_log_level_at_least(_Log.LogLevel.DEBUG):
+            _Log.log_debug("Font Unicode Ranges:")
 
             for range_ in font_info.code_point_ranges:
                 if range_.from_ == range_.to:
-                    log_debug("[%04X]" % (range_.from_))
+                    _Log.log_debug("[%04X]" % (range_.from_))
                 else:
-                    log_debug("[%04X..%04X]" % (range_.from_, range_.to))
+                    _Log.log_debug("[%04X..%04X]" % (range_.from_, range_.to))
 
         font_data_generator = _FontDataGenerator()
 
-        log_debug("Generating font textures...")
+        _Log.log_debug("Generating font textures...")
         
         self._data = font_data_generator.generate(font_info)
 
         if font_data_generator.is_ok():
-            log_debug("Font textures has been generated.")
+            _Log.log_debug("Font textures has been generated.")
             
             self._is_loaded = True
         else:
-            log_debug("Failed to generate font texture. Error: %s" % font_data_generator.get_err_msg())
+            _Log.log_debug("Failed to generate font texture. Error: %s" % font_data_generator.get_err_msg())
             
             self._err_msg = font_data_generator.get_err_msg()
 
@@ -966,7 +967,7 @@ class _FontDataGenerator:
 
                     # debug
                     #for range_ in get_code_point_ranges_of_current_win_font(self.device_context_handle)):
-                    #    log_debug("[%04X..%04X]" % (range_.from_, range_.to))
+                    #    _log_debug("[%04X..%04X]" % (range_.from_, range_.to))
 
                     # --- Generates Display Lists and Intermediary Font Bitmaps --- #
 
@@ -1008,7 +1009,7 @@ class _FontDataGenerator:
                         _C_GL.glPushAttrib(_C_GL.GL_ALL_ATTRIB_BITS)
 
                         for range_ in ranges:
-                            # log_debug("[%04X..%04X]" % (range_.from_, range_.to)) # debug
+                            # _log_debug("[%04X..%04X]" % (range_.from_, range_.to)) # debug
                    
                             display_list_set = _DisplayListSet(range_.from_, range_.to)
 

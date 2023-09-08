@@ -1,9 +1,6 @@
+# Same level modules.
 from .Size  import Size
 from .Point import Point
-
-__all__ = [
-    "Area",
-]
 
 class Area:
     """

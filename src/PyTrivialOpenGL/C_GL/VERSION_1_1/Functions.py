@@ -2,6 +2,7 @@
 Contains all functions of OpenGL 1.1.
 """
 import ctypes as _ctypes
+
 from .Types import *
 
 ### Internal ###

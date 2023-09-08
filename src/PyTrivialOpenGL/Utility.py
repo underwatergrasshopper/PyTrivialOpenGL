@@ -1,28 +1,13 @@
-from .Point         import Point
-from .Size          import Size
-from .Area          import Area
+import ctypes as _ctypes
+
 from ._Private      import C_WinApi as _C_WinApi
 from .              import C_GL     as _C_GL
 from .GL._Private   import Support  as _gl_support
 
-import ctypes as _ctypes
-
-__all__ = [
-    "MIN_U16",
-    "MAX_U16",
-    "MIN_I32",
-    "MAX_I32",
-    "OpenGL_Version",
-    "get_work_area",
-    "get_screen_size",
-    "get_cursor_pos_in_screen",
-    "run_question_box",
-    "save_as_bmp",
-    "save_texture_as_bmp",
-    "is_defined_in_gl",
-    "is_defined_in_c_gl",
-    "get_gl_error_str",
-]
+# Same level modules.
+from .Point         import Point
+from .Size          import Size
+from .Area          import Area
 
 ################################################################################
 
@@ -70,15 +55,6 @@ def get_work_area():
     """
     Returns : Area
         Desktop area without task bar.
-    """
-    rc = _C_WinApi.RECT()
-    _C_WinApi.SystemParametersInfoW(_C_WinApi.SPI_GETWORKAREA, 0, _ctypes.byref(rc), 0)
-    return Area(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top)
-
-
-def get_work_area():
-    """
-    Returns : Area
     """
     rc = _C_WinApi.RECT()
     _C_WinApi.SystemParametersInfoW(_C_WinApi.SPI_GETWORKAREA, 0, _ctypes.byref(rc), 0)

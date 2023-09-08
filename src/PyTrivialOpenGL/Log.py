@@ -1,23 +1,5 @@
+# Same level modules. 
 from .Logger import Logger, LogLevel, LogMessageTypeId, defautl_log_message_to_output
-from .Logger import __all__ as _logger_module__all__
-
-__all__ = [
-    "to_logger",
-
-    "log_debug",
-    "log_info",
-    "log_warning",
-    "log_error",
-    "log_fatal_error",
-
-    "set_log_level",
-    "get_log_level",
-    "is_log_level_at_least",
-
-    "set_log_message_to_output",
-
-    *_logger_module__all__
-]
 
 ### inner (do not use) ###
 

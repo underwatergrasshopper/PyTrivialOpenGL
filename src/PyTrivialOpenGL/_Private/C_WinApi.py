@@ -3,6 +3,7 @@ This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL pac
 
 Contains constants, types and functions of WinApi.
 """
+
 import ctypes           as _ctypes
 import ctypes.wintypes  as _wintypes
 

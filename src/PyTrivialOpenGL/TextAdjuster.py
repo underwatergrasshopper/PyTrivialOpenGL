@@ -1,5 +1,6 @@
-from .FineText  import *
-from .Font      import *
+# Same level modules.
+from .FineText  import FineText
+from .Font      import Font
 
 class TextAdjuster:
     """

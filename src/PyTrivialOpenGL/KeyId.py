@@ -1,9 +1,5 @@
 import enum as _enum
 
-__all__ = [
-    "KeyboardSideId",
-]
-
 class KeyId(_enum.IntEnum):
     """
     Identifier of keyboard key or mouse button.

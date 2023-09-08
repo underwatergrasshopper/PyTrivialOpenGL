@@ -1,6 +1,7 @@
-from .Color import *
-
 from copy import deepcopy as _deepcopy
+
+# Same level modules.
+from .Color import ColorB, ColorF
 
 class Text:
     """

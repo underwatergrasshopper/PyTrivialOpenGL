@@ -1,4 +1,6 @@
 """
+This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL package.
+
 Provides singleton functionality to class.
 """
 

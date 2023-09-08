@@ -1,8 +1,3 @@
-__all__ = [
-    "SpecialDebug",
-    "to_special_debug",
-]
-
 class SpecialDebug:
     """                         
     is_notify_remaining_messages    : bool
