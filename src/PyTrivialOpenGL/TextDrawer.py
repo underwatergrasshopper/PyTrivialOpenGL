@@ -1,13 +1,8 @@
 from . import C_GL as _C_GL
 
-# Same level modules.
-from .Point         import Point
-from .Size          import Size
-from .Color         import ColorF, ColorB
-from .FineText      import FineText, Text, TextHorizontalSpacer
-
-from .Font          import Font, OriginId, FontSizeUnitId, FontStyleId, CodePointRange, UnicodeCharSetId, UnicodeCodePoint
-from .TextAdjuster  import TextAdjuster
+# This module and modules imported below are logically part of one module.
+from .Font          import *
+from .TextAdjuster  import *
 
 class TextDrawer:
     """

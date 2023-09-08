@@ -4,19 +4,18 @@ import os       as _os
 
 from copy import deepcopy as _deepcopy
 
-from ._Private  import C_WGL    as _C_WGL
-from ._Private  import C_WinApi as _C_WinApi
-from .          import C_GL     as _C_GL
+from ._Private  import C_WGL        as _C_WGL
+from ._Private  import C_WinApi     as _C_WinApi
+from .          import C_GL         as _C_GL
 
-from .Utility   import get_gl_error_str         as _get_gl_error_str
-from .Utility   import save_texture_as_bmp      as _save_texture_as_bmp
-from .Window    import to_window                as _to_window
-from .          import Log                      as _Log
+from .Window    import to_window    as _to_window
 
-# Same level modules.
-from .Size      import Size
-from .Point     import Point
-from .OriginId  import OriginId
+# This module and modules imported below are logically part of one module.
+from .Size      import *
+from .Point     import *
+from .OriginId  import *
+from .Log       import *
+from .Utility   import *
 
 class FontSizeUnitId(_enum.Enum):
     PIXELS = _enum.auto()
@@ -187,27 +186,27 @@ class Font:
             distance_between_lines  = distance_between_lines, 
         )
 
-        if _Log.is_log_level_at_least(_Log.LogLevel.DEBUG):
-            _Log.log_debug("Font Unicode Ranges:")
+        if is_log_level_at_least(LogLevel.DEBUG):
+            log_debug("Font Unicode Ranges:")
 
             for range_ in font_info.code_point_ranges:
                 if range_.from_ == range_.to:
-                    _Log.log_debug("[%04X]" % (range_.from_))
+                    log_debug("[%04X]" % (range_.from_))
                 else:
-                    _Log.log_debug("[%04X..%04X]" % (range_.from_, range_.to))
+                    log_debug("[%04X..%04X]" % (range_.from_, range_.to))
 
         font_data_generator = _FontDataGenerator()
 
-        _Log.log_debug("Generating font textures...")
+        log_debug("Generating font textures...")
         
         self._data = font_data_generator.generate(font_info)
 
         if font_data_generator.is_ok():
-            _Log.log_debug("Font textures has been generated.")
+            log_debug("Font textures has been generated.")
             
             self._is_loaded = True
         else:
-            _Log.log_debug("Failed to generate font texture. Error: %s" % font_data_generator.get_err_msg())
+            log_debug("Failed to generate font texture. Error: %s" % font_data_generator.get_err_msg())
             
             self._err_msg = font_data_generator.get_err_msg()
 
@@ -435,7 +434,7 @@ class Font:
         for index in range(len(self._data.tex_objs)):
             file_name = "%s%s [%d].bmp" % (path, self._data.info.name, index)
 
-            if not _save_texture_as_bmp(file_name, self._data.tex_objs[index]):
+            if not save_texture_as_bmp(file_name, self._data.tex_objs[index]):
                 return False
 
         return True
@@ -731,14 +730,14 @@ class _FrameBuffer:
             _C_GL.glGetIntegerv(_C_GL.GL_MAX_VIEWPORT_DIMS, c_max_viewport_size)
 
             if _C_GL.glGetError() != 0:
-                self._err_msg = "Can not get maximal view port dimensions. OpenGL Error: %s." % _get_gl_error_str(_C_GL.glGetError())
+                self._err_msg = "Can not get maximal view port dimensions. OpenGL Error: %s." % get_gl_error_str(_C_GL.glGetError())
                 
         if self.is_ok():
             c_max_texture_size = _C_GL.GLint(0)
             _C_GL.glGetIntegerv(_C_GL.GL_MAX_TEXTURE_SIZE, _ctypes.byref(c_max_texture_size))
 
             if _C_GL.glGetError() != 0:
-                self._err_msg = "Can not get maximal texture size. OpenGL Error: %s." % _get_gl_error_str(_C_GL.glGetError())
+                self._err_msg = "Can not get maximal texture size. OpenGL Error: %s." % get_gl_error_str(_C_GL.glGetError())
 
         if self.is_ok():
             if width > c_max_viewport_size[0] or width > c_max_texture_size.value or height > c_max_viewport_size[1] or height > c_max_texture_size.value:
@@ -751,7 +750,7 @@ class _FrameBuffer:
             self._glGenFramebuffersEXT(1, _ctypes.byref(c_fbo))
 
             if _C_GL.glGetError() != 0:
-                self._err_msg = "Can not generate frame buffer. OpenGL Error: %s." % _get_gl_error_str(_C_GL.glGetError())
+                self._err_msg = "Can not generate frame buffer. OpenGL Error: %s." % get_gl_error_str(_C_GL.glGetError())
             else:
                 self._fbo = c_fbo.value
                 
@@ -760,7 +759,7 @@ class _FrameBuffer:
             _C_GL.glGetIntegerv(self._GL_FRAMEBUFFER_BINDING, _ctypes.byref(c_prev_fbo))
 
             if _C_GL.glGetError() != 0:
-                self._err_msg = "Can not get current framebuffer. OpenGL Error: %s." % _get_gl_error_str(_C_GL.glGetError())
+                self._err_msg = "Can not get current framebuffer. OpenGL Error: %s." % get_gl_error_str(_C_GL.glGetError())
             else:
                 self._prev_fbo = c_prev_fbo.value
 
@@ -768,7 +767,7 @@ class _FrameBuffer:
             self._glBindFramebufferEXT(self._GL_FRAMEBUFFER_EXT, self._fbo)
 
             if _C_GL.glGetError() != 0:
-                self._err_msg = "Can not bind framebuffer. OpenGL Error: %s." % _get_gl_error_str(_C_GL.glGetError())
+                self._err_msg = "Can not bind framebuffer. OpenGL Error: %s." % get_gl_error_str(_C_GL.glGetError())
         
         _C_GL.glPushAttrib(_C_GL.GL_ENABLE_BIT)
         _C_GL.glPushAttrib(_C_GL.GL_TEXTURE_BIT)
@@ -778,7 +777,7 @@ class _FrameBuffer:
             self._glFramebufferTexture2DEXT(self._GL_FRAMEBUFFER_EXT, self._GL_COLOR_ATTACHMENT0_EXT, _C_GL.GL_TEXTURE_2D, 0, 0)
 
             if _C_GL.glGetError() != 0:
-                self._err_msg = "Can not detach texture from framebuffer. OpenGL Error: %s." % _get_gl_error_str(_C_GL.glGetError())
+                self._err_msg = "Can not detach texture from framebuffer. OpenGL Error: %s." % get_gl_error_str(_C_GL.glGetError())
 
         _C_GL.glPopAttrib()
         _C_GL.glPopAttrib()
@@ -787,14 +786,14 @@ class _FrameBuffer:
             self._glBindFramebufferEXT(self._GL_FRAMEBUFFER_EXT, self._prev_fbo)
 
             if _C_GL.glGetError() != 0:
-                self._err_msg = "Can not rebind previous framebuffer. OpenGL Error: %s." % _get_gl_error_str(_C_GL.glGetError())
+                self._err_msg = "Can not rebind previous framebuffer. OpenGL Error: %s." % get_gl_error_str(_C_GL.glGetError())
 
         if self.is_ok():
             c_fbo = _C_GL.GLuint(self._fbo)
             self._glDeleteFramebuffersEXT(1, _ctypes.byref(c_fbo))
 
             if _C_GL.glGetError() != 0:
-                self._err_msg = "Can not delete framebuffer. OpenGL Error: %s." % _get_gl_error_str(_C_GL.glGetError())
+                self._err_msg = "Can not delete framebuffer. OpenGL Error: %s." % get_gl_error_str(_C_GL.glGetError())
         
 
     def is_ok(self):

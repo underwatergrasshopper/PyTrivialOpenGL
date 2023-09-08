@@ -4,9 +4,9 @@ This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL pac
 
 from . import C_WinApi as _C_WinApi
 
-# Same level modules.
-from ..KeyId            import KeyId
-from ..KeyboardSideId   import KeyboardSideId
+# This module and modules imported below are logically part of one module.
+from ..KeyId            import *
+from ..KeyboardSideId   import *
 
 class VirtualKeyData:
     """

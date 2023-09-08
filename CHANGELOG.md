@@ -1,3 +1,3 @@
 # v0.1.1
-* Removed many unnecessary `import *`.
+* Cleared and organized imports.
 * Added `_setup_path_env` module.

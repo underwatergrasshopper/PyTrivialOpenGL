@@ -4,10 +4,10 @@ from ._Private      import C_WinApi as _C_WinApi
 from .              import C_GL     as _C_GL
 from .GL._Private   import Support  as _gl_support
 
-# Same level modules.
-from .Point         import Point
-from .Size          import Size
-from .Area          import Area
+# This module and modules imported below are logically part of one module.
+from .Point         import *
+from .Size          import *
+from .Area          import *
 
 ################################################################################
 

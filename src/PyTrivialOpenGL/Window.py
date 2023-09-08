@@ -24,17 +24,15 @@ from ._Private          import C_WinApi         as _C_WinApi
 from ._Private          import C_WGL            as _C_WGL
 from .                  import C_GL             as _C_GL
 from .GL._Private       import Support          as _gl_support
-from .                  import Log              as _Log
-from .Utility           import get_work_area    as _get_work_area
-from .Utility           import get_screen_size  as _get_screen_size
-from .SpecialDebug      import to_special_debug as _to_special_debug
 
-# Same level modules.
-from .Point                 import Point
-from .Size                  import Size
-from .Area                  import Area
-from .Key                   import KeyExtra, KeyId, KeyboardSideId
-from .Utility               import OpenGL_Version
+# This module and modules imported below are logically part of one module.
+from .Point                 import *
+from .Size                  import *
+from .Area                  import *
+from .Key                   import *
+from .Utility               import *
+from .Log                   import *
+from .SpecialDebug          import *
 
 class WindowStyleBit:
     NO_RESIZE                   = 0x0001
@@ -521,9 +519,9 @@ class Window:
         wc.hIconSm          = _C_WinApi.NULL
 
         if _C_WinApi.RegisterClassExW(_ctypes.byref(wc)):
-            _Log.log_debug("Registered window class.")
+            log_debug("Registered window class.")
         else:
-            _Log.log_fatal_error("Can not register window class.")
+            log_fatal_error("Can not register window class.")
 
         self._window_style = _C_WinApi.WS_OVERLAPPEDWINDOW;
         if style & WindowStyleBit.NO_RESIZE:
@@ -552,9 +550,9 @@ class Window:
         self._push_is_enable_do_on_resize(False)
 
         if self._window_handle:
-            _Log.log_debug("Created window.")
+            log_debug("Created window.")
         else:
-            _Log.log_fatal_error("Can not create window.")
+            log_fatal_error("Can not create window.")
 
         if state_id == WindowStateId.NORMAL:
             self._solve_and_set_area(area)
@@ -591,16 +589,16 @@ class Window:
         if self._timer_time_interval > 0:
             result = _C_WinApi.SetTimer(self._window_handle, self._DEFAULT_TIMER_ID, self._timer_time_interval, _C_WinApi.TIMERPROC(0))
             if result == 0:
-               _Log.log_fatal_error("Can not set timer. (windows error code: %d)" % _C_WinApi.GetLastError())
+               log_fatal_error("Can not set timer. (windows error code: %d)" % _C_WinApi.GetLastError())
 
         _C_WinApi.UpdateWindow(self._window_handle)
 
         result = self._execute_main_loop()
   
         if _C_WinApi.UnregisterClassW(self._window_class_name, self._instance_handle):
-            _Log.log_debug("Unregistered window class.")
+            log_debug("Unregistered window class.")
         else:
-            _Log.log_fatal_error("Can not unregister window class.")
+            log_fatal_error("Can not unregister window class.")
 
         self._is_running = False
 
@@ -632,8 +630,8 @@ class Window:
         if not self._is_in_draw:
             self._is_in_draw = True
 
-            if _to_special_debug().is_notify_draw_call:
-                _Log.log_debug("Window Draw Call")
+            if to_special_debug().is_notify_draw_call:
+                log_debug("Window Draw Call")
 
             if self._draw:
                 self._draw()
@@ -1251,7 +1249,7 @@ class Window:
 
             window_area = Area(0, 0, current_size.width, current_size.height)
 
-        work_area = _get_work_area()
+        work_area = get_work_area()
 
         self._restore()
 
@@ -1447,7 +1445,7 @@ class Window:
             _C_WinApi.ShowWindow(self._window_handle, _C_WinApi.SW_RESTORE)
 
         if self._style & WindowStyleBit.DRAW_AREA_ONLY:
-            work_area = _get_work_area()
+            work_area = get_work_area()
 
             self._push_is_enable_change_state_at_resize(False)
 
@@ -1476,7 +1474,7 @@ class Window:
         # In Windows 7, if window is borderless and covers exactly whole screen then alt+tab is not working. 
         # To omit that, size of window is extended beyond borders of screen, internally.
         # Library provides size of window without this internal adjustment.
-        screen_size = _get_screen_size()
+        screen_size = get_screen_size()
         screen_rect = _C_WinApi.RECT(0, 0, screen_size.width, screen_size.height)
         _C_WinApi.AdjustWindowRectEx(_ctypes.byref(screen_rect), _get_window_style_draw_area_only(), _C_WinApi.FALSE, _get_window_extended_style_draw_area_only())
         screen_area = _make_area_from_rect(screen_rect)
@@ -1669,7 +1667,7 @@ class Window:
             
             if msg.message == _C_WinApi.WM_QUIT:
                 self._window_handle = _C_WinApi.NULL
-                _Log.log_debug("Destroyed window.")
+                log_debug("Destroyed window.")
                 return int(msg.wParam)
 
 
@@ -1678,7 +1676,7 @@ class Window:
                 if _C_WinApi.PeekMessageW(_ctypes.byref(msg), _C_WinApi.NULL, 0, 0, _C_WinApi.PM_REMOVE):
                     if msg.message == _C_WinApi.WM_QUIT:
                         m_window_handle = _C_WinApi.NULL
-                        _Log.log_debug("Destroyed window.")
+                        log_debug("Destroyed window.")
                         return int(msg.wParam)
 
                     _C_WinApi.TranslateMessage(_ctypes.byref(msg))
@@ -1707,9 +1705,9 @@ class Window:
                 _C_WinApi.LR_LOADFROMFILE | _C_WinApi.LR_DEFAULTSIZE | _C_WinApi.LR_SHARED
             )
             if icon_handle:
-                _Log.log_debug("Loaded icon image from '%s' file." % (self._icon_file_name))
+                log_debug("Loaded icon image from '%s' file." % (self._icon_file_name))
             else:
-                _Log.log_warning("Can not load icon image from '%s' file." % self._icon_file_name)
+                log_warning("Can not load icon image from '%s' file." % self._icon_file_name)
             return icon_handle
         else:
             return _C_WinApi.NULL
@@ -1741,7 +1739,7 @@ class Window:
 
         # --- Size --- #
 
-        work_area = _get_work_area()
+        work_area = get_work_area()
 
         window_area.width   = (work_area.width / 2) if is_default else area.width
         window_area.height  = (work_area.height / 2) if is_default else area.height
@@ -2040,41 +2038,41 @@ class Window:
 
         self._device_context_handle = _C_WinApi.GetDC(window_handle)
         if not self._device_context_handle:
-           _Log.log_fatal_error("Can not get device context.")
+           log_fatal_error("Can not get device context.")
 
         pfi = _C_WinApi.ChoosePixelFormat(self._device_context_handle, _ctypes.byref(pfd))
         if not pfi:
-           _Log.log_fatal_error("Can not choose pixel format. (windows error code: %d)" % _C_WinApi.GetLastError())
+           log_fatal_error("Can not choose pixel format. (windows error code: %d)" % _C_WinApi.GetLastError())
 
         result = _C_WinApi.SetPixelFormat(self._device_context_handle, pfi, _ctypes.byref(pfd))
         if not result:
-            _Log.log_fatal_error("Can not set pixel format. (windows error code: %d))" % _C_WinApi.GetLastError())
+            log_fatal_error("Can not set pixel format. (windows error code: %d))" % _C_WinApi.GetLastError())
 
         # --- Displaying Format Info --- #
 
-        if _Log.is_log_level_at_least(_Log.LogLevel.INFO):
+        if is_log_level_at_least(LogLevel.INFO):
             pfd = _C_WinApi.PIXELFORMATDESCRIPTOR()
             max_pfi = _C_WinApi.DescribePixelFormat(self._device_context_handle, pfi, _ctypes.sizeof(_C_WinApi.PIXELFORMATDESCRIPTOR), _ctypes.byref(pfd))
             if not max_pfi:
-               _Log.log_fatal_error("Can not get pixel format. (windows error code: %d)" % _C_WinApi.GetLastError())
+               log_fatal_error("Can not get pixel format. (windows error code: %d)" % _C_WinApi.GetLastError())
 
-            _Log.log_info("OpenGL Pixel Format: Red:%d Green:%d Blue:%d Alpha:%d Depth:%d Stencil:%d." % (pfd.cRedBits, pfd.cGreenBits, pfd.cBlueBits, pfd.cAlphaBits, pfd.cDepthBits, pfd.cStencilBits))
+            log_info("OpenGL Pixel Format: Red:%d Green:%d Blue:%d Alpha:%d Depth:%d Stencil:%d." % (pfd.cRedBits, pfd.cGreenBits, pfd.cBlueBits, pfd.cAlphaBits, pfd.cDepthBits, pfd.cStencilBits))
 
         # --- Creates OpenGL Rendering Context --- #
 
         self._rendering_context_handle = _C_WGL.wglCreateContext(self._device_context_handle)
         if not self._rendering_context_handle:
-           _Log.log_fatal_error("Can not create OpenGl Rendering Context. (windows error code: %d))" % _C_WinApi.GetLastError())
+           log_fatal_error("Can not create OpenGl Rendering Context. (windows error code: %d))" % _C_WinApi.GetLastError())
 
         if not _C_WGL.wglMakeCurrent(self._device_context_handle, self._rendering_context_handle):
-            _Log.log_fatal_error("Can not set created OpenGl Rendering Context to be current.")
+            log_fatal_error("Can not set created OpenGl Rendering Context to be current.")
 
         # --- Creates OpenGL Rendering Context with required minimum version --- #
 
         if self._opengl_version.major != 0 and self._opengl_version.minor != 0:
             wglCreateContextAttribsARB = _C_WGL.PFNWGLCREATECONTEXTATTRIBSARBPROC(_C_WGL.wglGetProcAddress(b"wglCreateContextAttribsARB"))
             if not wglCreateContextAttribsARB:
-                _Log.log_fatal_error("Can not load wglCreateContextAttribsARB function.")
+                log_fatal_error("Can not load wglCreateContextAttribsARB function.")
 
             attribute_list = [
                 _C_WGL.WGL_CONTEXT_MAJOR_VERSION_ARB, self._opengl_version.major,
@@ -2086,10 +2084,10 @@ class Window:
 
             rendering_context_handle = wglCreateContextAttribsARB(self._device_context_handle, 0, attribute_list)
             if not rendering_context_handle:
-                _Log.log_fatal_error("Can not create OpenGl Rendering Context for version %d.%d (error code = %d)." % (self._opengl_version.major, self._opengl_version.minor, _C_WinApi.GetLastError()))
+                log_fatal_error("Can not create OpenGl Rendering Context for version %d.%d (error code = %d)." % (self._opengl_version.major, self._opengl_version.minor, _C_WinApi.GetLastError()))
 
             if not _C_WGL.wglMakeCurrent(self._device_context_handle, rendering_context_handle):
-                _Log.log_fatal_error( "Can not set created OpenGl Rendering Context for version %d.%d to be current." % (self._opengl_version.major, self._opengl_version.minor))
+                log_fatal_error( "Can not set created OpenGl Rendering Context for version %d.%d to be current." % (self._opengl_version.major, self._opengl_version.minor))
             
             self._rendering_context_handle = rendering_context_handle
 
@@ -2119,13 +2117,13 @@ class Window:
             if result and result.lastindex == 2:
                 self._opengl_version = OpenGL_Version(int(result.group(1)), int(result.group(2)))
             else:
-                _Log.log_fatal_error("Can not receive OpenGL version from string.")
+                log_fatal_error("Can not receive OpenGL version from string.")
         else:
-            _Log.log_fatal_error("Can not receive OpenGL version.")
+            log_fatal_error("Can not receive OpenGL version.")
 
-        if _Log.is_log_level_at_least(_Log.LogLevel.INFO):
+        if is_log_level_at_least(LogLevel.INFO):
             version_text = _ctypes.cast(_C_GL.glGetString(_C_GL.GL_VERSION), _ctypes.c_char_p).value.decode()
-            _Log.log_info("OpenGl Version: %s." % version_text)
+            log_info("OpenGl Version: %s." % version_text)
 
     def _close(self):
         """
@@ -2170,27 +2168,27 @@ class Window:
 
         if window_message == _C_WinApi.WM_PAINT:
             if True or to_special_debug().is_notify_remaining_messages:
-                _Log.log_debug("WM_PAINT")
+                log_debug("WM_PAINT")
 
             self.draw_now()
             _C_WinApi.ValidateRect(self._window_handle, _C_WinApi.NULL)
             return 0
         
         elif window_message == _C_WinApi.WM_ERASEBKGND:
-            if _to_special_debug().is_notify_remaining_messages:
-                _Log.log_debug("WM_ERASEBKGND")
+            if to_special_debug().is_notify_remaining_messages:
+                log_debug("WM_ERASEBKGND")
             # Tells DefWindowProc to not erase background. It's unnecessary since background is handled by OpenGL.
             return 1
         
         ### Mouse ###
         
         elif window_message == _C_WinApi.WM_MOUSEMOVE:
-            if _to_special_debug().is_notify_mouse_move:
+            if to_special_debug().is_notify_mouse_move:
                 wm_text = "WM_MOUSEMOVE"
                 x       = _C_WinApi.GET_X_LPARAM(l_param).value
                 y       = _C_WinApi.GET_Y_LPARAM(l_param).value
         
-                _Log.log_debug("%-20s: %d %d" % (wm_text, x, y))
+                log_debug("%-20s: %d %d" % (wm_text, x, y))
         
             if self._do_on_mouse_move:
                 self._do_on_mouse_move(_C_WinApi.GET_X_LPARAM(l_param).value, _C_WinApi.GET_Y_LPARAM(l_param).value)
@@ -2198,7 +2196,7 @@ class Window:
             return 0
         
         elif window_message == _C_WinApi.WM_MOUSEWHEEL:
-            if _Log.is_log_level_at_least(_Log.LogLevel.DEBUG):
+            if is_log_level_at_least(LogLevel.DEBUG):
                 wm_text = "WM_MOUSEWHEEL"
                 delta   = _C_WinApi.GET_WHEEL_DELTA_WPARAM(w_param).value
                 x       = _C_WinApi.GET_X_LPARAM(l_param).value # in screen coordinates system
@@ -2209,7 +2207,7 @@ class Window:
         
                 mk_text = _mk_to_str(_C_WinApi.LOWORD(w_param).value)
         
-                _Log.log_debug("%-20s: %d (%d %d) %d %d %s" % (wm_text, delta, x, y, pos.x, pos.y, mk_text))
+                log_debug("%-20s: %d (%d %d) %d %d %s" % (wm_text, delta, x, y, pos.x, pos.y, mk_text))
         
             if self._do_on_mouse_wheel_roll:
                 step_count = _C_WinApi.GET_WHEEL_DELTA_WPARAM(w_param).value // 120
@@ -2222,7 +2220,7 @@ class Window:
             return 0
         
         elif _KeySupport.is_mw_mouse_button(window_message):
-            if _Log.is_log_level_at_least(_Log.LogLevel.DEBUG):
+            if is_log_level_at_least(LogLevel.DEBUG):
                 wm_text = _wm_to_str(window_message)
         
                 xb_text = ""
@@ -2234,7 +2232,7 @@ class Window:
                 y       = _C_WinApi.GET_Y_LPARAM(l_param).value 
                 mk_text = _mk_to_str(_C_WinApi.LOWORD(w_param).value)
         
-                _Log.log_debug("%-20s:%s %d %d %s" % (wm_text, xb_text, x, y, mk_text))
+                log_debug("%-20s:%s %d %d %s" % (wm_text, xb_text, x, y, mk_text))
         
             is_discard = self._handle_do_on_mouse_key(window_message, w_param, l_param)
             if is_discard:
@@ -2243,12 +2241,12 @@ class Window:
         ### Keyboard ###
         
         elif window_message in [_C_WinApi.WM_KEYDOWN, _C_WinApi.WM_KEYUP, _C_WinApi.WM_SYSKEYDOWN, _C_WinApi.WM_SYSKEYUP]:
-            if _to_special_debug().is_notify_key_message:
+            if to_special_debug().is_notify_key_message:
                 wm_text = _wm_to_str(window_message)
                 vk_text = _KeySupport.vk_code_to_str(w_param)
                 vk_data = _KeySupport.VirtualKeyData(l_param)
         
-                _Log.log_debug("%-20s: %-13s %s" % (wm_text, vk_text, vk_data))
+                log_debug("%-20s: %-13s %s" % (wm_text, vk_text, vk_data))
         
             is_down = window_message in [_C_WinApi.WM_KEYDOWN, _C_WinApi.WM_SYSKEYDOWN]
         
@@ -2257,7 +2255,7 @@ class Window:
                 return 0
         
         elif window_message == _C_WinApi.WM_CHAR:
-            if _to_special_debug().is_notify_character_message:
+            if to_special_debug().is_notify_character_message:
                 wm_text = "WM_CHAR"
                 vk_data = _KeySupport.VirtualKeyData(l_param)
                 
@@ -2274,7 +2272,7 @@ class Window:
                 else: # ascii or single utf-16 code unit
                     code_text = "cp=%Xh(%d), chr='%s'" % (code, code, chr(code))
         
-                _Log.log_debug("%-20s: %s, %s" % (wm_text, code_text, vk_data))
+                log_debug("%-20s: %s, %s" % (wm_text, code_text, vk_data))
         
             if self._do_on_text:
                 code = w_param
@@ -2310,7 +2308,7 @@ class Window:
         ### Window ###
         
         elif window_message == _C_WinApi.WM_SIZING:
-            if _Log.is_log_level_at_least(_Log.LogLevel.DEBUG):
+            if is_log_level_at_least(LogLevel.DEBUG):
                 wm_text = "WM_SIZING"
         
                 def get_edge_name(edge_id):
@@ -2328,12 +2326,12 @@ class Window:
                 rect_p = _ctypes.cast(l_param, _C_WinApi.LPRECT)
                 drag_rect_text = "drag_rect=%d %d %d %d" % (rect_p[0].left, rect_p[0].top, rect_p[0].right, rect_p[0].bottom)
         
-                _Log.log_debug("%-20s: %s, %s" % (wm_text, edge_name, drag_rect_text))
+                log_debug("%-20s: %s, %s" % (wm_text, edge_name, drag_rect_text))
         
             return _C_WinApi.TRUE
         
         elif window_message == _C_WinApi.WM_SIZE:
-            if _Log.is_log_level_at_least(_Log.LogLevel.DEBUG):
+            if is_log_level_at_least(LogLevel.DEBUG):
                 wm_text     = "WM_SIZE"
                 width       = _C_WinApi.LOWORD(l_param).value
                 height      = _C_WinApi.HIWORD(l_param).value
@@ -2353,7 +2351,7 @@ class Window:
                 if not self._is_enable_do_on_resize:
                     additional += ", without:do_on_resize"
         
-                _Log.log_debug("%-20s: %d %d, %s%s" % (wm_text, width, height, request_name, additional))
+                log_debug("%-20s: %d %d, %s%s" % (wm_text, width, height, request_name, additional))
         
             self._is_visible = True
         
@@ -2379,11 +2377,11 @@ class Window:
         ## Timer ###
 
         elif window_message == _C_WinApi.WM_TIMER:
-            if _to_special_debug().is_notify_timer:
+            if to_special_debug().is_notify_timer:
                 wm_text         = "WM_TIMER"
                 timer_id        = w_param
                 callback_addr   = l_param
-                _Log.log_debug("%-20s: id=%d, callback_addr=%d" % (wm_text, timer_id, callback_addr))
+                log_debug("%-20s: id=%d, callback_addr=%d" % (wm_text, timer_id, callback_addr))
 
             if w_param == self._DEFAULT_TIMER_ID:
                 if self._do_on_time:
@@ -2394,7 +2392,7 @@ class Window:
         ### State ###
 
         elif window_message == _C_WinApi.WM_SHOWWINDOW:
-            if _Log.is_log_level_at_least(_Log.LogLevel.DEBUG):
+            if is_log_level_at_least(LogLevel.DEBUG):
                 wm_text = "WM_SHOWWINDOW"
 
                 visibility_text = "SHOW" if w_param == _C_WinApi.TRUE else "HIDE"
@@ -2417,7 +2415,7 @@ class Window:
                     else:
                         status_name += " without:do_on_hide"
 
-                _Log.log_debug("%-20s: %s %s" % (wm_text, visibility_text, status_name))
+                log_debug("%-20s: %s %s" % (wm_text, visibility_text, status_name))
 
             is_visible = (w_param == _C_WinApi.TRUE)
 
@@ -2436,7 +2434,7 @@ class Window:
         elif window_message == _C_WinApi.WM_ACTIVATE:
             is_active = _C_WinApi.LOWORD(w_param).value != _C_WinApi.WA_INACTIVE
 
-            if _Log.is_log_level_at_least(_Log.LogLevel.DEBUG):
+            if is_log_level_at_least(LogLevel.DEBUG):
                 wm_text = "WM_ACTIVATE"
 
                 is_minimized = _C_WinApi.HIWORD(w_param).value
@@ -2461,7 +2459,7 @@ class Window:
                 if not self._is_enable_do_on_foreground:
                     transition_text += " without:do_on_foreground"
 
-                _Log.log_debug("%-20s:%s %s%s" % (wm_text, minimized_text, activation_state_name, transition_text))
+                log_debug("%-20s:%s %s%s" % (wm_text, minimized_text, activation_state_name, transition_text))
 
             if is_active != self._is_active:
                 self._is_active = is_active
@@ -2473,7 +2471,7 @@ class Window:
             return 0
 
         elif window_message == _C_WinApi.WM_SYSCOMMAND:
-            if _to_special_debug().is_notify_remaining_messages:
+            if to_special_debug().is_notify_remaining_messages:
                 wm_text = "WM_SYSCOMMAND"
 
                 def get_system_command_name(cmd_id):        
@@ -2504,7 +2502,7 @@ class Window:
                 x = _C_WinApi.GET_X_LPARAM(l_param).value # screen coordinates
                 y = _C_WinApi.GET_X_LPARAM(l_param).value # screen coordinates
 
-                _Log.log_debug("%-20s: %d %d %s" % (wm_text, x, y, system_command_name))
+                log_debug("%-20s: %d %d %s" % (wm_text, x, y, system_command_name))
 
             if self._is_auto_sleep_blocked:
                 system_command_id = w_param
@@ -2519,43 +2517,43 @@ class Window:
         ### Focus ###
 
         elif window_message == _C_WinApi.WM_SETFOCUS:
-            if _Log.is_log_level_at_least(_Log.LogLevel.DEBUG):
-                _Log.log_debug("WM_SETFOCUS")
+            if is_log_level_at_least(LogLevel.DEBUG):
+                log_debug("WM_SETFOCUS")
 
             return 0
 
         elif window_message == _C_WinApi.WM_KILLFOCUS:
-            if _Log.is_log_level_at_least(_Log.LogLevel.DEBUG):
-                _Log.log_debug("WM_KILLFOCUS")
+            if is_log_level_at_least(LogLevel.DEBUG):
+                log_debug("WM_KILLFOCUS")
 
             return 0
 
         ### Create, Close, Destroy ###
 
         elif window_message == _C_WinApi.WM_CREATE:
-            if _Log.is_log_level_at_least(_Log.LogLevel.DEBUG):
-                _Log.log_debug("WM_CREATE")
+            if is_log_level_at_least(LogLevel.DEBUG):
+                log_debug("WM_CREATE")
 
             self._create(window_handle)
             return 0
 
         elif window_message == _C_WinApi.WM_CLOSE:
-            if _Log.is_log_level_at_least(_Log.LogLevel.DEBUG):
-                _Log.log_debug("WM_CLOSE")
+            if is_log_level_at_least(LogLevel.DEBUG):
+                log_debug("WM_CLOSE")
 
             self._close()
             return 0
 
         elif window_message == _C_WinApi.WM_DESTROY:
-            if _Log.is_log_level_at_least(_Log.LogLevel.DEBUG):
-                _Log.log_debug("WM_DESTROY")
+            if is_log_level_at_least(LogLevel.DEBUG):
+                log_debug("WM_DESTROY")
 
             self._destroy()
             return 0
 
         else:
-            if _to_special_debug().is_notify_remaining_messages:
-                _Log.log_debug(_wm_to_str(window_message))
+            if to_special_debug().is_notify_remaining_messages:
+                log_debug(_wm_to_str(window_message))
 
         return _C_WinApi.DefWindowProcW(window_handle, window_message, w_param, l_param)
 
@@ -2636,7 +2634,7 @@ def _window_proc(window_handle, window_message, w_param, l_param):
     try:
         return to_window()._window_proc(window_handle, window_message, w_param, l_param)
     except SystemExit as e:
-        if _to_special_debug().is_full_exit_track_in_callback:
+        if to_special_debug().is_full_exit_track_in_callback:
             _logging.exception("From _window_proc callback.")
         else:
             print("SystemExit: %d" % e.code)

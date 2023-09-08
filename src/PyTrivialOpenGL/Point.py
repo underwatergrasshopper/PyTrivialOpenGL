@@ -1,5 +1,5 @@
-# Same level modules.
-from .Size import Size
+# This module and modules imported below are logically part of one module.
+from .Size import *
 
 __all__ = [
     "Point",

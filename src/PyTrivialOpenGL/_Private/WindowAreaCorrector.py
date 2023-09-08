@@ -5,10 +5,10 @@ This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL pac
 import ctypes as _ctypes
 from . import C_WinApi as _C_WinApi
 
-# Same level modules.
-from ..Size     import Size
-from ..Point    import Point
-from ..Area     import Area
+# This module and modules imported below are logically part of one module.
+from ..Size     import *
+from ..Point    import *
+from ..Area     import *
 
 class WindowAreaCorrector:
     """

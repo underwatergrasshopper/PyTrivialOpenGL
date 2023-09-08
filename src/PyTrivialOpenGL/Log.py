@@ -1,5 +1,5 @@
-# Same level modules. 
-from .Logger import Logger, LogLevel, LogMessageTypeId, defautl_log_message_to_output
+# This module and modules imported below are logically part of one module.
+from .Logger import *
 
 ### inner (do not use) ###
 

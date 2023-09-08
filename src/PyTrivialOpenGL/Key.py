@@ -1,12 +1,9 @@
-import enum     as _enum
-import ctypes   as _ctypes
-
 from ._Private import C_WinApi      as _C_WinApi
 from ._Private import KeySupport    as _KeySupport
 
-# Same level modules.
-from .KeyId             import KeyId
-from .KeyboardSideId    import KeyboardSideId
+# This module and modules imported below are logically part of one module.
+from .KeyId             import *
+from .KeyboardSideId    import *
 
 class KeyExtra:
     """

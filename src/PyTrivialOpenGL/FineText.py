@@ -1,7 +1,7 @@
 from copy import deepcopy as _deepcopy
 
-# Same level modules.
-from .Color import ColorB, ColorF
+# This module and modules imported below are logically part of one module.
+from .Color import *
 
 class Text:
     """

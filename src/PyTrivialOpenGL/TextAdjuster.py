@@ -1,10 +1,6 @@
-# Same level modules.
-from .Point     import Point
-from .Size      import Size
-from .Color     import ColorB, ColorF
-
-from .FineText  import FineText, Text, TextHorizontalSpacer
-from .Font      import Font, OriginId
+# This module and modules imported below are logically part of one module.
+from .FineText  import *
+from .Font      import *
 
 class TextAdjuster:
     """
