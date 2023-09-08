@@ -2257,7 +2257,7 @@ class Window:
                 return 0
         
         elif window_message == _C_WinApi.WM_CHAR:
-            if to_special_debug().is_notify_character_message:
+            if _to_special_debug().is_notify_character_message:
                 wm_text = "WM_CHAR"
                 vk_data = _KeySupport.VirtualKeyData(l_param)
                 

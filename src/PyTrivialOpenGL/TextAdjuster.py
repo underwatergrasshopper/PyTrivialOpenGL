@@ -1,5 +1,8 @@
 # Same level modules.
-from .FineText  import FineText
+from .Color     import ColorB, ColorF
+from .Size      import Size
+
+from .FineText  import FineText, Text, TextHorizontalSpacer
 from .Font      import Font
 
 class TextAdjuster:
