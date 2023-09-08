@@ -597,32 +597,32 @@ glIndexubv              = _ctypes.WINFUNCTYPE(GLvoid, _ctypes.POINTER(GLubyte))(
 
 ### Vertex Arrays ###
 
-glVertexPointer         = _ctypes.WINFUNCTYPE(GLvoid, GLint, GLenum, GLsizei, _ctypes.POINTER(GLvoid))(
+glVertexPointer         = _ctypes.WINFUNCTYPE(GLvoid, GLint, GLenum, GLsizei, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glVertexPointer", _OpenGL32),
     ((1, "size"), (1, "type_"), (1, "stride"), (1, "pointer"))
 )
 
-glNormalPointer         = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLsizei, _ctypes.POINTER(GLvoid))(
+glNormalPointer         = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLsizei, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glNormalPointer", _OpenGL32),
     ((1, "type_"), (1, "stride"), (1, "pointer"))
 )
 
-glColorPointer          = _ctypes.WINFUNCTYPE(GLvoid, GLint, GLenum, GLsizei, _ctypes.POINTER(GLvoid))(
+glColorPointer          = _ctypes.WINFUNCTYPE(GLvoid, GLint, GLenum, GLsizei, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glColorPointer", _OpenGL32),
     ((1, "size"), (1, "type_"), (1, "stride"), (1, "pointer"))
 )
 
-glIndexPointer          = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLsizei, _ctypes.POINTER(GLvoid))(
+glIndexPointer          = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLsizei, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glIndexPointer", _OpenGL32),
     ((1, "type_"), (1, "stride"), (1, "pointer"))
 )
 
-glEdgeFlagPointer       = _ctypes.WINFUNCTYPE(GLvoid, GLsizei, _ctypes.POINTER(GLvoid))(
+glEdgeFlagPointer       = _ctypes.WINFUNCTYPE(GLvoid, GLsizei, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glEdgeFlagPointer", _OpenGL32),
     ((1, "stride"), (1, "pointer"))
 )
 
-glTexCoordPointer       = _ctypes.WINFUNCTYPE(GLvoid, GLint, GLenum, GLsizei, _ctypes.POINTER(GLvoid))(
+glTexCoordPointer       = _ctypes.WINFUNCTYPE(GLvoid, GLint, GLenum, GLsizei, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glTexCoordPointer", _OpenGL32),
     ((1, "size"), (1, "type_"), (1, "stride"), (1, "pointer"))
 )
@@ -649,12 +649,12 @@ glDrawArrays            = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLint, GLsizei)(
     ((1, "mode"), (1, "first"), (1, "count"))
 )
 
-glDrawElements          = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLsizei, GLenum, _ctypes.POINTER(GLvoid))(
+glDrawElements          = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLsizei, GLenum, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glDrawElements", _OpenGL32),
     ((1, "mode"), (1, "count"), (1, "type_"), (1, "indices"))
 )
 
-glInterleavedArrays     = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLsizei, _ctypes.POINTER(GLvoid))(
+glInterleavedArrays     = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLsizei, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glInterleavedArrays", _OpenGL32),
     ((1, "format_"), (1, "stride"), (1, "pointer"))
 )
@@ -1189,7 +1189,7 @@ glGetPixelMapusv        = _ctypes.WINFUNCTYPE(GLvoid, GLenum, _ctypes.POINTER(GL
 
 # Rasterization of Pixel Rectangles
 
-glDrawPixels            = _ctypes.WINFUNCTYPE(GLvoid, GLsizei, GLsizei, GLenum, GLenum, _ctypes.POINTER(GLvoid))(
+glDrawPixels            = _ctypes.WINFUNCTYPE(GLvoid, GLsizei, GLsizei, GLenum, GLenum, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glDrawPixels", _OpenGL32),
     ((1, "width"), (1, "height"), (1, "format_"), (1, "type_"), (1, "pixels"))
 )
@@ -1210,12 +1210,12 @@ glBitmap                = _ctypes.WINFUNCTYPE(GLvoid, GLsizei, GLsizei, GLfloat,
 
 # Texture Image Specification
 
-glTexImage1D            = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLint, GLint, GLsizei, GLint, GLenum, GLenum, _ctypes.POINTER(GLvoid))(
+glTexImage1D            = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLint, GLint, GLsizei, GLint, GLenum, GLenum, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glTexImage1D", _OpenGL32),
     ((1, "target"), (1, "level"), (1, "internalformat"), (1, "width"), (1, "border"), (1, "format_"), (1, "type_"), (1, "pixels"))
 )
 
-glTexImage2D            = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLint, GLint, GLsizei, GLsizei, GLint, GLenum, GLenum, _ctypes.POINTER(GLvoid))(
+glTexImage2D            = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLint, GLint, GLsizei, GLsizei, GLint, GLenum, GLenum, _ctypes.POINTER(GLvoid))(  # type: ignore
     ("glTexImage2D", _OpenGL32),
     ((1, "target"), (1, "level"), (1, "internalformat"), (1, "width"), (1, "height"), (1, "border"), (1, "format_"), (1, "type_"), (1, "pixels"))
 )
@@ -1232,12 +1232,12 @@ glCopyTexImage2D        = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLint, GLenum, GLi
     ((1, "target"), (1, "level"), (1, "internalFormat"), (1, "x"), (1, "y"), (1, "width"), (1, "height"), (1, "border"))
 )
 
-glTexSubImage1D         = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLint, GLint, GLsizei, GLenum, GLenum, _ctypes.POINTER(GLvoid))(
+glTexSubImage1D         = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLint, GLint, GLsizei, GLenum, GLenum, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glTexSubImage1D", _OpenGL32),
     ((1, "target"), (1, "level"), (1, "xoffset"), (1, "width"), (1, "format_"), (1, "type_"), (1, "pixels"))
 )
 
-glTexSubImage2D         = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLint, GLint, GLint, GLsizei, GLsizei, GLenum, GLenum, _ctypes.POINTER(GLvoid))(
+glTexSubImage2D         = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLint, GLint, GLint, GLsizei, GLsizei, GLenum, GLenum, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glTexSubImage2D", _OpenGL32),
     ((1, "target"), (1, "level"), (1, "xoffset"), (1, "yoffset"), (1, "width"), (1, "height"), (1, "format_"), (1, "type_"), (1, "pixels"))
 )
@@ -1373,7 +1373,7 @@ glGetTexLevelParameteriv= _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLint, GLenum, _ct
 
 # Texture Queries
 
-glGetTexImage           = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLint, GLenum, GLenum, _ctypes.POINTER(GLvoid))(
+glGetTexImage           = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLint, GLenum, GLenum, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glGetTexImage", _OpenGL32),
     ((1, "target"), (1, "level"), (1, "format_"), (1, "type_"), (1, "pixels"))
 )
@@ -1418,7 +1418,7 @@ glHint                  = _ctypes.WINFUNCTYPE(GLvoid, GLenum, GLenum)(
 
 # Reading Pixels
 
-glReadPixels            = _ctypes.WINFUNCTYPE(GLvoid, GLint, GLint, GLsizei, GLsizei, GLenum, GLenum, _ctypes.POINTER(GLvoid))(
+glReadPixels            = _ctypes.WINFUNCTYPE(GLvoid, GLint, GLint, GLsizei, GLsizei, GLenum, GLenum, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glReadPixels", _OpenGL32),
     ((1, "x"), (1, "y"), (1, "width"), (1, "height"), (1, "format_"), (1, "type_"), (1, "pixels"))
 )
@@ -1741,7 +1741,7 @@ glCallList              = _ctypes.WINFUNCTYPE(GLvoid, GLuint)(
     ((1, "list_"),)
 )
 
-glCallLists             = _ctypes.WINFUNCTYPE(GLvoid, GLsizei, GLenum, _ctypes.POINTER(GLvoid))(
+glCallLists             = _ctypes.WINFUNCTYPE(GLvoid, GLsizei, GLenum, _ctypes.POINTER(GLvoid))( # type: ignore
     ("glCallLists", _OpenGL32),
     ((1, "n"), (1, "type_"), (1, "lists"))
 )
@@ -1823,7 +1823,7 @@ glIsEnabled             = _ctypes.WINFUNCTYPE(GLboolean, GLenum)(
 
 # Pointer and String Queries 
 
-glGetPointerv           = _ctypes.WINFUNCTYPE(GLvoid, GLenum, _ctypes.POINTER(_ctypes.POINTER(GLvoid)))(
+glGetPointerv           = _ctypes.WINFUNCTYPE(GLvoid, GLenum, _ctypes.POINTER(_ctypes.POINTER(GLvoid)))( # type: ignore
     ("glGetPointerv", _OpenGL32),
     ((1, "pname"), (1, "params"))
 )

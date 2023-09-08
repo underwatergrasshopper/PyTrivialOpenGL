@@ -821,15 +821,15 @@ LPWORD                  = _wintypes.LPWORD
 LPDWORD                 = _wintypes.LPDWORD       
 
 if _IS_64_BIT:
-    ULONG_PTR               = _ctypes.c_size_t
-    LONG_PTR                = _ctypes.c_ssize_t 
-    UINT_PTR                = _ctypes.c_size_t
-    INT_PTR                 = _ctypes.c_ssize_t 
+    ULONG_PTR               = _ctypes.c_size_t      # type: ignore
+    LONG_PTR                = _ctypes.c_ssize_t     # type: ignore
+    UINT_PTR                = _ctypes.c_size_t      # type: ignore
+    INT_PTR                 = _ctypes.c_ssize_t     # type: ignore
 else:
-    ULONG_PTR               = _ctypes.c_ulong
-    LONG_PTR                = _ctypes.c_long 
-    UINT_PTR                = _ctypes.c_uint
-    INT_PTR                 = _ctypes.c_int 
+    ULONG_PTR               = _ctypes.c_ulong       # type: ignore
+    LONG_PTR                = _ctypes.c_long        # type: ignore
+    UINT_PTR                = _ctypes.c_uint        # type: ignore
+    INT_PTR                 = _ctypes.c_int         # type: ignore
 
 SIZE_T                  = ULONG_PTR
 SSIZE_T                 = LONG_PTR

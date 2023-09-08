@@ -21,4 +21,6 @@ GLclampf    = _ctypes.c_float
 GLdouble    = _ctypes.c_double
 GLclampd    = _ctypes.c_double
 
-GLvoid      = None              # ctypes.POINTER(None) is ctypes.c_void_p
+GLvoid      = None
+
+assert _ctypes.POINTER(None) is _ctypes.c_void_p # type: ignore # in a case it would change
