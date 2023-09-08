@@ -2,9 +2,6 @@
 This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL package.
 """
 
-import enum     as _enum
-import ctypes   as _ctypes
-
 from . import C_WinApi as _C_WinApi
 
 # Same level modules.
