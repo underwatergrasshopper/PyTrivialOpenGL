@@ -7,8 +7,6 @@ __all__ = [
     "ExampleManager",
 ]
 
-_path_to_project = _os.path.abspath(_os.path.dirname(_os.path.realpath(__file__)) + "/../../..")
-
 class Example:
     def __init__(self, name, function, possible_options, default_options):
         """
@@ -35,21 +33,37 @@ class Example:
 
 class ExampleManager:
     """
-    examples                : dict[str, Example]
-    default_example_name    : str
+    _example_names          : list[str]
+    _examples               : dict[str, Example]
+    _default_example_name   : str
+    _output_path            : str
+    _register_path          : str
     """
     def __init__(self):
-        self.example_names          = []
-        self.examples               = {}
-        self.default_example_name   = ""
+        self._example_names         = []
+        self._examples              = {}
+        self._default_example_name  = ""
 
-        self.set_log_path_root()
+        self.set_output_path("")
+
+    def set_output_path(self, output_path):
+        """
+        log_path_root : str
+        """
+        self._output_path = output_path
+        
+        if self._output_path:
+            self._register_path = self._output_path + "/"
+        else:
+            self._register_path = ""
+
+        self._register_path += "ExampleManager"
 
     def set_default(self, default_example_name):
         """
         default_example_name    : str
         """
-        self.default_example_name = default_example_name
+        self._default_example_name = default_example_name
 
     def add_example(self, name, function, possible_options = None, default_options = None):
         """
@@ -64,23 +78,23 @@ class ExampleManager:
         else:
             default_options = set(default_options)
 
-        self.example_names.append(name)
-        self.examples[name] = Example(name, function, possible_options, default_options)
+        self._example_names.append(name)
+        self._examples[name] = Example(name, function, possible_options, default_options)
 
     def _display_examples(self):
-        max_len = max(len(example_name) for example_name in self.example_names)
+        max_len = max(len(example_name) for example_name in self._example_names)
         max_len += 2 # offset for ', '
         offset = 4 + 1 # 'tab' + '\n'
         max_num_of_columns = max(1, (_os.get_terminal_size().columns - offset) // max_len)
 
-        if len(self.example_names) > 0:
+        if len(self._example_names) > 0:
             print("    ", end = "")
 
         count = 0
-        for example_name in self.example_names:
+        for example_name in self._example_names:
             print("%-*s" % (max_len, example_name + ", "), end = "")
             count +=1
-            if count % max_num_of_columns == 0 and count != len(self.example_names):
+            if count % max_num_of_columns == 0 and count != len(self._example_names):
                 print("\n    ", end = "")
         print("")
 
@@ -90,7 +104,7 @@ class ExampleManager:
         offset = 4 + 1 # 'tab' + '\n'
         max_num_of_columns = max(1, (_os.get_terminal_size().columns - offset) // max_len)
         
-        if len(self.examples) > 0:
+        if len(self._examples) > 0:
             print("    ", end = "")
 
         count = 0
@@ -101,19 +115,15 @@ class ExampleManager:
                 print("\n    ", end = "")
         print("")
 
-    def set_log_path_root(self, log_path_root = _path_to_project):
-        self._log_path_root = log_path_root
-        self._log_path = self._log_path_root + "log\\ExampleManager"
-
     def _log_text(self, text, file_name):
-        _pathlib.Path(self._log_path).mkdir(parents = True, exist_ok = True)
-        with open(self._log_path + "\\" + file_name, "w") as file:
+        _pathlib.Path(self._register_path).mkdir(parents = True, exist_ok = True)
+        with open(self._register_path + "\\" + file_name, "w") as file:
             file.write(text)
 
     def _load_text(self, file_name):
-        _pathlib.Path(self._log_path).mkdir(parents = True, exist_ok = True)
+        _pathlib.Path(self._register_path).mkdir(parents = True, exist_ok = True)
 
-        file_name = self._log_path + "\\" + file_name
+        file_name = self._register_path + "\\" + file_name
 
         if _os.path.isfile(file_name):
             with open(file_name, "r") as file:
@@ -131,9 +141,9 @@ class ExampleManager:
 
             print("(type example name)")
             if last_example_name is not None:
-                print("(e=Exit, d=%s, l=%s)" % (self.default_example_name, last_example_name))
+                print("(e=Exit, d=%s, l=%s)" % (self._default_example_name, last_example_name))
             else:
-                print("(e=Exit, d=%s)" % self.default_example_name)
+                print("(e=Exit, d=%s)" % self._default_example_name)
             example_name = input("Select: ")
             print("")
 
@@ -141,12 +151,12 @@ class ExampleManager:
                 exit(0)
 
             elif example_name == "d":
-                example_name = self.default_example_name
+                example_name = self._default_example_name
 
             elif example_name == "l" and last_example_name is not None:
                 example_name = last_example_name
 
-            example = self.examples.get(example_name, None)
+            example = self._examples.get(example_name, None)
             if example:
                 if example.name != last_example_name:
                     self._log_text(example.name, "last_example_name.txt")

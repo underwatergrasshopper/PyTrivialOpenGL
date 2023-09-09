@@ -2,6 +2,7 @@ if __name__ == "__main__":
    import _setup_path_env
    _setup_path_env.run()
    
+import os as _os
 from PyTrivialOpenGL_TestsAndExamples.utility.ExampleManager import ExampleManager
 
 example_manager = ExampleManager()
@@ -28,6 +29,8 @@ def run():
         return 0
         
     example_manager.set_default("example_2")
+    output_path = _os.path.abspath(_os.path.dirname(__file__) + "/../out")
+    example_manager.set_output_path(output_path)
 
     example_manager.add_example("example_1", example_1)
     example_manager.add_example("example_2", example_2, ["a"])
