@@ -31,25 +31,28 @@ Operating System | Window 10
 
 ## HowTo: Install
 - Go to `Releases` section and download last release package with `whl` extension. 
-- Run `pip install PyTrivialOpenGL-<version>-py3-none-win32.whl` in directory where is the package.
+- Run `py -m pip install PyTrivialOpenGL-<version>-py3-none-win32.whl` in directory where is the package.
 
 *Note: The `<version>` in install command need to be replaced with a version of the package.*
 
 ## HowTo: Uninstall
+- Run `py -m pip uninstall PyTrivialOpenGL`.
 
-- Run `pip uninstall PyTrivialOpenGL`.
+## HowTo: Install required packages for Tests and Examples
+- Run `py -m pip install -r tests_and_examples_requirements.txt`.
 
 ## HowTo: Run Unit Tests
-
+- [HowTo: Install required packages for tests and examples](#howto-install-required-packages-for-tests-and-examples), if not done before.
+- Run `py -m pip install -r tests_and_examples_requirements.txt` to install needed packges (only first time).
 - Go to `tests_and_examples` folder.
-- Run `python run_unit_tests.py`.
+- Run `py run_unit_tests.py`.
 
-*Note: Local version of package is used, not installed.*
+*Note: Local version of PyTrivialOpenGl package will be used, not installed.*
 
 ## HowTo: Run Manual Tests
-
+- [HowTo: Install required packages for tests and examples](#howto-install-required-packages-for-tests-and-examples), if not done before.
 - Go to `tests_and_examples` folder.
-- Run `python run_manual_tests.py`.
+- Run `py run_unit_tests.py`.
 - Type one of following and press `enter`:
     - name of manual test
     - `l` - which means last used name of manual test
@@ -60,12 +63,12 @@ Operating System | Window 10
     - `l` - which means last used options names
     - `d` - which means default options names
 
-*Note: Local version of package is used, not installed.*
+*Note: Local version of PyTrivialOpenGl package will be used, not installed.*
 
 ## HowTo: Run Debugs
-
+- [HowTo: Install required packages for tests and examples](#howto-install-required-packages-for-tests-and-examples), if not done before.
 - Go to `tests_and_examples` folder.
-- Run `python run_debugs.py`.
+- Run `py run_debugs.py`.
 - Type one of following and press `enter`:
     - name of debug example
     - `l` - which means last used name of debug example
@@ -76,12 +79,12 @@ Operating System | Window 10
     - `l` - which means last used options names
     - `d` - which means default options names
 
-*Note: Local version of package is used, not installed.*
+*Note: Local version of PyTrivialOpenGl package will be used, not installed.*
 
 ## HowTo: Run Examples
-
+- [HowTo: Install required packages for tests and examples](#howto-install-required-packages-for-tests-and-examples), if not done before.
 - Go to `tests_and_examples` folder.
-- Run `python run_examples.py`.
+- Run `py run_examples.py`.
 - Type one of following and press `enter`:
     - name of example
     - `l` - which means last used name of example
@@ -94,14 +97,14 @@ Operating System | Window 10
 
 Examples with `c_` prefix are using `C_GL` module instead of `GL` module.
 
-*Note: Local version of package is used, not installed.*
+*Note: Local version of PyTrivialOpenGl package will be used, not installed.*
 
-When PyTrivialOpenGL package is installed, all examples can be run individually by going to `tests_and_examples/PyTrivialOpenGL_TestsAndExamples/examples` folder and running `python <example_name>.py` command.
+When PyTrivialOpenGL package is installed, all examples can be run individually by going to `tests_and_examples/PyTrivialOpenGL_TestsAndExamples/examples` folder and running `py <example_name>.py` command.
 
 ## HowTo: Run All non Unit Tests
-
+- [HowTo: Install required packages for tests and examples](#howto-install-required-packages-for-tests-and-examples), if not done before.
 - Go to `tests_and_examples` folder.
-- Run `python run_all_non_unit_tests.py`.
+- Run `py run_all_non_unit_tests.py`.
 - Type one of following and press `enter`:
     - name of example
     - `l` - which means last used name of example
