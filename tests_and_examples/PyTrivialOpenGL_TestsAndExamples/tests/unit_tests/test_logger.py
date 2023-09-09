@@ -181,7 +181,7 @@ def test_logger_custom_log_message(tmpdir):
     )
     assert content == expected_content, content
 
-def run(flag):
+def _run(flag):
     """
     flag : str
     """
@@ -318,14 +318,16 @@ def run(flag):
         logger.log_message(LogMessageTypeId.FATAL_ERROR, "Some fatal error message.")
         logger.log_message(LogMessageTypeId.ERROR, "This message should not be logged.")
 
-def main(argv):
+def _main(argv):
+    """
+    argv : list[str]
+    """
     if len(argv) > 1:
         flag = argv[1].lower()
-        run(flag)
+        _run(flag)
         
-
 if __name__ == "__main__":
     import sys as _sys
-    main(_sys.argv)
+    _main(_sys.argv)
 
 
