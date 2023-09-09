@@ -71,23 +71,23 @@ class ExampleRunner:
         example_manager.set_output_path(output_path)
 
         if category & ExampleCategoryBit.EXAMPLES:
-            example_manager.add_example("custom_icon",           lambda name, options: examples.custom_icon.run())
-            example_manager.add_example("opengl_version",        lambda name, options: examples.opengl_version.run())
-            example_manager.add_example("timer",                 lambda name, options: examples.timer.run())
-            example_manager.add_example("ask_on_close",          lambda name, options: examples.ask_on_close.run())
+            example_manager.add_example("custom_icon",           examples.custom_icon.run)
+            example_manager.add_example("opengl_version",        examples.opengl_version.run)
+            example_manager.add_example("timer",                 examples.timer.run)
+            example_manager.add_example("ask_on_close",          examples.ask_on_close.run)
 
-            example_manager.add_example("simple_triangle",       lambda name, options: examples.simple_triangle.run())
-            example_manager.add_example("animated_triangle",     lambda name, options: examples.animated_triangle.run())
+            example_manager.add_example("simple_triangle",       examples.simple_triangle.run)
+            example_manager.add_example("animated_triangle",     examples.animated_triangle.run)
 
-            example_manager.add_example("simple_text",           lambda name, options: examples.simple_text.run())
-            example_manager.add_example("colored_text",          lambda name, options: examples.colored_text.run())
-            example_manager.add_example("top_to_bottom_text",    lambda name, options: examples.top_to_bottom_text.run())
-            example_manager.add_example("unicode_text",          lambda name, options: examples.unicode_text.run())
-            example_manager.add_example("formated_text",         lambda name, options: examples.formated_text.run())
-            example_manager.add_example("text_box",              lambda name, options: examples.text_box.run())
-            example_manager.add_example("font_custom_code_point_range", lambda name, options: examples.font_custom_code_point_range.run())
-            example_manager.add_example("window_state",          lambda name, options: examples.window_state.run())
-            example_manager.add_example("cube_in_fog",           lambda name, options: examples.cube_in_fog.run())
+            example_manager.add_example("simple_text",           examples.simple_text.run)
+            example_manager.add_example("colored_text",          examples.colored_text.run)
+            example_manager.add_example("top_to_bottom_text",    examples.top_to_bottom_text.run)
+            example_manager.add_example("unicode_text",          examples.unicode_text.run)
+            example_manager.add_example("formated_text",         examples.formated_text.run)
+            example_manager.add_example("text_box",              examples.text_box.run)
+            example_manager.add_example("font_custom_code_point_range", examples.font_custom_code_point_range.run)
+            example_manager.add_example("window_state",          examples.window_state.run)
+            example_manager.add_example("cube_in_fog",           examples.cube_in_fog.run)
            
 
         if category & ExampleCategoryBit.DEBUGS:

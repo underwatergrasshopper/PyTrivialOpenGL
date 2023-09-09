@@ -15,11 +15,10 @@ __all__ = [
     "run"
 ]
 
-_path_to_project = os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + "/../../../..")
-
 class _Data:
     def __init__(self):
         self.options        = set()
+        self.output_path    = ""
 
         self.width          = 800
         self.height         = 400
@@ -87,7 +86,7 @@ def do_on_create(data):
     else:
         if "export" in _data.options:
             print("Exporting textures...")
-            _data.font.export_as_bmp(_path_to_project + "/out/font")
+            _data.font.export_as_bmp(_data.output_path)
             print("Textures has been exported.")
 
     _data.text_drawer.set_color(255, 255, 255, 255)
@@ -132,8 +131,12 @@ def do_on_resize(width, height):
     resize(width, height)
 
 
-def run(name, options):
+def run(name, options, output_path):
     _data.options = options
+    if output_path:
+        _data.output_path = output_path + "/mt_draw_text"
+    else:
+        _data.output_path = "mt_draw_text"
 
     if "debug" in options:
         togl.set_log_level(togl.LogLevel.DEBUG)

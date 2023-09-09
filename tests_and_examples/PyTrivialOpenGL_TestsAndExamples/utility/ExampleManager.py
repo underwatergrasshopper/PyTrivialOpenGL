@@ -1,6 +1,7 @@
 import re as _re
 import os as _os
 import pathlib as _pathlib 
+import inspect as _inspect
 
 __all__ = [
     "Example",
@@ -68,7 +69,17 @@ class ExampleManager:
     def add_example(self, name, function, possible_options = None, default_options = None):
         """
         name                : str
-        function            : Callable[[str, set[str]], NoneType]
+        function            : Callable[...], None]
+            Optional parameters of ...:
+                name : str
+                    Name of test.
+                options : set[str]
+                    Options of test.
+                output_path : str
+                    Path for creating files in it.
+
+            Note: It can be one, many or none of those parameters.
+
         possible_options    : set[str]
         possible_options    : set[str]
         """
@@ -204,7 +215,14 @@ class ExampleManager:
                 if is_valid_option:
                     self._log_text(" ".join(options), "last_option_names.txt")
 
-                    result = example.function(example_name, options)
+                    args = _inspect.getfullargspec(example.function).args
+                    kwargs = {}
+                    if "name" in args:          kwargs["name"]          = example_name
+                    if "options" in args:       kwargs["options"]       = options
+                    if "output_path" in args:   kwargs["output_path"]   = self._output_path
+
+                    result = example.function(**kwargs)
+
                     print("")
                     print("Example ended with result code: %d." % result)
             else:
