@@ -24,11 +24,11 @@ No GLUT is required.
 
 ## Requirements
 
-|
--|-
-Python Version | 3.9 (32bit) or later
-py launcher | Yes
-Operating System | Window 10 
+|  |  |
+| --- | :-: |
+| **Python Version** | 3.9 or later (32bit) |
+| **py launcher** | Yes |
+| **Operating System** | Window 10 | 
 
 ## HowTo: Install
 - Go to `Releases` section an `PyTrivialOpenGL` github page and download last release package with `whl` extension. 
