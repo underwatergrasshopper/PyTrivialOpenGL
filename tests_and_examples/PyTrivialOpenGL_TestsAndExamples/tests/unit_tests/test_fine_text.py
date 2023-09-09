@@ -1,14 +1,6 @@
-import pytest
-import math
-
-from PyTrivialOpenGL.FineText import *
-
-
-__all__ = [
-    "run"
-]
-
 def test_constructor():
+    from PyTrivialOpenGL.FineText import FineText, Text, TextHorizontalSpacer, ColorF, ColorB
+
     assert FineText().to_elements() == []
 
     assert FineText(Text("")).to_elements()                 == [Text("")]
@@ -32,12 +24,3 @@ def test_constructor():
         fine_text = FineText(SomethingElse())
     except Exception as e:
         assert str(e) == "At 0 element from 'elements'. Unexpected type."
-
-
-def run():
-    print("test_fine_text start")
-    test_constructor()
-    print("test_fine_text end")
-
-if __name__ == "__main__":
-   run()

@@ -1,44 +1,28 @@
-import pytest
-import sys
-import os
-import sys
-import shutil
 
-_path_to_src = os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + "/../../../../src")
-sys.path.insert(0, _path_to_src)
+import os as _os
+import sys as _sys
 
-from PyTrivialOpenGL.Logger import *
+def _get_output(output_path, test_flag):
+    test_file_name_no_ext = _os.path.basename(__file__).split(".")[0]
+    output_full_file_name = str(output_path) + "/" + test_file_name_no_ext + "_" +  test_flag + ".txt"
 
-__all__ = [
-    "run"
-]
+    if not _os.path.exists(output_path):
+        _os.makedirs(output_path)
 
-_path_to_project = os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + "/../../../..")
+    prefix = ""
+    for entry in _sys.path:
+        prefix += entry + _os.pathsep
 
-output_folder_path = _path_to_project + "/log/tests/logger"
+    _os.system(f"set PYTHONPATH={prefix}%PYTHONPATH% & py {__file__ } {test_flag} > {output_full_file_name}")
 
-def gen_test_output(test_file_name, test_flag, output_file_name):
-    content = ""
-
-    if not os.path.exists(output_folder_path):
-        os.makedirs(output_folder_path)
-
-    os.system("python " + _path_to_project + "/tests_and_examples/PyTrivialOpenGL_TestsAndExamples/tests/unit_tests/" + test_file_name + " " + test_flag + " > " + output_folder_path + "/" + output_file_name)
-
-    with open(output_folder_path + "/" + output_file_name) as file:
+    with open(output_full_file_name) as file:
         content = file.read()
 
     return content
 
-def gen_output(test_flag):
-    test_file_name  = "test_logger.py"
- 
-    test_file_name_no_ext   = test_file_name.split(".")[0]
-    output_file_name        = test_file_name_no_ext + "_" +  test_flag + ".txt"
-
-    return gen_test_output(test_file_name, test_flag, output_file_name)
-
 def test_logger_log_level():
+    from PyTrivialOpenGL.Logger import Logger, LogLevel
+
     logger = Logger()
     assert logger.get_log_level() == LogLevel.INFO
 
@@ -83,11 +67,10 @@ def test_logger_log_level():
     assert logger.is_log_level_at_least(LogLevel.ERROR)
 
 
-def test_logger_log_message():
-
+def test_logger_log_message(tmpdir):
     ### log ###
 
-    content = gen_output("log_message_level_default")
+    content = _get_output(tmpdir, "log_message_level_default")
     expected_content = (
         "(TOGL) Info: Some info message.\n"
         "(TOGL) Warning: Some warning message.\n"
@@ -96,7 +79,7 @@ def test_logger_log_message():
     )
     assert content == expected_content, content
 
-    content = gen_output("log_message_level_debug")
+    content = _get_output(tmpdir, "log_message_level_debug")
     expected_content = (
         "(TOGL) Debug: Some debug message.\n"
         "(TOGL) Info: Some info message.\n"
@@ -106,7 +89,7 @@ def test_logger_log_message():
     )
     assert content == expected_content, content
 
-    content = gen_output("log_message_level_info")
+    content = _get_output(tmpdir, "log_message_level_info")
     expected_content = (
         "(TOGL) Info: Some info message.\n"
         "(TOGL) Warning: Some warning message.\n"
@@ -115,7 +98,7 @@ def test_logger_log_message():
     )
     assert content == expected_content, content
 
-    content = gen_output("log_message_level_warning")
+    content = _get_output(tmpdir, "log_message_level_warning")
     expected_content = (
         "(TOGL) Warning: Some warning message.\n"
         "(TOGL) Error: Some error message.\n"
@@ -123,7 +106,7 @@ def test_logger_log_message():
     )
     assert content == expected_content, content
 
-    content = gen_output("log_message_level_error")
+    content = _get_output(tmpdir, "log_message_level_error")
     expected_content = (
         "(TOGL) Error: Some error message.\n"
         "(TOGL) Fatal Error: Some fatal error message.\n"
@@ -132,7 +115,7 @@ def test_logger_log_message():
 
     ### log direct ###
 
-    content = gen_output("log_message_direct_level_default")
+    content = _get_output(tmpdir, "log_message_direct_level_default")
     expected_content = (
         "(TOGL) Info: Some info message.\n"
         "(TOGL) Warning: Some warning message.\n"
@@ -141,7 +124,7 @@ def test_logger_log_message():
     )
     assert content == expected_content, content
 
-    content = gen_output("log_message_direct_level_debug")
+    content = _get_output(tmpdir, "log_message_direct_level_debug")
     expected_content = (
         "(TOGL) Debug: Some debug message.\n"
         "(TOGL) Info: Some info message.\n"
@@ -151,7 +134,7 @@ def test_logger_log_message():
     )
     assert content == expected_content, content
 
-    content = gen_output("log_message_direct_level_info")
+    content = _get_output(tmpdir, "log_message_direct_level_info")
     expected_content = (
         "(TOGL) Info: Some info message.\n"
         "(TOGL) Warning: Some warning message.\n"
@@ -160,7 +143,7 @@ def test_logger_log_message():
     )
     assert content == expected_content, content
 
-    content = gen_output("log_message_direct_level_warning")
+    content = _get_output(tmpdir, "log_message_direct_level_warning")
     expected_content = (
         "(TOGL) Warning: Some warning message.\n"
         "(TOGL) Error: Some error message.\n"
@@ -168,7 +151,7 @@ def test_logger_log_message():
     )
     assert content == expected_content, content
 
-    content = gen_output("log_message_direct_level_error")
+    content = _get_output(tmpdir, "log_message_direct_level_error")
     expected_content = (
         "(TOGL) Error: Some error message.\n"
         "(TOGL) Fatal Error: Some fatal error message.\n"
@@ -176,9 +159,9 @@ def test_logger_log_message():
     assert content == expected_content, content
 
 
-def test_logger_custom_log_message():
+def test_logger_custom_log_message(tmpdir):
 
-    content = gen_output("log_message_custom")
+    content = _get_output(tmpdir, "log_message_custom")
     expected_content = (
         "(TOGL) Debug: --Some debug message.\n"
         "(TOGL) Info: --Some info message.\n"
@@ -188,7 +171,7 @@ def test_logger_custom_log_message():
     )
     assert content == expected_content, content
 
-    content = gen_output("log_message_direct_custom")
+    content = _get_output(tmpdir, "log_message_direct_custom")
     expected_content = (
         "(TOGL) Debug: --Some debug message.\n"
         "(TOGL) Info: --Some info message.\n"
@@ -198,149 +181,151 @@ def test_logger_custom_log_message():
     )
     assert content == expected_content, content
 
-def run():
-    if os.path.exists(output_folder_path):
-        shutil.rmtree(output_folder_path)
+def run(flag):
+    """
+    flag : str
+    """
+    from PyTrivialOpenGL.Logger import Logger, LogLevel, LogMessageTypeId
 
-    print("test_logger start")
-    test_logger_log_level()
-    test_logger_log_message()
-    test_logger_custom_log_message()
-    print("test_logger end")
+    if flag == "log_message_level_default":
+        logger = Logger()
+        logger.log_debug("Some debug message.")
+        logger.log_info("Some info message.")
+        logger.log_warning("Some warning message.")
+        logger.log_error("Some error message.")
+        logger.log_fatal_error("Some fatal error message.")
+        logger.log_info("This message should not be logged.")
+
+    elif flag == "log_message_level_debug":
+        logger = Logger()
+        logger.set_log_level(LogLevel.DEBUG)
+        logger.log_debug("Some debug message.")
+        logger.log_info("Some info message.")
+        logger.log_warning("Some warning message.")
+        logger.log_error("Some error message.")
+        logger.log_fatal_error("Some fatal error message.")
+        logger.log_info("This message should not be logged.")
+
+    elif flag == "log_message_level_info":
+        logger = Logger()
+        logger.set_log_level(LogLevel.INFO)
+        logger.log_debug("Some debug message.")
+        logger.log_info("Some info message.")
+        logger.log_warning("Some warning message.")
+        logger.log_error("Some error message.")
+        logger.log_fatal_error("Some fatal error message.")
+        logger.log_info("This message should not be logged.")
+
+    elif flag == "log_message_level_warning":
+        logger = Logger()
+        logger.set_log_level(LogLevel.WARNING)
+        logger.log_debug("Some debug message.")
+        logger.log_info("Some info message.")
+        logger.log_warning("Some warning message.")
+        logger.log_error("Some error message.")
+        logger.log_fatal_error("Some fatal error message.")
+        logger.log_info("This message should not be logged.")
+
+    elif flag == "log_message_level_error":
+        logger = Logger()
+        logger.set_log_level(LogLevel.ERROR)
+        logger.log_debug("Some debug message.")
+        logger.log_info("Some info message.")
+        logger.log_warning("Some warning message.")
+        logger.log_error("Some error message.")
+        logger.log_fatal_error("Some fatal error message.")
+        logger.log_info("This message should not be logged.")
+
+    elif flag == "log_message_direct_level_default":
+        logger = Logger()
+        logger.log_message(LogMessageTypeId.DEBUG, "Some debug message.")
+        logger.log_message(LogMessageTypeId.INFO, "Some info message.")
+        logger.log_message(LogMessageTypeId.WARNING, "Some warning message.")
+        logger.log_message(LogMessageTypeId.ERROR, "Some error message.")
+        logger.log_message(LogMessageTypeId.FATAL_ERROR, "Some fatal error message.")
+        logger.log_message(LogMessageTypeId.ERROR, "This message should not be logged.")
+
+    elif flag == "log_message_direct_level_debug":
+        logger = Logger()
+        logger.set_log_level(LogLevel.DEBUG)
+        logger.log_message(LogMessageTypeId.DEBUG, "Some debug message.")
+        logger.log_message(LogMessageTypeId.INFO, "Some info message.")
+        logger.log_message(LogMessageTypeId.WARNING, "Some warning message.")
+        logger.log_message(LogMessageTypeId.ERROR, "Some error message.")
+        logger.log_message(LogMessageTypeId.FATAL_ERROR, "Some fatal error message.")
+        logger.log_message(LogMessageTypeId.ERROR, "This message should not be logged.")
+
+    elif flag == "log_message_direct_level_info":
+        logger = Logger()
+        logger.set_log_level(LogLevel.INFO)
+        logger.log_message(LogMessageTypeId.DEBUG, "Some debug message.")
+        logger.log_message(LogMessageTypeId.INFO, "Some info message.")
+        logger.log_message(LogMessageTypeId.WARNING, "Some warning message.")
+        logger.log_message(LogMessageTypeId.ERROR, "Some error message.")
+        logger.log_message(LogMessageTypeId.FATAL_ERROR, "Some fatal error message.")
+        logger.log_message(LogMessageTypeId.ERROR, "This message should not be logged.")
+
+    elif flag == "log_message_direct_level_warning":
+        logger = Logger()
+        logger.set_log_level(LogLevel.WARNING)
+        logger.log_message(LogMessageTypeId.DEBUG, "Some debug message.")
+        logger.log_message(LogMessageTypeId.INFO, "Some info message.")
+        logger.log_message(LogMessageTypeId.WARNING, "Some warning message.")
+        logger.log_message(LogMessageTypeId.ERROR, "Some error message.")
+        logger.log_message(LogMessageTypeId.FATAL_ERROR, "Some fatal error message.")
+        logger.log_message(LogMessageTypeId.ERROR, "This message should not be logged.")
+
+    elif flag == "log_message_direct_level_error":
+        logger = Logger()
+        logger.set_log_level(LogLevel.ERROR)
+        logger.log_message(LogMessageTypeId.DEBUG, "Some debug message.")
+        logger.log_message(LogMessageTypeId.INFO, "Some info message.")
+        logger.log_message(LogMessageTypeId.WARNING, "Some warning message.")
+        logger.log_message(LogMessageTypeId.ERROR, "Some error message.")
+        logger.log_message(LogMessageTypeId.FATAL_ERROR, "Some fatal error message.")
+        logger.log_message(LogMessageTypeId.ERROR, "This message should not be logged.")
+
+    elif flag == "log_message_custom":
+        logger = Logger()
+
+        def log_message_to_output(log_message_type_id, prefix, message):
+            print("%s--%s" % (prefix, message))
+
+        logger.set_log_message_to_output(log_message_to_output)
+
+        logger.set_log_level(LogLevel.DEBUG)
+        logger.log_debug("Some debug message.")
+        logger.log_info("Some info message.")
+        logger.log_warning("Some warning message.")
+        logger.log_error("Some error message.")
+        logger.log_fatal_error("Some fatal error message.")
+        logger.log_info("This message should not be logged.")
+
+
+    elif flag == "log_message_direct_custom":
+        logger = Logger()
+
+        def log_message_to_output(log_message_type_id, prefix, message):
+            print("%s--%s" % (prefix, message))
+
+        logger.set_log_message_to_output(log_message_to_output)
+
+        logger.set_log_level(LogLevel.DEBUG)
+        logger.log_message(LogMessageTypeId.DEBUG, "Some debug message.")
+        logger.log_message(LogMessageTypeId.INFO, "Some info message.")
+        logger.log_message(LogMessageTypeId.WARNING, "Some warning message.")
+        logger.log_message(LogMessageTypeId.ERROR, "Some error message.")
+        logger.log_message(LogMessageTypeId.FATAL_ERROR, "Some fatal error message.")
+        logger.log_message(LogMessageTypeId.ERROR, "This message should not be logged.")
+
+def main(argv):
+    if len(argv) > 1:
+        flag = argv[1].lower()
+        run(flag)
+        
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        flag = sys.argv[1].lower()
-
-        if flag == "log_message_level_default":
-            logger = Logger()
-            logger.log_debug("Some debug message.")
-            logger.log_info("Some info message.")
-            logger.log_warning("Some warning message.")
-            logger.log_error("Some error message.")
-            logger.log_fatal_error("Some fatal error message.")
-            logger.log_info("This message should not be logged.")
-
-        elif flag == "log_message_level_debug":
-            logger = Logger()
-            logger.set_log_level(LogLevel.DEBUG)
-            logger.log_debug("Some debug message.")
-            logger.log_info("Some info message.")
-            logger.log_warning("Some warning message.")
-            logger.log_error("Some error message.")
-            logger.log_fatal_error("Some fatal error message.")
-            logger.log_info("This message should not be logged.")
-
-        elif flag == "log_message_level_info":
-            logger = Logger()
-            logger.set_log_level(LogLevel.INFO)
-            logger.log_debug("Some debug message.")
-            logger.log_info("Some info message.")
-            logger.log_warning("Some warning message.")
-            logger.log_error("Some error message.")
-            logger.log_fatal_error("Some fatal error message.")
-            logger.log_info("This message should not be logged.")
-
-        elif flag == "log_message_level_warning":
-            logger = Logger()
-            logger.set_log_level(LogLevel.WARNING)
-            logger.log_debug("Some debug message.")
-            logger.log_info("Some info message.")
-            logger.log_warning("Some warning message.")
-            logger.log_error("Some error message.")
-            logger.log_fatal_error("Some fatal error message.")
-            logger.log_info("This message should not be logged.")
-
-        elif flag == "log_message_level_error":
-            logger = Logger()
-            logger.set_log_level(LogLevel.ERROR)
-            logger.log_debug("Some debug message.")
-            logger.log_info("Some info message.")
-            logger.log_warning("Some warning message.")
-            logger.log_error("Some error message.")
-            logger.log_fatal_error("Some fatal error message.")
-            logger.log_info("This message should not be logged.")
-
-        elif flag == "log_message_direct_level_default":
-            logger = Logger()
-            logger.log_message(LogMessageTypeId.DEBUG, "Some debug message.")
-            logger.log_message(LogMessageTypeId.INFO, "Some info message.")
-            logger.log_message(LogMessageTypeId.WARNING, "Some warning message.")
-            logger.log_message(LogMessageTypeId.ERROR, "Some error message.")
-            logger.log_message(LogMessageTypeId.FATAL_ERROR, "Some fatal error message.")
-            logger.log_message(LogMessageTypeId.ERROR, "This message should not be logged.")
-
-        elif flag == "log_message_direct_level_debug":
-            logger = Logger()
-            logger.set_log_level(LogLevel.DEBUG)
-            logger.log_message(LogMessageTypeId.DEBUG, "Some debug message.")
-            logger.log_message(LogMessageTypeId.INFO, "Some info message.")
-            logger.log_message(LogMessageTypeId.WARNING, "Some warning message.")
-            logger.log_message(LogMessageTypeId.ERROR, "Some error message.")
-            logger.log_message(LogMessageTypeId.FATAL_ERROR, "Some fatal error message.")
-            logger.log_message(LogMessageTypeId.ERROR, "This message should not be logged.")
-
-        elif flag == "log_message_direct_level_info":
-            logger = Logger()
-            logger.set_log_level(LogLevel.INFO)
-            logger.log_message(LogMessageTypeId.DEBUG, "Some debug message.")
-            logger.log_message(LogMessageTypeId.INFO, "Some info message.")
-            logger.log_message(LogMessageTypeId.WARNING, "Some warning message.")
-            logger.log_message(LogMessageTypeId.ERROR, "Some error message.")
-            logger.log_message(LogMessageTypeId.FATAL_ERROR, "Some fatal error message.")
-            logger.log_message(LogMessageTypeId.ERROR, "This message should not be logged.")
-
-        elif flag == "log_message_direct_level_warning":
-            logger = Logger()
-            logger.set_log_level(LogLevel.WARNING)
-            logger.log_message(LogMessageTypeId.DEBUG, "Some debug message.")
-            logger.log_message(LogMessageTypeId.INFO, "Some info message.")
-            logger.log_message(LogMessageTypeId.WARNING, "Some warning message.")
-            logger.log_message(LogMessageTypeId.ERROR, "Some error message.")
-            logger.log_message(LogMessageTypeId.FATAL_ERROR, "Some fatal error message.")
-            logger.log_message(LogMessageTypeId.ERROR, "This message should not be logged.")
-
-        elif flag == "log_message_direct_level_error":
-            logger = Logger()
-            logger.set_log_level(LogLevel.ERROR)
-            logger.log_message(LogMessageTypeId.DEBUG, "Some debug message.")
-            logger.log_message(LogMessageTypeId.INFO, "Some info message.")
-            logger.log_message(LogMessageTypeId.WARNING, "Some warning message.")
-            logger.log_message(LogMessageTypeId.ERROR, "Some error message.")
-            logger.log_message(LogMessageTypeId.FATAL_ERROR, "Some fatal error message.")
-            logger.log_message(LogMessageTypeId.ERROR, "This message should not be logged.")
-
-        elif flag == "log_message_custom":
-            logger = Logger()
-
-            def log_message_to_output(log_message_type_id, prefix, message):
-                print("%s--%s" % (prefix, message))
-
-            logger.set_log_message_to_output(log_message_to_output)
-
-            logger.set_log_level(LogLevel.DEBUG)
-            logger.log_debug("Some debug message.")
-            logger.log_info("Some info message.")
-            logger.log_warning("Some warning message.")
-            logger.log_error("Some error message.")
-            logger.log_fatal_error("Some fatal error message.")
-            logger.log_info("This message should not be logged.")
+    import sys as _sys
+    main(_sys.argv)
 
 
-        elif flag == "log_message_direct_custom":
-            logger = Logger()
-
-            def log_message_to_output(log_message_type_id, prefix, message):
-                print("%s--%s" % (prefix, message))
-
-            logger.set_log_message_to_output(log_message_to_output)
-
-            logger.set_log_level(LogLevel.DEBUG)
-            logger.log_message(LogMessageTypeId.DEBUG, "Some debug message.")
-            logger.log_message(LogMessageTypeId.INFO, "Some info message.")
-            logger.log_message(LogMessageTypeId.WARNING, "Some warning message.")
-            logger.log_message(LogMessageTypeId.ERROR, "Some error message.")
-            logger.log_message(LogMessageTypeId.FATAL_ERROR, "Some fatal error message.")
-            logger.log_message(LogMessageTypeId.ERROR, "This message should not be logged.")
-    else:
-        run()

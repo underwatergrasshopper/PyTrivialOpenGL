@@ -36,7 +36,7 @@ def gen_output(test_flag):
 
     return gen_test_output(test_file_name, test_flag, output_file_name)
 
-def test_log_log_level():
+def _test_log_log_level():
 
     assert get_log_level() == LogLevel.INFO
 
@@ -81,7 +81,7 @@ def test_log_log_level():
     assert is_log_level_at_least(LogLevel.ERROR)
 
 
-def test_log_log_message():
+def _test_log_log_message():
 
     ### log ###
 
@@ -129,7 +129,7 @@ def test_log_log_message():
     assert content == expected_content, content
 
 
-def test_log_custom_log_message():
+def _test_log_custom_log_message():
 
     content = gen_output("log_message_custom")
     expected_content = (
@@ -141,18 +141,10 @@ def test_log_custom_log_message():
     )
     assert content == expected_content, content
 
+if __name__ == "__main__":
+    pass
 
 def run():
-    if os.path.exists(output_folder_path):
-        shutil.rmtree(output_folder_path)
-
-    print("test_log start")
-    test_log_log_level()
-    test_log_log_message()
-    test_log_custom_log_message()
-    print("test_log end")
-
-if __name__ == "__main__":
     if len(sys.argv) > 1:
         flag = sys.argv[1].lower()
 

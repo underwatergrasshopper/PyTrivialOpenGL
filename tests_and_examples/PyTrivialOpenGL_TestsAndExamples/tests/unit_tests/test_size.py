@@ -1,13 +1,5 @@
-import pytest
-import math
-
-from PyTrivialOpenGL.Size import *
-
-__all__ = [
-    "run"
-]
-
 def test_size():
+    from PyTrivialOpenGL.Size import Size
 
     ### constructor ###
 
@@ -218,11 +210,3 @@ def test_size():
 
     assert str(Size(1, 2)) == "1 2"
     assert tuple(Size(1, 2)) == (1, 2)
-
-def run():
-    print("test_size start")
-    test_size()
-    print("test_size end")
-
-if __name__ == "__main__":
-   run()

@@ -1,14 +1,6 @@
-import pytest
-import math
-
-from PyTrivialOpenGL.Point import Point
-from PyTrivialOpenGL.Size import Size
-
-__all__ = [
-    "run"
-]
-
 def test_point():
+    from PyTrivialOpenGL.Point import Point
+    from PyTrivialOpenGL.Size import Size
 
     ### constructor ###
 
@@ -273,11 +265,3 @@ def test_point():
     p2 = p.copy()
     assert p == p2
     assert p is not p2
-
-def run():
-    print("test_point start")
-    test_point()
-    print("test_point end")
-
-if __name__ == "__main__":
-   run()

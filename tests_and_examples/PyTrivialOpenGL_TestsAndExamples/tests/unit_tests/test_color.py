@@ -1,13 +1,7 @@
-import pytest
-import math
-
-from PyTrivialOpenGL.Color import *
-
-__all__ = [
-    "run"
-]
-
 def test_color_b():
+    import math
+    from PyTrivialOpenGL.Color import Color, ColorB, ColorF
+
     ### constructor ###
 
     color = ColorB(0, 0, 0, 0)
@@ -160,8 +154,9 @@ def test_color_b():
     assert str(ColorB(1, 2, 3, 4)) == "1 2 3 4"
     assert tuple(ColorB(1, 2, 3, 4)) == (1, 2, 3 ,4)
 
-
 def test_color_f():
+    from PyTrivialOpenGL.Color import Color, ColorB, ColorF
+
     ### constructor ###
 
     color = ColorF(0, 0, 0, 0)
@@ -302,12 +297,3 @@ def test_color_f():
 
     assert str(ColorF(0.1, 0.2, 0.3, 0.4)) == "0.1 0.2 0.3 0.4"
     assert tuple(ColorF(0.1, 0.2, 0.3, 0.4)) == (0.1, 0.2, 0.3, 0.4)
-
-def run():
-    print("test_color start")
-    test_color_b()
-    test_color_f()
-    print("test_color end")
-
-if __name__ == "__main__":
-   run()

@@ -1,16 +1,25 @@
-import pytest
-import math
-
-from PyTrivialOpenGL.Size import Size
-from PyTrivialOpenGL.Area import Area
-from PyTrivialOpenGL.Point import Point
-from PyTrivialOpenGL._Private.Basics import *
-
-__all__ = [
-    "run"
-]
-
 def test_basics():
+    from PyTrivialOpenGL.Size import Size
+    from PyTrivialOpenGL.Area import Area
+    from PyTrivialOpenGL.Point import Point
+    from PyTrivialOpenGL._Private.Basics import (
+        check_area_i32_u16, 
+        is_area_i32_u16, 
+        is_point_i32, 
+        check_point_i32, 
+        is_size_u16, 
+        check_size_u16, 
+        is_u16, 
+        check_u16, 
+        is_i32, 
+        check_i32, 
+
+        MIN_U16, 
+        MAX_U16, 
+        MIN_I32, 
+        MAX_I32
+    )
+
     ### is_i32, check_i32 ###
 
     assert is_i32(MIN_I32)

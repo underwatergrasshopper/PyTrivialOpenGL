@@ -1,15 +1,7 @@
-import pytest
-import math
-
-from PyTrivialOpenGL.Size   import Size
-from PyTrivialOpenGL.Point  import Point
-from PyTrivialOpenGL.Area   import Area
-
-__all__ = [
-    "run"
-]
-
 def test_area():
+    from PyTrivialOpenGL.Size   import Size
+    from PyTrivialOpenGL.Point  import Point
+    from PyTrivialOpenGL.Area   import Area
 
     ### constructor ###
 
@@ -222,11 +214,3 @@ def test_area():
 
     assert str(Area(1, 2, 3, 4)) == "1 2 3 4"
     assert tuple(Area(1, 2, 3, 4)) == (1, 2, 3, 4)
-
-def run():
-    print("test_area start")
-    test_area()
-    print("test_area end")
-
-if __name__ == "__main__":
-   run()
