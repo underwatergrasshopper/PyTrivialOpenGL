@@ -4,8 +4,11 @@ import os as _os
 def run(targets = None, output_path = None):
     """
     targets         : list[str] | None
-        List of test script files. Similar to how pytest is doing this.
-        [<test_script_name>[::<test_function_name>] ...]
+        List of test script file names. They can be extended with test function name. 
+        Similarly to how pytest is doing this: '<test_script_name>[::<test_function_name>]'.
+        Examples:
+            test_area.py
+            test_area.py::test_area
     output_path     : str | None
     run_path        : str | None
     """
