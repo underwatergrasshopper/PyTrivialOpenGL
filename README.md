@@ -27,10 +27,11 @@ No GLUT is required.
 |
 -|-
 Python Version | 3.9 (32bit) or later
+py launcher | Yes
 Operating System | Window 10 
 
 ## HowTo: Install
-- Go to `Releases` section and download last release package with `whl` extension. 
+- Go to `Releases` section an `PyTrivialOpenGL` github page and download last release package with `whl` extension. 
 - Run `py -m pip install PyTrivialOpenGL-<version>-py3-none-win32.whl` in directory where is the package.
 
 *Note: The `<version>` in install command need to be replaced with a version of the package.*

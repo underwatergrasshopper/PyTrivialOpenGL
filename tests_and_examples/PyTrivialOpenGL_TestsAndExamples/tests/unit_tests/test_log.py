@@ -10,9 +10,15 @@ def _get_output(output_path, test_flag):
 
     prefix = ""
     for entry in _sys.path:
-        prefix += entry + _os.pathsep
+        if "PyTrivialOpenGL" in entry:
+            prefix += entry + _os.pathsep
 
-    _os.system(f"set PYTHONPATH={prefix}%PYTHONPATH% & py {__file__ } {test_flag} > {output_full_file_name}")
+    is_64 = _sys.maxsize > 2**32
+    platform = "64" if is_64 else "32"
+    major = _sys.version_info.major
+    minor = _sys.version_info.minor
+
+    _os.system(f"set PYTHONPATH={prefix}%PYTHONPATH% & py -{major}.{minor}-{platform} {__file__ } {test_flag} > {output_full_file_name}")
 
     with open(output_full_file_name) as file:
         content = file.read()
