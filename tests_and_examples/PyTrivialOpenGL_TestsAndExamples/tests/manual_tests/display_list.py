@@ -1,6 +1,5 @@
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
-from PyTrivialOpenGL.Utility import get_gl_error_str
 
 __all__ = [
     "run"

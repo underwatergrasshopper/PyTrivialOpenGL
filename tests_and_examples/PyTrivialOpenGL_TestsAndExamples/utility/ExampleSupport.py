@@ -1,8 +1,6 @@
-import ctypes
 import math
-import copy
 import os
-from timeit import default_timer as _timer
+from time import perf_counter
 
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
@@ -104,7 +102,7 @@ class FPS_Counter:
         self._fps       = 0
 
     def reset(self):
-        self._now   = _timer()
+        self._now   = perf_counter()
         self._accum = 0
         self._fps   = 0.0
 
@@ -117,7 +115,7 @@ class FPS_Counter:
     def update(self, is_display = True):
         self._count += 1
 
-        new_now = _timer()
+        new_now = perf_counter()
 
         self._accum += new_now - self._now
         self._now = new_now

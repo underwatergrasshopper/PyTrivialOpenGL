@@ -1,7 +1,7 @@
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
 from PyTrivialOpenGL import C_GL
-import ctypes
+
 import math
 
 __all__ = [

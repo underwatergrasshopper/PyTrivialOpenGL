@@ -2,7 +2,7 @@ import math
 
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
-from ...utility.ExampleSupport import FPS_Counter, check_gl_error, is_close
+from ...utility.ExampleSupport import is_close
 
 __all__ = [
     "run"

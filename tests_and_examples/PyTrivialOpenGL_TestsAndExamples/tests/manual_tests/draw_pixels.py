@@ -1,6 +1,7 @@
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
 from PyTrivialOpenGL import C_GL
+
 from PyTrivialOpenGL.Utility import get_gl_error_str
 from ...utility.ExampleSupport import is_close
 

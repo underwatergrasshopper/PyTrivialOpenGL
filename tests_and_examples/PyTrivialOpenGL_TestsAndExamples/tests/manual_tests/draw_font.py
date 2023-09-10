@@ -1,14 +1,7 @@
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
 
-from PyTrivialOpenGL import C_GL
-from PyTrivialOpenGL._Private import C_WGL
-
-from PyTrivialOpenGL.Font import _FrameBuffer, _FontDataGenerator, _FontInfo
 from ...utility.ExampleSupport import FPS_Counter
-
-import ctypes
-import os
 
 __all__ = [
     "run"

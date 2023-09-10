@@ -1,10 +1,8 @@
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
-from PyTrivialOpenGL import C_GL
-import ctypes
+
 import math
 from ...utility.ExampleSupport import FPS_Counter, check_gl_error, is_close
-
 
 __all__ = [
     "run"

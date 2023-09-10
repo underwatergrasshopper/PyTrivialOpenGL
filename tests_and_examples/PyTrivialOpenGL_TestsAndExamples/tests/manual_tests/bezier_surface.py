@@ -1,8 +1,6 @@
-import math
-
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
-from PyTrivialOpenGL import C_GL
+
 from ...utility.ExampleSupport import is_close
 
 __all__ = [

@@ -1,6 +1,5 @@
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
-import ctypes
 
 from ...utility.ExampleSupport import is_close
 
