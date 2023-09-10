@@ -42,6 +42,37 @@ No GLUT is required.
 ## HowTo: Install required packages for Tests and Examples
 - Run `py -m pip install -r tests_and_examples_requirements.txt`.
 
+## HowTo: Run Examples
+- [HowTo: Install required packages for tests and examples](#howto-install-required-packages-for-tests-and-examples), if not done before.
+- Go to `tests_and_examples` folder.
+- Run `py run_examples.py`.
+- Type one of following and press `enter`:
+    - name of example
+    - `l` - which means last used name of example
+    - `d` - which means default name of example
+- Type one of following and press `enter`:
+    - nothing
+    - one or many options names
+    - `l` - which means last used options names
+    - `d` - which means default options names
+
+
+### Interesting examples to run:
+
+* `cube_in_fog` - Move with arrows and WSAD.
+* `formated_text` - Text auto adjust to size of window.
+* `unicode_text`
+* `window_state` - Maximize, Minimize, Hide, Windowed FullScreen, ...
+* `text_box`
+* `animated_triangle`
+
+Examples with `c_` prefix are using `C_GL` module instead of `GL` module.
+
+*Note: Local version of PyTrivialOpenGl package will be used, not installed.*
+
+When PyTrivialOpenGL package is installed, all examples can be run individually by going to `tests_and_examples/PyTrivialOpenGL_TestsAndExamples/examples` folder and running `py <example_name>.py` command.
+
+
 ## HowTo: Run Unit Tests
 - [HowTo: Install required packages for tests and examples](#howto-install-required-packages-for-tests-and-examples), if not done before.
 - Run `py -m pip install -r tests_and_examples_requirements.txt` to install needed packges (only first time).
@@ -81,26 +112,6 @@ No GLUT is required.
     - `d` - which means default options names
 
 *Note: Local version of PyTrivialOpenGl package will be used, not installed.*
-
-## HowTo: Run Examples
-- [HowTo: Install required packages for tests and examples](#howto-install-required-packages-for-tests-and-examples), if not done before.
-- Go to `tests_and_examples` folder.
-- Run `py run_examples.py`.
-- Type one of following and press `enter`:
-    - name of example
-    - `l` - which means last used name of example
-    - `d` - which means default name of example
-- Type one of following and press `enter`:
-    - nothing
-    - one or many options names
-    - `l` - which means last used options names
-    - `d` - which means default options names
-
-Examples with `c_` prefix are using `C_GL` module instead of `GL` module.
-
-*Note: Local version of PyTrivialOpenGl package will be used, not installed.*
-
-When PyTrivialOpenGL package is installed, all examples can be run individually by going to `tests_and_examples/PyTrivialOpenGL_TestsAndExamples/examples` folder and running `py <example_name>.py` command.
 
 ## HowTo: Run All non Unit Tests
 - [HowTo: Install required packages for tests and examples](#howto-install-required-packages-for-tests-and-examples), if not done before.
