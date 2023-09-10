@@ -50,19 +50,19 @@ class Data:
 _data   = Data()
 _window = togl.to_window()
 
-_legend = """Scroll          - Move Legend Up/Down
+_legend = f"""Scroll          - Move Legend Up/Down
 Arrows          - Move by 30px
 J               - Move Test (window should ended at the same position) [wait for 'done']
 T               - Delay 3s -> Foreground                        [wait for 'done']
 H               - Hide 1s -> Show                               [wait for 'done']
-M               - Minimize 1s -> Center (width=600, height=300) [wait for 'done']
+M               - Minimize 1s -> Center (width={_WIDTH}, height={_HEIGHT}) [wait for 'done']
 Shift + M       - Maximize
 F               - Windowed Full Screen
 
 C               - Center
-Ctrl + C        - Center (width=600, height=300)
-L. Shift + C    - Center Draw Area (width=600, height=300)
-R. Shift + C    - Center Window Area (width=600, height=300)
+Ctrl + C        - Center (width={_WIDTH}, height={_HEIGHT})
+L. Shift + C    - Center Draw Area (width={_WIDTH}, height={_HEIGHT})
+R. Shift + C    - Center Window Area (width={_WIDTH}, height={_HEIGHT})
  
 P               - Move to (x=10, y=50)
 L. Ctrl + P     - Move to (x=10)
@@ -71,24 +71,25 @@ O               - Move to (x=0, y=0)
 L. Ctrl + O     - Move to (pos=Point(10,50))
 R. Ctrl + O     - Move to (pos=(10,50))
     
-S               - Resize (width=300, height=200)
-L. Ctrl + S     - Resize (width=300)
-R. Ctrl + S     - Resize (height=200)
-L. Shift + S    - Resize (size=Size(600, 300))
-R. Shift + S    - Resize (size=(600, 300))
+S               - Resize (width={_WIDTH // 2}, height={_HEIGHT // 2})
+L. Ctrl + S     - Resize (width={_WIDTH // 2})
+R. Ctrl + S     - Resize (height={_HEIGHT // 2})
+L. Shift + S    - Resize (size=Size({_WIDTH}, {_HEIGHT}))
+R. Shift + S    - Resize (size=({_WIDTH}, {_HEIGHT}))
     
-A               - Reshape(x=10, y=50, width=600, height=300)
-L. Shift + A    - Reshape(area=Area(10, 50, 600, 300)
-R. Shift + A    - Reshape(area=(10, 50, 600, 300)
-L. Ctrl + A     - Reshape(x=10, width=600)
-R. Ctrl + A     - Reshape(y=50, height=300)
+A               - Reshape(x=10, y=50, width={_WIDTH}, height={_HEIGHT})
+L. Shift + A    - Reshape(area=Area(10, 50, {_WIDTH}, {_HEIGHT})
+R. Shift + A    - Reshape(area=(10, 50, {_WIDTH}, {_HEIGHT})
+L. Ctrl + A     - Reshape(x=10, width={_WIDTH})
+R. Ctrl + A     - Reshape(y=50, height={_HEIGHT})
     
 D               - Toggle: by Window Area <-> by Draw Area
 R               - Request Draw
         
+                (should be no change in size and pos for 0 and 1)
 0               - Move by (none) 1s -> Move to (none) 1s -> Resize (none) 1s -> 
-                  Reshape (none)  1s -> Center (none)               [wait for 'done']
-1               - Minimize -> Move by (30, 0) -> Resize (600, 300)  [wait for 'done']
+                  Reshape (none)  1s -> Center (none)               [wait for 'done'] 
+1               - Minimize -> Move by (30, 0) -> Resize ({_WIDTH}, {_HEIGHT})  [wait for 'done'] 
 
 I               - Info
 L               - Legend
@@ -300,27 +301,27 @@ def do_on_key(key_id, is_down, extra):
 
     elif key_id == '0' and not is_down:
         def do():
-            _window.move_by()
+            _window.move_by(0, 0) # no move
             display_info()
         _data.action_chain.add(0, do)
 
         def do():
-            _window.move_to()
+            _window.move_to(x = _window.get_x()) # no move
             display_info()
         _data.action_chain.add(1, do)
 
         def do():
-            _window.resize()
+            _window.resize(width = _window.get_width()) # no resize
             display_info()
         _data.action_chain.add(1, do)
 
         def do():
-            _window.reshape()
+            _window.reshape(width = _window.get_width()) # no reshape
             display_info()
         _data.action_chain.add(1, do)
 
         def do():
-            _window.center()
+            _window.center() # no move or reshape
             print("done")
         _data.action_chain.add(1, do)
 

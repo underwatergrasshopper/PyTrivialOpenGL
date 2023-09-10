@@ -1140,17 +1140,18 @@ class Window:
 
         self._set_area(new_area, _WindowAreaPartId.ALL, is_draw_area)
 
-    def center(self, width = None, height = None, size = None, is_draw_area_size = False):
+    def center(self, width = None, height = None, size = None, is_draw_area_size = True):
         """
         Centers window in middle of work area (desktop area excluding task bar).
 
         Calling convention:
-            center(400, 300)                            - Changes window size to (400, 300) and centers window.
-            center(size = Size(400, 300))               - Changes window size to (400, 300) and centers window.
-            center(size = (400, 300))                   - Changes window size to (400, 300) and centers window.
-            center(width = 400)                         - Changes only window width to 400 and centers window.
-            center(height = 300)                        - Changes only window height to 300 and centers window.
-            center(400, 300, is_draw_area_size = True)  - Changes draw area size to (400, 300) and centers window.
+            center()                                    - Just centers window.
+            center(400, 300)                            - Changes size of window's draw area to (400, 300) and centers window.
+            center(size = Size(400, 300))               - Changes size of window's draw area to (400, 300) and centers window.
+            center(size = (400, 300))                   - Changes size of window's draw area to (400, 300) and centers window.
+            center(width = 400)                         - Changes width of window's draw area to 400 and centers window.
+            center(height = 300)                        - Changes height of window's draw area to 300 and centers window.
+            center(400, 300, is_draw_area_size = False) - Changes size of window to (400, 300) and centers window.
 
         width               : int | SupportsInt | None
             New width of window when 'is_draw_area_size' is False.
@@ -1298,6 +1299,20 @@ class Window:
             Position in screen of left-top corner of window.
         """
         return self.get_area().get_pos()
+    
+    def get_x(self):
+        """
+        Returns : Point
+            Position at X axis in screen of left-top corner of window.
+        """
+        return self.get_pos().x
+    
+    def get_y(self):
+        """
+        Returns : Point
+            Position at Y axis in screen of left-top corner of window.
+        """
+        return self.get_pos().y
 
     def get_size(self):
         """
