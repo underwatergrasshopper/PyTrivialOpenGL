@@ -2,7 +2,7 @@
 This is an internal module! Shouldn't by imported outside of PyTrivialOpenGL package.
 """
 
-from .C_WinApi import *
+from .C_WinApi.Constants import *
 
 __all__ = [
     "wm_to_str"
