@@ -56,6 +56,8 @@ No GLUT is required.
     - `l` - which means last used options names
     - `d` - which means default options names
 
+### Demonstration:
+[![How to run example from project folder](https://img.youtube.com/vi/XmKTZm-22m4/hq2.jpg)](https://youtu.be/XmKTZm-22m4)
 
 ### Interesting examples to run:
 
