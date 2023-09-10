@@ -1,7 +1,7 @@
-import re as _re
-import os as _os
-import pathlib as _pathlib 
-import inspect as _inspect
+import re       as _re
+import os       as _os
+import pathlib  as _pathlib 
+import inspect  as _inspect
 
 __all__ = [
     "Example",

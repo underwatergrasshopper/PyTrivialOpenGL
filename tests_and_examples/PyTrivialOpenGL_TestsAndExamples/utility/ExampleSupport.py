@@ -1,6 +1,6 @@
-import math
-import os
-from time import perf_counter
+import os   as _os
+import math as _math
+import time as _time
 
 import PyTrivialOpenGL as togl
 from PyTrivialOpenGL.GL import *
@@ -28,7 +28,7 @@ def check_gl_error():
         exit(EXIT_FAILURE)
 
 def get_path_to_assets():
-    return os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + "/../assets")
+    return _os.path.abspath(_os.path.dirname(_os.path.realpath(__file__)) + "/../assets")
 
 def print_rect(r):
     print("%d %d %d %d" % (r.left, r.top, r.right, r.bottom))
@@ -61,7 +61,7 @@ def display_info():
     print("%-*s: %s (= %s)" % (padding, "Window Center Check", center_check_size, work_area.get_size()))
 
     cursor_pos = window.get_cursor_pos_in_draw_area()
-    print("%-*s: %s" % (padding, "Cursor Pos. in Draw Area", cursor_pos))
+    print("%-*s: %s" % (padding, "Cursor P_os. in Draw Area", cursor_pos))
     
     print("%-*s: %s" % (padding, "is_running", window.is_running()))
     print("%-*s: %s" % (padding, "is_visible", window.is_visible()))
@@ -102,7 +102,7 @@ class FPS_Counter:
         self._fps       = 0
 
     def reset(self):
-        self._now   = perf_counter()
+        self._now   = _time.perf_counter()
         self._accum = 0
         self._fps   = 0.0
 
@@ -115,7 +115,7 @@ class FPS_Counter:
     def update(self, is_display = True):
         self._count += 1
 
-        new_now = perf_counter()
+        new_now = _time.perf_counter()
 
         self._accum += new_now - self._now
         self._now = new_now
@@ -151,33 +151,33 @@ def draw_rgb_triangle(x, y, scale, angle):
     #glIndexubv(b"\x05")
 
     angle = 0
-    glVertex2f(math.sin(angle), math.cos(angle))
+    glVertex2f(_math.sin(angle), _math.cos(angle))
 
     #glEdgeFlagv([GL_TRUE])
-    #glVertex2fv([math.sin(angle), math.cos(angle)])
-    #glVertex2dv([math.sin(angle), math.cos(angle)])
-    #glVertex2sv([math.sin(angle), math.cos(angle)])
-    #glVertex2iv([math.sin(angle), math.cos(angle)])
+    #glVertex2fv([_math.sin(angle), _math.cos(angle)])
+    #glVertex2dv([_math.sin(angle), _math.cos(angle)])
+    #glVertex2sv([_math.sin(angle), _math.cos(angle)])
+    #glVertex2iv([_math.sin(angle), _math.cos(angle)])
 
-    #glVertex3fv([math.sin(angle), math.cos(angle), 0])
-    #glVertex3dv([math.sin(angle), math.cos(angle), 0])
-    #glVertex3sv([math.sin(angle), math.cos(angle), 0])
-    #glVertex3iv([math.sin(angle), math.cos(angle), 0])
+    #glVertex3fv([_math.sin(angle), _math.cos(angle), 0])
+    #glVertex3dv([_math.sin(angle), _math.cos(angle), 0])
+    #glVertex3sv([_math.sin(angle), _math.cos(angle), 0])
+    #glVertex3iv([_math.sin(angle), _math.cos(angle), 0])
 
-    #glVertex4fv([math.sin(angle), math.cos(angle), 0, 1])
-    #glVertex4dv([math.sin(angle), math.cos(angle), 0, 1])
-    #glVertex4sv([math.sin(angle), math.cos(angle), 0, 1])
-    #glVertex4iv([math.sin(angle), math.cos(angle), 0, 1])
+    #glVertex4fv([_math.sin(angle), _math.cos(angle), 0, 1])
+    #glVertex4dv([_math.sin(angle), _math.cos(angle), 0, 1])
+    #glVertex4sv([_math.sin(angle), _math.cos(angle), 0, 1])
+    #glVertex4iv([_math.sin(angle), _math.cos(angle), 0, 1])
 
     glColor3f(0, 1, 0)
-    angle += math.pi * 2 / 3
-    glVertex2f(math.sin(angle), math.cos(angle))
-    #glVertex2dv([math.sin(angle), math.cos(angle)])
+    angle += _math.pi * 2 / 3
+    glVertex2f(_math.sin(angle), _math.cos(angle))
+    #glVertex2dv([_math.sin(angle), _math.cos(angle)])
             
     glColor3f(0, 0, 1)
-    angle += math.pi * 2 / 3
-    glVertex2f(math.sin(angle), math.cos(angle))
-    #glVertex2dv([math.sin(angle), math.cos(angle)])
+    angle += _math.pi * 2 / 3
+    glVertex2f(_math.sin(angle), _math.cos(angle))
+    #glVertex2dv([_math.sin(angle), _math.cos(angle)])
 
     glEnd()
 
@@ -207,4 +207,4 @@ def is_close(a, b, delta = 0.001):
                 return False
         return True
     else:
-        return math.isclose(a, b, abs_tol = delta)
+        return _math.isclose(a, b, abs_tol = delta)

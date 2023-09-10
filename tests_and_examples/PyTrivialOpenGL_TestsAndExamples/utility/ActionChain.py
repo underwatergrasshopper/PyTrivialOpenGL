@@ -1,4 +1,4 @@
-from time import time as _time
+import time as _time
 
 __all__ = [
     "ActionChain"
@@ -36,14 +36,14 @@ class ActionChain:
         self._actions.append(_Action(delay, do_once))
 
     def reset(self):
-        self._begin = _time()
+        self._begin = _time.perf_counter()
         self._end = self._begin
 
     def try_execute(self):
         """
         If there is at least one action and its delay expired, executes latest added, and removes it from chain.
         """
-        self._end = _time()
+        self._end = _time.perf_counter()
 
         if len(self._actions) > 0:
             action = self._actions[0]
