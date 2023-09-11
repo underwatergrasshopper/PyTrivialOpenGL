@@ -1,3 +1,6 @@
+# v0.1.2 (12-09-2023)
+* Improved build scripts. 
+* Changed configure files.
 # v0.1.1 (10-09-2023)
 * Cleared and organized imports.
 * Added `_setup_path_env` module.

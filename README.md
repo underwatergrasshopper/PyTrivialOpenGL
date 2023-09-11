@@ -26,7 +26,7 @@ No GLUT is required.
 
 |  |  |
 | --- | :-: |
-| **Python Version** | 3.9 or later (32bit) |
+| **Python Version** | 3.9 or later (32bit and 64bit) |
 | **py launcher** | Yes |
 | **Operating System** | Window 10 | 
 
