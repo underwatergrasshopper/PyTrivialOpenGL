@@ -1,7 +1,8 @@
 # v0.1.3
 * Removed `typings` type hints from `_setup_path_env.py`.
-* Renamed `defaultl_llog_message_to_output` to `default_log_message_to_output`.
+* Renamed `defaultl_log_message_to_output` to `default_log_message_to_output`.
 * Fixed typos and spellings in descriptions.
+* Fixed wrong type check in `init_tests` sub module.
 # v0.1.2 (12-09-2023)
 * Improved build scripts. 
 * Changed configure files.
