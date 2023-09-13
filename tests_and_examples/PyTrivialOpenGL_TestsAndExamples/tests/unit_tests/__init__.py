@@ -15,7 +15,7 @@ def run(targets = None, output_path = None):
     if targets is not None and not (isinstance(targets, list) and all(isinstance(item, str) for item in targets)):
         raise TypeError("Unexpected type of 'targets' parameter.")
     
-    if targets is not None and not isinstance(output_path, str):
+    if output_path is not None and not isinstance(output_path, str):
         raise TypeError("Unexpected type of 'output_path' parameter.")
     
     _run(targets, output_path)
