@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as file:
 
 setuptools.setup(
     name                            = "PyTrivialOpenGL",
-    version                         = "0.1.2",
+    version                         = "0.1.3",
     author                          = "underwatergrasshopper",
     description                     = "Simple python package which provides tools to create OpneGL window.",
     long_description                = long_description,

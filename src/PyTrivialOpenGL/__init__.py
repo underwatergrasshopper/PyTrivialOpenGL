@@ -6,7 +6,7 @@ To run window use `to_window().create_and_run(...)`.
 """
 
 __author__  = "underwatergrasshopper"
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 # This module and modules imported below are logically part of one module.
 # Note: They are physically separated only for convenience.

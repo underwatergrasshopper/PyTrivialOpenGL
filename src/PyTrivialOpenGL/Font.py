@@ -405,7 +405,7 @@ class Font:
         """
         Exports font as one or multiple '.bmp' files into 'path'.
 
-        Font file name is in format '\k<font_name> \[\k<image_index>\]\.bmp' (regex), 
+        Font file name is in format '\\k<font_name> \\[\\k<image_index>\\]\\.bmp' (regex), 
         where <font_name>  is text, and <image_index> is number equal or bigger than 0.
 
         path    : str | Any
