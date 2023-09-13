@@ -160,7 +160,7 @@ def save_as_bmp(file_name, pixel_data, width, height, is_reverse_rows):
 
     if not isinstance(is_reverse_rows, bool):
         try:
-            his_reverse_rowsight = bool(is_reverse_rows)
+            is_reverse_rows = bool(is_reverse_rows)
         except Exception as exception:
             raise ValueError("Value of 'is_reverse_rows' is not castable to bool.") from exception
 

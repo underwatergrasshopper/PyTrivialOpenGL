@@ -13,7 +13,7 @@ class LogMessageTypeId(_enum.Enum):
     ERROR       = 3
     FATAL_ERROR = 4
 
-def defautl_log_message_to_output(log_message_type_id, prefix, message):
+def default_log_message_to_output(log_message_type_id, prefix, message):
     """
     Logs message to stdout.
     """
@@ -27,7 +27,7 @@ class Logger:
 
     def __init__(self):
         self._log_level             = LogLevel.INFO
-        self._log_message_to_output = defautl_log_message_to_output
+        self._log_message_to_output = default_log_message_to_output
 
     ### log message ###
 
@@ -170,7 +170,7 @@ class Logger:
 
     def set_log_message_to_output(self, log_message_to_output):
         """
-        Replaces default function which displays log message with custom one (by default it's defautl_log_message_to_output).
+        Replaces default function which displays log message with custom one (by default it's default_log_message_to_output).
         log_message_to_output : Callable[[int, str, str], None]      
             Is called when any log_{...} method is called as log_message_to_output(log_message_type_id, prefix, message).
             Where:

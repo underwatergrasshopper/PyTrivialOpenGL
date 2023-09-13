@@ -6,7 +6,7 @@ from .TextAdjuster  import *
 
 class TextDrawer:
     """
-    _origin_id              : OringinId
+    _origin_id              : OriginId
     _orientation_factor_y   : int
     _pos                    : Point
     _base                   : Point

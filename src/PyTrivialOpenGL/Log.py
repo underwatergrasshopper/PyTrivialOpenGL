@@ -118,7 +118,7 @@ def is_log_level_at_least(log_level):
 
 def set_log_message_to_output(log_message_to_output):
     """
-    Replaces default function which displays log message with custom one (by default it's defautl_log_message_to_output).
+    Replaces default function which displays log message with custom one (by default it's default_log_message_to_output).
     log_message_to_output : Callable[[int, str, str], None]      
         Is called when any log_{...} method is called as log_message_to_output(log_message_type_id, prefix, message).
         Where:

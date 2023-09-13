@@ -1,5 +1,13 @@
 {
     "python.analysis.extraPaths": [
         "src"
+    ],
+    "cSpell.words": [
+        "Bitfield",
+        "borderless",
+        "castable",
+        "informations",
+        "opengl",
+        "Translatef"
     ]
 }

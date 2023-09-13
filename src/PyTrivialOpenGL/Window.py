@@ -340,7 +340,7 @@ class Window:
                 When either area.x, area.y, area[0] or area[1] is not in range <-2^31, 2^31-1>. 
                 When either area.width, area.height, area[2] or area[3] is not in range <0, 2^31-1>.
                 When area is tuple with length other than 2 or 4.
-                When opengl_verion is tuple with length other than 2.
+                When opengl_version is tuple with length other than 2.
             TypeError
                 When any value of area is not int type.
                 When type of area is unexpected.
