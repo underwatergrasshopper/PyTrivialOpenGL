@@ -1690,7 +1690,7 @@ class Window:
             while True:
                 if _C_WinApi.PeekMessageW(_ctypes.byref(msg), _C_WinApi.NULL, 0, 0, _C_WinApi.PM_REMOVE):
                     if msg.message == _C_WinApi.WM_QUIT:
-                        m_window_handle = _C_WinApi.NULL
+                        self._window_handle = _C_WinApi.NULL
                         log_debug("Destroyed window.")
                         return int(msg.wParam)
 
