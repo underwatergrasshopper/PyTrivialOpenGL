@@ -2077,10 +2077,10 @@ class Window:
 
         self._rendering_context_handle = _C_WGL.wglCreateContext(self._device_context_handle)
         if not self._rendering_context_handle:
-           log_fatal_error("Can not create OpenGl Rendering Context. (windows error code: %d))" % _C_WinApi.GetLastError())
+           log_fatal_error("Can not create temporal OpenGl Rendering Context. (windows error code: %d)" % _C_WinApi.GetLastError())
 
         if not _C_WGL.wglMakeCurrent(self._device_context_handle, self._rendering_context_handle):
-            log_fatal_error("Can not set created OpenGl Rendering Context to be current.")
+            log_fatal_error("Can not set temporal OpenGl Rendering Context to be current.")
 
         # --- Creates OpenGL Rendering Context with required minimum version --- #
 
@@ -2099,10 +2099,13 @@ class Window:
 
             rendering_context_handle = wglCreateContextAttribsARB(self._device_context_handle, 0, attribute_list)
             if not rendering_context_handle:
-                log_fatal_error("Can not create OpenGl Rendering Context for version %d.%d (error code = %d)." % (self._opengl_version.major, self._opengl_version.minor, _C_WinApi.GetLastError()))
+                log_fatal_error("Can not create OpenGl Rendering Context for version %d.%d. (error code = %d)" % (self._opengl_version.major, self._opengl_version.minor, _C_WinApi.GetLastError()))
 
             if not _C_WGL.wglMakeCurrent(self._device_context_handle, rendering_context_handle):
-                log_fatal_error( "Can not set created OpenGl Rendering Context for version %d.%d to be current." % (self._opengl_version.major, self._opengl_version.minor))
+                log_fatal_error( "Can not set created OpenGl Rendering Context for version %d.%d to be current. (error code = %d)" % (self._opengl_version.major, self._opengl_version.minor, _C_WinApi.GetLastError()))
+            
+            if not _C_WGL.wglDeleteContext(rendering_context_handle):
+                log_fatal_error( "Can not delete temporal OpenGl Rendering Context. (error code = %d)" % _C_WinApi.GetLastError())
             
             self._rendering_context_handle = rendering_context_handle
 
@@ -2161,8 +2164,12 @@ class Window:
 
         _gl_support.to_cache().clear()
 
-        _C_WGL.wglMakeCurrent(_C_WinApi.NULL, _C_WinApi.NULL)
-        _C_WGL.wglDeleteContext(self._rendering_context_handle)
+        if not _C_WGL.wglMakeCurrent(_C_WinApi.NULL, _C_WinApi.NULL):
+            log_fatal_error("Can not remove OpenGl Rendering Context for being current. (error code = %d)." % _C_WinApi.GetLastError())
+        
+        if not _C_WGL.wglDeleteContext(self._rendering_context_handle):
+            log_fatal_error( "Can not delete OpenGl Rendering Context. (error code = %d)." % _C_WinApi.GetLastError())
+
         self._rendering_context_handle = _C_WinApi.NULL
 
         _C_WinApi.ReleaseDC(self._window_handle, self._device_context_handle);

@@ -1,3 +1,6 @@
+# v0.1.4 (05-02-2024)
+* Added missing deletion of temporal OpenGL Rendering Context.
+* Fixed wrong window handle assignment.
 # v0.1.3 (15-09-2023)
 * Removed `typings` type hints from `_setup_path_env.py`.
 * Renamed `defaultl_log_message_to_output` to `default_log_message_to_output`.
